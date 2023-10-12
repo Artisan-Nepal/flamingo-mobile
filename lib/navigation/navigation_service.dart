@@ -14,7 +14,7 @@ class NavigationService {
     final isFirstTime = await _getIsFirstTime();
 
     if (isFirstTime) {
-      initialRoute = NavigationRouteNames.login;
+      initialRoute = NavigationRouteNames.onBoarding;
     } else if (isLoggedIn) {
       initialRoute = NavigationRouteNames.home;
     } else {

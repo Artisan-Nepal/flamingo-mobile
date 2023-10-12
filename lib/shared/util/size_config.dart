@@ -23,4 +23,18 @@ class SizeConfig {
     appBarHeight = AppBar().preferredSize.height;
     deviceRatio = _mediaQueryData.size.aspectRatio;
   }
+
+  static bool get isMediumDevice {
+    if (screenHeight <= 708 && screenHeight >= 535) {
+      return true;
+    }
+    return false;
+  }
+
+  static bool get isSmallerDevice {
+    if (screenHeight <= 535) {
+      return true;
+    }
+    return false;
+  }
 }

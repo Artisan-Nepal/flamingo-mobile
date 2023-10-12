@@ -10,6 +10,7 @@ class RoundedOutlinedButtonWidget extends StatelessWidget {
     this.isLoading = false,
     this.enabled = true,
     this.child,
+    this.textColor = AppColors.grayDarker,
     this.loadingMsg,
   });
 
@@ -19,6 +20,7 @@ class RoundedOutlinedButtonWidget extends StatelessWidget {
   final bool enabled;
   final Widget? child;
   final String? loadingMsg;
+  final Color textColor;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +33,7 @@ class RoundedOutlinedButtonWidget extends StatelessWidget {
       borderRaidus: BorderRadius.circular(50),
       needBorder: true,
       backgroundColor: AppColors.transparent,
-      textColor: AppColors.grayDarker,
+      textColor: textColor,
       child: child,
     );
   }

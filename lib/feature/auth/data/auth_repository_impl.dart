@@ -21,4 +21,9 @@ class AuthRepositoryImpl implements AuthRepository {
     await _authLocal.setAccessToken(response.token);
     await _authLocal.setUserId(response.user.id);
   }
+
+  @override
+  Future<void> onBoard() async {
+    await _authLocal.setIsFirstTime(false);
+  }
 }

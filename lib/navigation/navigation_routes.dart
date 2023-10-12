@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flamingo/feature/feature.dart';
 
 final navigationRoutes = <String, WidgetBuilder>{
-  NavigationRouteNames.onBoarding: (ctx) => const OnboardingScren(),
+  NavigationRouteNames.onBoarding: (ctx) => const OnBoardingScreen(),
   NavigationRouteNames.login: (ctx) => const LoginScreen(),
   NavigationRouteNames.home: (ctx) => const HomeScreen(),
 };

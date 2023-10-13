@@ -7,7 +7,7 @@ export 'data/local/auth_local_impl.dart';
 export 'data/remote/auth_remote.dart';
 export 'data/remote/auth_remote_impl.dart';
 
-export 'data/model/login_request.dart';
+export 'data/model/send_otp_request.dart';
 export 'data/model/login_response.dart';
 export 'data/mapper/login_mapper.dart';
 

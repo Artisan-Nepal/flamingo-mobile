@@ -27,4 +27,9 @@ class AuthLocalImpl implements AuthLocal {
   Future<void> setUserId(int userId) async {
     await _sharedPrefManager.setInt(LocalStorageKeys.userId, userId);
   }
+
+  @override
+  Future<void> setIsFirstTime(bool value) async {
+    await _sharedPrefManager.setBool(LocalStorageKeys.isFirstTime, value);
+  }
 }

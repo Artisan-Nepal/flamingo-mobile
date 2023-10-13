@@ -83,4 +83,9 @@ Future setUpServiceLocator() async {
       authRepository: locator<AuthRepository>(),
     ),
   );
+  locator.registerFactory<OnboardingViewModel>(
+    () => OnboardingViewModel(
+      authRepository: locator<AuthRepository>(),
+    ),
+  );
 }

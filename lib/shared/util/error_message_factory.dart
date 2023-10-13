@@ -19,6 +19,9 @@ class ErrorMessageFactory {
         return exception.response!.data['message'];
       } else {
         switch (exception.type) {
+          case DioExceptionType.connectionError:
+            return ErrorMessages.noConnection;
+
           case DioExceptionType.cancel:
             return ErrorMessages.requestCancelled;
 

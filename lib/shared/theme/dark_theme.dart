@@ -9,6 +9,7 @@ final ThemeData darkTheme = ThemeData(
     primary: AppColors.primaryDark,
     secondary: AppColors.secondaryDark,
   ),
+  cardColor: AppColors.grayDarker,
   pageTransitionsTheme: const PageTransitionsTheme(
     builders: {
       TargetPlatform.android: CupertinoPageTransitionsBuilder(),

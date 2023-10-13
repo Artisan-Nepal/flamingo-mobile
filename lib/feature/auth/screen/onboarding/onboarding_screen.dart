@@ -70,9 +70,9 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                         padding: const EdgeInsets.symmetric(
                           horizontal: Dimens.spacingSizeLarge,
                         ),
-                        decoration: const BoxDecoration(
-                          color: AppColors.white,
-                          borderRadius: BorderRadius.only(
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).cardColor,
+                          borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(
                               Dimens.radiusMedium,
                             ),

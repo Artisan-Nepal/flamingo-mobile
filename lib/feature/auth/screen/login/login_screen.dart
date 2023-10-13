@@ -1,5 +1,6 @@
 import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/auth/screen/login/login_view_model.dart';
+import 'package:flamingo/feature/auth/screen/login/verify_otp_screen.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/material.dart';
@@ -79,13 +80,21 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void onLogin(LoginViewModel viewModel) async {
     if (_formKey.currentState!.validate()) {
-      await viewModel.sendOtp(_mobileNumberController.text);
-      observeSendOtpResponse(viewModel);
+      NavigationHelper.push(
+        context,
+        const VerifyOtpScreen(),
+      );
+      // await viewModel.sendOtp(_mobileNumberController.text);
+      // observeSendOtpResponse(viewModel);
     }
   }
 
   void observeSendOtpResponse(LoginViewModel viewModel) {
     if (viewModel.sendOtpUseCase.hasCompleted) {
+      NavigationHelper.push(
+        context,
+        const VerifyOtpScreen(),
+      );
     } else {
       showToast(
         context,

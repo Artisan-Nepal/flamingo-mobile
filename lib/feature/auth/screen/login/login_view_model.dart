@@ -10,11 +10,11 @@ class LoginViewModel extends ChangeNotifier {
       : _authRepository = authRepository;
 
   Response<SendOtpResponse> _sendOtpUseCase = Response<SendOtpResponse>();
-  Response<SendOtpResponse> _resendOtpUseCase = Response<SendOtpResponse>();
+  // Response<SendOtpResponse> _resendOtpUseCase = Response<SendOtpResponse>();
   Response<LoginResponse> _verifyOtpUseCase = Response<LoginResponse>();
 
   Response<SendOtpResponse> get sendOtpUseCase => _sendOtpUseCase;
-  Response<SendOtpResponse> get resendOtpUseCase => _resendOtpUseCase;
+  // Response<SendOtpResponse> get resendOtpUseCase => _resendOtpUseCase;
   Response<LoginResponse> get verifyOtpUseCase => _verifyOtpUseCase;
 
   void setSendOtpUseCase(Response<SendOtpResponse> response) {
@@ -22,10 +22,10 @@ class LoginViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setResendOtpUseCase(Response<SendOtpResponse> response) {
-    _resendOtpUseCase = response;
-    notifyListeners();
-  }
+  // void setResendOtpUseCase(Response<SendOtpResponse> response) {
+  //   _resendOtpUseCase = response;
+  //   notifyListeners();
+  // }
 
   void setVerifyOtpUseCase(Response<LoginResponse> response) {
     _verifyOtpUseCase = response;
@@ -44,16 +44,17 @@ class LoginViewModel extends ChangeNotifier {
 
   Future<void> resendOtp(String otpToken) async {
     try {
-      setResendOtpUseCase(Response.loading());
+      setSendOtpUseCase(Response.loading());
       final response = await _authRepository.resendLoginOtp(otpToken);
-      setResendOtpUseCase(Response.complete(response));
+      setSendOtpUseCase(Response.complete(response));
     } catch (exception) {
-      setResendOtpUseCase(Response.error(exception));
+      setSendOtpUseCase(Response.error(exception));
     }
   }
 
-  Future<void> verifyOtp(String otpToken, String otpCode) async {
+  Future<void> verifyOtp(String otpCode) async {
     try {
+      final otpToken = _sendOtpUseCase.data!.otpToken;
       setVerifyOtpUseCase(Response.loading());
       final response = await _authRepository.verifyLoginOtp(otpToken, otpCode);
       setVerifyOtpUseCase(Response.complete(response));

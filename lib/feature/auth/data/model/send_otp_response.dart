@@ -1,6 +1,6 @@
 class SendOtpResponse {
   String otpToken;
-  int cooldown;
+  double cooldown;
 
   SendOtpResponse({
     required this.otpToken,

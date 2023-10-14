@@ -89,8 +89,10 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                         if (!viewModel.canResendCode)
                           Countdown(
                             seconds:
-                                (viewModel.sendOtpUseCase.data?.cooldown ?? 2) *
-                                    1000,
+                                ((viewModel.sendOtpUseCase.data?.cooldown ??
+                                            2) *
+                                        60)
+                                    .toInt(),
                             build: (BuildContext context, double time) =>
                                 Text(time.toInt().toString()),
                             onFinished: () {

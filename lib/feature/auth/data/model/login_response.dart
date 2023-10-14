@@ -16,7 +16,7 @@ class LoginResponse {
 }
 
 class UserResponse {
-  final int id;
+  final String id;
   final String mobileNumber;
 
   UserResponse({

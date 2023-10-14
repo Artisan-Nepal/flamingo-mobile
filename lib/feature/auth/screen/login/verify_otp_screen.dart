@@ -6,6 +6,7 @@ import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/material.dart';
 import 'package:otp_text_field/otp_field.dart';
 import 'package:provider/provider.dart';
+import 'package:timer_count_down/timer_count_down.dart';
 
 class VerifyOtpScreen extends StatefulWidget {
   const VerifyOtpScreen({super.key});
@@ -67,22 +68,41 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                         // ),
                         // const VerticalSpaceWidget(
                         //     height: Dimens.spacingSizeLarge),
-                        RichText(
-                          text: TextSpan(
-                            text: "Didn't receive code? ",
-                            style: Theme.of(context).textTheme.bodyMedium,
-                            children: <TextSpan>[
-                              TextSpan(
-                                text: 'Resend code',
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            TextWidget(
+                              text: "Didn't receive code? ",
+                              style: Theme.of(context).textTheme.bodyMedium!,
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                onResendOtp(viewModel);
+                              },
+                              child: TextWidget(
+                                text: 'Resend code ',
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleSmall!
                                     .copyWith(
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                        fontWeight: FontWeight.bold,
+                                        color: viewModel.canResendCode
+                                            ? null
+                                            : AppColors.grayLight),
                               ),
-                            ],
-                          ),
+                            ),
+                            if (!viewModel.canResendCode)
+                              Countdown(
+                                seconds:
+                                    viewModel.sendOtpUseCase.data?.cooldown ??
+                                        5,
+                                build: (BuildContext context, double time) =>
+                                    Text(time.toInt().toString()),
+                                onFinished: () {
+                                  viewModel.allowResendCode();
+                                },
+                              )
+                          ],
                         )
                       ],
                     );
@@ -106,6 +126,26 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
       NavigationHelper.pushAndReplaceAll(
         context,
         const HomeScreen(),
+      );
+    }
+  }
+
+  onResendOtp(LoginViewModel viewModel) async {
+    await viewModel.resendOtp();
+    observeResendOtpResponse(viewModel);
+  }
+
+  void observeResendOtpResponse(LoginViewModel viewModel) {
+    if (viewModel.sendOtpUseCase.hasCompleted) {
+      showToast(
+        context,
+        "OTP code sent successfully.",
+      );
+    } else {
+      showToast(
+        context,
+        viewModel.sendOtpUseCase.exception!,
+        isSuccess: false,
       );
     }
   }

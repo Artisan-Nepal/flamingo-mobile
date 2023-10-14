@@ -10,22 +10,22 @@ class LoginViewModel extends ChangeNotifier {
       : _authRepository = authRepository;
 
   Response<SendOtpResponse> _sendOtpUseCase = Response<SendOtpResponse>();
-  // Response<SendOtpResponse> _resendOtpUseCase = Response<SendOtpResponse>();
   Response<LoginResponse> _verifyOtpUseCase = Response<LoginResponse>();
+  bool _canResendCode = false;
 
   Response<SendOtpResponse> get sendOtpUseCase => _sendOtpUseCase;
-  // Response<SendOtpResponse> get resendOtpUseCase => _resendOtpUseCase;
   Response<LoginResponse> get verifyOtpUseCase => _verifyOtpUseCase;
+  bool get canResendCode => _canResendCode;
+
+  void allowResendCode() {
+    _canResendCode = true;
+    notifyListeners();
+  }
 
   void setSendOtpUseCase(Response<SendOtpResponse> response) {
     _sendOtpUseCase = response;
     notifyListeners();
   }
-
-  // void setResendOtpUseCase(Response<SendOtpResponse> response) {
-  //   _resendOtpUseCase = response;
-  //   notifyListeners();
-  // }
 
   void setVerifyOtpUseCase(Response<LoginResponse> response) {
     _verifyOtpUseCase = response;
@@ -36,16 +36,19 @@ class LoginViewModel extends ChangeNotifier {
     try {
       setSendOtpUseCase(Response.loading());
       final response = await _authRepository.sendLoginOtp(mobileNumber);
+      _canResendCode = false;
       setSendOtpUseCase(Response.complete(response));
     } catch (exception) {
       setSendOtpUseCase(Response.error(exception));
     }
   }
 
-  Future<void> resendOtp(String otpToken) async {
+  Future<void> resendOtp() async {
     try {
+      final otpToken = _sendOtpUseCase.data!.otpToken;
       setSendOtpUseCase(Response.loading());
       final response = await _authRepository.resendLoginOtp(otpToken);
+      _canResendCode = false;
       setSendOtpUseCase(Response.complete(response));
     } catch (exception) {
       setSendOtpUseCase(Response.error(exception));

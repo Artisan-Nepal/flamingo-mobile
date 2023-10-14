@@ -27,6 +27,7 @@ class NavigationService {
   }
 
   Future<bool> _getIsFirstTime() async {
-    return await _sharedPrefManager.containsKey(LocalStorageKeys.isFirstTime);
+    return await _sharedPrefManager.getBool(LocalStorageKeys.isFirstTime) ??
+        true;
   }
 }

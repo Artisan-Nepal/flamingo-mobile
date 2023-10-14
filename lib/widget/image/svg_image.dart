@@ -19,10 +19,12 @@ class SvgImageWidget extends StatelessWidget {
     return SvgPicture.asset(
       image,
       alignment: Alignment.center,
-      colorFilter: ColorFilter.mode(
-        color ?? Theme.of(context).iconTheme.color!,
-        BlendMode.srcIn,
-      ),
+      colorFilter: color != null
+          ? ColorFilter.mode(
+              color!,
+              BlendMode.srcIn,
+            )
+          : null,
       width: width,
       height: height,
     );

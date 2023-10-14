@@ -30,7 +30,7 @@ class PasswordTextFieldWidget extends StatefulWidget {
   final FocusNode? nextNode;
   final TextEditingController? controller;
   final String? hintText;
-  final IconData? prefixIcon;
+  final Widget? prefixIcon;
   final TextInputAction? textInputAction;
   final bool enabled;
   final bool readOnly;

@@ -2,6 +2,7 @@ import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/auth/screen/login/login_view_model.dart';
 import 'package:flamingo/feature/auth/screen/login/verify_otp_screen.dart';
 import 'package:flamingo/shared/shared.dart';
+import 'package:flamingo/widget/image/image.dart';
 import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -25,6 +26,7 @@ class _LoginScreenState extends State<LoginScreen> {
       create: (context) => _viewModel,
       builder: (context, child) {
         return Scaffold(
+          appBar: AppBar(),
           body: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(Dimens.spacingSizeDefault),
@@ -34,22 +36,28 @@ class _LoginScreenState extends State<LoginScreen> {
                   builder: (context, viewModel, child) {
                     return Column(
                       mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const VerticalSpaceWidget(height: Dimens.spacing_64),
-                        Text(
-                          'Hello!',
-                          style: Theme.of(context).textTheme.displayMedium,
-                        ),
                         const VerticalSpaceWidget(
                           height: Dimens.spacingSizeSmall,
                         ),
                         Text(
-                          'Welcome to Flamingo',
-                          style: Theme.of(context).textTheme.titleLarge,
+                          'Continue with mobile number',
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleLarge!
+                              .copyWith(fontWeight: FontWeight.bold),
                         ),
-                        const VerticalSpaceWidget(height: Dimens.spacing_64),
+                        const VerticalSpaceWidget(
+                            height: Dimens.spacingSizeExtraSmall),
+                        Text(
+                          'Please enter your mobile number',
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                        const VerticalSpaceWidget(
+                            height: Dimens.spacingSizeExtraLarge),
                         TextFieldWidget(
+                          prefixIcon: _getTextFieldPrefix(),
                           controller: _mobileNumberController,
                           maxLength: 10,
                           textInputType: TextInputType.number,
@@ -60,10 +68,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         const VerticalSpaceWidget(
                           height: Dimens.spacingSizeOverLarge,
                         ),
-                        FilledButtonWidget(
+                        RoundedFilledButtonWidget(
                           label: 'Login',
                           onPressed: () {
-                            onLogin(viewModel);
+                            _onLogin(viewModel);
                           },
                           isLoading: viewModel.sendOtpUseCase.isLoading,
                         )
@@ -79,14 +87,39 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void onLogin(LoginViewModel viewModel) async {
+  Widget _getTextFieldPrefix() {
+    return Container(
+      margin: const EdgeInsets.fromLTRB(2, 2, Dimens.spacingSizeSmall, 2),
+      decoration: const BoxDecoration(
+        color: AppColors.grayLighter,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(Dimens.radiusLarge),
+          bottomLeft: Radius.circular(Dimens.radiusLarge),
+        ),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: Dimens.spacingSizeSmall),
+      child: const Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SvgImageWidget(
+            image: ImageConstants.nepalFlag,
+            height: Dimens.iconSizeDefault,
+          ),
+          HorizontalSpaceWidget(width: Dimens.spacingSizeExtraSmall),
+          Text('+977')
+        ],
+      ),
+    );
+  }
+
+  void _onLogin(LoginViewModel viewModel) async {
     if (_formKey.currentState!.validate()) {
       await viewModel.sendOtp(_mobileNumberController.text);
-      observeSendOtpResponse(viewModel);
+      _observeSendOtpResponse(viewModel);
     }
   }
 
-  void observeSendOtpResponse(LoginViewModel viewModel) {
+  void _observeSendOtpResponse(LoginViewModel viewModel) {
     if (viewModel.sendOtpUseCase.hasCompleted) {
       NavigationHelper.push(
         context,

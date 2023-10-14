@@ -22,4 +22,13 @@ class NavigationHelper {
   static void pop(BuildContext context) {
     Navigator.pop(context);
   }
+
+  static void pushAndReplaceAll(BuildContext context, Widget screen) async {
+    await Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (context) => screen,
+        ),
+        (route) => false);
+  }
 }

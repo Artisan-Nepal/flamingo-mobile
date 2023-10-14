@@ -54,6 +54,11 @@ class LoginViewModel extends ChangeNotifier {
 
   Future<void> verifyOtp(String otpCode) async {
     try {
+      if (otpCode.length != CommonConstants.otpLength) {
+        setVerifyOtpUseCase(Response.error("OTP must be of length 4"));
+        return;
+      }
+
       final otpToken = _sendOtpUseCase.data!.otpToken;
       setVerifyOtpUseCase(Response.loading());
       final response = await _authRepository.verifyLoginOtp(otpToken, otpCode);

@@ -80,12 +80,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void onLogin(LoginViewModel viewModel) async {
     if (_formKey.currentState!.validate()) {
-      NavigationHelper.push(
-        context,
-        const VerifyOtpScreen(),
-      );
-      // await viewModel.sendOtp(_mobileNumberController.text);
-      // observeSendOtpResponse(viewModel);
+      await viewModel.sendOtp(_mobileNumberController.text);
+      observeSendOtpResponse(viewModel);
     }
   }
 

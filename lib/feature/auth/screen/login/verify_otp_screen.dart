@@ -1,10 +1,10 @@
 import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/auth/auth.dart';
+import 'package:flamingo/feature/dashboard/dashboard.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/material.dart';
 import 'package:otp_text_field/otp_field.dart';
-import 'package:otp_text_field/style.dart';
 import 'package:provider/provider.dart';
 
 class VerifyOtpScreen extends StatefulWidget {
@@ -18,6 +18,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
   final _viewModel = locator<LoginViewModel>();
 
   final _formKey = GlobalKey<FormState>();
+  final OtpFieldController _otpFieldController = OtpFieldController();
 
   @override
   Widget build(BuildContext context) {
@@ -42,31 +43,30 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                         const VerticalSpaceWidget(
                             height: Dimens.spacingSizeSmall),
                         Text(
-                          'Enter otp code',
+                          'Enter OTP code',
                           style: Theme.of(context).textTheme.titleLarge!,
                         ),
                         const VerticalSpaceWidget(height: Dimens.spacing_30),
-                        OTPTextField(
-                          length: 4,
-                          width: double.infinity,
-                          fieldWidth: 40,
-                          spaceBetween: Dimens.spacingSizeLarge,
-                          style:
-                              const TextStyle(fontSize: Dimens.fontSizeDefault),
-                          textFieldAlignment: MainAxisAlignment.center,
-                          fieldStyle: FieldStyle.box,
-                          onCompleted: (otp) {},
+                        OtpTextFieldWidget(
+                          controller: _otpFieldController,
+                          length: CommonConstants.otpLength,
+                          onCompleted: (otpCode) async {
+                            await onContinue(viewModel, otpCode);
+                          },
+                          error: viewModel.verifyOtpUseCase.exception,
                         ),
                         const VerticalSpaceWidget(
                           height: Dimens.spacingSizeOverLarge,
                         ),
-                        FilledButtonWidget(
-                          label: 'Continue',
-                          onPressed: () {},
-                          isLoading: viewModel.sendOtpUseCase.isLoading,
-                        ),
-                        const VerticalSpaceWidget(
-                            height: Dimens.spacingSizeLarge),
+                        // FilledButtonWidget(
+                        //   label: 'Continue',
+                        //   onPressed: () async {
+                        //     await onContinue(viewModel, _otpFieldController.);
+                        //   },
+                        //   isLoading: viewModel.sendOtpUseCase.isLoading,
+                        // ),
+                        // const VerticalSpaceWidget(
+                        //     height: Dimens.spacingSizeLarge),
                         RichText(
                           text: TextSpan(
                             text: "Didn't receive code? ",
@@ -94,5 +94,19 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
         );
       },
     );
+  }
+
+  onContinue(LoginViewModel viewModel, String otpCode) async {
+    await viewModel.verifyOtp(otpCode);
+    observeVerifyOtpResponse(viewModel);
+  }
+
+  void observeVerifyOtpResponse(LoginViewModel viewModel) {
+    if (viewModel.verifyOtpUseCase.hasCompleted) {
+      NavigationHelper.pushAndReplaceAll(
+        context,
+        const HomeScreen(),
+      );
+    }
   }
 }

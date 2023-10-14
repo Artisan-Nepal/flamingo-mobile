@@ -5,7 +5,7 @@ import 'package:flamingo/shared/constant/message/message.dart';
 import 'package:flamingo/data/remote/api_exceptions.dart';
 
 class ErrorMessageFactory {
-  static String createMessage(Exception exception) {
+  static String createMessage(dynamic exception) {
     if (exception is NetworkNotAvailableException) {
       return exception.message.toString();
     } else if (exception is FailedResponseException) {

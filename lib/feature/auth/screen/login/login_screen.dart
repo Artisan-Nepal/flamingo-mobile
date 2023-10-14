@@ -125,7 +125,9 @@ class _LoginScreenState extends State<LoginScreen> {
         context,
         ChangeNotifierProvider.value(
           value: viewModel,
-          builder: (context, child) => const VerifyOtpScreen(),
+          builder: (context, child) => VerifyOtpScreen(
+            otpReceiver: _mobileNumberController.text,
+          ),
         ),
       );
     } else {

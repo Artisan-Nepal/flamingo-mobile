@@ -24,13 +24,14 @@ class OtpTextFieldWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      // crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         OTPTextField(
           controller: controller,
           length: length,
           width: double.infinity,
           fieldWidth: 40,
-          spaceBetween: Dimens.spacingSizeExtraLarge,
+          spaceBetween: Dimens.spacingSizeLarge,
           hasError: error != null,
           style: const TextStyle(fontSize: Dimens.fontSizeDefault),
           textFieldAlignment: MainAxisAlignment.center,

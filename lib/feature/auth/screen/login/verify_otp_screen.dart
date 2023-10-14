@@ -7,7 +7,9 @@ import 'package:otp_text_field/otp_field.dart';
 import 'package:provider/provider.dart';
 
 class VerifyOtpScreen extends StatefulWidget {
-  const VerifyOtpScreen({super.key});
+  const VerifyOtpScreen({super.key, required this.otpReceiver});
+
+  final String otpReceiver;
 
   @override
   State<VerifyOtpScreen> createState() => _VerifyOtpScreenState();
@@ -21,6 +23,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(Dimens.spacingSizeDefault),
@@ -30,17 +33,24 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
               builder: (context, viewModel, child) {
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  // crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const TopSpaceWidget(height: Dimens.spacing_64),
-                    Text('OTP Code',
-                        style: Theme.of(context).textTheme.headlineMedium),
-                    const VerticalSpaceWidget(height: Dimens.spacingSizeSmall),
                     Text(
-                      'Enter OTP code',
-                      style: Theme.of(context).textTheme.titleLarge!,
+                      'Enter the OTP code',
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleLarge!
+                          .copyWith(fontWeight: FontWeight.bold),
                     ),
-                    const VerticalSpaceWidget(height: Dimens.spacing_30),
+                    const VerticalSpaceWidget(
+                        height: Dimens.spacingSizeExtraSmall),
+                    Text(
+                      'Please enter the ${CommonConstants.otpLength}-digit code sent to ${widget.otpReceiver}.',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                      textAlign: TextAlign.center,
+                    ),
+                    const VerticalSpaceWidget(
+                        height: Dimens.spacingSizeExtraLarge),
                     OtpTextFieldWidget(
                       controller: _otpFieldController,
                       length: CommonConstants.otpLength,

@@ -157,18 +157,7 @@ class DioApiClientImpl implements ApiClient {
   }
 
   ApiResponse _returnResponse(Response response) {
-    var apiResponse = ApiResponse.fromJson(response.data);
-    if (apiResponse.statusCode == 200) {
-      return apiResponse;
-    } else {
-      if (apiResponse.message is List && apiResponse.message.isNotEmpty) {
-        throw FailedResponseException(apiResponse.message[0]);
-      } else if (apiResponse.message is String) {
-        throw FailedResponseException(apiResponse.message);
-      } else {
-        throw FailedResponseException(ErrorMessages.defaultError);
-      }
-    }
+    return ApiResponse.fromJson(response.data);
   }
 
   _requestInterceptorToAttachAccessToken(

@@ -20,7 +20,7 @@ class AuthRemoteImpl implements AuthRemote {
   @override
   Future<SendOtpResponse> sendLoginOtp(SendOtpRequest request) async {
     final apiResponse =
-        await _apiClient.post(ApiUrls.resendLoginOtp, body: request.toJson());
+        await _apiClient.post(ApiUrls.sendLoginOtp, body: request.toJson());
     return SendOtpResponse.fromJson(apiResponse.data);
   }
 

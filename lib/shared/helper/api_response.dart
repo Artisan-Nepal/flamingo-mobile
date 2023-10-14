@@ -1,6 +1,6 @@
 class ApiResponse {
   final dynamic data;
-  final int statusCode;
+  final int? statusCode;
   final dynamic message;
 
   ApiResponse({
@@ -12,7 +12,7 @@ class ApiResponse {
   factory ApiResponse.fromJson(Map<String, dynamic> json) {
     return ApiResponse(
         data: json['data'],
-        statusCode: int.parse(json['statusCode'].toString()),
+        statusCode: json['statusCode'],
         message: json['message']);
   }
 }

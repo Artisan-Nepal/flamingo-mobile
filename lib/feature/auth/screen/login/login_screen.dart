@@ -55,6 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           textInputType: TextInputType.number,
                           enabled: !viewModel.sendOtpUseCase.isLoading,
                           textInputAction: TextInputAction.done,
+                          validator: validatePhoneNumber,
                         ),
                         const VerticalSpaceWidget(
                           height: Dimens.spacingSizeOverLarge,
@@ -80,12 +81,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void onLogin(LoginViewModel viewModel) async {
     if (_formKey.currentState!.validate()) {
-      NavigationHelper.push(
-        context,
-        const VerifyOtpScreen(),
-      );
-      // await viewModel.sendOtp(_mobileNumberController.text);
-      // observeSendOtpResponse(viewModel);
+      await viewModel.sendOtp(_mobileNumberController.text);
+      observeSendOtpResponse(viewModel);
     }
   }
 
@@ -93,7 +90,10 @@ class _LoginScreenState extends State<LoginScreen> {
     if (viewModel.sendOtpUseCase.hasCompleted) {
       NavigationHelper.push(
         context,
-        const VerifyOtpScreen(),
+        ChangeNotifierProvider.value(
+          value: viewModel,
+          builder: (context, child) => const VerifyOtpScreen(),
+        ),
       );
     } else {
       showToast(

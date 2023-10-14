@@ -1,4 +1,3 @@
-import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/auth/auth.dart';
 import 'package:flamingo/feature/dashboard/dashboard.dart';
 import 'package:flamingo/shared/shared.dart';
@@ -16,103 +15,97 @@ class VerifyOtpScreen extends StatefulWidget {
 }
 
 class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
-  final _viewModel = locator<LoginViewModel>();
-
   final _formKey = GlobalKey<FormState>();
   final OtpFieldController _otpFieldController = OtpFieldController();
+  String _otpCode = "";
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => _viewModel,
-      builder: (context, child) {
-        return Scaffold(
-          body: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(Dimens.spacingSizeDefault),
-              child: Form(
-                key: _formKey,
-                child: Consumer<LoginViewModel>(
-                  builder: (context, viewModel, child) {
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(Dimens.spacingSizeDefault),
+          child: Form(
+            key: _formKey,
+            child: Consumer<LoginViewModel>(
+              builder: (context, viewModel, child) {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const TopSpaceWidget(height: Dimens.spacing_64),
+                    Text('OTP Code',
+                        style: Theme.of(context).textTheme.headlineMedium),
+                    const VerticalSpaceWidget(height: Dimens.spacingSizeSmall),
+                    Text(
+                      'Enter OTP code',
+                      style: Theme.of(context).textTheme.titleLarge!,
+                    ),
+                    const VerticalSpaceWidget(height: Dimens.spacing_30),
+                    OtpTextFieldWidget(
+                      controller: _otpFieldController,
+                      length: CommonConstants.otpLength,
+                      onCompleted: (otpCode) async {
+                        await onContinue(viewModel, otpCode);
+                      },
+                      onChanged: (otpCode) => _otpCode = otpCode,
+                      error: viewModel.verifyOtpUseCase.exception,
+                    ),
+                    const VerticalSpaceWidget(
+                      height: Dimens.spacingSizeOverLarge,
+                    ),
+                    FilledButtonWidget(
+                      label: 'Continue',
+                      onPressed: () async {
+                        await onContinue(viewModel, _otpCode);
+                      },
+                      isLoading: viewModel.resendOtpUseCase.isLoading ||
+                          viewModel.verifyOtpUseCase.isLoading,
+                    ),
+                    const VerticalSpaceWidget(height: Dimens.spacingSizeLarge),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const TopSpaceWidget(height: Dimens.spacing_64),
-                        Text('OTP Code',
-                            style: Theme.of(context).textTheme.headlineMedium),
-                        const VerticalSpaceWidget(
-                            height: Dimens.spacingSizeSmall),
-                        Text(
-                          'Enter OTP code',
-                          style: Theme.of(context).textTheme.titleLarge!,
+                        TextWidget(
+                          text: "Didn't receive code? ",
+                          style: Theme.of(context).textTheme.bodyMedium!,
                         ),
-                        const VerticalSpaceWidget(height: Dimens.spacing_30),
-                        OtpTextFieldWidget(
-                          controller: _otpFieldController,
-                          length: CommonConstants.otpLength,
-                          onCompleted: (otpCode) async {
-                            await onContinue(viewModel, otpCode);
+                        GestureDetector(
+                          onTap: () {
+                            onResendOtp(viewModel);
                           },
-                          error: viewModel.verifyOtpUseCase.exception,
+                          child: TextWidget(
+                            text: 'Resend code ',
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleSmall!
+                                .copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: viewModel.canResendCode
+                                        ? null
+                                        : AppColors.grayLight),
+                          ),
                         ),
-                        const VerticalSpaceWidget(
-                          height: Dimens.spacingSizeOverLarge,
-                        ),
-                        // FilledButtonWidget(
-                        //   label: 'Continue',
-                        //   onPressed: () async {
-                        //     await onContinue(viewModel, _otpFieldController.);
-                        //   },
-                        //   isLoading: viewModel.sendOtpUseCase.isLoading,
-                        // ),
-                        // const VerticalSpaceWidget(
-                        //     height: Dimens.spacingSizeLarge),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            TextWidget(
-                              text: "Didn't receive code? ",
-                              style: Theme.of(context).textTheme.bodyMedium!,
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                onResendOtp(viewModel);
-                              },
-                              child: TextWidget(
-                                text: 'Resend code ',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleSmall!
-                                    .copyWith(
-                                        fontWeight: FontWeight.bold,
-                                        color: viewModel.canResendCode
-                                            ? null
-                                            : AppColors.grayLight),
-                              ),
-                            ),
-                            if (!viewModel.canResendCode)
-                              Countdown(
-                                seconds:
-                                    viewModel.sendOtpUseCase.data?.cooldown ??
-                                        5,
-                                build: (BuildContext context, double time) =>
-                                    Text(time.toInt().toString()),
-                                onFinished: () {
-                                  viewModel.allowResendCode();
-                                },
-                              )
-                          ],
-                        )
+                        if (!viewModel.canResendCode)
+                          Countdown(
+                            seconds:
+                                (viewModel.sendOtpUseCase.data?.cooldown ?? 2) *
+                                    1000,
+                            build: (BuildContext context, double time) =>
+                                Text(time.toInt().toString()),
+                            onFinished: () {
+                              viewModel.allowResendCode();
+                            },
+                          )
                       ],
-                    );
-                  },
-                ),
-              ),
+                    )
+                  ],
+                );
+              },
             ),
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 
@@ -136,7 +129,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
   }
 
   void observeResendOtpResponse(LoginViewModel viewModel) {
-    if (viewModel.sendOtpUseCase.hasCompleted) {
+    if (viewModel.resendOtpUseCase.hasCompleted) {
       showToast(
         context,
         "OTP code sent successfully.",
@@ -144,7 +137,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
     } else {
       showToast(
         context,
-        viewModel.sendOtpUseCase.exception!,
+        viewModel.resendOtpUseCase.exception!,
         isSuccess: false,
       );
     }

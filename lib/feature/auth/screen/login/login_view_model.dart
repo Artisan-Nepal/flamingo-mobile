@@ -10,10 +10,13 @@ class LoginViewModel extends ChangeNotifier {
       : _authRepository = authRepository;
 
   Response<SendOtpResponse> _sendOtpUseCase = Response<SendOtpResponse>();
+  Response<SendOtpResponse> _resendOtpUseCase = Response<SendOtpResponse>();
   Response<LoginResponse> _verifyOtpUseCase = Response<LoginResponse>();
   bool _canResendCode = false;
+  String _otpToken = "";
 
   Response<SendOtpResponse> get sendOtpUseCase => _sendOtpUseCase;
+  Response<SendOtpResponse> get resendOtpUseCase => _resendOtpUseCase;
   Response<LoginResponse> get verifyOtpUseCase => _verifyOtpUseCase;
   bool get canResendCode => _canResendCode;
 
@@ -27,6 +30,11 @@ class LoginViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setResendOtpUseCase(Response<SendOtpResponse> response) {
+    _resendOtpUseCase = response;
+    notifyListeners();
+  }
+
   void setVerifyOtpUseCase(Response<LoginResponse> response) {
     _verifyOtpUseCase = response;
     notifyListeners();
@@ -37,7 +45,9 @@ class LoginViewModel extends ChangeNotifier {
       setSendOtpUseCase(Response.loading());
       final response = await _authRepository.sendLoginOtp(mobileNumber);
       _canResendCode = false;
+      _otpToken = response.otpToken;
       setSendOtpUseCase(Response.complete(response));
+      setVerifyOtpUseCase(Response());
     } catch (exception) {
       setSendOtpUseCase(Response.error(exception));
     }
@@ -45,26 +55,26 @@ class LoginViewModel extends ChangeNotifier {
 
   Future<void> resendOtp() async {
     try {
-      final otpToken = _sendOtpUseCase.data!.otpToken;
-      setSendOtpUseCase(Response.loading());
-      final response = await _authRepository.resendLoginOtp(otpToken);
+      setResendOtpUseCase(Response.loading());
+      final response = await _authRepository.resendLoginOtp(_otpToken);
       _canResendCode = false;
-      setSendOtpUseCase(Response.complete(response));
+      _otpToken = response.otpToken;
+      setResendOtpUseCase(Response.complete(response));
+      setVerifyOtpUseCase(Response());
     } catch (exception) {
-      setSendOtpUseCase(Response.error(exception));
+      setResendOtpUseCase(Response.error(exception));
     }
   }
 
   Future<void> verifyOtp(String otpCode) async {
     try {
       if (otpCode.length != CommonConstants.otpLength) {
-        setVerifyOtpUseCase(Response.error("OTP must be of length 4"));
+        setVerifyOtpUseCase(
+            Response.error(AppException("OTP must be of length 4")));
         return;
       }
-
-      final otpToken = _sendOtpUseCase.data!.otpToken;
       setVerifyOtpUseCase(Response.loading());
-      final response = await _authRepository.verifyLoginOtp(otpToken, otpCode);
+      final response = await _authRepository.verifyLoginOtp(_otpToken, otpCode);
       setVerifyOtpUseCase(Response.complete(response));
     } catch (exception) {
       setVerifyOtpUseCase(Response.error(exception));

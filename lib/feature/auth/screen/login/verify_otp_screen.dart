@@ -45,7 +45,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                       controller: _otpFieldController,
                       length: CommonConstants.otpLength,
                       onCompleted: (otpCode) async {
-                        await onContinue(viewModel, otpCode);
+                        await _onContinue(viewModel, otpCode);
                       },
                       onChanged: (otpCode) => _otpCode = otpCode,
                       error: viewModel.verifyOtpUseCase.exception,
@@ -56,7 +56,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                     FilledButtonWidget(
                       label: 'Continue',
                       onPressed: () async {
-                        await onContinue(viewModel, _otpCode);
+                        await _onContinue(viewModel, _otpCode);
                       },
                       isLoading: viewModel.resendOtpUseCase.isLoading ||
                           viewModel.verifyOtpUseCase.isLoading,
@@ -72,7 +72,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                         GestureDetector(
                           onTap: () {
                             if (viewModel.canResendCode) {
-                              onResendOtp(viewModel);
+                              _onResendOtp(viewModel);
                             }
                           },
                           child: TextWidget(
@@ -107,12 +107,12 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
     );
   }
 
-  onContinue(LoginViewModel viewModel, String otpCode) async {
+  _onContinue(LoginViewModel viewModel, String otpCode) async {
     await viewModel.verifyOtp(otpCode);
-    observeVerifyOtpResponse(viewModel);
+    _observeVerifyOtpResponse(viewModel);
   }
 
-  void observeVerifyOtpResponse(LoginViewModel viewModel) {
+  void _observeVerifyOtpResponse(LoginViewModel viewModel) {
     if (viewModel.verifyOtpUseCase.hasCompleted) {
       NavigationHelper.pushAndReplaceAll(
         context,
@@ -121,12 +121,12 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
     }
   }
 
-  onResendOtp(LoginViewModel viewModel) async {
+  _onResendOtp(LoginViewModel viewModel) async {
     await viewModel.resendOtp();
-    observeResendOtpResponse(viewModel);
+    _observeResendOtpResponse(viewModel);
   }
 
-  void observeResendOtpResponse(LoginViewModel viewModel) {
+  void _observeResendOtpResponse(LoginViewModel viewModel) {
     if (viewModel.resendOtpUseCase.hasCompleted) {
       showToast(
         context,

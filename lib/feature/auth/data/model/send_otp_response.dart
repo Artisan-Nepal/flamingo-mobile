@@ -10,6 +10,6 @@ class SendOtpResponse {
   factory SendOtpResponse.fromJson(Map<String, dynamic> json) =>
       SendOtpResponse(
         otpToken: json["otpToken"],
-        cooldown: json["cooldown"],
+        cooldown: json["cooldown"].toDouble(),
       );
 }

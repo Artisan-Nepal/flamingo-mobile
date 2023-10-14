@@ -5,7 +5,6 @@ import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/material.dart';
 import 'package:otp_text_field/otp_field.dart';
 import 'package:provider/provider.dart';
-import 'package:timer_count_down/timer_count_down.dart';
 
 class VerifyOtpScreen extends StatefulWidget {
   const VerifyOtpScreen({super.key});
@@ -72,7 +71,9 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                         ),
                         GestureDetector(
                           onTap: () {
-                            onResendOtp(viewModel);
+                            if (viewModel.canResendCode) {
+                              onResendOtp(viewModel);
+                            }
                           },
                           child: TextWidget(
                             text: 'Resend code ',
@@ -87,14 +88,9 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                           ),
                         ),
                         if (!viewModel.canResendCode)
-                          Countdown(
-                            seconds:
-                                ((viewModel.sendOtpUseCase.data?.cooldown ??
-                                            2) *
-                                        60)
-                                    .toInt(),
-                            build: (BuildContext context, double time) =>
-                                Text(time.toInt().toString()),
+                          CountdownWidget(
+                            minutes:
+                                (viewModel.sendOtpUseCase.data?.cooldown ?? 2),
                             onFinished: () {
                               viewModel.allowResendCode();
                             },

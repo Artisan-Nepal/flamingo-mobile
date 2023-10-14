@@ -42,12 +42,12 @@ class LoginViewModel extends ChangeNotifier {
 
   Future<void> sendOtp(String mobileNumber) async {
     try {
+      setVerifyOtpUseCase(Response());
       setSendOtpUseCase(Response.loading());
       final response = await _authRepository.sendLoginOtp(mobileNumber);
       _canResendCode = false;
       _otpToken = response.otpToken;
       setSendOtpUseCase(Response.complete(response));
-      setVerifyOtpUseCase(Response());
     } catch (exception) {
       setSendOtpUseCase(Response.error(exception));
     }
@@ -55,12 +55,12 @@ class LoginViewModel extends ChangeNotifier {
 
   Future<void> resendOtp() async {
     try {
+      setVerifyOtpUseCase(Response());
       setResendOtpUseCase(Response.loading());
       final response = await _authRepository.resendLoginOtp(_otpToken);
       _canResendCode = false;
       _otpToken = response.otpToken;
       setResendOtpUseCase(Response.complete(response));
-      setVerifyOtpUseCase(Response());
     } catch (exception) {
       setResendOtpUseCase(Response.error(exception));
     }

@@ -152,7 +152,7 @@ class TextFieldWidget extends StatelessWidget {
       {bool isFocused = false}) {
     return OutlineInputBorder(
       borderRadius: BorderRadius.circular(Dimens.radiusLarge),
-      borderSide: BorderSide(width: isFocused ? 1.6 : 1.2, color: borderColor),
+      borderSide: BorderSide(width: isFocused ? 1.3 : 1.2, color: borderColor),
     );
   }
 }

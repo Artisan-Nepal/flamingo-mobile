@@ -85,11 +85,9 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget _getTextFieldPrefix() {
     return Container(
       margin: const EdgeInsets.fromLTRB(2, 2, Dimens.spacingSizeSmall, 2),
-      decoration: BoxDecoration(
-        color: Provider.of<ThemeService>(context).isLightMode(context)
-            ? AppColors.grayLighter
-            : AppColors.grayLight,
-        borderRadius: const BorderRadius.only(
+      decoration: const BoxDecoration(
+        color: AppColors.grayLighter,
+        borderRadius: BorderRadius.only(
           topLeft: Radius.circular(Dimens.radiusLarge),
           bottomLeft: Radius.circular(Dimens.radiusLarge),
         ),

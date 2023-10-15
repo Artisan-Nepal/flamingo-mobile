@@ -1,3 +1,4 @@
+import 'package:flamingo/feature/theme/theme_service.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/space/space.dart';
 import 'package:flamingo/widget/text/text.dart';
@@ -5,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:otp_text_field/otp_field.dart';
 import 'package:otp_text_field/otp_field_style.dart';
 import 'package:otp_text_field/style.dart';
+import 'package:provider/provider.dart';
 
 class OtpTextFieldWidget extends StatelessWidget {
   const OtpTextFieldWidget(
@@ -23,8 +25,8 @@ class OtpTextFieldWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isLightMode = Provider.of<ThemeService>(context).isLightMode(context);
     return Column(
-      // crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         OTPTextField(
           controller: controller,
@@ -40,6 +42,11 @@ class OtpTextFieldWidget extends StatelessWidget {
           onChanged: onChanged ?? (value) {},
           otpFieldStyle: OtpFieldStyle(
             errorBorderColor: AppColors.error,
+            borderColor:
+                isLightMode ? AppColors.grayDarker : AppColors.grayLighter,
+            enabledBorderColor:
+                isLightMode ? AppColors.grayDarker : AppColors.grayLighter,
+            focusBorderColor: AppColors.primaryMain,
           ),
         ),
         getError(context),

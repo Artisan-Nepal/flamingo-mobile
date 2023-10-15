@@ -1,5 +1,7 @@
+import 'package:flamingo/feature/theme/theme_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flamingo/shared/shared.dart';
+import 'package:provider/provider.dart';
 
 class TextFieldWidget extends StatelessWidget {
   const TextFieldWidget(
@@ -59,6 +61,8 @@ class TextFieldWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isLightMode = Provider.of<ThemeService>(context).isLightMode(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -120,21 +124,34 @@ class TextFieldWidget extends StatelessWidget {
                 .bodyMedium!
                 .copyWith(color: AppColors.error),
             hintText: hintText,
-            border: _generateBorder(AppColors.grayDarker),
-            focusedBorder: _generateBorder(AppColors.primaryMain),
-            enabledBorder: _generateBorder(AppColors.grayDarker),
-            errorBorder: _generateBorder(AppColors.error),
-            focusedErrorBorder: _generateBorder(AppColors.error),
+            border: _generateBorder(
+              isLightMode ? AppColors.grayDarker : AppColors.grayLighter,
+            ),
+            focusedBorder: _generateBorder(
+              AppColors.primaryMain,
+              isFocused: true,
+            ),
+            enabledBorder: _generateBorder(
+              isLightMode ? AppColors.grayDarker : AppColors.grayLighter,
+            ),
+            errorBorder: _generateBorder(
+              AppColors.error,
+            ),
+            focusedErrorBorder: _generateBorder(
+              AppColors.error,
+              isFocused: true,
+            ),
           ),
         ),
       ],
     );
   }
 
-  OutlineInputBorder _generateBorder(Color borderColor) {
+  OutlineInputBorder _generateBorder(Color borderColor,
+      {bool isFocused = false}) {
     return OutlineInputBorder(
       borderRadius: BorderRadius.circular(Dimens.radiusLarge),
-      borderSide: BorderSide(width: 1.2, color: borderColor),
+      borderSide: BorderSide(width: isFocused ? 1.6 : 1.2, color: borderColor),
     );
   }
 }

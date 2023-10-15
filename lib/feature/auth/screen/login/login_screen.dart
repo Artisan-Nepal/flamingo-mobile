@@ -42,7 +42,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           height: Dimens.spacingSizeSmall,
                         ),
                         Text(
-                          'Continue with mobile number',
+                          'Connect with mobile number',
                           style: Theme.of(context)
                               .textTheme
                               .titleLarge!

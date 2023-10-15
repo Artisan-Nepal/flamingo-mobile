@@ -16,7 +16,7 @@ class NavigationService {
     if (isFirstTime) {
       initialRoute = NavigationRouteNames.onBoarding;
     } else if (isLoggedIn) {
-      initialRoute = NavigationRouteNames.login;
+      initialRoute = NavigationRouteNames.home;
     } else {
       initialRoute = NavigationRouteNames.login;
     }

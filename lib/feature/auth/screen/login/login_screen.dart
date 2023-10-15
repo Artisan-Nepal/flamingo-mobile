@@ -26,61 +26,55 @@ class _LoginScreenState extends State<LoginScreen> {
     return ChangeNotifierProvider(
       create: (context) => _viewModel,
       builder: (context, child) {
-        return Scaffold(
-          appBar: AppBar(),
-          body: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(Dimens.spacingSizeDefault),
-              child: Form(
-                key: _formKey,
-                child: Consumer<LoginViewModel>(
-                  builder: (context, viewModel, child) {
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const VerticalSpaceWidget(
-                          height: Dimens.spacingSizeSmall,
-                        ),
-                        Text(
-                          'Connect with mobile number',
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleLarge!
-                              .copyWith(fontWeight: FontWeight.bold),
-                        ),
-                        const VerticalSpaceWidget(
-                            height: Dimens.spacingSizeExtraSmall),
-                        Text(
-                          'Please enter your mobile number',
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                        const VerticalSpaceWidget(
-                            height: Dimens.spacingSizeExtraLarge),
-                        TextFieldWidget(
-                          prefixIcon: _getTextFieldPrefix(),
-                          controller: _mobileNumberController,
-                          maxLength: 10,
-                          textInputType: TextInputType.number,
-                          enabled: !viewModel.sendOtpUseCase.isLoading,
-                          textInputAction: TextInputAction.done,
-                          validator: validatePhoneNumber,
-                        ),
-                        const VerticalSpaceWidget(
-                          height: Dimens.spacingSizeOverLarge,
-                        ),
-                        RoundedFilledButtonWidget(
-                          label: 'Login',
-                          onPressed: () {
-                            _onLogin(viewModel);
-                          },
-                          isLoading: viewModel.sendOtpUseCase.isLoading,
-                        )
-                      ],
-                    );
-                  },
-                ),
-              ),
+        return DefaultScreen(
+          child: Form(
+            key: _formKey,
+            child: Consumer<LoginViewModel>(
+              builder: (context, viewModel, child) {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const VerticalSpaceWidget(
+                      height: Dimens.spacingSizeSmall,
+                    ),
+                    Text(
+                      'Connect with mobile number',
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleLarge!
+                          .copyWith(fontWeight: FontWeight.bold),
+                    ),
+                    const VerticalSpaceWidget(
+                        height: Dimens.spacingSizeExtraSmall),
+                    Text(
+                      'Please enter your mobile number',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                    const VerticalSpaceWidget(
+                        height: Dimens.spacingSizeExtraLarge),
+                    TextFieldWidget(
+                      prefixIcon: _getTextFieldPrefix(),
+                      controller: _mobileNumberController,
+                      maxLength: 10,
+                      textInputType: TextInputType.number,
+                      enabled: !viewModel.sendOtpUseCase.isLoading,
+                      textInputAction: TextInputAction.done,
+                      validator: validatePhoneNumber,
+                    ),
+                    const VerticalSpaceWidget(
+                      height: Dimens.spacingSizeOverLarge,
+                    ),
+                    RoundedFilledButtonWidget(
+                      label: 'Login',
+                      onPressed: () {
+                        _onLogin(viewModel);
+                      },
+                      isLoading: viewModel.sendOtpUseCase.isLoading,
+                    )
+                  ],
+                );
+              },
             ),
           ),
         );

@@ -22,95 +22,91 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(Dimens.spacingSizeDefault),
-          child: Form(
-            key: _formKey,
-            child: Consumer<LoginViewModel>(
-              builder: (context, viewModel, child) {
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  // crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Enter the OTP code',
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleLarge!
-                          .copyWith(fontWeight: FontWeight.bold),
-                    ),
-                    const VerticalSpaceWidget(
-                        height: Dimens.spacingSizeExtraSmall),
-                    Text(
-                      'Please enter the ${CommonConstants.otpLength}-digit code sent to ${widget.otpReceiver}.',
-                      style: Theme.of(context).textTheme.bodyMedium,
-                      textAlign: TextAlign.center,
-                    ),
-                    const VerticalSpaceWidget(
-                        height: Dimens.spacingSizeExtraLarge),
-                    OtpTextFieldWidget(
-                      controller: _otpFieldController,
-                      length: CommonConstants.otpLength,
-                      onCompleted: (otpCode) async {
-                        await _onContinue(viewModel, otpCode);
-                      },
-                      onChanged: (otpCode) => _otpCode = otpCode,
-                      error: viewModel.verifyOtpUseCase.exception,
-                    ),
-                    const VerticalSpaceWidget(
-                      height: Dimens.spacingSizeOverLarge,
-                    ),
-                    FilledButtonWidget(
-                      label: 'Continue',
-                      onPressed: () async {
-                        await _onContinue(viewModel, _otpCode);
-                      },
-                      isLoading: viewModel.resendOtpUseCase.isLoading ||
-                          viewModel.verifyOtpUseCase.isLoading,
-                    ),
-                    const VerticalSpaceWidget(height: Dimens.spacingSizeLarge),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        TextWidget(
-                          text: "Didn't receive code? ",
-                          style: Theme.of(context).textTheme.bodyMedium!,
+    return SingleChildScrollView(
+      child: DefaultScreen(
+        child: Form(
+          key: _formKey,
+          child: Consumer<LoginViewModel>(
+            builder: (context, viewModel, child) {
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                // crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Enter the OTP code',
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleLarge!
+                        .copyWith(fontWeight: FontWeight.bold),
+                  ),
+                  const VerticalSpaceWidget(
+                      height: Dimens.spacingSizeExtraSmall),
+                  Text(
+                    'Please enter the ${CommonConstants.otpLength}-digit code sent to ${widget.otpReceiver}.',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                    textAlign: TextAlign.center,
+                  ),
+                  const VerticalSpaceWidget(
+                      height: Dimens.spacingSizeExtraLarge),
+                  OtpTextFieldWidget(
+                    controller: _otpFieldController,
+                    length: CommonConstants.otpLength,
+                    onCompleted: (otpCode) async {
+                      await _onContinue(viewModel, otpCode);
+                    },
+                    onChanged: (otpCode) => _otpCode = otpCode,
+                    error: viewModel.verifyOtpUseCase.exception,
+                  ),
+                  const VerticalSpaceWidget(
+                    height: Dimens.spacingSizeOverLarge,
+                  ),
+                  FilledButtonWidget(
+                    label: 'Continue',
+                    onPressed: () async {
+                      await _onContinue(viewModel, _otpCode);
+                    },
+                    isLoading: viewModel.resendOtpUseCase.isLoading ||
+                        viewModel.verifyOtpUseCase.isLoading,
+                  ),
+                  const VerticalSpaceWidget(height: Dimens.spacingSizeLarge),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      TextWidget(
+                        text: "Didn't receive code? ",
+                        style: Theme.of(context).textTheme.bodyMedium!,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          if (viewModel.canResendCode) {
+                            _onResendOtp(viewModel);
+                          }
+                        },
+                        child: TextWidget(
+                          text: 'Resend code ',
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleSmall!
+                              .copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: viewModel.canResendCode
+                                      ? null
+                                      : AppColors.grayLight),
                         ),
-                        GestureDetector(
-                          onTap: () {
-                            if (viewModel.canResendCode) {
-                              _onResendOtp(viewModel);
-                            }
+                      ),
+                      if (!viewModel.canResendCode)
+                        CountdownWidget(
+                          minutes:
+                              (viewModel.sendOtpUseCase.data?.cooldown ?? 2),
+                          onFinished: () {
+                            viewModel.allowResendCode();
                           },
-                          child: TextWidget(
-                            text: 'Resend code ',
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleSmall!
-                                .copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: viewModel.canResendCode
-                                        ? null
-                                        : AppColors.grayLight),
-                          ),
-                        ),
-                        if (!viewModel.canResendCode)
-                          CountdownWidget(
-                            minutes:
-                                (viewModel.sendOtpUseCase.data?.cooldown ?? 2),
-                            onFinished: () {
-                              viewModel.allowResendCode();
-                            },
-                          )
-                      ],
-                    )
-                  ],
-                );
-              },
-            ),
+                        )
+                    ],
+                  )
+                ],
+              );
+            },
           ),
         ),
       ),

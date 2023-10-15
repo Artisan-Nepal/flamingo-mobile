@@ -1,6 +1,7 @@
 import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/auth/screen/login/login_view_model.dart';
 import 'package:flamingo/feature/auth/screen/login/verify_otp_screen.dart';
+import 'package:flamingo/feature/feature.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/image/image.dart';
 import 'package:flamingo/widget/widget.dart';
@@ -90,23 +91,31 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget _getTextFieldPrefix() {
     return Container(
       margin: const EdgeInsets.fromLTRB(2, 2, Dimens.spacingSizeSmall, 2),
-      decoration: const BoxDecoration(
-        color: AppColors.grayLighter,
-        borderRadius: BorderRadius.only(
+      decoration: BoxDecoration(
+        color: Provider.of<ThemeService>(context).isLightMode(context)
+            ? AppColors.grayLighter
+            : AppColors.grayLight,
+        borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(Dimens.radiusLarge),
           bottomLeft: Radius.circular(Dimens.radiusLarge),
         ),
       ),
-      padding: const EdgeInsets.symmetric(horizontal: Dimens.spacingSizeSmall),
-      child: const Row(
+      padding: const EdgeInsets.only(
+          left: Dimens.spacingSizeDefault, right: Dimens.spacingSizeSmall),
+      child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          SvgImageWidget(
+          const SvgImageWidget(
             image: ImageConstants.nepalFlag,
             height: Dimens.iconSizeDefault,
           ),
-          HorizontalSpaceWidget(width: Dimens.spacingSizeExtraSmall),
-          Text('+977')
+          const HorizontalSpaceWidget(width: Dimens.spacingSizeExtraSmall),
+          Text(
+            '+977',
+            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  color: AppColors.grayDarker,
+                ),
+          )
         ],
       ),
     );

@@ -109,8 +109,9 @@ class TextFieldWidget extends StatelessWidget {
                 ? const EdgeInsets.symmetric(
                     vertical: 4,
                   )
-                : const EdgeInsets.all(
-                    8,
+                : const EdgeInsets.symmetric(
+                    vertical: 8,
+                    horizontal: Dimens.spacingSizeLarge,
                   ),
             prefixIcon: prefixIcon,
             suffixIcon: suffixIcon == null
@@ -125,14 +126,14 @@ class TextFieldWidget extends StatelessWidget {
                 .copyWith(color: AppColors.error),
             hintText: hintText,
             border: _generateBorder(
-              isLightMode ? AppColors.grayDarker : AppColors.grayLighter,
+              isLightMode ? AppColors.grayLight : AppColors.grayLighter,
             ),
             focusedBorder: _generateBorder(
               AppColors.primaryMain,
               isFocused: true,
             ),
             enabledBorder: _generateBorder(
-              isLightMode ? AppColors.grayDarker : AppColors.grayLighter,
+              isLightMode ? AppColors.grayLight : AppColors.grayLighter,
             ),
             errorBorder: _generateBorder(
               AppColors.error,

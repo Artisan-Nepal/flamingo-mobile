@@ -1,36 +1,33 @@
 class LoginResponse {
-  final String token;
-
+  final String accessToken;
   final UserResponse user;
 
-  LoginResponse(
-    this.token,
-    this.user,
-  );
+  LoginResponse({
+    required this.accessToken,
+    required this.user,
+  });
+
+  factory LoginResponse.fromJson(Map<String, dynamic> json) {
+    return LoginResponse(
+      accessToken: json['accessToken'],
+      user: UserResponse.fromJson(json['user']),
+    );
+  }
 }
 
 class UserResponse {
-  final int id;
+  final String id;
+  final String mobileNumber;
 
-  final String fullName;
+  UserResponse({
+    required this.id,
+    required this.mobileNumber,
+  });
 
-  final String email;
-
-  final String phoneNumber;
-
-  final String firstName;
-
-  final String lastName;
-
-  final String? refreshToken;
-
-  UserResponse(
-    this.id,
-    this.fullName,
-    this.email,
-    this.phoneNumber,
-    this.firstName,
-    this.lastName,
-    this.refreshToken,
-  );
+  factory UserResponse.fromJson(Map<String, dynamic> json) {
+    return UserResponse(
+      id: json['id'],
+      mobileNumber: json['mobileNumber'],
+    );
+  }
 }

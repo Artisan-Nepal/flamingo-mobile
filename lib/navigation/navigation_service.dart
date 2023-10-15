@@ -23,8 +23,7 @@ class NavigationService {
   }
 
   Future<bool> _getIsLoggedIn() async {
-    return await _sharedPrefManager.getBool(LocalStorageKeys.isLoggedIn) ??
-        false;
+    return await _sharedPrefManager.containsKey(LocalStorageKeys.accessToken);
   }
 
   Future<bool> _getIsFirstTime() async {

@@ -36,7 +36,7 @@ class TextFieldWidget extends StatelessWidget {
   final TextInputType? textInputType;
   final TextEditingController? controller;
   final String? hintText;
-  final IconData? prefixIcon;
+  final Widget? prefixIcon;
   final IconData? suffixIcon;
   final TextInputAction? textInputAction;
   final bool enabled;
@@ -108,24 +108,23 @@ class TextFieldWidget extends StatelessWidget {
                 : const EdgeInsets.all(
                     8,
                   ),
-            prefixIcon: prefixIcon == null
-                ? null
-                : IconButton(
-                    icon: Icon(prefixIcon),
-                    onPressed: onPrefixPressed,
-                  ),
+            prefixIcon: prefixIcon,
             suffixIcon: suffixIcon == null
                 ? null
                 : IconButton(
                     icon: Icon(suffixIcon),
                     onPressed: onSuffixPressed,
                   ),
+            errorStyle: Theme.of(context)
+                .textTheme
+                .bodyMedium!
+                .copyWith(color: AppColors.error),
             hintText: hintText,
             border: _generateBorder(AppColors.grayDarker),
-            focusedBorder: _generateBorder(AppColors.grayDarker),
+            focusedBorder: _generateBorder(AppColors.primaryMain),
             enabledBorder: _generateBorder(AppColors.grayDarker),
-            errorBorder: _generateBorder(AppColors.grayDarker),
-            focusedErrorBorder: _generateBorder(AppColors.grayDarker),
+            errorBorder: _generateBorder(AppColors.error),
+            focusedErrorBorder: _generateBorder(AppColors.error),
           ),
         ),
       ],
@@ -134,7 +133,7 @@ class TextFieldWidget extends StatelessWidget {
 
   OutlineInputBorder _generateBorder(Color borderColor) {
     return OutlineInputBorder(
-      borderRadius: BorderRadius.circular(5),
+      borderRadius: BorderRadius.circular(Dimens.radiusLarge),
       borderSide: BorderSide(width: 1.2, color: borderColor),
     );
   }

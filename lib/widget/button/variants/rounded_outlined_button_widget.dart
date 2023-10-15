@@ -30,7 +30,7 @@ class RoundedOutlinedButtonWidget extends StatelessWidget {
       isLoading: isLoading,
       enabled: enabled,
       loadingMsg: loadingMsg,
-      borderRaidus: BorderRadius.circular(50),
+      borderRaidus: BorderRadius.circular(Dimens.radiusLarge),
       needBorder: true,
       backgroundColor: AppColors.transparent,
       textColor: textColor,

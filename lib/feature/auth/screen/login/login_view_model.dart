@@ -1,29 +1,83 @@
-import 'package:flutter/material.dart';
+import 'package:flamingo/feature/auth/data/model/send_otp_response.dart';
 import 'package:flamingo/feature/feature.dart';
 import 'package:flamingo/shared/shared.dart';
+import 'package:flutter/material.dart';
 
 class LoginViewModel extends ChangeNotifier {
-  final AuthRepository _loginRepository;
+  final AuthRepository _authRepository;
 
   LoginViewModel({required AuthRepository authRepository})
-      : _loginRepository = authRepository;
+      : _authRepository = authRepository;
 
-  late LoginResponse loginResponse;
+  Response<SendOtpResponse> _sendOtpUseCase = Response<SendOtpResponse>();
+  Response<SendOtpResponse> _resendOtpUseCase = Response<SendOtpResponse>();
+  Response<LoginResponse> _verifyOtpUseCase = Response<LoginResponse>();
+  bool _canResendCode = false;
+  String _otpToken = "";
 
-  Response<LoginResponse> loginUseCase = Response<LoginResponse>();
+  Response<SendOtpResponse> get sendOtpUseCase => _sendOtpUseCase;
+  Response<SendOtpResponse> get resendOtpUseCase => _resendOtpUseCase;
+  Response<LoginResponse> get verifyOtpUseCase => _verifyOtpUseCase;
+  bool get canResendCode => _canResendCode;
 
-  void setLoginUseCase(Response<LoginResponse> response) {
-    loginUseCase = response;
+  void allowResendCode() {
+    _canResendCode = true;
     notifyListeners();
   }
 
-  Future<void> login(LoginRequest request) async {
-    setLoginUseCase(Response.loading());
+  void setSendOtpUseCase(Response<SendOtpResponse> response) {
+    _sendOtpUseCase = response;
+    notifyListeners();
+  }
+
+  void setResendOtpUseCase(Response<SendOtpResponse> response) {
+    _resendOtpUseCase = response;
+    notifyListeners();
+  }
+
+  void setVerifyOtpUseCase(Response<LoginResponse> response) {
+    _verifyOtpUseCase = response;
+    notifyListeners();
+  }
+
+  Future<void> sendOtp(String mobileNumber) async {
     try {
-      loginResponse = await _loginRepository.login(request);
-      setLoginUseCase(Response.complete(loginResponse));
-    } on Exception catch (exception) {
-      setLoginUseCase(Response.error(exception));
+      setVerifyOtpUseCase(Response());
+      setSendOtpUseCase(Response.loading());
+      final response = await _authRepository.sendLoginOtp(mobileNumber);
+      _canResendCode = false;
+      _otpToken = response.otpToken;
+      setSendOtpUseCase(Response.complete(response));
+    } catch (exception) {
+      setSendOtpUseCase(Response.error(exception));
+    }
+  }
+
+  Future<void> resendOtp() async {
+    try {
+      setVerifyOtpUseCase(Response());
+      setResendOtpUseCase(Response.loading());
+      final response = await _authRepository.resendLoginOtp(_otpToken);
+      _canResendCode = false;
+      _otpToken = response.otpToken;
+      setResendOtpUseCase(Response.complete(response));
+    } catch (exception) {
+      setResendOtpUseCase(Response.error(exception));
+    }
+  }
+
+  Future<void> verifyOtp(String otpCode) async {
+    try {
+      if (otpCode.length != CommonConstants.otpLength) {
+        setVerifyOtpUseCase(
+            Response.error(AppException("OTP must be of length 4")));
+        return;
+      }
+      setVerifyOtpUseCase(Response.loading());
+      final response = await _authRepository.verifyLoginOtp(_otpToken, otpCode);
+      setVerifyOtpUseCase(Response.complete(response));
+    } catch (exception) {
+      setVerifyOtpUseCase(Response.error(exception));
     }
   }
 }

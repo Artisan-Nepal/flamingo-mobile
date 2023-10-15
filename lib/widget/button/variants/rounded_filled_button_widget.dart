@@ -1,3 +1,4 @@
+import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/material.dart';
 
@@ -27,7 +28,7 @@ class RoundedFilledButtonWidget extends StatelessWidget {
       isLoading: isLoading,
       enabled: enabled,
       loadingMsg: loadingMsg,
-      borderRaidus: BorderRadius.circular(50),
+      borderRaidus: BorderRadius.circular(Dimens.radiusLarge),
       child: child,
     );
   }

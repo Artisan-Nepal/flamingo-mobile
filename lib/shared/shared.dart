@@ -6,3 +6,4 @@ export 'interface/interface.dart';
 export 'theme/theme.dart';
 export 'util/util.dart';
 export 'validation/validation.dart';
+export 'exception/exception.dart';

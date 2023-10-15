@@ -3,7 +3,6 @@ import 'package:flamingo/feature/auth/screen/login/login_view_model.dart';
 import 'package:flamingo/feature/auth/screen/login/verify_otp_screen.dart';
 import 'package:flamingo/feature/feature.dart';
 import 'package:flamingo/shared/shared.dart';
-import 'package:flamingo/widget/image/image.dart';
 import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -53,11 +52,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     const VerticalSpaceWidget(
                         height: Dimens.spacingSizeExtraLarge),
-                    TextFieldWidget(
-                      prefixIcon: _getTextFieldPrefix(),
+                    PhoneTextFieldWidget(
                       controller: _mobileNumberController,
                       maxLength: 10,
-                      textInputType: TextInputType.number,
                       enabled: !viewModel.sendOtpUseCase.isLoading,
                       textInputAction: TextInputAction.done,
                       validator: validatePhoneNumber,
@@ -79,37 +76,6 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         );
       },
-    );
-  }
-
-  Widget _getTextFieldPrefix() {
-    return Container(
-      margin: const EdgeInsets.fromLTRB(2, 2, Dimens.spacingSizeSmall, 2),
-      decoration: const BoxDecoration(
-        color: AppColors.grayLighter,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(Dimens.radiusLarge),
-          bottomLeft: Radius.circular(Dimens.radiusLarge),
-        ),
-      ),
-      padding: const EdgeInsets.only(
-          left: Dimens.spacingSizeDefault, right: Dimens.spacingSizeSmall),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const SvgImageWidget(
-            image: ImageConstants.nepalFlag,
-            height: Dimens.iconSizeDefault,
-          ),
-          const HorizontalSpaceWidget(width: Dimens.spacingSizeExtraSmall),
-          Text(
-            '+977',
-            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                  color: AppColors.grayDarker,
-                ),
-          )
-        ],
-      ),
     );
   }
 

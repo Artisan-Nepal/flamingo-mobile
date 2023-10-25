@@ -1,37 +1,37 @@
-import 'package:flamingo/feature/theme/theme_service.dart';
+import 'package:flamingo/feature/feature.dart';
 import 'package:flutter/material.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:provider/provider.dart';
 
 class TextFieldWidget extends StatelessWidget {
-  const TextFieldWidget(
-      {Key? key,
-      this.focusNode,
-      this.controller,
-      this.nextNode,
-      this.textInputType,
-      this.prefixIcon,
-      this.suffixIcon,
-      this.textInputAction,
-      this.hintText,
-      this.enabled = true,
-      this.onTap,
-      this.readOnly = false,
-      this.label,
-      this.onChanged,
-      this.validator,
-      this.autoFocus = false,
-      this.autovalidateMode = AutovalidateMode.disabled,
-      this.maxLines,
-      this.maxLength,
-      this.obscureText = false,
-      this.textCapitalization = TextCapitalization.none,
-      this.onFieldSubmitted,
-      this.onSaved,
-      this.onPrefixPressed,
-      this.onSuffixPressed,
-      this.textAlign = TextAlign.start})
-      : super(key: key);
+  const TextFieldWidget({
+    Key? key,
+    this.focusNode,
+    this.controller,
+    this.nextNode,
+    this.textInputType,
+    this.prefixIcon,
+    this.suffixIcon,
+    this.textInputAction = TextInputAction.next,
+    this.hintText,
+    this.enabled = true,
+    this.onTap,
+    this.readOnly = false,
+    this.label,
+    this.onChanged,
+    this.validator,
+    this.autoFocus = false,
+    this.autovalidateMode = AutovalidateMode.disabled,
+    this.maxLines,
+    this.maxLength,
+    this.obscureText = false,
+    this.textCapitalization = TextCapitalization.none,
+    this.onFieldSubmitted,
+    this.onSaved,
+    this.onPrefixPressed,
+    this.onSuffixPressed,
+    this.textAlign = TextAlign.start,
+  }) : super(key: key);
 
   final FocusNode? focusNode;
   final FocusNode? nextNode;
@@ -62,7 +62,6 @@ class TextFieldWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isLightMode = Provider.of<ThemeService>(context).isLightMode(context);
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -125,34 +124,26 @@ class TextFieldWidget extends StatelessWidget {
                 .bodyMedium!
                 .copyWith(color: AppColors.error),
             hintText: hintText,
-            border: _generateBorder(
+            border: generateBorder(
               isLightMode ? AppColors.grayLight : AppColors.grayLighter,
             ),
-            focusedBorder: _generateBorder(
+            focusedBorder: generateBorder(
               AppColors.primaryMain,
               isFocused: true,
             ),
-            enabledBorder: _generateBorder(
+            enabledBorder: generateBorder(
               isLightMode ? AppColors.grayLight : AppColors.grayLighter,
             ),
-            errorBorder: _generateBorder(
+            errorBorder: generateBorder(
               AppColors.error,
             ),
-            focusedErrorBorder: _generateBorder(
+            focusedErrorBorder: generateBorder(
               AppColors.error,
               isFocused: true,
             ),
           ),
         ),
       ],
-    );
-  }
-
-  OutlineInputBorder _generateBorder(Color borderColor,
-      {bool isFocused = false}) {
-    return OutlineInputBorder(
-      borderRadius: BorderRadius.circular(Dimens.radiusLarge),
-      borderSide: BorderSide(width: isFocused ? 1.3 : 1.2, color: borderColor),
     );
   }
 }

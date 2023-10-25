@@ -1,7 +1,9 @@
-String? validatePhoneNumber(String? text) {
-  if (text == null || text.isEmpty) {
+import 'package:flamingo/data/data.dart';
+
+String? validatePhoneNumber(PhoneNumber? phoneNumber) {
+  if (phoneNumber == null || phoneNumber.number.isEmpty) {
     return 'Phone number required.';
-  } else if (text.length != 10) {
+  } else if (phoneNumber.number.length != 10) {
     return 'Enter a valid phone number.';
   }
   return null;

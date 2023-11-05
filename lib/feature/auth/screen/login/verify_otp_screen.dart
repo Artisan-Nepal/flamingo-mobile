@@ -73,7 +73,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       TextWidget(
-                        text: "Didn't receive code? ",
+                        "Didn't receive code? ",
                         style: Theme.of(context).textTheme.bodyMedium!,
                       ),
                       GestureDetector(
@@ -83,7 +83,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                           }
                         },
                         child: TextWidget(
-                          text: 'Resend code ',
+                          'Resend code ',
                           style: Theme.of(context)
                               .textTheme
                               .titleSmall!

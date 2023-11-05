@@ -60,7 +60,7 @@ class OtpTextFieldWidget extends StatelessWidget {
       children: [
         const VerticalSpaceWidget(height: 20),
         TextWidget(
-          text: error!,
+          error!,
           style: Theme.of(context)
               .textTheme
               .bodyMedium!

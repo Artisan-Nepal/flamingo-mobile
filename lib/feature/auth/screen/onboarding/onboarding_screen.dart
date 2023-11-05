@@ -98,25 +98,21 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                               height: 100,
                               child: Column(children: [
                                 TextWidget(
-                                  text: data[_currentIndex].title,
+                                  data[_currentIndex].title,
                                   style: Theme.of(context)
                                       .textTheme
                                       .titleLarge!
                                       .copyWith(
                                         fontWeight: FontWeight.bold,
                                       ),
-                                  adaptive: true,
-                                  adaptiveValue: 1,
-                                  miniAdaptiveValue: Dimens.adaptExtraSmall,
+                                  scaleForSmallerDevice: 1,
                                 ),
                                 const SizedBox(height: 16.0),
                                 TextWidget(
-                                  text: data[_currentIndex].description,
+                                  data[_currentIndex].description,
                                   style:
                                       Theme.of(context).textTheme.titleSmall!,
-                                  adaptive: true,
-                                  adaptiveValue: 1,
-                                  miniAdaptiveValue: Dimens.adaptExtraSmall,
+                                  scaleForSmallerDevice: 1,
                                 ),
                               ]),
                             ),

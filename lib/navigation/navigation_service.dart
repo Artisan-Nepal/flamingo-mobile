@@ -18,7 +18,7 @@ class NavigationService {
     } else if (isLoggedIn) {
       initialRoute = NavigationRouteNames.home;
     } else {
-      initialRoute = NavigationRouteNames.login;
+      initialRoute = NavigationRouteNames.home; //test only
     }
   }
 

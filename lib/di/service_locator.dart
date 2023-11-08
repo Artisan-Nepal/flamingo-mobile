@@ -1,3 +1,10 @@
+import 'package:flamingo/di/registration/feature/category.dart';
+import 'package:flamingo/di/registration/feature/product.dart';
+import 'package:flamingo/feature/category/data/category_repository.dart';
+import 'package:flamingo/feature/category/data/model/product_category.dart';
+import 'package:flamingo/feature/dashboard/screen/home/home/home_screen_model.dart';
+import 'package:flamingo/feature/dashboard/screen/home/product/product_list_screenmodel.dart';
+
 import 'package:get_it/get_it.dart';
 import 'package:flamingo/data/data.dart';
 import 'package:flamingo/di/service_names.dart';
@@ -83,6 +90,17 @@ Future setUpServiceLocator() async {
       authRepository: locator<AuthRepository>(),
     ),
   );
+  locator
+      .registerLazySingleton<HomescreenviewModel>(() => HomescreenviewModel());
+  registerCategoryFeature(locator);
+  registerProductFeature(locator);
+
+  locator.registerFactory<ProductListScreenModel>(
+    () => ProductListScreenModel(
+      categoryRepository: locator<CategoryRepository>(),
+    ),
+  );
+
   locator.registerFactory<OnboardingViewModel>(
     () => OnboardingViewModel(
       authRepository: locator<AuthRepository>(),

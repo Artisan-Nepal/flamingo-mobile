@@ -1,7 +1,6 @@
 import 'package:flamingo/data/remote/rest/api_client.dart';
 import 'package:flamingo/feature/product/data/model/product_color.dart';
 import 'package:flamingo/feature/product/data/remote/product_remote.dart';
-import 'package:flutter/material.dart';
 
 class ProductRemoteImpl implements ProductRemote {
   // ignore: unused_field
@@ -10,37 +9,131 @@ class ProductRemoteImpl implements ProductRemote {
   ProductRemoteImpl({required ApiClient apiClient}) : _apiClient = apiClient;
 
   @override
-  Future<List<ProductColor>> getProductColors() async {
+  Future<List<Product>> getProductList() async {
     return [
-      ProductColor(
+      Product(
+          imageurl: [
+            'https://plus.unsplash.com/premium_photo-1692809752577-72da691a28ae?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+          ],
+          price: '12.99',
+          id: '1',
+          brand: 'Gucci',
+          name: 'Shirt',
+          size: ['XL', 'L'],
+          description: 'Product 1 description'),
+      Product(
+        imageurl: [
+          'https://plus.unsplash.com/premium_photo-1692809752577-72da691a28ae?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+          'https://plus.unsplash.com/premium_photo-1698846880893-fe6432d51597?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwyfHx8ZW58MHx8fHx8'
+        ],
         id: '1',
-        colorCode: '000000',
-        name: 'Black',
-        value: Colors.black,
+        price: '12.99',
+        brand: 'Gucci',
+        name: 'Shirt',
+        size: ['XL', 'L'],
+        description: 'Product 1 description',
       ),
-      ProductColor(
+      Product(
+        imageurl: [
+          'https://plus.unsplash.com/premium_photo-1692809752577-72da691a28ae?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+          'https://plus.unsplash.com/premium_photo-1698846877123-6677c975db78?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwzfHx8ZW58MHx8fHx8'
+        ],
+        price: '12.99',
         id: '2',
-        colorCode: 'FFFFFF',
-        name: 'White',
-        value: Colors.white,
+        brand: 'Nike',
+        name: 'Sneakers',
+        size: ['US 10', 'US 11'],
+        description: 'Product 2 description',
       ),
-      ProductColor(
+      Product(
+        imageurl: [
+          'https://plus.unsplash.com/premium_photo-1692809752577-72da691a28ae?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+          'https://images.unsplash.com/photo-1699355484587-b5018a07b73e?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw1fHx8ZW58MHx8fHx8',
+          'https://images.unsplash.com/photo-1699356426894-6cf94459b827?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw4fHx8ZW58MHx8fHx8'
+        ],
+        price: '12.99',
         id: '3',
-        colorCode: 'FF0000',
-        name: 'Red',
-        value: Colors.red,
+        brand: 'Adidas',
+        name: 'Shorts',
+        size: ['M', 'L'],
+        description: 'Product 3 description',
       ),
-      ProductColor(
+      Product(
+        price: '12.99',
+        imageurl: [
+          'https://plus.unsplash.com/premium_photo-1692809752577-72da691a28ae?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+        ],
         id: '4',
-        colorCode: '00FF00',
-        name: 'Green',
-        value: Colors.green,
+        brand: 'Puma',
+        name: 'Hat',
+        size: ['One Size'],
+        description: 'Product 4 description',
       ),
-      ProductColor(
+      Product(
+        price: '12.99',
+        imageurl: [
+          'https://plus.unsplash.com/premium_photo-1692809752577-72da691a28ae?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+        ],
         id: '5',
-        colorCode: '0000FF',
-        name: 'Blue',
-        value: Colors.blue,
+        brand: 'Levi\'s',
+        name: 'Jeans',
+        size: ['30x32', '32x32'],
+        description: 'Product 5 description',
+      ),
+      Product(
+        price: '12.99',
+        imageurl: [
+          'https://plus.unsplash.com/premium_photo-1692809752577-72da691a28ae?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+        ],
+        id: '6',
+        brand: 'Vans',
+        name: 'Socks',
+        size: ['M', 'L'],
+        description: 'Product 6 description',
+      ),
+      Product(
+        price: '12.99',
+        imageurl: [
+          'https://plus.unsplash.com/premium_photo-1692809752577-72da691a28ae?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+        ],
+        id: '7',
+        brand: 'Converse',
+        name: 'T-shirt',
+        size: ['S', 'M', 'L'],
+        description: 'Product 7 description',
+      ),
+      Product(
+        price: '12.99',
+        imageurl: [
+          'https://plus.unsplash.com/premium_photo-1692809752577-72da691a28ae?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+        ],
+        id: '8',
+        brand: 'Fila',
+        name: 'Hoodie',
+        size: ['S', 'M', 'L', 'XL'],
+        description: 'Product 8 description',
+      ),
+      Product(
+        price: '12.99',
+        imageurl: [
+          'https://plus.unsplash.com/premium_photo-1692809752577-72da691a28ae?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+        ],
+        id: '9',
+        brand: 'Tommy Hilfiger',
+        name: 'Belt',
+        size: ['M', 'L', 'XL'],
+        description: 'Product 9 description',
+      ),
+      Product(
+        price: '12.99',
+        imageurl: [
+          'https://plus.unsplash.com/premium_photo-1692809752577-72da691a28ae?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+        ],
+        id: '10',
+        brand: 'Calvin Klein',
+        name: 'Underwear',
+        size: ['S', 'M', 'L'],
+        description: 'Product 10 description',
       ),
     ];
   }

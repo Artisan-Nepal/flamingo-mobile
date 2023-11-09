@@ -5,10 +5,10 @@ import 'package:flamingo/shared/shared.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 
-class ProductListScreenModel extends ChangeNotifier {
+class CategoryListScreenModel extends ChangeNotifier {
   final CategoryRepository _categoryRepository;
 
-  ProductListScreenModel({
+  CategoryListScreenModel({
     required CategoryRepository categoryRepository,
   }) : _categoryRepository = categoryRepository;
 

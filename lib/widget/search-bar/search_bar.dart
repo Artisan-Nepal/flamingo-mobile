@@ -1,4 +1,5 @@
-import 'package:flamingo/feature/dashboard/screen/home/search/searchresult_screen.dart';
+import 'package:flamingo/feature/dashboard/dashboard.dart';
+
 import 'package:flamingo/shared/util/util.dart';
 import 'package:flutter/material.dart';
 
@@ -41,10 +42,9 @@ class _SearchBarState extends State<Search_Bar> {
 
       Navigator.push(
         context,
-        MaterialPageRoute(
-          builder: (context) => SearchResultScreen(
-              searchQuery: _searchController.text, category: widget.category),
-        ),
+        MaterialPageRoute(builder: (context) => HomeScreen()
+            //search result screen here,
+            ),
       );
     }
   }

@@ -1,6 +1,6 @@
 import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/category/data/model/model.dart';
-import 'package:flamingo/feature/dashboard/screen/home/product/product_list_screenmodel.dart';
+import 'package:flamingo/feature/dashboard/screen/home/product/category/category_list_screenmodel.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/test-data/product.dart';
 import 'package:flamingo/widget/screen/default_screen.dart';
@@ -9,23 +9,23 @@ import 'package:flamingo/widget/text/text.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class ProductListScreen extends StatefulWidget {
+class CategoryListScreen extends StatefulWidget {
   final String selectedItem;
   final String category;
   final ProductCategory? productCategory;
 
-  ProductListScreen({
+  CategoryListScreen({
     required this.selectedItem,
     required this.category,
     required this.productCategory,
   });
 
   @override
-  _ProductListScreenState createState() => _ProductListScreenState();
+  _CategoryListScreenState createState() => _CategoryListScreenState();
 }
 
-class _ProductListScreenState extends State<ProductListScreen> {
-  final _viewmodel = locator<ProductListScreenModel>();
+class _CategoryListScreenState extends State<CategoryListScreen> {
+  final _viewmodel = locator<CategoryListScreenModel>();
   List<Product> selectedProducts = [];
 
   @override
@@ -51,7 +51,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
         ),
         bottomNavigationBar: const VerticalSpaceWidget(height: 2),
         child: SafeArea(
-          child: Consumer<ProductListScreenModel>(
+          child: Consumer<CategoryListScreenModel>(
             builder: (context, viewModel, child) {
               if (viewModel.topLevelCategoriesUseCase.isLoading) {
                 return const CircularProgressIndicator.adaptive();
@@ -129,10 +129,15 @@ class _ProductListScreenState extends State<ProductListScreen> {
         ListTile(
           contentPadding: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
           onTap: () {
+            if (categories.children == null) {
+              print('null');
+            } else {
+              print(categories.children.toString());
+            }
             subcat(categories);
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => ProductListScreen(
+                builder: (context) => CategoryListScreen(
                   selectedItem: categories.name,
                   category: widget.category,
                   productCategory: _viewmodel.selectedTopLevelCategory,

@@ -1,26 +1,30 @@
-import 'package:flutter/material.dart';
-
-class ProductColor {
+class Product {
   final String id;
-  final String colorCode;
+  final String price;
+  final String brand;
+  final String description;
+  final List<String> size;
   final String name;
-  final Color value;
+  final List<String> imageurl;
 
-  ProductColor({
+  Product({
+    required this.price,
     required this.id,
-    required this.colorCode,
+    required this.brand,
+    required this.description,
+    required this.size,
     required this.name,
-    required this.value,
+    required this.imageurl,
   });
 
-  factory ProductColor.fromJson(Map<String, dynamic> json) {
-    return ProductColor(
-      id: json['id'],
-      colorCode: json['colorCode'],
-      name: json['name'],
-      value: Color(
-        int.parse('0xFF${json['colorCode']}'),
-      ),
-    );
+  factory Product.fromJson(Map<String, dynamic> json) {
+    return Product(
+        price: json['price'],
+        imageurl: json['imageurl'],
+        id: json['id'],
+        size: json['size'],
+        name: json['name'],
+        brand: json['brand'],
+        description: json['description']);
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/category/data/model/product_category.dart';
-import 'package:flamingo/feature/dashboard/screen/home/product/product_list_screen.dart';
+import 'package:flamingo/feature/dashboard/screen/home/product/category/category_list_screen.dart';
 import 'package:flamingo/feature/dashboard/screen/home/search/searchscreen_model.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/cards/snippetcard.dart';
@@ -176,7 +176,7 @@ class _SearchScreenState extends State<SearchScreen> {
             subcat(productCategory[index]);
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => ProductListScreen(
+                builder: (context) => CategoryListScreen(
                   selectedItem: itemName,
                   category: selected_value,
                   productCategory: _viewmodel.selectedCategory,

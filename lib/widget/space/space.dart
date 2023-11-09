@@ -22,6 +22,48 @@ class VerticalSpaceWidget extends StatelessWidget {
   }
 }
 
+class VerticalSpaceColoredWidget extends StatelessWidget {
+  final double height;
+  final double thickness;
+  final double? scaleForSmallDevice;
+  final Color? color;
+
+  const VerticalSpaceColoredWidget({
+    Key? key,
+    this.color,
+    required this.height,
+    required this.thickness,
+    this.scaleForSmallDevice,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          height: getScaledValueForSmallerDevice(
+            value: height / 2,
+            scale: scaleForSmallDevice,
+          ),
+        ),
+        Container(
+          color: color,
+          height: getScaledValueForSmallerDevice(
+            value: thickness,
+            scale: scaleForSmallDevice,
+          ),
+        ),
+        Container(
+          height: getScaledValueForSmallerDevice(
+            value: height / 2,
+            scale: scaleForSmallDevice,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 class BottomSpaceWidget extends StatelessWidget {
   final double height;
   final double? scaleForSmallDevice;

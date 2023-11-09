@@ -16,7 +16,7 @@ class ProductRepositoryImpl implements ProductRepository {
         _productRemote = productRemote;
 
   @override
-  Future<List<ProductColor>> getProductColors() async {
-    return _productRemote.getProductColors();
+  Future<List<Product>> getProductList() async {
+    return _productRemote.getProductList();
   }
 }

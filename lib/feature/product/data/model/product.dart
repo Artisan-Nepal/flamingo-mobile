@@ -6,8 +6,10 @@ class Product {
   final List<String> size;
   final String name;
   final List<String> imageurl;
+  String? discount;
 
   Product({
+    this.discount,
     required this.price,
     required this.id,
     required this.brand,
@@ -25,6 +27,7 @@ class Product {
         size: json['size'],
         name: json['name'],
         brand: json['brand'],
-        description: json['description']);
+        description: json['description'],
+        discount: json['discount']);
   }
 }

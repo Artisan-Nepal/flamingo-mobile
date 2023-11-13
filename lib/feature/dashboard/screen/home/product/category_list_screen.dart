@@ -1,8 +1,9 @@
 import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/category/data/model/model.dart';
 import 'package:flamingo/feature/dashboard/screen/home/product/category/category_list_screenmodel.dart';
+import 'package:flamingo/feature/product/data/model/product.dart';
 import 'package:flamingo/shared/shared.dart';
-import 'package:flamingo/test-data/product.dart';
+
 import 'package:flamingo/widget/screen/default_screen.dart';
 import 'package:flamingo/widget/space/space.dart';
 import 'package:flamingo/widget/text/text.dart';

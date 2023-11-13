@@ -20,6 +20,7 @@ class _SearchBarState extends State<Search_Bar> {
 
   @override
   void initState() {
+    print(widget.category);
     _searchController.addListener(() {
       setState(() {
         showSearchButton = _searchController.text.isNotEmpty;
@@ -39,13 +40,6 @@ class _SearchBarState extends State<Search_Bar> {
     if (widget.onSearchPressed != null) {
       // Call the onSearchPressed function with the current search query
       widget.onSearchPressed!(_searchController.text);
-
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => HomeScreen()
-            //search result screen here,
-            ),
-      );
     }
   }
 
@@ -64,7 +58,7 @@ class _SearchBarState extends State<Search_Bar> {
           border: InputBorder
               .none, // Remove protruding lines out of the circular border
           prefixIcon: Icon(Icons.search),
-          hintText: showSearchButton ? "" : "Search for ${widget.category}",
+          hintText: showSearchButton ? "" : "Search",
           suffixIcon: showSearchButton
               ? IconButton(
                   icon: Icon(Icons.search),

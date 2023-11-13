@@ -1,5 +1,5 @@
 import 'package:flamingo/data/remote/rest/api_client.dart';
-import 'package:flamingo/feature/product/data/model/product_color.dart';
+import 'package:flamingo/feature/product/data/model/product.dart';
 import 'package:flamingo/feature/product/data/remote/product_remote.dart';
 
 class ProductRemoteImpl implements ProductRemote {
@@ -20,16 +20,17 @@ class ProductRemoteImpl implements ProductRemote {
           brand: 'Gucci',
           name: 'Shirt',
           size: ['XL', 'L'],
+          discount: '30% off',
           description: 'Product 1 description'),
       Product(
         imageurl: [
           'https://plus.unsplash.com/premium_photo-1692809752577-72da691a28ae?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
           'https://plus.unsplash.com/premium_photo-1698846880893-fe6432d51597?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwyfHx8ZW58MHx8fHx8'
         ],
-        id: '1',
+        id: '11',
         price: '12.99',
         brand: 'Gucci',
-        name: 'Shirt',
+        name: 'Shirt22',
         size: ['XL', 'L'],
         description: 'Product 1 description',
       ),
@@ -114,16 +115,16 @@ class ProductRemoteImpl implements ProductRemote {
         description: 'Product 8 description',
       ),
       Product(
-        price: '12.99',
-        imageurl: [
-          'https://plus.unsplash.com/premium_photo-1692809752577-72da691a28ae?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
-        ],
-        id: '9',
-        brand: 'Tommy Hilfiger',
-        name: 'Belt',
-        size: ['M', 'L', 'XL'],
-        description: 'Product 9 description',
-      ),
+          price: '12.99',
+          imageurl: [
+            'https://plus.unsplash.com/premium_photo-1692809752577-72da691a28ae?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+          ],
+          id: '9',
+          brand: 'Gucci',
+          name: 'Belt',
+          size: ['M', 'L', 'XL'],
+          description: 'Product 9 description',
+          discount: '25% off'),
       Product(
         price: '12.99',
         imageurl: [

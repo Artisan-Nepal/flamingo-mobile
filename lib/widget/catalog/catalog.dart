@@ -1,15 +1,18 @@
 import 'package:flamingo/feature/dashboard/screen/home/product/product/productscreen.dart';
-import 'package:flamingo/feature/product/data/model/product_color.dart';
+import 'package:flamingo/feature/product/data/model/product.dart';
+import 'package:flamingo/widget/text/text.dart';
 import 'package:flutter/material.dart';
 
 class ProductCatalog extends StatefulWidget {
   final List<Product>? products;
   final String title;
   final double height;
+  final double width;
 
   ProductCatalog({
     required this.products,
     required this.title,
+    required this.width,
     required this.height,
   });
 
@@ -31,7 +34,6 @@ class _ProductCatalogState extends State<ProductCatalog>
 
   @override
   Widget build(BuildContext context) {
-    // Widget contents remain the same as before
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -45,72 +47,82 @@ class _ProductCatalogState extends State<ProductCatalog>
             ),
           ),
         ),
-        SizedBox(
-          height: widget.height,
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: widget.products?.map((product) {
-                    return Padding(
-                        padding: const EdgeInsets.all(1.0),
-                        child: Card(
-                          child: InkWell(
-                            onTap: () {
-                              // Navigate to ProductsScreen and pass the tapped product
-                              Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) =>
-                                    ProductScreen(product: product),
-                              ));
-                            },
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Image.network(
-                                  product.imageurl[0],
-                                  width: 150,
-                                  height: 150,
-                                  fit: BoxFit.fill,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(0.0),
-                                  child: Text(
-                                    product.name,
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
+        widget.products!.isNotEmpty
+            ? SizedBox(
+                height: widget.height,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: widget.products?.map((product) {
+                          return Padding(
+                            padding: const EdgeInsets.all(1.0),
+                            child: Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: InkWell(
+                                onTap: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) =>
+                                        ProductScreen(product: product),
+                                  ));
+                                },
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(12),
+                                        topRight: Radius.circular(12),
+                                      ),
+                                      child: Image.network(
+                                        product.imageurl[0],
+                                        width: widget.width,
+                                        height: widget.height - 100,
+                                        fit: BoxFit.fill,
+                                      ),
                                     ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(0.0),
-                                  child: Text(
-                                    product.brand,
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.grey,
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            product.name,
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          Text(
+                                            product.brand,
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.grey,
+                                            ),
+                                          ),
+                                          Text(
+                                            product.price,
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
+                                  ],
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.all(0.0),
-                                  child: Text(
-                                    product
-                                        .price, // Replace with the actual price
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ],
+                              ),
                             ),
-                          ),
-                        ));
-                  }).toList() ??
-                  [],
-            ),
-          ),
-        ),
+                          );
+                        }).toList() ??
+                        [],
+                  ),
+                ),
+              )
+            : const Center(child: TextWidget('No products to display.'))
       ],
     );
   }

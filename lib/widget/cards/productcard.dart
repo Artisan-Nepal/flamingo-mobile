@@ -1,4 +1,6 @@
-import 'package:flamingo/feature/product/data/model/product_color.dart';
+import 'package:flamingo/feature/dashboard/screen/cart/cartscreen.dart';
+import 'package:flamingo/feature/dashboard/screen/home/wishlist/wishlist_screen.dart';
+import 'package:flamingo/feature/product/data/model/product.dart';
 import 'package:flamingo/shared/util/colors.dart';
 import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/material.dart';
@@ -8,12 +10,14 @@ class ProductCard extends StatelessWidget {
   final String chosenSize;
   final String title;
   final double height;
+  final bool cartorwishlist;
 
   ProductCard({
     required this.product,
     required this.chosenSize,
     required this.title,
     required this.height,
+    required this.cartorwishlist,
   });
 
   @override
@@ -64,7 +68,7 @@ class ProductCard extends StatelessWidget {
                       style: TextStyle(fontSize: 16, color: AppColors.grayDark),
                     ),
                     TextWidget(
-                      "Size: ${chosenSize}",
+                      chosenSize != '' ? "Size: ${chosenSize}" : '',
                       style: TextStyle(fontSize: 16, color: AppColors.grayDark),
                     ),
                     TextWidget(
@@ -80,7 +84,25 @@ class ProductCard extends StatelessWidget {
             ],
           ),
           VerticalSpaceWidget(height: 2),
-          ButtonWidget(label: 'View Cart', onPressed: () {})
+          cartorwishlist == true
+              ? ButtonWidget(
+                  label: 'View Cart',
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => Cartscreen(),
+                      ),
+                    );
+                  })
+              : ButtonWidget(
+                  label: 'View WishList',
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => WishlistScreen(),
+                      ),
+                    );
+                  })
         ],
       ),
     );

@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flamingo/feature/dashboard/screen/home/product/product/productscreen.dart';
-import 'package:flamingo/feature/product/data/model/product_color.dart';
+import 'package:flamingo/feature/product/data/model/product.dart';
 import 'package:flutter/material.dart';
 
 class ProductCatalog extends StatefulWidget {

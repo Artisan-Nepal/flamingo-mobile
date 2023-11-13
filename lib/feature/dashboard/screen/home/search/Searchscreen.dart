@@ -1,7 +1,9 @@
 import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/category/data/model/product_category.dart';
+import 'package:flamingo/feature/dashboard/screen/cart/cartscreen.dart';
 import 'package:flamingo/feature/dashboard/screen/home/product/category/category_list_screen.dart';
 import 'package:flamingo/feature/dashboard/screen/home/search/searchscreen_model.dart';
+import 'package:flamingo/feature/dashboard/screen/home/wishlist/wishlist_screen.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/cards/snippetcard.dart';
 import 'package:flamingo/widget/search-bar/search_bar.dart';
@@ -33,11 +35,32 @@ class _SearchScreenState extends State<SearchScreen> {
     _viewmodel.initProductAddition();
   }
 
+  void searchPressed(String text) {
+    print(text + 'sadda');
+  }
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => _viewmodel,
       builder: (context, child) => DefaultScreen(
+          appBarActions: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: IconButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => Cartscreen(),
+                    ),
+                  );
+                },
+                icon: Icon(
+                  Icons.shopping_cart_outlined,
+                ),
+              ),
+            ),
+          ],
           appBarTitle: const TextWidget(
             'Search',
             style: TextStyle(fontSize: 20),
@@ -53,6 +76,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 children: [
                   Search_Bar(
                     category: selected_value,
+                    onSearchPressed: searchPressed,
                   ),
                   _buildSelection(
                     flag: true,

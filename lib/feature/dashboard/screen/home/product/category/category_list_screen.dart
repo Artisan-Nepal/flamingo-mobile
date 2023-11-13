@@ -1,6 +1,8 @@
 import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/category/data/model/model.dart';
+import 'package:flamingo/feature/dashboard/screen/cart/cartscreen.dart';
 import 'package:flamingo/feature/dashboard/screen/home/product/category/category_list_screenmodel.dart';
+import 'package:flamingo/feature/product/data/model/product.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/test-data/product.dart';
 import 'package:flamingo/widget/screen/default_screen.dart';
@@ -45,6 +47,23 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
     return ChangeNotifierProvider(
       create: (context) => _viewmodel,
       builder: (context, child) => DefaultScreen(
+        appBarActions: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: IconButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => Cartscreen(),
+                  ),
+                );
+              },
+              icon: Icon(
+                Icons.shopping_cart_outlined,
+              ),
+            ),
+          ),
+        ],
         appBarTitle: TextWidget(
           widget.selectedItem,
           style: TextStyle(fontSize: 20),

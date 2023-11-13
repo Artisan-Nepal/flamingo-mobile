@@ -1,7 +1,9 @@
 import 'package:flamingo/di/di.dart';
+import 'package:flamingo/feature/dashboard/screen/cart/cartscreen.dart';
 
 import 'package:flamingo/feature/dashboard/screen/home/product/product/productscreen_model.dart';
-import 'package:flamingo/feature/product/data/model/product_color.dart';
+import 'package:flamingo/feature/dashboard/screen/home/wishlist/wishlist_screen.dart';
+import 'package:flamingo/feature/product/data/model/product.dart';
 import 'package:flamingo/shared/shared.dart';
 
 import 'package:flamingo/widget/arrowdown/arrowdown.dart';
@@ -27,6 +29,8 @@ class ProductScreen extends StatefulWidget {
 }
 
 class _ProductScreenState extends State<ProductScreen> {
+  bool isWishlist = false;
+
   int selectedImageIndex = 0;
   String? chosenSize; // Initialize as null
 
@@ -47,8 +51,10 @@ class _ProductScreenState extends State<ProductScreen> {
     if (product.size.length == 1) {
       // If there is only one size, display "One Size"
       return FieldBar(
-        labelText: 'Size',
-        selected: 'One Size',
+        width: 80,
+        height: 36,
+        labelText: '1 Size',
+        selected: '1 Size',
         onchange: (size) {
           // Do nothing when the size changes (since it's fixed)
         },
@@ -56,6 +62,9 @@ class _ProductScreenState extends State<ProductScreen> {
     } else {
       // If there are multiple sizes, allow the user to choose a size
       return DropSelector(
+        height: 36,
+        width: 72,
+        hinttext: 'Size',
         selections: product.size,
         chosenselection: chosenSize,
         onSelectionchange: (size) {
@@ -68,36 +77,37 @@ class _ProductScreenState extends State<ProductScreen> {
     }
   }
 
-  displayPopup(context, Product product, String? _chosensize) {
+  displayPopup(context, Product product, String? _chosensize, String title,
+      bool cartorwishlist) {
     final double screenHeight = MediaQuery.of(context).size.height;
-    if (_chosensize != null) {
-      bottomSlider(
-          context,
-          Container(
-            height: screenHeight * 0.4,
-            padding: EdgeInsets.all(16),
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              // Close button
-              Align(
-                alignment: Alignment.topRight,
-                child: IconButton(
-                  icon: Icon(Icons.close),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                ),
+
+    bottomSlider(
+        context,
+        Container(
+          height: screenHeight * 0.4,
+          padding: EdgeInsets.all(16),
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            // Close button
+            Align(
+              alignment: Alignment.topRight,
+              child: IconButton(
+                icon: Icon(Icons.close),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
               ),
-              // Product
-              ProductCard(
-                product: widget.product,
-                chosenSize: _chosensize,
-                title: "You have added this item to the cart.",
-                height: 150,
-              )
-            ]),
-          ));
-    }
+            ),
+            // Product
+            ProductCard(
+              cartorwishlist: cartorwishlist,
+              product: widget.product,
+              chosenSize: _chosensize ?? '',
+              title: title,
+              height: 150,
+            )
+          ]),
+        ));
   }
 
   @override
@@ -105,11 +115,30 @@ class _ProductScreenState extends State<ProductScreen> {
     return ChangeNotifierProvider(
       create: (context) => _viewmodel,
       builder: (context, child) => DefaultScreen(
-          bottomNavigationBar: ButtonWidget(
-              label: 'Add to Cart',
-              onPressed: () => chosenSize != null
-                  ? displayPopup(context, widget.product, chosenSize)
-                  : print('error')),
+          appBarActions: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: IconButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => Cartscreen(),
+                    ),
+                  );
+                },
+                icon: Icon(
+                  Icons.shopping_cart_outlined,
+                ),
+              ),
+            ),
+          ],
+          bottomNavigationBar: RoundedFilledButtonWidget(
+            label: 'Add to Cart',
+            onPressed: () => chosenSize != null
+                ? displayPopup(context, widget.product, chosenSize,
+                    'Following item has been added to cart.', true)
+                : print('error'),
+          ),
           appBarTitle: TextWidget(
             widget.product.name,
             style: const TextStyle(fontSize: 24, color: AppColors.black),
@@ -122,29 +151,34 @@ class _ProductScreenState extends State<ProductScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Image Swiper
-                    Container(
-                      height: 500, // Adjust the height as needed
-                      child: Stack(children: [
-                        PageView.builder(
-                          itemCount: widget.product.imageurl.length,
-                          controller: PageController(
-                            viewportFraction:
-                                1.0, // Ensure one image is visible at a time
-                            initialPage: selectedImageIndex,
-                          ),
-                          onPageChanged: (index) {
-                            setState(() {
-                              selectedImageIndex = index;
-                            });
-                          },
-                          itemBuilder: (context, index) {
-                            return Image.network(
-                              widget.product.imageurl[index],
-                              fit: BoxFit.cover,
-                            );
-                          },
+                    Stack(
+                      children: [
+                        Container(
+                          height: 500, // Adjust the height as needed
+                          child: Stack(children: [
+                            PageView.builder(
+                              itemCount: widget.product.imageurl.length,
+                              controller: PageController(
+                                viewportFraction:
+                                    1.0, // Ensure one image is visible at a time
+                                initialPage: selectedImageIndex,
+                              ),
+                              onPageChanged: (index) {
+                                setState(() {
+                                  selectedImageIndex = index;
+                                });
+                              },
+                              itemBuilder: (context, index) {
+                                return Image.network(
+                                  widget.product.imageurl[index],
+                                  fit: BoxFit.cover,
+                                );
+                              },
+                            ),
+                          ]),
                         ),
-                      ]),
+                        CreateWishlistIcon(context),
+                      ],
                     ),
                     VerticalSpaceWidget(height: 3),
                     // Product Lines
@@ -166,6 +200,8 @@ class _ProductScreenState extends State<ProductScreen> {
                         );
                       }),
                     ),
+                    //wishlist button
+
                     VerticalSpaceWidget(height: 5),
                     // Product Name
                     TextWidget(
@@ -328,5 +364,35 @@ class _ProductScreenState extends State<ProductScreen> {
     );
 
     //
+  }
+
+  Widget CreateWishlistIcon(BuildContext context) {
+    return Positioned(
+      top: 0,
+      right: 0,
+      child: IconButton(
+        icon: Icon(
+          Icons.favorite,
+          color: isWishlist ? AppColors.pink : AppColors.grayLighter,
+        ),
+        onPressed: () {
+          // Toggle the wishlist status
+          setState(() {
+            isWishlist = !isWishlist;
+          });
+
+          // Handle your wishlist logic here
+          if (isWishlist) {
+            displayPopup(context, widget.product, chosenSize,
+                'Following Product Added to Wishlist.', false);
+            print('Added to wishlist');
+          } else {
+            displayPopup(context, widget.product, chosenSize,
+                'Following Product Removed from Wishlist.', false);
+            print('Removed from wishlist');
+          }
+        },
+      ),
+    );
   }
 }

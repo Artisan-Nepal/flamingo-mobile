@@ -13,6 +13,7 @@ class DefaultScreen extends StatelessWidget {
         const EdgeInsets.symmetric(horizontal: Dimens.spacingSizeDefault),
     this.appBarLeading,
     this.automaticallyImplyAppBarLeading = true,
+    this.scrollable = true,
   });
 
   final Widget child;
@@ -23,6 +24,7 @@ class DefaultScreen extends StatelessWidget {
   final Widget? bottomNavigationBar;
   final EdgeInsets padding;
   final bool automaticallyImplyAppBarLeading;
+  final bool scrollable;
 
   @override
   Widget build(BuildContext context) {
@@ -40,11 +42,18 @@ class DefaultScreen extends StatelessWidget {
           notification.disallowIndicator();
           return false;
         },
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: padding,
-            child: child,
-          ),
+        child: GestureDetector(
+          child: scrollable
+              ? SingleChildScrollView(
+                  child: Padding(
+                    padding: padding,
+                    child: child,
+                  ),
+                )
+              : Padding(
+                  padding: padding,
+                  child: child,
+                ),
         ),
       ),
       bottomNavigationBar: bottomNavigationBar,

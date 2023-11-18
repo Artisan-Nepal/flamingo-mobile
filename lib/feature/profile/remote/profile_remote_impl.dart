@@ -96,4 +96,10 @@ class ProfileRemoteImpl implements ProfileRemote {
     String profileid = 'Testid1';
     return profileid;
   }
+
+  @override
+  List<String> getaddress() {
+    List<String> address = ['Sukedhara', 'Ktm, 46500', 'Nepal'];
+    return address;
+  }
 }

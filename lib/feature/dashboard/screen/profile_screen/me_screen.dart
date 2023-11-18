@@ -4,7 +4,7 @@ import 'package:flamingo/feature/profile/model/profile.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/arrowdown/arrowdown.dart';
 import 'package:flamingo/widget/profile/profile.dart';
-import 'package:flamingo/widget/text/text.dart';
+
 import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -85,16 +85,14 @@ class _MeScreenState extends State<MeScreen> {
       child: Column(
         children: [
           ArrowDown(title: 'Reviews', body: Container()),
-          VerticalSpaceColoredWidget(
+          const VerticalSpaceColoredWidget(
               height: 19, thickness: 2, color: Colors.grey),
           TextFieldWidget(
             controller: _textEditingController,
             label: 'Write a review',
-            onFieldSubmitted: (value) {
-              print('Done');
-            },
+            onFieldSubmitted: (value) {},
           ),
-          VerticalSpaceWidget(height: 10),
+          const VerticalSpaceWidget(height: 10),
           ButtonWidget(
             label: 'Submit',
             onPressed: () {

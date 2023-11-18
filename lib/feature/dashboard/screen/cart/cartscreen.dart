@@ -1,5 +1,6 @@
 import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/dashboard/screen/cart/cartscreenmodel.dart';
+import 'package:flamingo/feature/dashboard/screen/cashout_screen/cashoutscreen.dart';
 import 'package:flamingo/feature/dashboard/screen/home/product/product/productscreen.dart';
 
 import 'package:flamingo/feature/product/data/model/product.dart';
@@ -49,6 +50,7 @@ class ProfileEditScreenState extends State<Cartscreen> {
     return ChangeNotifierProvider(
       create: (context) => _viewmodel,
       builder: (context, child) => DefaultScreen(
+        scrollable: false,
         appBarTitle: TextWidget(
           'Cart',
           textAlign: TextAlign.center,
@@ -57,19 +59,49 @@ class ProfileEditScreenState extends State<Cartscreen> {
           ),
         ),
         bottomNavigationBar: ButtonWidget(
+            fontSize: 20,
             label: 'Cash Out',
             onPressed: () {
               //cashout logic
-
-              if (quantity.contains(null) || chosenSize.contains(null)) {
+              if (_viewmodel.empty_selection.isEmpty) {
                 displayPopup(
-                    context,
-                    true,
-                    'Please choose the sizes and quantities of items before checking out.',
-                    'Pick all quantities and sizes');
+                  context,
+                  true,
+                  'Please select items before checking out.',
+                  'Select Items',
+                );
               } else {
-                displayPopup(context, false, 'Total: ${_total}',
-                    'Cashing out. Yout items are:');
+                bool _null = true;
+                for (int i = 0;
+                    i < _viewmodel.listofproducts.data!.length;
+                    i++) {
+                  if (_viewmodel.empty_selection
+                          .contains(_viewmodel.listofproducts.data![i]) &&
+                      (chosenSize[i] == null || quantity[i] == null)) {
+                    _null = false;
+                    displayPopup(
+                      context,
+                      true,
+                      'Please select sizes and quantities for selected items.',
+                      'Select Sizes and Quantities',
+                    );
+                    break;
+                  }
+                }
+                if (_null == true) {
+                  displayPopup(context, false, 'Total: $_total',
+                      'Cashing out. Yout items are:');
+                }
+                // if (quantity.contains(null) || chosenSize.contains(null)) {
+                //   displayPopup(
+                //       context,
+                //       true,
+                //       'Please choose the sizes and quantities of items before checking out.',
+                //       'Pick all quantities and sizes');
+                // } else {
+                //   displayPopup(context, false, 'Total: ${_total}',
+                //       'Cashing out. Yout items are:');
+                // }
               }
             }),
         child: Consumer<CartScreenmodel>(
@@ -85,103 +117,143 @@ class ProfileEditScreenState extends State<Cartscreen> {
             for (int i = 0; i < viewModel.listofproducts.data!.length; i++) {
               subtotal = subtotal +
                   double.parse(viewModel.listofproducts.data![i].price) *
-                      (quantity.length > i && quantity[i] != null
+                      (quantity.length > i &&
+                              quantity[i] != null &&
+                              viewModel.empty_selection.contains(
+                                  viewModel.listofproducts.data![i]) &&
+                              chosenSize[i] != null
                           ? double.parse(quantity[i]!)
                           : 0);
             }
             double total = subtotal + 50;
-            _total = total.toString();
+            _total = total.toStringAsFixed(3);
 
             return Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Column(
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     TextWidget(
-                      'Subtotal: ${subtotal.toStringAsFixed(3)}',
+                      'Subtotal:',
                       style: TextStyle(
                           fontWeight: FontWeight.bold, color: AppColors.black),
                     ),
-                    TextWidget('Shipping: \$50'),
-                    TextWidget('Total: ${total.toStringAsFixed(3)}',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.black)),
-                    VerticalSpaceColoredWidget(
-                      height: 5,
-                      thickness: 1,
-                      color: AppColors.grayDarker,
-                    )
+                    TextWidget(
+                      '${subtotal.toStringAsFixed(3)}',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, color: AppColors.black),
+                    ),
                   ],
                 ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextWidget(
+                      'Shipping:',
+                      style: TextStyle(color: AppColors.black),
+                    ),
+                    TextWidget('\$50',
+                        style: TextStyle(color: AppColors.black)),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextWidget(
+                      'Total:',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, color: AppColors.black),
+                    ),
+                    TextWidget(
+                      '${total.toStringAsFixed(3)}',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, color: AppColors.black),
+                    ),
+                  ],
+                ),
+                VerticalSpaceColoredWidget(
+                  height: 5,
+                  thickness: 1,
+                  color: AppColors.grayDarker,
+                ),
                 viewModel.listofproducts.data!.isNotEmpty
-                    ? ListView.builder(
-                        physics: ScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: viewModel.listofproducts.data!.length,
-                        itemBuilder: (context, index) {
-                          return GestureDetector(
-                              onLongPress: () {
-                                if (viewModel
-                                    .selectedorunselected.data![index]) {
-                                  viewModel.itemremoval(index);
-                                } else {
-                                  viewModel.itemselection(index);
-                                }
-                              },
-                              child: Stack(children: [
-                                createProductCard(
-                                    vertical: false,
-                                    border: viewModel
-                                        .selectedorunselected.data![index],
-                                    crossbutton: true,
-                                    onimgtap: () {
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (context) => ProductScreen(
-                                              product: viewModel
-                                                  .listofproducts.data![index]),
-                                        ),
-                                      );
-                                    },
-                                    close: () {
-                                      setState(() {
-                                        viewModel.removefromlist(index);
-                                        chosenSize.removeAt(index);
-                                        quantity.removeAt(index);
-                                        //aile chaldaina
-                                      });
-                                    },
-                                    height: 200,
-                                    width: MediaQuery.of(context).size.width /
-                                        2.95,
-                                    topText: viewModel
-                                        .listofproducts.data![index].name,
-                                    bottomText: viewModel
-                                        .listofproducts.data![index].price,
-                                    imageUrl: viewModel.listofproducts
-                                        .data![index].imageurl[0],
-                                    specialText: viewModel
-                                        .listofproducts.data![index].discount,
-                                    specialColor: AppColors.orange,
-                                    widget: createbutton(
-                                        context,
-                                        viewModel.listofproducts.data![index],
-                                        index)),
-                                chosenSize[index] != null &&
-                                        quantity[index] != null
-                                    ? Positioned(
-                                        bottom: 4,
-                                        right: 10,
-                                        child: TextWidget(
-                                            (double.parse(quantity[index]!) *
-                                                    double.parse(viewModel
-                                                        .listofproducts
-                                                        .data![index]
-                                                        .price))
-                                                .toStringAsFixed(3)))
-                                    : VerticalSpaceWidget(height: 0)
-                              ]));
-                        },
+                    ? Expanded(
+                        child: ListView.builder(
+                          physics: ScrollPhysics(),
+                          shrinkWrap: false, //size error
+                          itemCount: viewModel.listofproducts.data!.length,
+                          itemBuilder: (context, index) {
+                            return GestureDetector(
+                                onLongPress: () {
+                                  if (viewModel.empty_selection.contains(
+                                      viewModel.listofproducts.data![index])) {
+                                    viewModel.itemremoval(index);
+                                  } else {
+                                    viewModel.itemselection(index);
+                                  }
+                                },
+                                child: Stack(children: [
+                                  createProductCard(
+                                      // selectedcolor: viewModel.empty_selection
+                                      //     .contains(viewModel
+                                      //         .listofproducts.data![index]),
+                                      vertical: false,
+                                      border: viewModel.empty_selection
+                                          .contains(viewModel
+                                              .listofproducts.data![index]),
+                                      crossbutton: true,
+                                      onimgtap: () {
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (context) => ProductScreen(
+                                                product: viewModel
+                                                    .listofproducts
+                                                    .data![index]),
+                                          ),
+                                        );
+                                      },
+                                      close: () {
+                                        setState(() {
+                                          viewModel.removefromlist(index);
+                                          chosenSize.removeAt(index);
+                                          quantity.removeAt(index);
+                                          //aile chaldaina
+                                        });
+                                      },
+                                      height: 200,
+                                      width: MediaQuery.of(context).size.width /
+                                          2.95,
+                                      topText: viewModel
+                                          .listofproducts.data![index].name,
+                                      bottomText: viewModel
+                                          .listofproducts.data![index].price,
+                                      imageUrl: viewModel.listofproducts
+                                          .data![index].imageurl[0],
+                                      specialText: viewModel
+                                          .listofproducts.data![index].discount,
+                                      specialColor: AppColors.orange,
+                                      widget: createbutton(
+                                          context,
+                                          viewModel.listofproducts.data![index],
+                                          index)),
+                                  chosenSize[index] != null &&
+                                          quantity[index] != null
+                                      ? Positioned(
+                                          bottom: 4,
+                                          right: 10,
+                                          child: TextWidget(
+                                              (double.parse(quantity[index]!) *
+                                                      double.parse(viewModel
+                                                          .listofproducts
+                                                          .data![index]
+                                                          .price))
+                                                  .toStringAsFixed(3)))
+                                      : VerticalSpaceWidget(height: 0)
+                                ]));
+                          },
+                        ),
                       )
                     : Center(child: const TextWidget('No item in your cart.')),
               ],
@@ -213,6 +285,7 @@ class ProfileEditScreenState extends State<Cartscreen> {
             buildQuantitySelector(context, product, index),
           ],
         ),
+        //selection button can be placed here
       ],
     );
   }
@@ -221,7 +294,8 @@ class ProfileEditScreenState extends State<Cartscreen> {
     if (product.size.length == 1) {
       // If there is only one size, display "One Size"
       return FieldBar(
-        width: 80,
+        forcart: true,
+        width: 70,
         height: 36,
         labelText: '1 Size',
         selected: '1 Size',
@@ -232,9 +306,10 @@ class ProfileEditScreenState extends State<Cartscreen> {
     } else {
       // If there are multiple sizes, allow the user to choose a size
       return DropSelector(
+        forcart: true,
+        width: 70,
         hinttext: 'Size',
         height: 36,
-        width: 80,
         selections: product.size,
         chosenselection: chosenSize[index],
         onSelectionchange: (size) {
@@ -252,9 +327,10 @@ class ProfileEditScreenState extends State<Cartscreen> {
       BuildContext context, Product product, int index) {
     // If there are multiple sizes, allow the user to choose a size
     return DropSelector(
+      forcart: true,
       hinttext: 'Qty',
       height: 36,
-      width: 80,
+      width: 70,
       selections: ['none', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
       chosenselection: quantity[index],
       onSelectionchange: (_quantity) {
@@ -277,7 +353,6 @@ class ProfileEditScreenState extends State<Cartscreen> {
     String total,
     String title,
   ) {
-    final double screenHeight = MediaQuery.of(context).size.height;
     Widget val = SingleChildScrollView(
       padding: EdgeInsets.all(16),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -314,7 +389,7 @@ class ProfileEditScreenState extends State<Cartscreen> {
                           ListView.builder(
                             physics: NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
-                            itemCount: _viewmodel.products.length,
+                            itemCount: _viewmodel.selecteditems.data!.length,
                             itemBuilder: (BuildContext context, int index) {
                               return Center(
                                 child: createProductCard(
@@ -325,8 +400,8 @@ class ProfileEditScreenState extends State<Cartscreen> {
                                     padding: EdgeInsets.all(8),
                                     child: Column(children: [
                                       TextWidget('Price: ' +
-                                          (double.parse(_viewmodel
-                                                      .products[index].price) *
+                                          (double.parse(_viewmodel.selecteditems
+                                                      .data![index].price) *
                                                   double.parse(
                                                       quantity[index]!))
                                               .toStringAsFixed(3)),
@@ -335,10 +410,11 @@ class ProfileEditScreenState extends State<Cartscreen> {
                                           ' Quantity: ${quantity[index]}')
                                     ]),
                                   ),
-                                  topText: _viewmodel.products[index].name,
+                                  topText: _viewmodel
+                                      .selecteditems.data![index].name,
                                   bottomText: '',
-                                  imageUrl:
-                                      _viewmodel.products[index].imageurl[0],
+                                  imageUrl: _viewmodel
+                                      .selecteditems.data![index].imageurl[0],
                                 ),
                               );
                             },
@@ -354,9 +430,18 @@ class ProfileEditScreenState extends State<Cartscreen> {
                                 fontSize: 24, fontWeight: FontWeight.bold),
                           ),
                           ButtonWidget(
+                            fontSize: 20,
                             label: 'Check Out',
                             onPressed: () {
-                              print('checked out');
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => CashoutScreen(
+                                    product_count:
+                                        _viewmodel.selecteditems.data!.length,
+                                    total: total,
+                                  ),
+                                ),
+                              );
                             },
                           )
                         ],

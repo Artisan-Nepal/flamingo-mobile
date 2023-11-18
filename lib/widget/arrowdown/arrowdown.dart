@@ -1,11 +1,10 @@
-import 'package:flamingo/shared/shared.dart';
 import 'package:flutter/material.dart';
 
 class ArrowDown extends StatefulWidget {
   final String title;
   final Widget body;
 
-  ArrowDown({required this.title, required this.body});
+  const ArrowDown({required this.title, required this.body});
 
   @override
   _ArrowDownState createState() => _ArrowDownState();
@@ -30,10 +29,10 @@ class _ArrowDownState extends State<ArrowDown> {
             children: [
               Text(
                 widget.title,
-                style: TextStyle(
-                  fontSize: 20,
-                  color: AppColors.grayDarker,
-                ),
+                style: Theme.of(context)
+                    .textTheme
+                    .titleLarge!
+                    .copyWith(fontWeight: FontWeight.bold),
               ),
               Icon(
                 isExpanded

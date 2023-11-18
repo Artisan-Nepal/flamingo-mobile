@@ -23,8 +23,8 @@ class CartScreenmodel extends ChangeNotifier {
   Response<List<Product>> get listofproducts => _listofproducts;
   Response<List<Product>> _selecteditems = Response<List<Product>>();
   Response<List<Product>> get selecteditems => _selecteditems;
-  Response<List<bool>> _selectedorunselected = Response<List<bool>>();
-  Response<List<bool>> get selectedorunselected => _selectedorunselected;
+  // Response<List<bool>> _selectedorunselected = Response<List<bool>>();
+  // Response<List<bool>> get selectedorunselected => _selectedorunselected;
   List<bool> sel = [];
 
   Profile? userprofile;
@@ -37,10 +37,10 @@ class CartScreenmodel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void set_selectedorunselected(Response<List<bool>> response) {
-    _selectedorunselected = response;
-    notifyListeners();
-  }
+  // void set_selectedorunselected(Response<List<bool>> response) {
+  //   _selectedorunselected = response;
+  //   notifyListeners();
+  // }
 
   void setlistofproducts(Response<List<Product>> response) {
     _listofproducts = response;
@@ -75,7 +75,7 @@ class CartScreenmodel extends ChangeNotifier {
 
   Future<void> getcartlist() async {
     setlistofproducts(Response.loading());
-    set_selectedorunselected(Response.loading());
+    // set_selectedorunselected(Response.loading());
     Profile profile = await _profileRepository.getProfile();
     final total_products = await _productRepository.getProductList();
 
@@ -88,35 +88,39 @@ class CartScreenmodel extends ChangeNotifier {
     }
     products = wishlist;
     setlistofproducts(Response.complete(wishlist));
-    set_selectedorunselected(Response.complete(sel));
+    // set_selectedorunselected(Response.complete(sel));
   }
 
   ///changeable
   Future<void> removefromlist(int index) async {
+    setselecteditems(Response.loading());
     setlistofproducts(Response.loading());
-    set_selectedorunselected(Response.loading());
+    // set_selectedorunselected(Response.loading());
     sel.removeAt(index);
+    empty_selection.remove(products[index]);
     products.removeAt(index);
+
     print(products.toString());
     setlistofproducts(Response.complete(products));
-    set_selectedorunselected(Response.complete(sel));
+    // set_selectedorunselected(Response.complete(sel));
+    setselecteditems(Response.complete(empty_selection));
   }
 
   Future<void> itemselection(int index) async {
     setselecteditems(Response.loading());
-    set_selectedorunselected(Response.loading());
+    // set_selectedorunselected(Response.loading());
     empty_selection.add(products[index]);
     sel[index] = true;
     setselecteditems(Response.complete(empty_selection));
-    set_selectedorunselected(Response.complete(sel));
+    // set_selectedorunselected(Response.complete(sel));
   }
 
   Future<void> itemremoval(int index) async {
     setselecteditems(Response.loading());
-    set_selectedorunselected(Response.loading());
+    // set_selectedorunselected(Response.loading());
     empty_selection.remove(products[index]);
     sel[index] = false;
     setselecteditems(Response.complete(empty_selection));
-    set_selectedorunselected(Response.complete(sel));
+    // set_selectedorunselected(Response.complete(sel));
   }
 }

@@ -23,6 +23,7 @@ class OutlinedButtonWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ButtonWidget(
+      fontSize: 20,
       label: label,
       onPressed: onPressed,
       isLoading: isLoading,

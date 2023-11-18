@@ -1,7 +1,7 @@
 import 'package:flamingo/data/data.dart';
 import 'package:flamingo/di/service_names.dart';
 import 'package:flamingo/feature/category/data/category_repository.dart';
-import 'package:flamingo/feature/category/data/model/model.dart';
+
 import 'package:flamingo/feature/dashboard/screen/home/main/main_home_screen_model.dart';
 import 'package:flamingo/feature/dashboard/screen/home/search/searchscreen_model.dart';
 import 'package:flamingo/feature/product/data/local/product_local.dart';
@@ -10,6 +10,7 @@ import 'package:flamingo/feature/product/data/product_repository.dart';
 import 'package:flamingo/feature/product/data/product_repository_impl.dart';
 import 'package:flamingo/feature/product/data/remote/product_remote.dart';
 import 'package:flamingo/feature/product/data/remote/product_remote_impl.dart';
+import 'package:flamingo/feature/profile/profile_repository.dart';
 
 import 'package:get_it/get_it.dart';
 
@@ -34,8 +35,8 @@ void registerProductFeature(GetIt locator) {
   );
   locator.registerFactory<MainHometScreenModel>(
     () => MainHometScreenModel(
-      productRepository: locator<ProductRepository>(),
-    ),
+        productRepository: locator<ProductRepository>(),
+        profileRepository: locator<ProfileRepository>()),
   );
 
   locator.registerFactory<SearchScreenModel>(

@@ -1,3 +1,4 @@
+import 'package:flamingo/shared/util/util.dart';
 import 'package:flamingo/widget/text/text.dart';
 import 'package:flutter/material.dart';
 
@@ -11,12 +12,14 @@ Widget createBrandCard({
   Color? specialColor,
 }) {
   return Card(
-    elevation: 4,
-    margin: EdgeInsets.all(8.0),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(10.0),
+    ),
+    elevation: 0,
+    margin: const EdgeInsets.all(8.0),
     child: Stack(
       children: [
         ClipRRect(
-          borderRadius: BorderRadius.circular(8.0),
           child: Image.network(
             imageUrl,
             width: width,
@@ -25,12 +28,13 @@ Widget createBrandCard({
           ),
         ),
         Positioned(
-          bottom: 27,
+          bottom: 25,
           left: 0,
           child: specialText != null
               ? Container(
                   width: width,
-                  padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
                     color: specialColor ??
                         Colors.orange, // Default color if not provided
@@ -38,7 +42,7 @@ Widget createBrandCard({
                   ),
                   child: TextWidget(
                     specialText,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 12,
                     ),
@@ -46,13 +50,14 @@ Widget createBrandCard({
                 )
               : Container(
                   width: width,
-                  color: Colors.white,
-                  padding: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                  color: AppColors.white,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
                   child: TextWidget(
                     topText,
                     textAlign: TextAlign.start,
                     textOverflow: TextOverflow.ellipsis,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.black,
                       fontSize: 16,
                     ),
@@ -60,17 +65,17 @@ Widget createBrandCard({
                 ),
         ),
         Positioned(
-          bottom: 2,
+          bottom: 0,
           left: 0,
           child: Container(
             width: width,
-            color: Colors.white,
-            padding: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+            color: AppColors.white,
+            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
             child: TextWidget(
               bottomText,
               textAlign: TextAlign.start,
               textOverflow: TextOverflow.ellipsis,
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.black,
                 fontSize: 16,
               ),

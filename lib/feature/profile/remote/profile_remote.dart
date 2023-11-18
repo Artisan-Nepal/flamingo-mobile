@@ -4,4 +4,5 @@ abstract class ProfileRemote {
   Future<Profile> getProfile();
   String getProfileid();
   Future<List<Profile>> getbrandProfile();
+  List<String> getaddress();
 }

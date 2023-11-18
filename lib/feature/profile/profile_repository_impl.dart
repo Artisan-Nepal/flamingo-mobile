@@ -30,4 +30,9 @@ class ProfileRepositoryImpl implements ProfileRepository {
   Future<List<Profile>> getbrandProfile() async {
     return _profileRemote.getbrandProfile();
   }
+
+  @override
+  List<String> getaddress() {
+    return _profileRemote.getaddress();
+  }
 }

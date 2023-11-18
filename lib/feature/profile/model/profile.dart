@@ -1,5 +1,3 @@
-import 'package:flamingo/feature/product/data/model/product.dart';
-
 class Profile {
   final String address;
   final String coverPicture;

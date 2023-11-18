@@ -13,7 +13,7 @@ class ProductRemoteImpl implements ProductRemote {
     return [
       Product(
           imageurl: [
-            'https://plus.unsplash.com/premium_photo-1692809752577-72da691a28ae?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+            'https://assets.myntassets.com/dpr_1.5,q_60,w_400,c_limit,fl_progressive/assets/images/15388382/2021/10/25/08ee22a2-6efe-4ade-aafe-5729c0005cb21635138906543-United-Colors-of-Benetton-Men-Casual-Shoes-3771635138906055-1.jpg'
           ],
           price: '12.99',
           id: '1',
@@ -24,7 +24,7 @@ class ProductRemoteImpl implements ProductRemote {
           description: 'Product 1 description'),
       Product(
         imageurl: [
-          'https://plus.unsplash.com/premium_photo-1692809752577-72da691a28ae?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+          'https://assets.myntassets.com/dpr_1.5,q_60,w_400,c_limit,fl_progressive/assets/images/15388382/2021/10/25/08ee22a2-6efe-4ade-aafe-5729c0005cb21635138906543-United-Colors-of-Benetton-Men-Casual-Shoes-3771635138906055-1.jpg',
           'https://plus.unsplash.com/premium_photo-1698846880893-fe6432d51597?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwyfHx8ZW58MHx8fHx8'
         ],
         id: '11',
@@ -36,7 +36,7 @@ class ProductRemoteImpl implements ProductRemote {
       ),
       Product(
         imageurl: [
-          'https://plus.unsplash.com/premium_photo-1692809752577-72da691a28ae?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+          'https://assets.myntassets.com/dpr_1.5,q_60,w_400,c_limit,fl_progressive/assets/images/15388382/2021/10/25/08ee22a2-6efe-4ade-aafe-5729c0005cb21635138906543-United-Colors-of-Benetton-Men-Casual-Shoes-3771635138906055-1.jpg',
           'https://plus.unsplash.com/premium_photo-1698846877123-6677c975db78?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwzfHx8ZW58MHx8fHx8'
         ],
         price: '12.99',
@@ -48,7 +48,7 @@ class ProductRemoteImpl implements ProductRemote {
       ),
       Product(
         imageurl: [
-          'https://plus.unsplash.com/premium_photo-1692809752577-72da691a28ae?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+          'https://assets.myntassets.com/dpr_1.5,q_60,w_400,c_limit,fl_progressive/assets/images/15388382/2021/10/25/08ee22a2-6efe-4ade-aafe-5729c0005cb21635138906543-United-Colors-of-Benetton-Men-Casual-Shoes-3771635138906055-1.jpg',
           'https://images.unsplash.com/photo-1699355484587-b5018a07b73e?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw1fHx8ZW58MHx8fHx8',
           'https://images.unsplash.com/photo-1699356426894-6cf94459b827?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw4fHx8ZW58MHx8fHx8'
         ],
@@ -62,7 +62,7 @@ class ProductRemoteImpl implements ProductRemote {
       Product(
         price: '12.99',
         imageurl: [
-          'https://plus.unsplash.com/premium_photo-1692809752577-72da691a28ae?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+          'https://assets.myntassets.com/dpr_1.5,q_60,w_400,c_limit,fl_progressive/assets/images/15388382/2021/10/25/08ee22a2-6efe-4ade-aafe-5729c0005cb21635138906543-United-Colors-of-Benetton-Men-Casual-Shoes-3771635138906055-1.jpg'
         ],
         id: '4',
         brand: 'Puma',
@@ -73,7 +73,7 @@ class ProductRemoteImpl implements ProductRemote {
       Product(
         price: '12.99',
         imageurl: [
-          'https://plus.unsplash.com/premium_photo-1692809752577-72da691a28ae?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+          'https://assets.myntassets.com/dpr_1.5,q_60,w_400,c_limit,fl_progressive/assets/images/15388382/2021/10/25/08ee22a2-6efe-4ade-aafe-5729c0005cb21635138906543-United-Colors-of-Benetton-Men-Casual-Shoes-3771635138906055-1.jpg'
         ],
         id: '5',
         brand: 'Levi\'s',
@@ -84,7 +84,7 @@ class ProductRemoteImpl implements ProductRemote {
       Product(
         price: '12.99',
         imageurl: [
-          'https://plus.unsplash.com/premium_photo-1692809752577-72da691a28ae?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+          'https://assets.myntassets.com/dpr_1.5,q_60,w_400,c_limit,fl_progressive/assets/images/15388382/2021/10/25/08ee22a2-6efe-4ade-aafe-5729c0005cb21635138906543-United-Colors-of-Benetton-Men-Casual-Shoes-3771635138906055-1.jpg'
         ],
         id: '6',
         brand: 'Vans',
@@ -95,7 +95,7 @@ class ProductRemoteImpl implements ProductRemote {
       Product(
         price: '12.99',
         imageurl: [
-          'https://plus.unsplash.com/premium_photo-1692809752577-72da691a28ae?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+          'https://assets.myntassets.com/dpr_1.5,q_60,w_400,c_limit,fl_progressive/assets/images/15388382/2021/10/25/08ee22a2-6efe-4ade-aafe-5729c0005cb21635138906543-United-Colors-of-Benetton-Men-Casual-Shoes-3771635138906055-1.jpg'
         ],
         id: '7',
         brand: 'Converse',

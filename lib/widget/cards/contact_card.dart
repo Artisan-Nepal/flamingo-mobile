@@ -1,4 +1,5 @@
 import 'package:flamingo/shared/util/util.dart';
+import 'package:flamingo/widget/space/space.dart';
 import 'package:flamingo/widget/text/text.dart';
 import 'package:flutter/material.dart';
 
@@ -14,22 +15,22 @@ class ContactCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            TextWidget(
+            const TextWidget(
               'Contact Us',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 10),
-            TextWidget(
+            const VerticalSpaceWidget(height: Dimens.iconSizeDefault),
+            const TextWidget(
               'Contact description',
               style: TextStyle(
                 fontSize: 16,
                 color: Colors.grey,
               ),
             ),
-            const SizedBox(height: 20),
+            const VerticalSpaceWidget(height: Dimens.iconSizeLarge),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -37,13 +38,13 @@ class ContactCard extends StatelessWidget {
                   onPressed: () {
                     // Handle Phone button press
                   },
-                  child: TextWidget('Phone'),
+                  child: const TextWidget('Phone'),
                 ),
                 ElevatedButton(
                   onPressed: () {
                     // Handle Email button press
                   },
-                  child: TextWidget('Email'),
+                  child: const TextWidget('Email'),
                 ),
               ],
             ),

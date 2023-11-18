@@ -2,11 +2,10 @@ import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/dashboard/screen/cart/cartscreen.dart';
 import 'package:flamingo/feature/dashboard/screen/home/brand/BrandProfileScreen.dart';
 import 'package:flamingo/feature/dashboard/screen/home/brand/brand_screen_model.dart';
-import 'package:flamingo/feature/dashboard/screen/home/wishlist/wishlist_screen.dart';
-import 'package:flamingo/feature/profile/model/profile.dart';
+
 import 'package:flamingo/shared/util/colors.dart';
 import 'package:flamingo/widget/cards/brandcard.dart';
-import 'package:flamingo/widget/text/text.dart';
+
 import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -31,7 +30,6 @@ class _BrandScreenState extends State<BrandScreen> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
   }
 
@@ -47,17 +45,17 @@ class _BrandScreenState extends State<BrandScreen> {
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => Cartscreen(),
+                    builder: (context) => const Cartscreen(),
                   ),
                 );
               },
-              icon: Icon(
+              icon: const Icon(
                 Icons.shopping_cart_outlined,
               ),
             ),
           ),
         ],
-        appBarTitle: TextWidget(
+        appBarTitle: const TextWidget(
           'Brands',
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
           textAlign: TextAlign.center,
@@ -70,8 +68,10 @@ class _BrandScreenState extends State<BrandScreen> {
                 return const CircularProgressIndicator();
               }
               return GridView.builder(
+                physics: const ScrollPhysics(),
                 shrinkWrap: true,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  childAspectRatio: 0.6,
                   crossAxisCount: 2,
                   crossAxisSpacing: 1,
                   mainAxisSpacing: 1,
@@ -93,8 +93,8 @@ class _BrandScreenState extends State<BrandScreen> {
                     child: Padding(
                       padding: const EdgeInsets.all(2.0),
                       child: createBrandCard(
-                          height: 200,
-                          width: 200,
+                          height: MediaQuery.of(context).size.height * 0.3,
+                          width: MediaQuery.of(context).size.width * 0.5,
                           topText: viewModel.listofprofile.data![index].name,
                           bottomText: 'Listing',
                           imageUrl: viewModel

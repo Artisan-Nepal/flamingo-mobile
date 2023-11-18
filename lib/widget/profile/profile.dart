@@ -13,7 +13,7 @@ Widget buildProfileLayout(Profile? profile, BuildContext context, String? id) {
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
-              Container(
+              SizedBox(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height *
                     0.33, // Set container height
@@ -30,8 +30,8 @@ Widget buildProfileLayout(Profile? profile, BuildContext context, String? id) {
                       top: MediaQuery.of(context).size.height / 5,
                       left: MediaQuery.of(context).size.width / 40,
                       child: Container(
-                        width: 100,
-                        height: 100,
+                        width: MediaQuery.of(context).size.height / 8,
+                        height: MediaQuery.of(context).size.height / 8,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           border: Border.all(color: Colors.white, width: 3),
@@ -54,7 +54,7 @@ Widget buildProfileLayout(Profile? profile, BuildContext context, String? id) {
                     TextWidget(
                       profile.name,
                       textAlign: TextAlign.left,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 22,
                         color: AppColors.black,
                         fontWeight: FontWeight.bold,
@@ -63,20 +63,21 @@ Widget buildProfileLayout(Profile? profile, BuildContext context, String? id) {
                     TextWidget(
                       profile.address,
                       textAlign: TextAlign.left,
-                      style:
-                          TextStyle(fontSize: 14, color: AppColors.grayLight),
+                      style: const TextStyle(
+                          fontSize: 14, color: AppColors.grayLight),
                     ),
                   ],
                 ),
               ),
-              VerticalSpaceWidget(height: 20),
-              VerticalSpaceColoredWidget(
+              const VerticalSpaceWidget(height: 20),
+              const VerticalSpaceColoredWidget(
                 height: 7,
                 thickness: 2,
                 color: AppColors.grayLight,
               ),
               id == profile.profileid
                   ? ButtonWidget(
+                      fontSize: 20,
                       label: 'Edit Profile',
                       onPressed: () {
                         Navigator.push(
@@ -88,8 +89,8 @@ Widget buildProfileLayout(Profile? profile, BuildContext context, String? id) {
                           ),
                         );
                       })
-                  : HorizontalSpaceWidget(width: 0),
-              VerticalSpaceWidget(height: 90),
+                  : const HorizontalSpaceWidget(width: 0),
+              const VerticalSpaceWidget(height: 90),
               ArrowDown(title: 'Bio', body: Container()),
               const VerticalSpaceColoredWidget(
                 height: 35,

@@ -1,9 +1,9 @@
 import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/dashboard/screen/home/brand/brandprofilescreenmodel.dart';
 import 'package:flamingo/feature/dashboard/screen/home/product/product/productscreen.dart';
-import 'package:flamingo/feature/product/data/model/product.dart';
 
 import 'package:flamingo/feature/profile/model/profile.dart';
+import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/shared/util/colors.dart';
 import 'package:flamingo/widget/arrowdown/arrowdown.dart';
 import 'package:flamingo/widget/button/button.dart';
@@ -80,6 +80,8 @@ class ProfileEditScreenState extends State<BrandProfileScreen> {
                           return Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 CustomStack(
                                   profilePicture: GestureDetector(
@@ -96,6 +98,16 @@ class ProfileEditScreenState extends State<BrandProfileScreen> {
                                       child: ClipOval(
                                         child: Image.network(
                                           widget.user.profilePicture,
+                                          loadingBuilder: (BuildContext context,
+                                              Widget child,
+                                              ImageChunkEvent?
+                                                  loadingProgress) {
+                                            if (loadingProgress == null) {
+                                              return child;
+                                            } else {
+                                              return CircularProgressIndicator();
+                                            }
+                                          },
                                           fit: BoxFit.cover,
                                         ),
                                       ),
@@ -115,10 +127,13 @@ class ProfileEditScreenState extends State<BrandProfileScreen> {
                                   ),
                                 ),
                                 VerticalSpaceWidget(height: 1),
-                                Transform.translate(
-                                  offset: Offset(
-                                      -100 + widget.user.name.length * 0.8, 0),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(32.0, 0, 0, 0),
                                   child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       TextWidget(
                                         widget.user.name,
@@ -165,6 +180,8 @@ class ProfileEditScreenState extends State<BrandProfileScreen> {
                                         fontSize: 20),
                                   ),
                                 ),
+                                const VerticalSpaceWidget(
+                                    height: Dimens.iconSizeSmall),
                                 viewModel.listofproduct.data != null
                                     ? GridView.builder(
                                         physics: ScrollPhysics(),
@@ -174,7 +191,7 @@ class ProfileEditScreenState extends State<BrandProfileScreen> {
                                                 crossAxisCount: 2,
                                                 crossAxisSpacing: 1,
                                                 mainAxisSpacing: 1,
-                                                childAspectRatio: 0.7),
+                                                childAspectRatio: 0.4),
                                         itemCount: viewModel
                                             .listofproduct.data!.length,
                                         itemBuilder: (context, index) {
@@ -197,8 +214,13 @@ class ProfileEditScreenState extends State<BrandProfileScreen> {
                                               padding:
                                                   const EdgeInsets.all(2.0),
                                               child: createProductCard(
-                                                  height: 220,
-                                                  width: 200,
+                                                  height: MediaQuery.of(context)
+                                                          .size
+                                                          .height *
+                                                      .85,
+                                                  width: MediaQuery.of(context)
+                                                      .size
+                                                      .width,
                                                   topText: viewModel
                                                       .listofproduct
                                                       .data![index]
@@ -291,7 +313,7 @@ class ProfileEditScreenState extends State<BrandProfileScreen> {
             },
           ),
           VerticalSpaceWidget(height: 10),
-          RoundedFilledButtonWidget(
+          FilledButtonWidget(
             label: 'Submit',
             onPressed: () {
               print(_textEditingController.text);

@@ -41,7 +41,7 @@ class ProductCard extends StatelessWidget {
           Row(
             children: [
               Container(
-                width: 100,
+                width: MediaQuery.of(context).size.width * 0.4,
                 height: height,
                 decoration: BoxDecoration(
                   image: DecorationImage(
@@ -50,21 +50,23 @@ class ProductCard extends StatelessWidget {
                   ),
                 ),
               ),
-              HorizontalSpaceWidget(width: 10),
+              HorizontalSpaceWidget(width: 25),
               // Product Details
-              Expanded(
+              Align(
+                alignment: Alignment.centerLeft,
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     TextWidget(
-                      "Product Name: ${product.name}",
+                      "${product.name}",
                       style: TextStyle(
                           fontSize: 20,
                           color: AppColors.black,
                           fontWeight: FontWeight.bold),
                     ),
                     TextWidget(
-                      "Brand: ${product.brand}",
+                      "${product.brand}",
                       style: TextStyle(fontSize: 16, color: AppColors.grayDark),
                     ),
                     TextWidget(
@@ -72,7 +74,7 @@ class ProductCard extends StatelessWidget {
                       style: TextStyle(fontSize: 16, color: AppColors.grayDark),
                     ),
                     TextWidget(
-                      "Price: ${product.price}",
+                      "${product.price}",
                       style: TextStyle(
                           fontSize: 20,
                           color: AppColors.black,
@@ -83,9 +85,10 @@ class ProductCard extends StatelessWidget {
               ),
             ],
           ),
-          VerticalSpaceWidget(height: 2),
+          VerticalSpaceWidget(height: 30),
           cartorwishlist == true
               ? ButtonWidget(
+                  fontSize: 20,
                   label: 'View Cart',
                   onPressed: () {
                     Navigator.of(context).push(
@@ -96,6 +99,7 @@ class ProductCard extends StatelessWidget {
                   })
               : ButtonWidget(
                   label: 'View WishList',
+                  fontSize: 20,
                   onPressed: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(

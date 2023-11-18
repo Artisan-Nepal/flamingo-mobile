@@ -6,6 +6,7 @@ class ButtonWidget extends StatelessWidget {
     Key? key,
     required this.label,
     this.onPressed,
+    this.fontWeight,
     this.height = 50,
     this.textColor = AppColors.white,
     this.width = double.infinity,
@@ -14,8 +15,9 @@ class ButtonWidget extends StatelessWidget {
     this.enabled = true,
     this.needBorder = false,
     this.child,
+    this.borderwidth = 1,
     this.loadingMsg,
-    this.backgroundColor = AppColors.primaryMain,
+    this.backgroundColor = AppColors.black, //
     this.borderColor = AppColors.grayLight,
     this.padding = const EdgeInsets.symmetric(
       horizontal: 20,
@@ -36,14 +38,17 @@ class ButtonWidget extends StatelessWidget {
   final String? loadingMsg;
   final Color backgroundColor;
   final Color borderColor;
+  final FontWeight? fontWeight;
   final EdgeInsets padding;
   final double loaderSize;
   final Color textColor;
+  final double borderwidth;
   final BorderRadius? borderRaidus;
 
   @override
   Widget build(BuildContext context) {
-    final textStyle = TypographyStyles.bodyLarge.copyWith(color: textColor);
+    final textStyle = TypographyStyles.bodyLarge
+        .copyWith(color: textColor, fontWeight: fontWeight, fontSize: fontSize);
     return SizedBox(
       width: width,
       height: height,
@@ -52,7 +57,9 @@ class ButtonWidget extends StatelessWidget {
           padding: padding,
           backgroundColor: backgroundColor,
           shape: RoundedRectangleBorder(
-            side: needBorder ? BorderSide(color: borderColor) : BorderSide.none,
+            side: needBorder
+                ? BorderSide(color: borderColor, width: borderwidth)
+                : BorderSide.none,
             borderRadius: borderRaidus ?? BorderRadius.circular(5),
           ),
         ),

@@ -1,11 +1,11 @@
 import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/dashboard/screen/cart/cartscreen.dart';
-import 'package:flamingo/feature/dashboard/screen/home/brand/brandprofilescreenmodel.dart';
+
 import 'package:flamingo/feature/dashboard/screen/home/product/product/productscreen.dart';
 
 import 'package:flamingo/feature/dashboard/screen/home/wishlist/wishlistscreenmodel.dart';
 import 'package:flamingo/feature/product/data/model/product.dart';
-import 'package:flamingo/feature/profile/model/profile.dart';
+
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/cards/bottom_slider.dart';
 import 'package:flamingo/widget/cards/productcard.dart';
@@ -100,7 +100,7 @@ class ProfileEditScreenState extends State<WishlistScreen> {
                           crossAxisCount: 2,
                           crossAxisSpacing: 1,
                           mainAxisSpacing: 1,
-                          childAspectRatio: 0.5),
+                          childAspectRatio: 0.38),
                       itemCount: viewModel.listofproducts.data!.length,
                       itemBuilder: (context, index) {
                         return GestureDetector(
@@ -115,8 +115,8 @@ class ProfileEditScreenState extends State<WishlistScreen> {
                                   chosenSize.removeAt(index);
                                 });
                               },
-                              height: 310,
-                              width: 200,
+                              height: MediaQuery.of(context).size.height * 0.67,
+                              width: MediaQuery.of(context).size.width * 0.65,
                               onimgtap: () {
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
@@ -164,6 +164,11 @@ class ProfileEditScreenState extends State<WishlistScreen> {
         buildSizeSelector(context, product, index),
         VerticalSpaceWidget(height: Dimens.iconSizeExtraSmall),
         ButtonWidget(
+          borderwidth: 1.5,
+          textColor: AppColors.black,
+          backgroundColor: AppColors.white,
+          needBorder: true,
+          borderColor: AppColors.black,
           width: 158,
           label: 'Add to Cart',
           onPressed: () {
@@ -171,7 +176,7 @@ class ProfileEditScreenState extends State<WishlistScreen> {
               displayPopup(context, product, chosenSize[index],
                   'Following Item has been added to cart.', true);
             } else {
-              print('error');
+              showToast(context, 'Please select size.');
             }
           },
         ),
@@ -183,7 +188,7 @@ class ProfileEditScreenState extends State<WishlistScreen> {
     if (product.size.length == 1) {
       // If there is only one size, display "One Size"
       return FieldBar(
-        width: 80,
+        width: MediaQuery.of(context).size.width,
         height: 36,
         labelText: '1 Size',
         selected: '1 Size',
@@ -194,9 +199,9 @@ class ProfileEditScreenState extends State<WishlistScreen> {
     } else {
       // If there are multiple sizes, allow the user to choose a size
       return DropSelector(
+        width: MediaQuery.of(context).size.width,
         hinttext: 'Size',
         height: 36,
-        width: 80,
         selections: product.size,
         chosenselection: chosenSize[index],
         onSelectionchange: (size) {
@@ -217,7 +222,7 @@ class ProfileEditScreenState extends State<WishlistScreen> {
     bottomSlider(
         context,
         Container(
-          height: screenHeight * 0.4,
+          height: screenHeight * 0.5,
           padding: EdgeInsets.all(16),
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [

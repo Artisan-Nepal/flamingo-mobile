@@ -1,7 +1,6 @@
 import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/dashboard/screen/profile_screen/edit_profile/edit_Profile_model.dart';
 import 'package:flamingo/feature/profile/model/profile.dart';
-import 'package:flamingo/shared/util/colors.dart';
 import 'package:flamingo/widget/button/button.dart';
 import 'package:flamingo/widget/screen/default_screen.dart';
 import 'package:flamingo/widget/space/space.dart';
@@ -21,9 +20,9 @@ class ProfileEditScreen extends StatefulWidget {
 
 class ProfileEditScreenState extends State<ProfileEditScreen> {
   final _viewmodel = locator<EditProfileModel>();
-  TextEditingController _namecontroller = TextEditingController();
-  TextEditingController _biocontroller = TextEditingController();
-  TextEditingController _addresscontroller = TextEditingController();
+  final TextEditingController _namecontroller = TextEditingController();
+  final TextEditingController _biocontroller = TextEditingController();
+  final TextEditingController _addresscontroller = TextEditingController();
 
   @override
   void initState() {
@@ -32,7 +31,6 @@ class ProfileEditScreenState extends State<ProfileEditScreen> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
   }
 
@@ -44,7 +42,7 @@ class ProfileEditScreenState extends State<ProfileEditScreen> {
         appBarTitle: TextWidget(
           "Edit ${widget.user.name}'s profile",
           textAlign: TextAlign.left,
-          style: TextStyle(fontSize: 20),
+          style: const TextStyle(fontSize: 20),
         ),
         bottomNavigationBar: const VerticalSpaceWidget(height: 0),
         child: SafeArea(
@@ -53,10 +51,12 @@ class ProfileEditScreenState extends State<ProfileEditScreen> {
               return Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     CustomStack(
                       profilePicture: GestureDetector(
-                        key: Key('profilePicture'),
+                        key: const Key('profilePicture'),
                         onTap: () {
                           _editProfilePicture();
                         },
@@ -76,7 +76,7 @@ class ProfileEditScreenState extends State<ProfileEditScreen> {
                         ),
                       ),
                       coverPicture: GestureDetector(
-                        key: Key('coverPhoto'),
+                        key: const Key('coverPhoto'),
                         onTap: () {
                           _editCoverPhoto();
                         },
@@ -88,51 +88,43 @@ class ProfileEditScreenState extends State<ProfileEditScreen> {
                         ),
                       ),
                     ),
-                    VerticalSpaceWidget(height: 10),
-                    Transform.translate(
-                      offset: Offset(-100, 0),
-                      child: TextWidget(
-                        'Username:',
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
+                    const VerticalSpaceWidget(height: 10),
+                    const TextWidget(
+                      'Username:',
+                      textAlign: TextAlign.left,
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                     TextFieldWidget(
                       hintText: widget.user.name,
                       controller: _namecontroller,
                     ),
-                    VerticalSpaceWidget(height: 10),
-                    Transform.translate(
-                      offset: Offset(-100, 0),
-                      child: TextWidget(
-                        'Address:',
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
+                    const VerticalSpaceWidget(height: 10),
+                    const TextWidget(
+                      'Address:',
+                      textAlign: TextAlign.left,
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                     TextFieldWidget(
                       hintText: widget.user.address,
                       controller: _addresscontroller,
                     ),
-                    VerticalSpaceWidget(height: 10),
-                    Transform.translate(
-                      offset: Offset(-100, 0),
-                      child: TextWidget(
-                        'Bio:',
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
+                    const VerticalSpaceWidget(height: 10),
+                    const TextWidget(
+                      'Bio:',
+                      textAlign: TextAlign.left,
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                     TextFieldWidget(
                       hintText: widget.user.bio,
                       controller: _biocontroller,
                       textInputType: TextInputType.multiline,
                     ),
-                    VerticalSpaceWidget(height: 30),
+                    const VerticalSpaceWidget(height: 30),
                     ButtonWidget(
+                        fontSize: 20,
                         label: 'Save',
                         onPressed: () {
                           print(_namecontroller.text);

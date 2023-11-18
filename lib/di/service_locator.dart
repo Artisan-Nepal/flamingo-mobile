@@ -2,6 +2,10 @@ import 'package:flamingo/di/registration/feature/category.dart';
 import 'package:flamingo/di/registration/feature/product.dart';
 import 'package:flamingo/feature/category/data/category_repository.dart';
 import 'package:flamingo/feature/dashboard/screen/cart/cartscreenmodel.dart';
+import 'package:flamingo/feature/dashboard/screen/cashout_screen/address/addressscreen_model.dart';
+import 'package:flamingo/feature/dashboard/screen/cashout_screen/address/editaddress/editaddressscreen_model.dart';
+import 'package:flamingo/feature/dashboard/screen/cashout_screen/cashout_screen_model.dart';
+import 'package:flamingo/feature/dashboard/screen/cashout_screen/payment/payment_screen_model.dart';
 import 'package:flamingo/feature/dashboard/screen/home/brand/brand_screen_model.dart';
 import 'package:flamingo/feature/dashboard/screen/home/brand/brandprofilescreenmodel.dart';
 
@@ -130,6 +134,30 @@ Future setUpServiceLocator() async {
 
   locator.registerFactory<MeScreenModel>(
     () => MeScreenModel(
+      profileRepository: locator<ProfileRepository>(),
+    ),
+  );
+
+  locator.registerFactory<CashoutScreenModel>(
+    () => CashoutScreenModel(
+      profileRepository: locator<ProfileRepository>(),
+    ),
+  );
+
+  locator.registerFactory<PaymentScreenModel>(
+    () => PaymentScreenModel(
+      profileRepository: locator<ProfileRepository>(),
+    ),
+  );
+
+  locator.registerFactory<AddressScreenModel>(
+    () => AddressScreenModel(
+      profileRepository: locator<ProfileRepository>(),
+    ),
+  );
+
+  locator.registerFactory<EditAddressScreenModel>(
+    () => EditAddressScreenModel(
       profileRepository: locator<ProfileRepository>(),
     ),
   );

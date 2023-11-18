@@ -3,7 +3,7 @@ import 'package:flamingo/feature/category/data/model/product_category.dart';
 import 'package:flamingo/feature/dashboard/screen/cart/cartscreen.dart';
 import 'package:flamingo/feature/dashboard/screen/home/product/category/category_list_screen.dart';
 import 'package:flamingo/feature/dashboard/screen/home/search/searchscreen_model.dart';
-import 'package:flamingo/feature/dashboard/screen/home/wishlist/wishlist_screen.dart';
+
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/cards/snippetcard.dart';
 import 'package:flamingo/widget/search-bar/search_bar.dart';

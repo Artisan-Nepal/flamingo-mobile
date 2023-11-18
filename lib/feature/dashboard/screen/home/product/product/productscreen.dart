@@ -2,7 +2,7 @@ import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/dashboard/screen/cart/cartscreen.dart';
 
 import 'package:flamingo/feature/dashboard/screen/home/product/product/productscreen_model.dart';
-import 'package:flamingo/feature/dashboard/screen/home/wishlist/wishlist_screen.dart';
+
 import 'package:flamingo/feature/product/data/model/product.dart';
 import 'package:flamingo/shared/shared.dart';
 
@@ -51,8 +51,8 @@ class _ProductScreenState extends State<ProductScreen> {
     if (product.size.length == 1) {
       // If there is only one size, display "One Size"
       return FieldBar(
-        width: 80,
-        height: 36,
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height * 0.04,
         labelText: '1 Size',
         selected: '1 Size',
         onchange: (size) {
@@ -62,9 +62,9 @@ class _ProductScreenState extends State<ProductScreen> {
     } else {
       // If there are multiple sizes, allow the user to choose a size
       return DropSelector(
-        height: 36,
-        width: 72,
-        hinttext: 'Size',
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height * 0.04,
+        hinttext: 'Select your Size',
         selections: product.size,
         chosenselection: chosenSize,
         onSelectionchange: (size) {
@@ -84,7 +84,7 @@ class _ProductScreenState extends State<ProductScreen> {
     bottomSlider(
         context,
         Container(
-          height: screenHeight * 0.4,
+          height: screenHeight * 0.5,
           padding: EdgeInsets.all(16),
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -104,7 +104,7 @@ class _ProductScreenState extends State<ProductScreen> {
               product: widget.product,
               chosenSize: _chosensize ?? '',
               title: title,
-              height: 150,
+              height: MediaQuery.of(context).size.height * 0.25,
             )
           ]),
         ));
@@ -132,12 +132,16 @@ class _ProductScreenState extends State<ProductScreen> {
               ),
             ),
           ],
-          bottomNavigationBar: RoundedFilledButtonWidget(
+          bottomNavigationBar: FilledButtonWidget(
             label: 'Add to Cart',
             onPressed: () => chosenSize != null
                 ? displayPopup(context, widget.product, chosenSize,
                     'Following item has been added to cart.', true)
-                : print('error'),
+                : showToast(
+                    context,
+                    'Please select the size first.',
+                    isSuccess: false,
+                  ),
           ),
           appBarTitle: TextWidget(
             widget.product.name,
@@ -232,6 +236,7 @@ class _ProductScreenState extends State<ProductScreen> {
                     const VerticalSpaceWidget(height: 15),
                     ///////////////////
                     buildSizeSelector(context, widget.product),
+                    const VerticalSpaceWidget(height: 5),
                     //////////////////
                     ArrowDown(title: 'The Details', body: FirstColumn()),
                     const VerticalSpaceColoredWidget(

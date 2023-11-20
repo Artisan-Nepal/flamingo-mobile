@@ -5,10 +5,10 @@ import 'package:flamingo/feature/user/data/user_repository.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flutter/material.dart';
 
-class UpdateVendorHandlerViewModel extends ChangeNotifier {
+class UpdateUserViewModel extends ChangeNotifier {
   final UserRepository _userRepository;
 
-  UpdateVendorHandlerViewModel({
+  UpdateUserViewModel({
     required UserRepository userRepository,
   }) : _userRepository = userRepository;
 

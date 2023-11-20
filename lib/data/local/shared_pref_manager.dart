@@ -70,7 +70,7 @@ class SharedPrefManager implements LocalStorageClient {
 
   @override
   Future<Obj?> getObject<Obj>(
-      String key, Obj Function(dynamic json) fromJsonFn) async {
+      String key, Obj Function(Map<String, dynamic> json) fromJsonFn) async {
     final value = _sharedPref.getString(key);
     if (value == null) return null;
 

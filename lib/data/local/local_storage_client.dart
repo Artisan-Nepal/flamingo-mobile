@@ -26,7 +26,7 @@ abstract class LocalStorageClient {
   Future<void> setObject<Obj extends JsonSerializable>(String key, Obj value);
 
   Future<Obj?> getObject<Obj>(
-      String key, Obj Function(dynamic json) fromJsonFn);
+      String key, Obj Function(Map<String, dynamic> json) fromJsonFn);
 
   Future<bool> remove(String key);
 }

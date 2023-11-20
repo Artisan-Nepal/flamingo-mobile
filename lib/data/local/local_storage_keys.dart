@@ -3,4 +3,5 @@ class LocalStorageKeys {
   static const String isFirstTime = "is_first_time";
   static const String accessToken = "access_token";
   static const String themeMode = 'theme_mode';
+  static const String user = 'user';
 }

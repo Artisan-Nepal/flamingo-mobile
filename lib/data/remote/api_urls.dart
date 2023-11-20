@@ -6,4 +6,6 @@ class ApiUrls {
   static String sendLoginOtp = '/auth/send-otp';
   static String resendLoginOtp = '/auth/resend-otp';
   static String verifyLoginOtp = '/auth/login/verify-otp';
+
+  static String customers = '/customers';
 }

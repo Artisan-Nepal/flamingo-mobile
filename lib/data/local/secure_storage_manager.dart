@@ -76,7 +76,7 @@ class SecureStorageManager implements LocalStorageClient {
 
   @override
   Future<Obj?> getObject<Obj>(
-      String key, Obj Function(dynamic json) fromJsonFn) async {
+      String key, Obj Function(Map<String, dynamic> json) fromJsonFn) async {
     final jsonString = await _secureStorage.read(key: key);
     if (jsonString != null) {
       final json = jsonDecode(jsonString);

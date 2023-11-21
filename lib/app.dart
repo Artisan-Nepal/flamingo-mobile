@@ -1,3 +1,4 @@
+import 'package:flamingo/feature/auth/auth_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/di/di.dart';
@@ -16,6 +17,7 @@ class App extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (ctx) => locator<ThemeService>()),
+        ChangeNotifierProvider(create: (ctx) => locator<AuthViewModel>()),
       ],
       builder: (ctx, child) {
         final themeService = Provider.of<ThemeService>(ctx);

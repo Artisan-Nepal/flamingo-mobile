@@ -1,5 +1,6 @@
 import 'package:flamingo/feature/feature.dart';
 import 'package:flamingo/data/local/local.dart';
+import 'package:flamingo/feature/user/data/customer.dart';
 
 class AuthLocalImpl implements AuthLocal {
   final LocalStorageClient _sharedPrefManager;
@@ -21,5 +22,16 @@ class AuthLocalImpl implements AuthLocal {
   @override
   Future<void> setIsFirstTime(bool value) async {
     await _sharedPrefManager.setBool(LocalStorageKeys.isFirstTime, value);
+  }
+
+  @override
+  Future<void> setUser(Customer user) async {
+    await _sharedPrefManager.setObject(LocalStorageKeys.user, user);
+  }
+
+  @override
+  Future<Customer?> getUser() async {
+    return await _sharedPrefManager.getObject(
+        LocalStorageKeys.user, Customer.fromJson);
   }
 }

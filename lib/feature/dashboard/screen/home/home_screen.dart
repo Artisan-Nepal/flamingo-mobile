@@ -1,6 +1,6 @@
-import 'package:flamingo/feature/auth/auth_view_model.dart';
+import 'package:flamingo/shared/shared.dart';
+import 'package:flamingo/widget/space/space.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -11,15 +11,50 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   @override
-  void initState() {
-    super.initState();
-    Provider.of<AuthViewModel>(context, listen: false).syncRemotely();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Home screen")),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: Dimens.spacingSizeSmall),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const VerticalSpaceWidget(height: Dimens.spacingSizeLarge),
+                _buildAppBar(),
+                const VerticalSpaceWidget(height: Dimens.spacingSizeDefault),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAppBar() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          'Flamingo',
+          style: textTheme(context).headlineSmall!.copyWith(
+                color: isLightMode(context)
+                    ? AppColors.primaryMain
+                    : AppColors.white,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 0.05,
+              ),
+        ),
+        GestureDetector(
+          onTap: () {},
+          child: const Icon(
+            Icons.notifications_rounded,
+            color: AppColors.primaryMain,
+            size: Dimens.iconSizeDefault,
+          ),
+        )
+      ],
     );
   }
 }

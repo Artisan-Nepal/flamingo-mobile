@@ -114,7 +114,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
     if (viewModel.verifyOtpUseCase.hasCompleted) {
       NavigationHelper.pushAndReplaceAll(
         context,
-        const HomeScreen(),
+        const DashboardScreen(),
       );
     }
   }

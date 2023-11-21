@@ -5,5 +5,5 @@ import 'package:flamingo/feature/feature.dart';
 final navigationRoutes = <String, WidgetBuilder>{
   NavigationRouteNames.onBoarding: (ctx) => const OnBoardingScreen(),
   NavigationRouteNames.login: (ctx) => const LoginScreen(),
-  NavigationRouteNames.home: (ctx) => const HomeScreen(),
+  NavigationRouteNames.dashboard: (ctx) => const DashboardScreen(),
 };

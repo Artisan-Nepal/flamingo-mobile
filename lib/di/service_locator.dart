@@ -1,4 +1,5 @@
 import 'package:flamingo/di/registration/data.dart';
+import 'package:flamingo/di/registration/feature/dashboard.dart';
 import 'package:flamingo/di/registration/feature/user.dart';
 import 'package:flamingo/di/registration/registration.dart';
 import 'package:get_it/get_it.dart';
@@ -15,4 +16,5 @@ Future setUpServiceLocator() async {
   // features
   registerAuthFeature(locator);
   registerUserFeature(locator);
+  registerDashboardFeature(locator);
 }

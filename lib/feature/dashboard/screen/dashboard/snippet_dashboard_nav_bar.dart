@@ -33,8 +33,8 @@ class SnippetDashboardNavBar extends StatelessWidget {
               label: 'HOME',
             ),
             BottomNavigationBarItem(
-              icon: Icon(CupertinoIcons.search),
-              label: 'SEARCH',
+              icon: Icon(CupertinoIcons.square_grid_2x2),
+              label: 'CATEGORY',
             ),
             BottomNavigationBarItem(
               icon: Icon(CupertinoIcons.tag),

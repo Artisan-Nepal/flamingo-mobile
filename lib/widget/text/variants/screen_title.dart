@@ -2,8 +2,8 @@ import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/material.dart';
 
-class ScreenTitle extends StatelessWidget {
-  const ScreenTitle(this.title, {super.key});
+class ScreenTitleWidget extends StatelessWidget {
+  const ScreenTitleWidget(this.title, {super.key});
 
   final String title;
   @override

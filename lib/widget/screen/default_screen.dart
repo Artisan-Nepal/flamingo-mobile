@@ -38,6 +38,9 @@ class DefaultScreen extends StatelessWidget {
               leading: appBarLeading ??
                   (NavigationHelper.canPop(context)
                       ? GestureDetector(
+                          onTap: () {
+                            NavigationHelper.pop(context);
+                          },
                           child: const Icon(
                             Icons.chevron_left,
                             size: Dimens.iconSizeLarge,

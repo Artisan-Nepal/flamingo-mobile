@@ -47,11 +47,8 @@ class _CategorySearchScreenState extends State<CategorySearchScreen>
                     children: [
                       const VerticalSpaceWidget(
                           height: Dimens.spacingSizeDefault),
-                      TextWidget(
-                        'CATEGORY',
-                        style: textTheme(context).titleLarge!.copyWith(
-                              fontWeight: FontWeight.w900,
-                            ),
+                      const ScreenTitle(
+                        'Category',
                       ),
                       _buildTabBar(),
                       _buildTabBarView(),

@@ -1,11 +1,11 @@
 import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/auth/auth_view_model.dart';
 import 'package:flamingo/feature/brand/screen/brand-listing/brand_listing_screen.dart';
+import 'package:flamingo/feature/category/screen/category-search/category_search_screen.dart';
 import 'package:flamingo/feature/dashboard/screen/account/account_screen.dart';
 import 'package:flamingo/feature/dashboard/screen/dashboard/dashboard_view_model.dart';
 import 'package:flamingo/feature/dashboard/screen/dashboard/snippet_dashboard_nav_bar.dart';
 import 'package:flamingo/feature/dashboard/screen/home/home_screen.dart';
-import 'package:flamingo/feature/search/screen/category-search/category_search_screen.dart';
 import 'package:flamingo/feature/wishlist/screen/wishlist-listing/wishlist_listing_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

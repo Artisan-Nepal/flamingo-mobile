@@ -14,7 +14,7 @@ class TextWidget extends StatelessWidget {
     super.key,
     this.style = TypographyStyles.bodyMedium,
     this.scaleForSmallerDevice = 1,
-    this.textAlign = TextAlign.center,
+    this.textAlign = TextAlign.start,
     this.textOverflow = TextOverflow.visible,
     this.softWrap = true,
   });

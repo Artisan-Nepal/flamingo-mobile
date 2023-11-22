@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
 class NavigationHelper {
+  static bool canPop(BuildContext context) {
+    return Navigator.canPop(context);
+  }
+
   static Future push(BuildContext context, Widget screen) async {
     return await Navigator.push(
       context,

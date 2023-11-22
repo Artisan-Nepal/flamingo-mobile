@@ -1,4 +1,5 @@
 import 'package:flamingo/shared/shared.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class DefaultScreen extends StatelessWidget {
@@ -35,7 +36,18 @@ class DefaultScreen extends StatelessWidget {
           ? AppBar(
               title: appBarTitle,
               actions: appBarActions,
-              leading: appBarLeading,
+              leading: appBarLeading ??
+                  (NavigationHelper.canPop(context)
+                      ? GestureDetector(
+                          onTap: () {
+                            NavigationHelper.pop(context);
+                          },
+                          child: const Icon(
+                            CupertinoIcons.back,
+                            size: Dimens.iconSizeLarge,
+                          ),
+                        )
+                      : null),
               automaticallyImplyLeading: automaticallyImplyAppBarLeading,
             )
           : null,

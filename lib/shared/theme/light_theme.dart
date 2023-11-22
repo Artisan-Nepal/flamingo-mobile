@@ -26,10 +26,10 @@ final ThemeData lightTheme = ThemeData(
   appBarTheme: AppBarTheme(
     backgroundColor: AppColors.white,
     titleTextStyle: TypographyStyles.titleLarge.copyWith(
-      color: AppColors.grayDarker,
+      color: AppColors.black,
     ),
     elevation: 0,
-    iconTheme: const IconThemeData(color: AppColors.grayDarker),
+    iconTheme: const IconThemeData(color: AppColors.black),
     systemOverlayStyle: const SystemUiOverlayStyle(
       statusBarColor: AppColors.white,
       statusBarIconBrightness: Brightness.dark,
@@ -43,43 +43,43 @@ final ThemeData lightTheme = ThemeData(
   ),
   textTheme: TextTheme(
     displayLarge: TypographyStyles.displayLarge.copyWith(
-      color: AppColors.grayDarker,
+      color: AppColors.black,
     ),
     displayMedium: TypographyStyles.displayMedium.copyWith(
-      color: AppColors.grayDarker,
+      color: AppColors.black,
     ),
     displaySmall: TypographyStyles.displaySmall.copyWith(
-      color: AppColors.grayDarker,
+      color: AppColors.black,
     ),
     headlineMedium: TypographyStyles.headlineMedium.copyWith(
-      color: AppColors.grayDarker,
+      color: AppColors.black,
     ),
     headlineSmall: TypographyStyles.headlineSmall.copyWith(
-      color: AppColors.grayDarker,
+      color: AppColors.black,
     ),
     titleLarge: TypographyStyles.titleLarge.copyWith(
-      color: AppColors.grayDarker,
+      color: AppColors.black,
     ),
     titleMedium: TypographyStyles.titleMedium.copyWith(
-      color: AppColors.grayDarker,
+      color: AppColors.black,
     ),
     titleSmall: TypographyStyles.titleSmall.copyWith(
-      color: AppColors.grayDarker,
+      color: AppColors.black,
     ),
     bodyLarge: TypographyStyles.bodyLarge.copyWith(
-      color: AppColors.grayDarker,
+      color: AppColors.black,
     ),
     bodyMedium: TypographyStyles.bodyMedium.copyWith(
-      color: AppColors.grayDarker,
+      color: AppColors.black,
     ),
     labelLarge: TypographyStyles.labelLarge.copyWith(
-      color: AppColors.grayDarker,
+      color: AppColors.black,
     ),
     bodySmall: TypographyStyles.bodySmall.copyWith(
-      color: AppColors.grayDarker,
+      color: AppColors.black,
     ),
     labelSmall: TypographyStyles.labelSmall.copyWith(
-      color: AppColors.grayDarker,
+      color: AppColors.black,
     ),
   ),
 );

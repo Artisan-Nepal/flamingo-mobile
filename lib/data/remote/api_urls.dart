@@ -8,4 +8,5 @@ class ApiUrls {
   static String verifyLoginOtp = '/auth/login/verify-otp';
 
   static String customers = '/customers';
+  static String categories = '/categories';
 }

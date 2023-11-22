@@ -35,7 +35,15 @@ class DefaultScreen extends StatelessWidget {
           ? AppBar(
               title: appBarTitle,
               actions: appBarActions,
-              leading: appBarLeading,
+              leading: appBarLeading ??
+                  (NavigationHelper.canPop(context)
+                      ? GestureDetector(
+                          child: const Icon(
+                            Icons.chevron_left,
+                            size: Dimens.iconSizeLarge,
+                          ),
+                        )
+                      : null),
               automaticallyImplyLeading: automaticallyImplyAppBarLeading,
             )
           : null,

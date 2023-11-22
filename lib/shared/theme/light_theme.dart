@@ -25,9 +25,11 @@ final ThemeData lightTheme = ThemeData(
   ),
   appBarTheme: AppBarTheme(
     backgroundColor: AppColors.white,
-    titleTextStyle: TypographyStyles.titleLarge.copyWith(
+    titleTextStyle: TypographyStyles.titleMedium.copyWith(
       color: AppColors.black,
+      fontWeight: FontWeight.w600,
     ),
+    centerTitle: true,
     elevation: 0,
     iconTheme: const IconThemeData(color: AppColors.black),
     systemOverlayStyle: const SystemUiOverlayStyle(

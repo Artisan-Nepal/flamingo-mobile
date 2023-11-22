@@ -26,9 +26,11 @@ final ThemeData darkTheme = ThemeData(
   ),
   appBarTheme: AppBarTheme(
     backgroundColor: AppColors.black,
-    titleTextStyle: TypographyStyles.titleLarge.copyWith(
+    titleTextStyle: TypographyStyles.titleMedium.copyWith(
       color: AppColors.grayLighter,
+      fontWeight: FontWeight.w600,
     ),
+    centerTitle: true,
     iconTheme: const IconThemeData(color: AppColors.grayLighter),
     systemOverlayStyle: const SystemUiOverlayStyle(
       statusBarColor: AppColors.black,

@@ -51,7 +51,7 @@ class _ProductListingScreenState extends State<ProductListingScreen> {
       create: (context) => _viewModel,
       builder: (context, child) {
         return DefaultScreen(
-          appBarTitle: const Text('Products'),
+          appBarTitle: Text(widget.title),
           scrollable: false,
           child: Consumer<ProductListingViewModel>(
             builder: (context, viewModel, child) {

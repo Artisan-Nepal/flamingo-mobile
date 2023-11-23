@@ -8,6 +8,7 @@ class TextWidget extends StatelessWidget {
   final TextAlign? textAlign;
   final TextOverflow? textOverflow;
   final bool? softWrap;
+  final int? maxLines;
 
   const TextWidget(
     this.text, {
@@ -17,6 +18,7 @@ class TextWidget extends StatelessWidget {
     this.textAlign = TextAlign.start,
     this.textOverflow = TextOverflow.visible,
     this.softWrap = true,
+    this.maxLines,
   });
 
   @override
@@ -32,6 +34,7 @@ class TextWidget extends StatelessWidget {
       textAlign: textAlign,
       overflow: textOverflow,
       softWrap: softWrap,
+      maxLines: maxLines,
     );
   }
 }

@@ -29,7 +29,7 @@ class CategoryListingScreen extends StatelessWidget {
               NavigationHelper.push(
                 context,
                 ProductListingScreen(
-                  title: title,
+                  title: categories[index].name,
                   productListingType: ProductListingType.all,
                 ),
               );

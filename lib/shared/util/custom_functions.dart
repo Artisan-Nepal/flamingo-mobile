@@ -1,4 +1,5 @@
 import 'package:flamingo/feature/feature.dart';
+import 'package:flamingo/feature/product/data/model/product.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -39,4 +40,33 @@ double getScaledValueForSmallerDevice(
               ? value * (minScaleValue ?? scale * 0.7)
               : value
       : value;
+}
+
+List<Product> sortProductsHelper({
+  double startingPrice = 0,
+  double endingPrice = 0,
+  required List<Product> products,
+  ProductFilterType? filterType,
+}) {
+  List<Product> list = [];
+  if (startingPrice > 0 && endingPrice > startingPrice) {
+    list.addAll(products
+        .where((product) =>
+            (product.variants[0].price) >= startingPrice &&
+            (product.variants[0].price) <= endingPrice)
+        .toList());
+  } else {
+    list.addAll(products);
+  }
+
+  if (filterType == null) return list;
+
+  if (filterType.isPriceAsc) {
+    list.sort((a, b) => a.variants[0].price.compareTo(b.variants[0].price));
+  } else if (filterType.isPriceDesc) {
+    list.sort((a, b) => a.variants[0].price.compareTo(b.variants[0].price));
+    Iterable<Product> iterable = list.reversed;
+    list = iterable.toList();
+  }
+  return list;
 }

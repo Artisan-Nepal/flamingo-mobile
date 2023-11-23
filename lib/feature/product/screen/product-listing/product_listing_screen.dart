@@ -21,7 +21,7 @@ class _ProductListingScreenState extends State<ProductListingScreen> {
   @override
   void initState() {
     super.initState();
-    _viewModel.getProducts('');
+    _viewModel.getVendorProducts('');
   }
 
   @override

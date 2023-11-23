@@ -1,4 +1,5 @@
 import 'package:flamingo/feature/product/data/model/product.dart';
+import 'package:flamingo/feature/product/screen/product-detail/product_detail_screen.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/image/image.dart';
 import 'package:flamingo/widget/widget.dart';
@@ -17,7 +18,9 @@ class ProductWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        NavigationHelper.push(context, const ProductDetailScreen());
+      },
       child: Container(
         width: double.infinity,
         margin: const EdgeInsets.only(top: 1),
@@ -65,7 +68,7 @@ class ProductWidget extends StatelessWidget {
                     ),
                     const SizedBox(height: Dimens.spacingSizeExtraSmall),
                     TextWidget(
-                      'Rs. 3,200',
+                      'Rs. ${formatNepaliCurrency(product.variants[0].price)}',
                       style: textTheme(context).labelLarge!,
                     ),
                     const SizedBox(height: Dimens.spacingSizeSmall),

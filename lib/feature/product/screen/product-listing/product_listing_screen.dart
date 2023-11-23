@@ -9,7 +9,18 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
 
 class ProductListingScreen extends StatefulWidget {
-  const ProductListingScreen({super.key});
+  const ProductListingScreen({
+    super.key,
+    required this.title,
+    required this.productListingType,
+    this.categoryId,
+    this.vendorId,
+  });
+
+  final String title;
+  final ProductListingType productListingType;
+  final String? vendorId;
+  final String? categoryId;
 
   @override
   State<ProductListingScreen> createState() => _ProductListingScreenState();
@@ -21,7 +32,17 @@ class _ProductListingScreenState extends State<ProductListingScreen> {
   @override
   void initState() {
     super.initState();
-    _viewModel.getVendorProducts('');
+    getData();
+  }
+
+  getData() {
+    if (widget.productListingType.isCategory && widget.categoryId != null) {
+      _viewModel.getCategoryProducts(widget.categoryId!);
+    } else if (widget.productListingType.isVendor && widget.vendorId != null) {
+      _viewModel.getVendorProducts(widget.vendorId!);
+    } else {
+      _viewModel.getProducts();
+    }
   }
 
   @override

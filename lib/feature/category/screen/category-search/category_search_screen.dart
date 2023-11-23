@@ -1,6 +1,7 @@
 import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/category/screen/category-listing/category_listing_screen.dart';
 import 'package:flamingo/feature/category/screen/category-search/category_search_view_model.dart';
+import 'package:flamingo/feature/product/screen/product-listing/product_listing_screen.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/list-tile/list_tile.dart';
 import 'package:flamingo/widget/widget.dart';
@@ -125,13 +126,25 @@ class _CategorySearchScreenState extends State<CategorySearchScreen>
                         return ListTileV2Wdiget(
                           title: subCategories[index].name,
                           onPressed: () {
-                            NavigationHelper.push(
-                              context,
-                              CategoryListingScreen(
+                            if (subCategories[index].children != null &&
+                                subCategories[index].children!.isNotEmpty) {
+                              NavigationHelper.push(
+                                context,
+                                CategoryListingScreen(
                                   categories:
                                       subCategories[index].children ?? [],
-                                  title: subCategories[index].name),
-                            );
+                                  title: subCategories[index].name,
+                                ),
+                              );
+                            } else {
+                              NavigationHelper.push(
+                                context,
+                                ProductListingScreen(
+                                  title: subCategories[index].name,
+                                  productListingType: ProductListingType.all,
+                                ),
+                              );
+                            }
                           },
                         );
                       },

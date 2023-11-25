@@ -10,6 +10,7 @@ class FilledButtonWidget extends StatelessWidget {
     this.enabled = true,
     this.child,
     this.loadingMsg,
+    this.width,
   });
 
   final String label;
@@ -18,6 +19,7 @@ class FilledButtonWidget extends StatelessWidget {
   final bool enabled;
   final Widget? child;
   final String? loadingMsg;
+  final double? width;
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +29,7 @@ class FilledButtonWidget extends StatelessWidget {
       isLoading: isLoading,
       enabled: enabled,
       loadingMsg: loadingMsg,
+      width: width,
       child: child,
     );
   }

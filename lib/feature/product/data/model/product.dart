@@ -46,7 +46,7 @@ class ProductVariant {
   final int price;
   final String productId;
   final ProductColor color;
-  final List<ProductAttributeResponse> attribute;
+  final List<ProductAttributeResponse> attributes;
   final UploadFileResponse image;
 
   ProductVariant({
@@ -56,7 +56,7 @@ class ProductVariant {
     required this.price,
     required this.productId,
     required this.color,
-    required this.attribute,
+    required this.attributes,
     required this.image,
   });
 
@@ -68,7 +68,7 @@ class ProductVariant {
         productId: json['productId'],
         color: ProductColor.fromJson(
             json['productVariantColor'][0]['productColor']),
-        attribute: ProductAttributeResponse.fromJsonList(
+        attributes: ProductAttributeResponse.fromJsonList(
             json['productAttributeOption']),
         image: UploadFileResponse.fromJson(
           json['productVariantColor'][0]['image'],

@@ -55,4 +55,10 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<void> setUserLocal(Customer user) async {
     return await _authLocal.setUser(user);
   }
+
+  @override
+  Future logout() async {
+    await _authLocal.removeAccessToken();
+    await _authLocal.removeUser();
+  }
 }

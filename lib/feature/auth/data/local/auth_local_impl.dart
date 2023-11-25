@@ -34,4 +34,14 @@ class AuthLocalImpl implements AuthLocal {
     return await _sharedPrefManager.getObject(
         LocalStorageKeys.user, Customer.fromJson);
   }
+
+  @override
+  Future removeAccessToken() async {
+    return await _sharedPrefManager.remove(LocalStorageKeys.accessToken);
+  }
+
+  @override
+  Future removeUser() async {
+    return await _sharedPrefManager.remove(LocalStorageKeys.user);
+  }
 }

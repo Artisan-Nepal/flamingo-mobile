@@ -23,7 +23,7 @@ Widget addHorizontalSpace(double width) {
 }
 
 OutlineInputBorder generateBorder(Color borderColor,
-    {bool isFocused = false, double radius = Dimens.radiusLarge}) {
+    {bool isFocused = false, double radius = Dimens.radiusSmall}) {
   return OutlineInputBorder(
     borderRadius: BorderRadius.circular(radius),
     borderSide: BorderSide(width: isFocused ? 1.3 : 1.2, color: borderColor),

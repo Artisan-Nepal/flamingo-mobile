@@ -1,10 +1,8 @@
 import 'package:flamingo/data/data.dart';
-import 'package:flamingo/feature/feature.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flutter/material.dart';
 import 'package:intl_phone_field/countries.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
-import 'package:provider/provider.dart';
 
 class PhoneTextFieldWidget extends StatelessWidget {
   const PhoneTextFieldWidget({
@@ -66,7 +64,6 @@ class PhoneTextFieldWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isLightMode = Provider.of<ThemeService>(context).isLightMode(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -94,6 +91,10 @@ class PhoneTextFieldWidget extends StatelessWidget {
               maxLength: 10,
             )
           ],
+          dropdownTextStyle: const TextStyle(
+            fontSize: 14,
+            color: AppColors.black,
+          ),
           style: const TextStyle(
             fontSize: 14,
             textBaseline: TextBaseline.alphabetic,
@@ -168,8 +169,8 @@ class PhoneTextFieldWidget extends StatelessWidget {
           dropdownDecoration: const BoxDecoration(
             color: AppColors.grayLighter,
             borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(Dimens.radiusLarge),
-              bottomLeft: Radius.circular(Dimens.radiusLarge),
+              topLeft: Radius.circular(Dimens.radiusSmall),
+              bottomLeft: Radius.circular(Dimens.radiusSmall),
             ),
           ),
           decoration: InputDecoration(
@@ -191,14 +192,18 @@ class PhoneTextFieldWidget extends StatelessWidget {
                 .copyWith(color: AppColors.error),
             hintText: hintText,
             border: generateBorder(
-              isLightMode ? AppColors.grayLight : AppColors.grayLighter,
+              isLightMode(context)
+                  ? AppColors.grayLight
+                  : AppColors.grayLighter,
             ),
             focusedBorder: generateBorder(
               themedPrimaryColor(context),
               isFocused: true,
             ),
             enabledBorder: generateBorder(
-              isLightMode ? AppColors.grayLight : AppColors.grayLighter,
+              isLightMode(context)
+                  ? AppColors.grayLight
+                  : AppColors.grayLighter,
             ),
             errorBorder: generateBorder(
               AppColors.error,

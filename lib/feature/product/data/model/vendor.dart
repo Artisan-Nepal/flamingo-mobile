@@ -1,6 +1,5 @@
 import 'package:flamingo/feature/address/data/model/address.dart';
 import 'package:flamingo/feature/upload-file/data/model/upload_file_response.dart';
-import 'package:flamingo/shared/enum/vendor_status.dart';
 import 'package:flamingo/shared/shared.dart';
 
 class Vendor extends JsonSerializable {

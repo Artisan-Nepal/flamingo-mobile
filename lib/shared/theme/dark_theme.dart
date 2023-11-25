@@ -4,9 +4,9 @@ import 'package:flamingo/shared/shared.dart';
 
 final ThemeData darkTheme = ThemeData(
   brightness: Brightness.dark,
-  primaryColor: AppColors.primaryDark,
+  primaryColor: AppColors.darkModePrimary,
   colorScheme: const ColorScheme.dark(
-    primary: AppColors.primaryDark,
+    primary: AppColors.darkModePrimary,
     secondary: AppColors.secondaryDark,
   ),
   cardColor: AppColors.grayDarker,

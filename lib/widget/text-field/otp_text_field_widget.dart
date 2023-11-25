@@ -46,7 +46,7 @@ class OtpTextFieldWidget extends StatelessWidget {
                 isLightMode ? AppColors.grayDarker : AppColors.grayLighter,
             enabledBorderColor:
                 isLightMode ? AppColors.grayDarker : AppColors.grayLighter,
-            focusBorderColor: AppColors.primaryMain,
+            focusBorderColor: themedPrimaryColor(context),
           ),
         ),
         getError(context),

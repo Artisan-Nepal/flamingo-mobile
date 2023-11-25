@@ -40,7 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
           'Flamingo',
           style: textTheme(context).headlineSmall!.copyWith(
                 color: isLightMode(context)
-                    ? AppColors.primaryMain
+                    ? themedPrimaryColor(context)
                     : AppColors.white,
                 fontWeight: FontWeight.bold,
                 letterSpacing: 0.05,
@@ -48,9 +48,9 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         GestureDetector(
           onTap: () {},
-          child: const Icon(
+          child: Icon(
             Icons.notifications_rounded,
-            color: AppColors.primaryMain,
+            color: themedPrimaryColor(context),
             size: Dimens.iconSizeDefault,
           ),
         )

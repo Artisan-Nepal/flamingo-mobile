@@ -7,7 +7,7 @@ class ButtonWidget extends StatelessWidget {
     required this.label,
     this.onPressed,
     this.height = 50,
-    this.textColor = AppColors.white,
+    this.textColor,
     this.width = double.infinity,
     this.isLoading = false,
     this.fontSize = 14,
@@ -15,7 +15,7 @@ class ButtonWidget extends StatelessWidget {
     this.needBorder = false,
     this.child,
     this.loadingMsg,
-    this.backgroundColor = AppColors.primaryMain,
+    this.backgroundColor,
     this.borderColor = AppColors.grayLight,
     this.padding = const EdgeInsets.symmetric(
       horizontal: 20,
@@ -34,23 +34,29 @@ class ButtonWidget extends StatelessWidget {
   final bool needBorder;
   final Widget? child;
   final String? loadingMsg;
-  final Color backgroundColor;
+  final Color? backgroundColor;
   final Color borderColor;
   final EdgeInsets padding;
   final double loaderSize;
-  final Color textColor;
+  final Color? textColor;
   final BorderRadius? borderRaidus;
 
   @override
   Widget build(BuildContext context) {
-    final textStyle = TypographyStyles.bodyLarge.copyWith(color: textColor);
+    final themedBackgroundColor =
+        backgroundColor ?? themedPrimaryColor(context);
+    final themedTextColor = (isLightMode(context)
+        ? AppColors.darkModePrimary
+        : AppColors.lightModePrimary);
+    final textStyle =
+        TypographyStyles.bodyLarge.copyWith(color: themedTextColor);
     return SizedBox(
       width: width,
       height: height,
       child: TextButton(
         style: TextButton.styleFrom(
           padding: padding,
-          backgroundColor: backgroundColor,
+          backgroundColor: themedBackgroundColor,
           shape: RoundedRectangleBorder(
             side: needBorder ? BorderSide(color: borderColor) : BorderSide.none,
             borderRadius: borderRaidus ?? BorderRadius.circular(5),
@@ -67,7 +73,7 @@ class ButtonWidget extends StatelessWidget {
                     child: CircularProgressIndicator.adaptive(
                       strokeWidth: 2,
                       valueColor: AlwaysStoppedAnimation<Color>(
-                        textColor,
+                        themedTextColor,
                       ),
                     ),
                   ),

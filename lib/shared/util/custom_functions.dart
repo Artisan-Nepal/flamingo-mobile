@@ -29,6 +29,10 @@ TextTheme textTheme(BuildContext context) {
   return Theme.of(context).textTheme;
 }
 
+Color themedPrimaryColor(BuildContext context) {
+  return Theme.of(context).primaryColor;
+}
+
 double getScaledValueForSmallerDevice(
     {required double value, double? scale, double? minScaleValue}) {
   bool isMediumScreen = SizeConfig.isMediumDevice;

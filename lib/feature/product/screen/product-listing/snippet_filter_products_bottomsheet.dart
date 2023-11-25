@@ -54,7 +54,7 @@ class _SnippetFilterProductsBottomSheetState
                     _buildFilterSelection(),
                     const VerticalSpaceWidget(height: Dimens.spacingSizeSmall),
                     Center(
-                      child: RoundedFilledButtonWidget(
+                      child: FilledButtonWidget(
                         label: 'Apply',
                         onPressed: _onApplyFilter,
                       ),
@@ -148,7 +148,7 @@ class _SnippetFilterProductsBottomSheetState
         style: TypographyStyles.labelLarge,
         decoration: InputDecoration(
           filled: true,
-          fillColor: AppColors.primaryMain.withOpacity(0.2),
+          fillColor: themedPrimaryColor(context).withOpacity(0.2),
           contentPadding: const EdgeInsets.only(bottom: 8),
           focusedBorder: UnderlineInputBorder(
             borderSide: BorderSide.none,
@@ -219,7 +219,7 @@ class SnippetFilterProductCheckBox extends StatelessWidget {
       contentPadding: EdgeInsets.zero,
       title:
           Text(title, style: const TextStyle(fontSize: Dimens.fontSizeSmall)),
-      checkColor: AppColors.primaryMain,
+      checkColor: themedPrimaryColor(context),
       activeColor: Colors.transparent,
       value: Provider.of<ProductListingViewModel>(context).selectedFilterType ==
           filterType,

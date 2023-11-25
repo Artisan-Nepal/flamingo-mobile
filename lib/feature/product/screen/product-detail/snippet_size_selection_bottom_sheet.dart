@@ -1,4 +1,4 @@
-import 'package:flamingo/feature/product/data/model/product_color.dart';
+import 'package:flamingo/feature/product/data/model/product.dart';
 import 'package:flamingo/feature/product/screen/product-detail/product_detail_view_model.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/widget.dart';
@@ -6,17 +6,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class SnippetColorSelectionBottomSheet extends StatefulWidget {
-  const SnippetColorSelectionBottomSheet({super.key});
+class SnippetSizeSelectionBottomSheet extends StatefulWidget {
+  const SnippetSizeSelectionBottomSheet({super.key});
 
   @override
-  State<SnippetColorSelectionBottomSheet> createState() =>
-      _SnippetColorSelectionBottomSheetState();
+  State<SnippetSizeSelectionBottomSheet> createState() =>
+      _SnippetSizeSelectionBottomSheetState();
 }
 
-class _SnippetColorSelectionBottomSheetState
-    extends State<SnippetColorSelectionBottomSheet> {
-  late ProductColor _selectedColor;
+class _SnippetSizeSelectionBottomSheetState
+    extends State<SnippetSizeSelectionBottomSheet> {
+  late ProductAttributeOptionResponse _selectedSize;
   late FixedExtentScrollController _scrollController;
 
   @override
@@ -24,9 +24,9 @@ class _SnippetColorSelectionBottomSheetState
     super.initState();
     final viewModel =
         Provider.of<ProductDetailViewModel>(context, listen: false);
-    _selectedColor = viewModel.selectedColor;
+    _selectedSize = viewModel.selectedSize;
     _scrollController = FixedExtentScrollController(
-      initialItem: viewModel.availableColors.indexOf(viewModel.selectedColor),
+      initialItem: viewModel.availableSizes.indexOf(viewModel.selectedSize),
     );
   }
 
@@ -61,7 +61,7 @@ class _SnippetColorSelectionBottomSheetState
                 width: double.infinity,
                 onPressed: () {
                   Provider.of<ProductDetailViewModel>(context, listen: false)
-                      .setSelectedColor(_selectedColor);
+                      .setSelectedSize(_selectedSize);
                   NavigationHelper.pop(context);
                 },
               )
@@ -81,7 +81,7 @@ class _SnippetColorSelectionBottomSheetState
             scrollController: _scrollController,
             itemExtent: 40,
             onSelectedItemChanged: (index) {
-              _selectedColor = viewModel.availableColors[index];
+              _selectedSize = viewModel.availableSizes[index];
             },
             selectionOverlay: Container(
               decoration: const BoxDecoration(
@@ -92,10 +92,10 @@ class _SnippetColorSelectionBottomSheetState
               ),
             ),
             children: List<Widget>.generate(
-              viewModel.availableColors.length,
+              viewModel.availableSizes.length,
               (index) {
                 final productVariant = viewModel.getVariantByColorAndSize(
-                    viewModel.availableColors[index], viewModel.selectedSize);
+                    viewModel.selectedColor, viewModel.availableSizes[index]);
                 return Row(
                   children: [
                     Expanded(
@@ -106,7 +106,7 @@ class _SnippetColorSelectionBottomSheetState
                     ),
                     Expanded(
                       child: Text(
-                        viewModel.availableColors[index].name,
+                        viewModel.availableSizes[index].value,
                         textAlign: TextAlign.center,
                         style: textTheme(context).labelLarge,
                       ),

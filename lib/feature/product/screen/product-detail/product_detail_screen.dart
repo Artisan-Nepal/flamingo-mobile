@@ -5,6 +5,7 @@ import 'package:flamingo/feature/product/screen/product-detail/product_detail_vi
 import 'package:flamingo/feature/product/screen/product-detail/snippet_color_selection_bottom_sheet.dart';
 import 'package:flamingo/feature/product/screen/product-detail/snippet_product_detail_app_bar.dart';
 import 'package:flamingo/feature/product/screen/product-detail/snippet_product_detail_images.dart';
+import 'package:flamingo/feature/product/screen/product-detail/snippet_size_selection_bottom_sheet.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/button/button.dart';
 import 'package:flamingo/widget/screen/default_screen.dart';
@@ -112,6 +113,20 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                 _buildAttributeSelection(
                                   name: 'Size',
                                   value: viewModel.selectedSize.value,
+                                  onPressed: () {
+                                    showCupertinoModalPopup(
+                                      context: context,
+                                      builder: (context) => Wrap(
+                                        children: [
+                                          ChangeNotifierProvider.value(
+                                            value: _viewModel,
+                                            child:
+                                                const SnippetSizeSelectionBottomSheet(),
+                                          )
+                                        ],
+                                      ),
+                                    );
+                                  },
                                 ),
                               ],
                             ),

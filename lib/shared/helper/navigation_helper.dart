@@ -14,6 +14,17 @@ class NavigationHelper {
     );
   }
 
+  static Future pushWithoutAnimation(
+      BuildContext context, Widget screen) async {
+    return await Navigator.push(
+      context,
+      PageRouteBuilder(
+        transitionDuration: Duration.zero,
+        pageBuilder: (context, animation, secondaryAnimation) => screen,
+      ),
+    );
+  }
+
   static Future pushReplacement(BuildContext context, Widget screen) async {
     return await Navigator.pushReplacement(
       context,

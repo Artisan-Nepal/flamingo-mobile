@@ -1,3 +1,5 @@
+// ignore_for_file: unused_field
+
 import 'package:flamingo/feature/product/data/model/product.dart';
 import 'package:flamingo/feature/product/data/product_repository.dart';
 import 'package:flutter/material.dart';

@@ -4,10 +4,7 @@ import 'package:flamingo/feature/product/screen/product-detail/product_detail_ap
 import 'package:flamingo/feature/product/screen/product-detail/product_detail_view_model.dart';
 import 'package:flamingo/feature/product/screen/product-detail/snippet_product_detail_app_bar.dart';
 import 'package:flamingo/feature/product/screen/product-detail/snippet_product_detail_images.dart';
-import 'package:flamingo/shared/shared.dart';
-import 'package:flamingo/widget/image/cached_network_image_widget.dart';
 import 'package:flamingo/widget/screen/default_screen.dart';
-import 'package:flamingo/widget/space/space.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -67,9 +64,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       child: Column(
                         children: [
                           SnippetProductDetailImages(
-                            images: viewModel.product.variants
-                                .map((e) => e.image.url)
-                                .toList(),
+                            variants: viewModel.product.variants,
                           ),
                         ],
                       ),

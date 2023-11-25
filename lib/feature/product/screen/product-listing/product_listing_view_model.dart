@@ -14,10 +14,17 @@ class ProductListingViewModel extends ChangeNotifier {
   Response<FetchResponse<Product>> _getProductsUseCase =
       Response<FetchResponse<Product>>();
   List<Product> _sortedProducts = [];
+  ProductFilterType? _selectedFilterType;
 
   Response<FetchResponse<Product>> get getProductsUseCase =>
       _getProductsUseCase;
   List<Product> get sortedProducts => _sortedProducts;
+  ProductFilterType? get selectedFilterType => _selectedFilterType;
+
+  void setSelectedFilterType(ProductFilterType filterType) {
+    _selectedFilterType = filterType;
+    notifyListeners();
+  }
 
   void setProductsUseCase(Response<FetchResponse<Product>> response) {
     _getProductsUseCase = response;
@@ -37,13 +44,14 @@ class ProductListingViewModel extends ChangeNotifier {
       startingPrice: startingPrice,
       endingPrice: endingPrice,
       products: _getProductsUseCase.data?.rows ?? [],
-      filterType: filterType,
+      filterType: filterType ?? _selectedFilterType,
     );
     notifyListeners();
   }
 
   // restore the sorted list to original state
   restoreSortedList() {
+    _selectedFilterType = null;
     _sortedProducts = _getProductsUseCase.data?.rows ?? [];
     notifyListeners();
   }

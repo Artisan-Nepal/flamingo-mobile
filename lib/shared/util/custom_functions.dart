@@ -48,12 +48,14 @@ List<Product> sortProductsHelper({
   required List<Product> products,
   ProductFilterType? filterType,
 }) {
+  final startingPriceInPaisa = startingPrice * 100;
+  final endingPriceInPaisa = endingPrice * 100;
   List<Product> list = [];
   if (startingPrice > 0 && endingPrice > startingPrice) {
     list.addAll(products
         .where((product) =>
-            (product.variants[0].price) >= startingPrice &&
-            (product.variants[0].price) <= endingPrice)
+            (product.variants[0].price) >= startingPriceInPaisa &&
+            (product.variants[0].price) <= endingPriceInPaisa)
         .toList());
   } else {
     list.addAll(products);

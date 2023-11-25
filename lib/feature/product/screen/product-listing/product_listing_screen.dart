@@ -1,11 +1,12 @@
 import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/product/screen/product-listing/product_listing_view_model.dart';
+import 'package:flamingo/feature/product/screen/product-listing/snippet_filter_products_bottomsheet.dart';
+import 'package:flamingo/feature/product/screen/product-listing/snippet_product_listing.dart';
 import 'package:flamingo/shared/shared.dart';
-import 'package:flamingo/widget/product/product_widget.dart';
 import 'package:flamingo/widget/screen/default_screen.dart';
 import 'package:flamingo/widget/shimmer/shimmer.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
 
 class ProductListingScreen extends StatefulWidget {
@@ -53,30 +54,40 @@ class _ProductListingScreenState extends State<ProductListingScreen> {
         return DefaultScreen(
           appBarTitle: Text(widget.title),
           scrollable: false,
+          appBarActions: [
+            IconButton(
+              onPressed: _onPressFilter,
+              icon: const Icon(Icons.filter_list),
+            )
+          ],
           child: Consumer<ProductListingViewModel>(
             builder: (context, viewModel, child) {
-              final products = viewModel.getProductsUseCase.data?.rows ?? [];
+              final products = viewModel.sortedProducts;
               if (viewModel.getProductsUseCase.isLoading) {
                 return const ProductViewShimmerWidget();
               }
-              return MasonryGridView.builder(
-                mainAxisSpacing: Dimens.spacingSizeSmall,
-                crossAxisSpacing: Dimens.spacingSizeSmall,
-                itemCount: products.length,
-                gridDelegate:
-                    const SliverSimpleGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                ),
-                itemBuilder: (context, index) {
-                  return ProductWidget(
-                    product: products[index],
-                  );
-                },
-              );
+              return SnippetProductListing(products: products);
             },
           ),
         );
       },
+    );
+  }
+
+  void _onPressFilter() {
+    showCupertinoModalPopup(
+      context: context,
+      builder: (context) => Wrap(
+        children: [
+          Padding(
+            padding: MediaQuery.of(context).viewInsets,
+            child: ChangeNotifierProvider.value(
+              value: _viewModel,
+              child: const SnippetFilterProductsBottomSheet(),
+            ),
+          )
+        ],
+      ),
     );
   }
 }

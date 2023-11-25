@@ -128,7 +128,7 @@ class TextFieldWidget extends StatelessWidget {
               isLightMode ? AppColors.grayLight : AppColors.grayLighter,
             ),
             focusedBorder: generateBorder(
-              AppColors.primaryMain,
+              themedPrimaryColor(context),
               isFocused: true,
             ),
             enabledBorder: generateBorder(

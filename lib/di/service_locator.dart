@@ -1,6 +1,9 @@
 import 'package:flamingo/di/registration/data.dart';
+import 'package:flamingo/di/registration/feature/address.dart';
 import 'package:flamingo/di/registration/feature/category.dart';
 import 'package:flamingo/di/registration/feature/dashboard.dart';
+import 'package:flamingo/di/registration/feature/product.dart';
+import 'package:flamingo/di/registration/feature/upload_file.dart';
 import 'package:flamingo/di/registration/feature/user.dart';
 import 'package:flamingo/di/registration/registration.dart';
 import 'package:get_it/get_it.dart';
@@ -19,4 +22,7 @@ Future setUpServiceLocator() async {
   registerUserFeature(locator);
   registerDashboardFeature(locator);
   registerCategoryFeature(locator);
+  registerAddressFeature(locator);
+  registerProductFeature(locator);
+  registerUploadFileFeature(locator);
 }

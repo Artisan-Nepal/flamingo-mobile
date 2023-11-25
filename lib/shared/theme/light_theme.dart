@@ -3,9 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:flamingo/shared/shared.dart';
 
 final ThemeData lightTheme = ThemeData(
-  primaryColor: AppColors.primaryDark,
+  primaryColor: AppColors.lightModePrimary,
   colorScheme: const ColorScheme.light(
-    primary: AppColors.primaryDark,
+    primary: AppColors.lightModePrimary,
     secondary: AppColors.secondaryDark,
   ),
   cardColor: AppColors.grayLighter,

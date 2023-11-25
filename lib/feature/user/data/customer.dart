@@ -1,4 +1,3 @@
-import 'package:flamingo/shared/enum/user_role.dart';
 import 'package:flamingo/shared/shared.dart';
 
 class Customer extends JsonSerializable {

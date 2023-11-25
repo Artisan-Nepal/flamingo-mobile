@@ -17,10 +17,12 @@ class ListTileV2Wdiget extends StatelessWidget {
       onTap: onPressed,
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: Dimens.spacing_12),
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           border: Border(
             bottom: BorderSide(
-              color: AppColors.grayLighter,
+              color: isLightMode(context)
+                  ? AppColors.grayLighter
+                  : AppColors.grayDarker,
               width: 1,
             ),
           ),

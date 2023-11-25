@@ -1,3 +1,4 @@
+import 'package:flamingo/feature/cart/screen/cart-listing/cart_listing_screen.dart';
 import 'package:flamingo/feature/product/screen/product-detail/product_detail_app_bar_view_model.dart';
 import 'package:flamingo/feature/product/screen/product-detail/product_detail_view_model.dart';
 import 'package:flamingo/shared/shared.dart';
@@ -76,12 +77,7 @@ class SnippetProductDetailAppBar extends StatelessWidget {
                   // Shopping bag
                   GestureDetector(
                     onTap: () {
-                      // Provider.of<AuthProvider>(context, listen: false).isLoggedIn
-                      //     ? Navigator.push(
-                      //         context,
-                      //         MaterialPageRoute(
-                      //             builder: (context) => const CartScreen()))
-                      //     : showJoinAndConnectWidget(context);
+                      NavigationHelper.push(context, const CartListingScreen());
                     },
                     child: Container(
                       padding: const EdgeInsets.all(Dimens.spacingSizeSmall),

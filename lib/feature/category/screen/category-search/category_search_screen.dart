@@ -30,34 +30,31 @@ class _CategorySearchScreenState extends State<CategorySearchScreen>
     return ChangeNotifierProvider(
       create: (context) => _viewModel,
       builder: (context, child) {
-        return DefaultScreen(
+        return TitledScreen(
           scrollable: false,
-          needAppBar: false,
-          child: SafeArea(
-            child: Consumer<CategorySearchViewModel>(
-              builder: (context, viewModel, child) {
-                if (!viewModel.categoriesUseCase.hasCompleted) {
-                  return const SizedBox();
-                }
-                final categories = viewModel.categoriesUseCase.data ?? [];
-                return DefaultTabController(
+          padding: EdgeInsets.zero,
+          title: 'CATEGORY',
+          child: Consumer<CategorySearchViewModel>(
+            builder: (context, viewModel, child) {
+              if (!viewModel.categoriesUseCase.hasCompleted) {
+                return const SizedBox();
+              }
+              final categories = viewModel.categoriesUseCase.data ?? [];
+              return SizedBox(
+                height: SizeConfig.screenHeight,
+                child: DefaultTabController(
                   animationDuration: Duration.zero,
                   length: categories.length,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const VerticalSpaceWidget(
-                          height: Dimens.spacingSizeDefault),
-                      const ScreenTitleWidget(
-                        'Category',
-                      ),
                       _buildTabBar(),
                       _buildTabBarView(),
                     ],
                   ),
-                );
-              },
-            ),
+                ),
+              );
+            },
           ),
         );
       },

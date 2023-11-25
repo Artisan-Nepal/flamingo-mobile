@@ -48,7 +48,7 @@ class _SnippetSizeSelectionBottomSheetState
                 ),
               ),
               TextWidget(
-                'Select Color',
+                'Select Size',
                 style: textTheme(context).bodyLarge!.copyWith(
                       fontWeight: FontWeight.bold,
                     ),

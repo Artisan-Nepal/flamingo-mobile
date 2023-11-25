@@ -2,5 +2,5 @@ import 'package:flamingo/feature/wishlist/data/model/add_to_wishlist_request.dar
 import 'package:flamingo/feature/wishlist/data/model/wishlist_item.dart';
 
 abstract class WishlistRemote {
-  Future<WishlistItem> addToWishList(AddToWishlistRequest request);
+  Future<WishlistItem> updateWishlist(UpdateWishlistRequest request);
 }

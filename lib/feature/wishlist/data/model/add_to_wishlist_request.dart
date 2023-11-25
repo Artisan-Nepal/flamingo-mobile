@@ -1,7 +1,7 @@
-class AddToWishlistRequest {
+class UpdateWishlistRequest {
   final String productId;
 
-  AddToWishlistRequest({
+  UpdateWishlistRequest({
     required this.productId,
   });
 

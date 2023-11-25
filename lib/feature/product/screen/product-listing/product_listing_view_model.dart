@@ -1,6 +1,8 @@
 import 'package:flamingo/data/data.dart';
+import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/product/data/model/product.dart';
 import 'package:flamingo/feature/product/data/product_repository.dart';
+import 'package:flamingo/feature/wishlist/wishlist_view_model.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flutter/material.dart';
 
@@ -60,6 +62,7 @@ class ProductListingViewModel extends ChangeNotifier {
     try {
       setProductsUseCase(Response.loading());
       final response = await _productRepository.getVendorProducts(vendorId);
+      locator<WishlistViewModel>().initWishlistStatus(response.rows);
       setProductsUseCase(Response.complete(response));
     } catch (exception) {
       setProductsUseCase(Response.error(exception));
@@ -70,6 +73,7 @@ class ProductListingViewModel extends ChangeNotifier {
     try {
       setProductsUseCase(Response.loading());
       final response = await _productRepository.getProducts();
+      locator<WishlistViewModel>().initWishlistStatus(response.rows);
       setProductsUseCase(Response.complete(response));
     } catch (exception) {
       setProductsUseCase(Response.error(exception));
@@ -80,6 +84,7 @@ class ProductListingViewModel extends ChangeNotifier {
     try {
       setProductsUseCase(Response.loading());
       final response = await _productRepository.getCategoryProducts(catgeoryId);
+      locator<WishlistViewModel>().initWishlistStatus(response.rows);
       setProductsUseCase(Response.complete(response));
     } catch (exception) {
       setProductsUseCase(Response.error(exception));

@@ -10,6 +10,7 @@ class Product {
   final Vendor vendor;
   final List<String> tags;
   final List<ProductVariant> variants;
+  final bool isInWishlist;
 
   Product({
     required this.id,
@@ -19,6 +20,7 @@ class Product {
     required this.vendor,
     required this.tags,
     required this.variants,
+    required this.isInWishlist,
   });
 
   factory Product.fromJson(Map<String, dynamic> json) => Product(
@@ -30,6 +32,7 @@ class Product {
         tags: List<String>.from(
             json['productToTag'].map((e) => e['productTag']['name'])),
         variants: ProductVariant.fromJsonList(json['variants']),
+        isInWishlist: json['isInWishlist'] ?? false,
       );
 
   static List<Product> fromJsonList(dynamic json) => List<Product>.from(

@@ -17,7 +17,7 @@ class WishlistRepositoryImpl implements WishlistRepository {
         _wishlistRemote = wishlistRemote;
 
   @override
-  Future<WishlistItem> addToWishlist(AddToWishlistRequest request) async {
-    return await _wishlistRemote.addToWishList(request);
+  Future<WishlistItem> updateWishlist(UpdateWishlistRequest request) async {
+    return await _wishlistRemote.updateWishlist(request);
   }
 }

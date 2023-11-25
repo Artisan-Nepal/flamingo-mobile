@@ -9,7 +9,7 @@ class WishlistRemoteImpl implements WishlistRemote {
   WishlistRemoteImpl({required ApiClient apiClient}) : _apiClient = apiClient;
 
   @override
-  Future<WishlistItem> addToWishList(AddToWishlistRequest request) async {
+  Future<WishlistItem> updateWishlist(UpdateWishlistRequest request) async {
     final apiResponse =
         await _apiClient.post(ApiUrls.carts, body: request.toJson());
     return WishlistItem.fromJson(apiResponse.data);

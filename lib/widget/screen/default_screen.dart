@@ -1,6 +1,7 @@
 import 'package:flamingo/shared/shared.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class DefaultScreen extends StatelessWidget {
   const DefaultScreen({
@@ -16,6 +17,7 @@ class DefaultScreen extends StatelessWidget {
     this.automaticallyImplyAppBarLeading = true,
     this.scrollable = true,
     this.bottomBarPadding = const EdgeInsets.all(Dimens.spacingSizeDefault),
+    this.statusBarIconBrightness,
   });
 
   final Widget child;
@@ -28,51 +30,59 @@ class DefaultScreen extends StatelessWidget {
   final EdgeInsets bottomBarPadding;
   final bool automaticallyImplyAppBarLeading;
   final bool scrollable;
+  final Brightness? statusBarIconBrightness;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: needAppBar
-          ? AppBar(
-              title: appBarTitle,
-              actions: appBarActions,
-              leading: appBarLeading ??
-                  (NavigationHelper.canPop(context)
-                      ? GestureDetector(
-                          onTap: () {
-                            NavigationHelper.pop(context);
-                          },
-                          child: const Icon(
-                            CupertinoIcons.back,
-                            size: Dimens.iconSizeLarge,
-                          ),
-                        )
-                      : null),
-              automaticallyImplyLeading: automaticallyImplyAppBarLeading,
-            )
-          : null,
-      body: NotificationListener<OverscrollIndicatorNotification>(
-        onNotification: (notification) {
-          notification.disallowIndicator();
-          return false;
-        },
-        child: GestureDetector(
-          child: scrollable
-              ? SingleChildScrollView(
-                  child: Padding(
+    return AnnotatedRegion(
+      value: SystemUiOverlayStyle(
+        statusBarColor: AppColors.transparent,
+        statusBarIconBrightness: statusBarIconBrightness ??
+            (isLightMode(context) ? Brightness.dark : Brightness.light),
+      ),
+      child: Scaffold(
+        appBar: needAppBar
+            ? AppBar(
+                title: appBarTitle,
+                actions: appBarActions,
+                leading: appBarLeading ??
+                    (NavigationHelper.canPop(context)
+                        ? GestureDetector(
+                            onTap: () {
+                              NavigationHelper.pop(context);
+                            },
+                            child: const Icon(
+                              CupertinoIcons.back,
+                              size: Dimens.iconSizeLarge,
+                            ),
+                          )
+                        : null),
+                automaticallyImplyLeading: automaticallyImplyAppBarLeading,
+              )
+            : null,
+        body: NotificationListener<OverscrollIndicatorNotification>(
+          onNotification: (notification) {
+            notification.disallowIndicator();
+            return false;
+          },
+          child: GestureDetector(
+            child: scrollable
+                ? SingleChildScrollView(
+                    child: Padding(
+                      padding: padding,
+                      child: child,
+                    ),
+                  )
+                : Padding(
                     padding: padding,
                     child: child,
                   ),
-                )
-              : Padding(
-                  padding: padding,
-                  child: child,
-                ),
+          ),
         ),
-      ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: bottomNavigationBar,
+        bottomNavigationBar: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: bottomNavigationBar,
+        ),
       ),
     );
   }

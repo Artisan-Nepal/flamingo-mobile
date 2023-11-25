@@ -26,8 +26,8 @@ class ButtonWidget extends StatelessWidget {
 
   final String label;
   final VoidCallback? onPressed;
-  final double width;
-  final double height;
+  final double? width;
+  final double? height;
   final bool isLoading;
   final double fontSize;
   final bool enabled;

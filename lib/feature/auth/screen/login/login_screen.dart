@@ -62,7 +62,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     const VerticalSpaceWidget(
                       height: Dimens.spacingSizeOverLarge,
                     ),
-                    RoundedFilledButtonWidget(
+                    FilledButtonWidget(
+                      width: double.infinity,
                       label: 'Login',
                       onPressed: () {
                         _onLogin(viewModel);

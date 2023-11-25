@@ -1,6 +1,7 @@
 import 'package:flamingo/feature/feature.dart';
 import 'package:flamingo/feature/user/data/customer.dart';
 import 'package:flamingo/feature/user/data/user_repository.dart';
+import 'package:flamingo/shared/shared.dart';
 import 'package:flutter/material.dart';
 
 class AuthViewModel extends ChangeNotifier {
@@ -21,6 +22,15 @@ class AuthViewModel extends ChangeNotifier {
   bool get isLoggedIn => _isLoggedIn;
   Customer? get user => _user;
 
+  Response _logoutUseCase = Response();
+
+  Response get logoutUseCase => _logoutUseCase;
+
+  void _setLogoutUseCase(Response response) {
+    _logoutUseCase = response;
+    notifyListeners();
+  }
+
   Future<void> syncLocally() async {
     _isLoggedIn = await _authRepository.getIsLoggedIn();
     _user = await _authRepository.getUserLocal();
@@ -36,5 +46,17 @@ class AuthViewModel extends ChangeNotifier {
           'Failed to sync auth state remotely | Error: ${err.toString()}');
     }
     notifyListeners();
+  }
+
+  Future<void> logout() async {
+    try {
+      _setLogoutUseCase(Response.loading());
+      await _authRepository.logout();
+      _isLoggedIn = false;
+      _user = null;
+      _setLogoutUseCase(Response.complete(null));
+    } catch (exception) {
+      _setLogoutUseCase(Response.error(exception));
+    }
   }
 }

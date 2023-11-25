@@ -19,7 +19,12 @@ class ProductWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        NavigationHelper.push(context, const ProductDetailScreen());
+        NavigationHelper.push(
+          context,
+          ProductDetailScreen(
+            product: product,
+          ),
+        );
       },
       child: Container(
         width: double.infinity,

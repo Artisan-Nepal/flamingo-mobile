@@ -1,16 +1,23 @@
 // ignore_for_file: unused_field
 
+import 'package:flamingo/feature/cart/data/cart_repository.dart';
+import 'package:flamingo/feature/cart/data/model/add_to_cart_request.dart';
+import 'package:flamingo/feature/cart/data/model/cart.dart';
 import 'package:flamingo/feature/product/data/model/product.dart';
 import 'package:flamingo/feature/product/data/model/product_color.dart';
 import 'package:flamingo/feature/product/data/product_repository.dart';
+import 'package:flamingo/shared/shared.dart';
 import 'package:flutter/material.dart';
 
 class ProductDetailViewModel extends ChangeNotifier {
   final ProductRepository _productRepository;
+  final CartRepository _cartRepository;
 
   ProductDetailViewModel({
     required ProductRepository productRepository,
-  }) : _productRepository = productRepository;
+    required CartRepository cartRepository,
+  })  : _productRepository = productRepository,
+        _cartRepository = cartRepository;
 
   late Product _product;
   late ProductColor _selectedColor;
@@ -19,6 +26,15 @@ class ProductDetailViewModel extends ChangeNotifier {
   Product get product => _product;
   ProductColor get selectedColor => _selectedColor;
   ProductAttributeOptionResponse get selectedSize => _selectedSize;
+
+  Response<Cart> _addToCartUseCase = Response<Cart>();
+
+  Response<Cart> get addToCartUseCase => _addToCartUseCase;
+
+  void setAddToCartUseCase(Response<Cart> response) {
+    _addToCartUseCase = response;
+    notifyListeners();
+  }
 
   setProduct(Product? product) {
     if (product != null) {
@@ -71,5 +87,18 @@ class ProductDetailViewModel extends ChangeNotifier {
         variant.attributes.first.option.id == size.id);
   }
 
-  Future<void> addToBag() async {}
+  Future<void> addToCart() async {
+    try {
+      setAddToCartUseCase(Response.loading());
+      final response = await _cartRepository.addToCart(
+        AddToCartRequest(
+          productVariantId: selectedVariant.id,
+          quantity: 1,
+        ),
+      );
+      setAddToCartUseCase(Response.complete(response));
+    } catch (exception) {
+      setAddToCartUseCase(Response.error(exception));
+    }
+  }
 }

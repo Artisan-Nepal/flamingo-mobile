@@ -64,10 +64,6 @@ class SnippetProductDetailAppBar extends StatelessWidget {
                     child: Container(
                       padding: const EdgeInsets.all(1),
                       alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        // color: iconBackgroundColor,
-                      ),
                       child: Icon(
                         CupertinoIcons.back,
                         size: 26,
@@ -91,10 +87,6 @@ class SnippetProductDetailAppBar extends StatelessWidget {
                       padding: const EdgeInsets.all(Dimens.spacingSizeSmall),
                       height: 30,
                       // width: 30,
-                      decoration: BoxDecoration(
-                          // shape: BoxShape.circle,
-                          // color: iconBackgroundColor,
-                          ),
                       margin: const EdgeInsets.symmetric(
                         horizontal: Dimens.spacingSizeSmall,
                         vertical: Dimens.spacing_8,

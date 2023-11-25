@@ -7,12 +7,9 @@ import 'package:flamingo/feature/product/screen/product-detail/snippet_product_d
 import 'package:flamingo/feature/product/screen/product-detail/snippet_product_detail_images.dart';
 import 'package:flamingo/feature/product/screen/product-detail/snippet_size_selection_bottom_sheet.dart';
 import 'package:flamingo/shared/shared.dart';
-import 'package:flamingo/widget/button/button.dart';
-import 'package:flamingo/widget/screen/default_screen.dart';
-import 'package:flamingo/widget/text/text.dart';
+import 'package:flamingo/widget/loader/full_screen_loader.dart';
 import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:provider/provider.dart';
 
@@ -195,11 +192,26 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       child: FilledButtonWidget(
         label: 'Add to Bag',
         width: SizeConfig.screenWidth - 2 * Dimens.spacingSizeDefault,
-        onPressed: () {
-          viewModel.addToBag();
+        onPressed: () async {
+          showFullScreenLoader(context);
+          await viewModel.addToCart();
+          _observeAddToCartResponse(viewModel);
         },
       ),
     );
+  }
+
+  void _observeAddToCartResponse(ProductDetailViewModel viewModel) {
+    NavigationHelper.pop(context);
+
+    if (viewModel.addToCartUseCase.hasCompleted) {
+    } else {
+      showToast(
+        context,
+        viewModel.addToCartUseCase.exception!,
+        isSuccess: false,
+      );
+    }
   }
 
   List<Widget> _buildProductInformation(ProductDetailViewModel viewModel) {

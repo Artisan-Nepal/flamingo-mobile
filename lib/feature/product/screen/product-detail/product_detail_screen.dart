@@ -2,6 +2,7 @@ import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/product/data/model/product.dart';
 import 'package:flamingo/feature/product/screen/product-detail/product_detail_app_bar_view_model.dart';
 import 'package:flamingo/feature/product/screen/product-detail/product_detail_view_model.dart';
+import 'package:flamingo/feature/product/screen/product-detail/snippet_add_to_cart_summary_bottom_sheet.dart';
 import 'package:flamingo/feature/product/screen/product-detail/snippet_color_selection_bottom_sheet.dart';
 import 'package:flamingo/feature/product/screen/product-detail/snippet_product_detail_app_bar.dart';
 import 'package:flamingo/feature/product/screen/product-detail/snippet_product_detail_images.dart';
@@ -205,6 +206,17 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     NavigationHelper.pop(context);
 
     if (viewModel.addToCartUseCase.hasCompleted) {
+      showCupertinoModalPopup(
+        context: context,
+        builder: (context) => Wrap(
+          children: [
+            ChangeNotifierProvider.value(
+              value: _viewModel,
+              child: const SnippetAddToCartSummaryBottomSheet(),
+            )
+          ],
+        ),
+      );
     } else {
       showToast(
         context,

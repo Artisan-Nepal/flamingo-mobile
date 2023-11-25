@@ -1,5 +1,6 @@
 import 'package:flamingo/di/registration/data.dart';
 import 'package:flamingo/di/registration/feature/address.dart';
+import 'package:flamingo/di/registration/feature/cart.dart';
 import 'package:flamingo/di/registration/feature/category.dart';
 import 'package:flamingo/di/registration/feature/dashboard.dart';
 import 'package:flamingo/di/registration/feature/product.dart';
@@ -25,4 +26,5 @@ Future setUpServiceLocator() async {
   registerAddressFeature(locator);
   registerProductFeature(locator);
   registerUploadFileFeature(locator);
+  registerCartFeature(locator);
 }

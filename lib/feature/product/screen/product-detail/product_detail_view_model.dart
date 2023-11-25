@@ -70,4 +70,6 @@ class ProductDetailViewModel extends ChangeNotifier {
         variant.color.id == color.id &&
         variant.attributes.first.option.id == size.id);
   }
+
+  Future<void> addToBag() async {}
 }

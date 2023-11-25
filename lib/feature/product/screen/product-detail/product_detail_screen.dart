@@ -137,7 +137,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   ],
                 ),
                 const SnippetProductDetailAppBar(),
-                _buildAddToBagButton(),
+                _buildAddToBagButton(viewModel),
               ],
             ),
           );
@@ -187,7 +187,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     );
   }
 
-  Widget _buildAddToBagButton() {
+  Widget _buildAddToBagButton(ProductDetailViewModel viewModel) {
     return Positioned(
       bottom: 0,
       right: Dimens.spacingSizeDefault,
@@ -195,6 +195,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       child: FilledButtonWidget(
         label: 'Add to Bag',
         width: SizeConfig.screenWidth - 2 * Dimens.spacingSizeDefault,
+        onPressed: () {
+          viewModel.addToBag();
+        },
       ),
     );
   }

@@ -6,6 +6,7 @@ import 'package:flamingo/feature/wishlist/data/remote/wishilst_remote.dart';
 import 'package:flamingo/feature/wishlist/data/remote/wishlist_remote_impl.dart';
 import 'package:flamingo/feature/wishlist/data/wishlist_repository.dart';
 import 'package:flamingo/feature/wishlist/data/wishlist_repository_impl.dart';
+import 'package:flamingo/feature/wishlist/update_wishlist_view_model.dart';
 import 'package:flamingo/feature/wishlist/wishlist_view_model.dart';
 import 'package:get_it/get_it.dart';
 
@@ -28,7 +29,12 @@ void registerWishlistFeature(GetIt locator) {
       wishlistRemote: locator<WishlistRemote>(),
     ),
   );
-  locator.registerFactory<WishlistViewModel>(
+  locator.registerLazySingleton<WishlistViewModel>(
     () => WishlistViewModel(),
+  );
+  locator.registerFactory<UpdateWishlistViewModel>(
+    () => UpdateWishlistViewModel(
+      wishlistRepository: locator<WishlistRepository>(),
+    ),
   );
 }

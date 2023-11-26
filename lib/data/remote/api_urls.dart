@@ -17,4 +17,5 @@ class ApiUrls {
   static String productsByVendorId = '/products/vendor/:id';
   static String productsByCategoryId = '/products/category/:id';
   static String carts = '/carts';
+  static String wishlists = '/wishlists';
 }

@@ -11,7 +11,7 @@ class WishlistRemoteImpl implements WishlistRemote {
   @override
   Future<WishlistItem> updateWishlist(UpdateWishlistRequest request) async {
     final apiResponse =
-        await _apiClient.post(ApiUrls.carts, body: request.toJson());
+        await _apiClient.post(ApiUrls.wishlists, body: request.toJson());
     return WishlistItem.fromJson(apiResponse.data);
   }
 }

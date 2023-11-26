@@ -1,6 +1,7 @@
 import 'package:flamingo/feature/product/data/model/product.dart';
 import 'package:flamingo/feature/product/screen/product-detail/product_detail_screen.dart';
 import 'package:flamingo/shared/shared.dart';
+import 'package:flamingo/widget/fav-button/fav_button_widget.dart';
 import 'package:flamingo/widget/image/image.dart';
 import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/material.dart';
@@ -10,10 +11,12 @@ class ProductWidget extends StatelessWidget {
     Key? key,
     required this.product,
     this.nameMaxLines = 2,
+    this.needFavIcon = true,
   }) : super(key: key);
 
   final Product product;
   final int nameMaxLines;
+  final bool needFavIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -40,14 +43,26 @@ class ProductWidget extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(
-                height: 170,
-                width: double.infinity,
-                child: CachedNetworkImageWidget(
-                  image: product.variants[0].image.url,
-                  fit: BoxFit.cover,
-                  placeHolder: ImageConstants.imagePlaceholder,
-                ),
+              Stack(
+                children: [
+                  SizedBox(
+                    height: 170,
+                    width: double.infinity,
+                    child: CachedNetworkImageWidget(
+                      image: product.variants[0].image.url,
+                      fit: BoxFit.cover,
+                      placeHolder: ImageConstants.imagePlaceholder,
+                    ),
+                  ),
+                  if (needFavIcon)
+                    Positioned(
+                      top: 10,
+                      right: 10,
+                      child: FavButtonWidget(
+                        productId: product.id,
+                      ),
+                    ),
+                ],
               ),
               const SizedBox(height: 5),
               Padding(
@@ -60,7 +75,7 @@ class ProductWidget extends StatelessWidget {
                     TextWidget(
                       product.vendor.storeName,
                       textOverflow: TextOverflow.ellipsis,
-                      style: textTheme(context).bodySmall!.copyWith(
+                      style: textTheme(context).bodyMedium!.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
                     ),
@@ -69,7 +84,7 @@ class ProductWidget extends StatelessWidget {
                       product.title,
                       maxLines: nameMaxLines,
                       textOverflow: TextOverflow.ellipsis,
-                      style: textTheme(context).bodySmall!,
+                      style: textTheme(context).bodyMedium!,
                     ),
                     const SizedBox(height: Dimens.spacingSizeExtraSmall),
                     TextWidget(

@@ -55,6 +55,7 @@ class _SnippetFilterProductsBottomSheetState
                     const VerticalSpaceWidget(height: Dimens.spacingSizeSmall),
                     Center(
                       child: FilledButtonWidget(
+                        width: double.infinity,
                         label: 'Apply',
                         onPressed: _onApplyFilter,
                       ),

@@ -80,11 +80,10 @@ class SnippetProductDetailAppBar extends StatelessWidget {
                       NavigationHelper.push(context, const CartListingScreen());
                     },
                     child: Container(
-                      padding: const EdgeInsets.all(Dimens.spacingSizeSmall),
                       height: 30,
                       // width: 30,
                       margin: const EdgeInsets.symmetric(
-                        horizontal: Dimens.spacingSizeSmall,
+                        horizontal: Dimens.spacingSizeDefault,
                         vertical: Dimens.spacing_8,
                       ),
                       child: Row(

@@ -9,9 +9,11 @@ class FavButtonWidget extends StatefulWidget {
   const FavButtonWidget({
     super.key,
     required this.productId,
+    this.iconSize = Dimens.iconSize_22,
   });
 
   final String productId;
+  final double iconSize;
 
   @override
   State<FavButtonWidget> createState() => _FavButtonWidgetState();
@@ -37,6 +39,7 @@ class _FavButtonWidgetState extends State<FavButtonWidget> {
                   },
                   child: Icon(
                     isInWishlist ? Icons.favorite : Icons.favorite_outline,
+                    size: widget.iconSize,
                     color: AppColors.black,
                   ),
                 );

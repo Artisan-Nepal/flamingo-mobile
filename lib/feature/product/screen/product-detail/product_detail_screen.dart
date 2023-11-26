@@ -70,6 +70,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           SnippetProductDetailImages(
+                            productId: viewModel.product.id,
                             variants: viewModel.product.variants,
                           ),
                           Padding(

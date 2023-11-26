@@ -11,6 +11,8 @@ class OutlinedButtonWidget extends StatelessWidget {
     this.enabled = true,
     this.child,
     this.loadingMsg,
+    this.height,
+    this.fontSize,
   });
 
   final String label;
@@ -19,6 +21,8 @@ class OutlinedButtonWidget extends StatelessWidget {
   final bool enabled;
   final Widget? child;
   final String? loadingMsg;
+  final double? height;
+  final double? fontSize;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +34,10 @@ class OutlinedButtonWidget extends StatelessWidget {
       loadingMsg: loadingMsg,
       needBorder: true,
       backgroundColor: AppColors.transparent,
-      textColor: AppColors.grayDarker,
+      borderColor: isLightMode(context) ? AppColors.black : AppColors.white,
+      textColor: isLightMode(context) ? AppColors.black : AppColors.white,
+      height: height,
+      fontSize: fontSize,
       child: child,
     );
   }

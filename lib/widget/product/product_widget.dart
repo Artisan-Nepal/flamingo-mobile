@@ -25,6 +25,7 @@ class ProductWidget extends StatelessWidget {
         NavigationHelper.push(
           context,
           ProductDetailScreen(
+            productId: product.id,
             product: product,
           ),
         );

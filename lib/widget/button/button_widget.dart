@@ -29,7 +29,7 @@ class ButtonWidget extends StatelessWidget {
   final double? width;
   final double? height;
   final bool isLoading;
-  final double fontSize;
+  final double? fontSize;
   final bool enabled;
   final bool needBorder;
   final Widget? child;
@@ -45,11 +45,14 @@ class ButtonWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final themedBackgroundColor =
         backgroundColor ?? themedPrimaryColor(context);
-    final themedTextColor = (isLightMode(context)
-        ? AppColors.darkModePrimary
-        : AppColors.lightModePrimary);
-    final textStyle =
-        TypographyStyles.bodyLarge.copyWith(color: themedTextColor);
+    final themedTextColor = textColor ??
+        (isLightMode(context)
+            ? AppColors.darkModePrimary
+            : AppColors.lightModePrimary);
+    final textStyle = TypographyStyles.bodyLarge.copyWith(
+      color: themedTextColor,
+      fontSize: fontSize,
+    );
     return SizedBox(
       width: width,
       height: height,

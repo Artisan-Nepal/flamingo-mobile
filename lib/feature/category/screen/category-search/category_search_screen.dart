@@ -32,7 +32,6 @@ class _CategorySearchScreenState extends State<CategorySearchScreen>
       builder: (context, child) {
         return TitledScreen(
           scrollable: false,
-          padding: EdgeInsets.zero,
           title: 'CATEGORY',
           child: Consumer<CategorySearchViewModel>(
             builder: (context, viewModel, child) {

@@ -18,9 +18,11 @@ class ProductDetailScreen extends StatefulWidget {
   const ProductDetailScreen({
     super.key,
     this.product,
+    required this.productId,
   });
 
   final Product? product;
+  final String productId;
 
   @override
   State<ProductDetailScreen> createState() => _ProductDetailScreenState();

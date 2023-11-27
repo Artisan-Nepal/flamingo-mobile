@@ -1,6 +1,6 @@
 class ApiUrls {
   static String baseUrl =
-      'https://70f2-2400-1a00-b080-ad39-1c1f-601-2637-e30c.ngrok-free.app/api';
+      'https://6341-2400-1a00-b080-1fe5-dd78-8e6-85f6-6fbe.ngrok-free.app/api';
 
   // AUTH
   static String sendLoginOtp = '/auth/send-otp';
@@ -18,4 +18,5 @@ class ApiUrls {
   static String productsByCategoryId = '/products/category/:id';
   static String carts = '/carts';
   static String wishlists = '/wishlists';
+  static String updateWishlist = '/wishlists/update';
 }

@@ -1,3 +1,4 @@
+import 'package:flamingo/feature/product/screen/product-detail/product_detail_screen.dart';
 import 'package:flamingo/feature/wishlist/data/model/wishlist_item.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/image/image.dart';
@@ -32,7 +33,7 @@ class SnippetWishListItem extends StatelessWidget {
                 children: [
                   Positioned.fill(
                     child: CachedNetworkImageWidget(
-                      image: item.variants.first.image.url[0],
+                      image: item.product.variants.first.image.url,
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -53,18 +54,18 @@ class SnippetWishListItem extends StatelessWidget {
             const VerticalSpaceWidget(height: Dimens.spacingSizeExtraSmall),
 
             TextWidget(
-              item.vendor.storeName,
+              item.product.vendor.storeName,
               style: textTheme(context).bodyMedium!.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
             ),
             TextWidget(
-              item.title,
+              item.product.title,
               style: textTheme(context).bodyMedium!,
             ),
             const SizedBox(height: Dimens.spacingSizeExtraSmall),
             TextWidget(
-              'Rs. ${formatNepaliCurrency(item.variants[0].price)}',
+              'Rs. ${formatNepaliCurrency(item.product.variants.first.price)}',
               style: textTheme(context).labelLarge!,
             ),
             const SizedBox(height: Dimens.spacingSizeExtraSmall),
@@ -76,7 +77,6 @@ class SnippetWishListItem extends StatelessWidget {
                   context,
                   ProductDetailScreen(
                     productId: item.id,
-                    item: item,
                   ),
                 );
               },

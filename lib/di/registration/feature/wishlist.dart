@@ -1,5 +1,6 @@
 import 'package:flamingo/data/data.dart';
 import 'package:flamingo/di/service_names.dart';
+import 'package:flamingo/feature/auth/auth.dart';
 import 'package:flamingo/feature/wishlist/data/local/wishlist_local.dart';
 import 'package:flamingo/feature/wishlist/data/local/wishlist_local_impl.dart';
 import 'package:flamingo/feature/wishlist/data/remote/wishilst_remote.dart';
@@ -28,6 +29,7 @@ void registerWishlistFeature(GetIt locator) {
     () => WishlistRepositoryImpl(
       wishlistLocal: locator<WishlistLocal>(),
       wishlistRemote: locator<WishlistRemote>(),
+      authRepository: locator<AuthRepository>(),
     ),
   );
   locator.registerLazySingleton<WishlistViewModel>(

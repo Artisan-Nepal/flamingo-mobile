@@ -1,25 +1,18 @@
+import 'package:flamingo/feature/product/data/model/product.dart';
+
 class WishlistItem {
   final String id;
-  final String productName;
-  final int productPrice;
-  final String productImage;
-  final String vendor;
+  final Product product;
 
   WishlistItem({
     required this.id,
-    required this.productImage,
-    required this.productName,
-    required this.productPrice,
-    required this.vendor,
+    required this.product,
   });
 
   factory WishlistItem.fromJson(Map<String, dynamic> json) {
     return WishlistItem(
       id: json['id'],
-      productName: json['product']['title'],
-      productPrice: json['product']['variants'][0]['price'],
-      productImage: json['product']['variants'][0]['image'],
-      vendor: json['product']['vendor']['storeName'],
+      product: Product.fromJson(json['product']),
     );
   }
 

@@ -1,4 +1,5 @@
 import 'package:flamingo/di/di.dart';
+import 'package:flamingo/feature/product/screen/product-detail/product_detail_screen.dart';
 import 'package:flamingo/feature/wishlist/screen/wishlist-listing/snippet_wishlist_item.dart';
 import 'package:flamingo/feature/wishlist/screen/wishlist-listing/wishlist_listing_view_model.dart';
 import 'package:flamingo/shared/shared.dart';
@@ -15,11 +16,18 @@ class WishlistListingScreen extends StatefulWidget {
 }
 
 class _WishlistListingScreenState extends State<WishlistListingScreen> {
-  final viewModel = locator<WishlistListingViewModel>();
+  final _viewModel = locator<WishlistListingViewModel>();
+
+  @override
+  void initState() {
+    super.initState();
+    _viewModel.getWishlist();
+  }
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => viewModel,
+      create: (context) => _viewModel,
       builder: (context, child) {
         return TitledScreen(
           title: 'WISHLIST (5)',
@@ -37,10 +45,19 @@ class _WishlistListingScreenState extends State<WishlistListingScreen> {
                   mainAxisSpacing: Dimens.spacingSizeSmall,
                   crossAxisSpacing: Dimens.spacingSizeSmall,
                 ),
-                itemCount: 10,
+                itemCount: items.length,
                 itemBuilder: (context, index) {
                   return SnippetWishListItem(
                     item: items[index],
+                    onPressed: () {
+                      NavigationHelper.push(
+                        context,
+                        ProductDetailScreen(
+                          productId: items[index].product.id,
+                          product: items[index].product,
+                        ),
+                      );
+                    },
                   );
                 },
               );

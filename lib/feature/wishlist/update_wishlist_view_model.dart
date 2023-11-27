@@ -1,6 +1,5 @@
 import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/wishlist/data/model/add_to_wishlist_request.dart';
-import 'package:flamingo/feature/wishlist/data/model/wishlist_item.dart';
 import 'package:flamingo/feature/wishlist/data/wishlist_repository.dart';
 import 'package:flamingo/feature/wishlist/wishlist_view_model.dart';
 import 'package:flamingo/shared/shared.dart';
@@ -13,11 +12,11 @@ class UpdateWishlistViewModel extends ChangeNotifier {
     required WishlistRepository wishlistRepository,
   }) : _wishlistRepository = wishlistRepository;
 
-  Response<WishlistItem> _updateWishlistUseCase = Response<WishlistItem>();
+  Response _updateWishlistUseCase = Response();
 
-  Response<WishlistItem> get updateWishlistUseCase => _updateWishlistUseCase;
+  Response get updateWishlistUseCase => _updateWishlistUseCase;
 
-  void setUpdateWishlistUseCase(Response<WishlistItem> response) {
+  void setUpdateWishlistUseCase(Response response) {
     _updateWishlistUseCase = response;
     notifyListeners();
   }

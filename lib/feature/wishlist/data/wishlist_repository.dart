@@ -3,6 +3,6 @@ import 'package:flamingo/feature/wishlist/data/model/add_to_wishlist_request.dar
 import 'package:flamingo/feature/wishlist/data/model/wishlist_item.dart';
 
 abstract class WishlistRepository {
-  Future<WishlistItem> updateWishlist(UpdateWishlistRequest request);
+  Future updateWishlist(UpdateWishlistRequest request);
   Future<FetchResponse<WishlistItem>> getUserWishlist();
 }

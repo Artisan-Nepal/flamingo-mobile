@@ -19,7 +19,7 @@ class WishlistListingViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> sendOtp(String mobileNumber) async {
+  Future<void> getWishlist() async {
     try {
       setWishlistUseCase(Response.loading());
       final response = await _wishlistRepository.getUserWishlist();

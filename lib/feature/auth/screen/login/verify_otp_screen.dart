@@ -128,12 +128,12 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
     if (viewModel.resendOtpUseCase.hasCompleted) {
       showToast(
         context,
-        "OTP code sent successfully.",
+        message: "OTP code sent successfully.",
       );
     } else {
       showToast(
         context,
-        viewModel.resendOtpUseCase.exception!,
+        message: viewModel.resendOtpUseCase.exception!,
         isSuccess: false,
       );
     }

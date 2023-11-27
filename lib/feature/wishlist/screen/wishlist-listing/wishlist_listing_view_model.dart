@@ -28,4 +28,10 @@ class WishlistListingViewModel extends ChangeNotifier {
       setWishlistUseCase(Response.error(exception));
     }
   }
+
+  void removeFromWishlistState(String productId) {
+    wishlistUseCase.data?.rows
+        .removeWhere((element) => element.product.id == productId);
+    notifyListeners();
+  }
 }

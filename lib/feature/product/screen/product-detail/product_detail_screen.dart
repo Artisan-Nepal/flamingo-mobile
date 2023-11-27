@@ -223,7 +223,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     } else {
       showToast(
         context,
-        viewModel.addToCartUseCase.exception!,
+        message: viewModel.addToCartUseCase.exception,
         isSuccess: false,
       );
     }

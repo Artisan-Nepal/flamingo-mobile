@@ -1,11 +1,15 @@
+import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/product/screen/product-detail/product_detail_screen.dart';
 import 'package:flamingo/feature/wishlist/data/model/wishlist_item.dart';
+import 'package:flamingo/feature/wishlist/screen/wishlist-listing/wishlist_listing_view_model.dart';
+import 'package:flamingo/feature/wishlist/update_wishlist_view_model.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/image/image.dart';
 import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class SnippetWishListItem extends StatelessWidget {
+class SnippetWishListItem extends StatefulWidget {
   const SnippetWishListItem({
     Key? key,
     required this.item,
@@ -14,67 +18,95 @@ class SnippetWishListItem extends StatelessWidget {
   final WishlistItem item;
 
   @override
+  State<SnippetWishListItem> createState() => _SnippetWishListItemState();
+}
+
+class _SnippetWishListItemState extends State<SnippetWishListItem> {
+  final _updateWishlistViewModel = locator<UpdateWishlistViewModel>();
+
+  @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        _navigateToProductDetail(context);
-      },
-      child: Container(
-        color: Colors.transparent,
-        width: double.infinity,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Image
-            Expanded(
-              child: Stack(
-                children: [
-                  Positioned.fill(
-                    child: CachedNetworkImageWidget(
-                      image: item.product.variants.first.image.url,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  Positioned(
-                    top: 10,
-                    right: 10,
-                    child: GestureDetector(
-                      onTap: () {},
-                      child: const Icon(
-                        Icons.close,
-                        color: AppColors.black,
+    return ChangeNotifierProvider(
+      create: (context) => _updateWishlistViewModel,
+      builder: (context, child) => GestureDetector(
+        onTap: () {
+          _navigateToProductDetail(context);
+        },
+        child: Container(
+          color: Colors.transparent,
+          width: double.infinity,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Image
+              Expanded(
+                child: Stack(
+                  children: [
+                    Positioned.fill(
+                      child: CachedNetworkImageWidget(
+                        image: widget.item.product.variants.first.image.url,
+                        fit: BoxFit.cover,
                       ),
                     ),
-                  ),
-                ],
+                    Positioned(
+                      top: 10,
+                      right: 10,
+                      child: Consumer<UpdateWishlistViewModel>(
+                        builder: (context, viewModel, child) {
+                          if (viewModel.updateWishlistUseCase.isLoading) {
+                            return const SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator.adaptive(
+                                strokeWidth: 2,
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  AppColors.black,
+                                ),
+                              ),
+                            );
+                          }
+                          return GestureDetector(
+                            onTap: () {
+                              _onRemove(viewModel);
+                            },
+                            child: const Icon(
+                              Icons.close,
+                              color: AppColors.black,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            const VerticalSpaceWidget(height: Dimens.spacingSizeExtraSmall),
+              const VerticalSpaceWidget(height: Dimens.spacingSizeExtraSmall),
 
-            TextWidget(
-              item.product.vendor.storeName,
-              style: textTheme(context).bodyMedium!.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-            TextWidget(
-              item.product.title,
-              style: textTheme(context).bodyMedium!,
-            ),
-            const SizedBox(height: Dimens.spacingSizeExtraSmall),
-            TextWidget(
-              'Rs. ${formatNepaliCurrency(item.product.variants.first.price)}',
-              style: textTheme(context).labelLarge!,
-            ),
-            const SizedBox(height: Dimens.spacingSizeExtraSmall),
-            OutlinedButtonWidget(
-              label: 'Add to bag',
-              fontSize: Dimens.fontSizeDefault,
-              onPressed: () {
-                _navigateToProductDetail(context);
-              },
-            ),
-          ],
+              TextWidget(
+                widget.item.product.vendor.storeName,
+                style: textTheme(context).bodyMedium!.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+              TextWidget(
+                widget.item.product.title,
+                style: textTheme(context).bodyMedium!,
+              ),
+              const SizedBox(height: Dimens.spacingSizeExtraSmall),
+              TextWidget(
+                'Rs. ${formatNepaliCurrency(widget.item.product.variants.first.price)}',
+                style: textTheme(context).labelLarge!,
+              ),
+              const SizedBox(height: Dimens.spacingSizeExtraSmall),
+              OutlinedButtonWidget(
+                label: 'Add to bag',
+                fontSize: Dimens.fontSizeDefault,
+                onPressed: () {
+                  _navigateToProductDetail(context);
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -84,9 +116,25 @@ class SnippetWishListItem extends StatelessWidget {
     NavigationHelper.push(
       context,
       ProductDetailScreen(
-        productId: item.id,
-        product: item.product,
+        productId: widget.item.id,
+        product: widget.item.product,
       ),
     );
+  }
+
+  Future<void> _onRemove(UpdateWishlistViewModel viewModel) async {
+    await viewModel.updateWishlist(widget.item.product.id);
+    if (!context.mounted) return;
+
+    if (viewModel.updateWishlistUseCase.hasCompleted) {
+      Provider.of<WishlistListingViewModel>(context, listen: false)
+          .removeFromWishlistState(widget.item.product.id);
+    } else {
+      showToast(
+        context,
+        message: viewModel.updateWishlistUseCase.exception,
+        isSuccess: false,
+      );
+    }
   }
 }

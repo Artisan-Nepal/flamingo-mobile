@@ -101,7 +101,7 @@ class _LoginScreenState extends State<LoginScreen> {
     } else {
       showToast(
         context,
-        viewModel.sendOtpUseCase.exception!,
+        message: viewModel.sendOtpUseCase.exception,
         isSuccess: false,
       );
     }

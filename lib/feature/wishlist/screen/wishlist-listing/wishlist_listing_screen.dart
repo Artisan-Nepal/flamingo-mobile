@@ -1,5 +1,4 @@
 import 'package:flamingo/di/di.dart';
-import 'package:flamingo/feature/product/screen/product-detail/product_detail_screen.dart';
 import 'package:flamingo/feature/wishlist/screen/wishlist-listing/snippet_wishlist_item.dart';
 import 'package:flamingo/feature/wishlist/screen/wishlist-listing/wishlist_listing_view_model.dart';
 import 'package:flamingo/shared/shared.dart';

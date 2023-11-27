@@ -44,7 +44,7 @@ class _AccountScreenState extends State<AccountScreen> {
     } else {
       showToast(
         context,
-        viewModel.logoutUseCase.exception!,
+        message: viewModel.logoutUseCase.exception,
         isSuccess: false,
       );
     }

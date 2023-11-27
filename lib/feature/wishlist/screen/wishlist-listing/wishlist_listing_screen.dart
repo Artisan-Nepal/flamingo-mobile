@@ -33,7 +33,7 @@ class _WishlistListingScreenState extends State<WishlistListingScreen> {
           scrollable: false,
           child: Consumer<WishlistListingViewModel>(
             builder: (context, viewModel, child) {
-              if (viewModel.wishlistUseCase.isLoading) {
+              if (!viewModel.wishlistUseCase.hasCompleted) {
                 return const ProductViewShimmerWidget();
               }
               final items = viewModel.wishlistUseCase.data?.rows ?? [];

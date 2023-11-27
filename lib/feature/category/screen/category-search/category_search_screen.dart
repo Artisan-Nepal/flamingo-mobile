@@ -4,6 +4,7 @@ import 'package:flamingo/feature/category/screen/category-search/category_search
 import 'package:flamingo/feature/product/screen/product-listing/product_listing_screen.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/list-tile/list_tile.dart';
+import 'package:flamingo/widget/loader/loader.dart';
 import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -36,7 +37,11 @@ class _CategorySearchScreenState extends State<CategorySearchScreen>
           child: Consumer<CategorySearchViewModel>(
             builder: (context, viewModel, child) {
               if (!viewModel.categoriesUseCase.hasCompleted) {
-                return const SizedBox();
+                return const Center(
+                  child: CircularProgressIndicatorWidget(
+                    size: Dimens.iconSizeLarge,
+                  ),
+                );
               }
               final categories = viewModel.categoriesUseCase.data ?? [];
               return SizedBox(

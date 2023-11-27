@@ -9,18 +9,16 @@ class SnippetWishListItem extends StatelessWidget {
   const SnippetWishListItem({
     Key? key,
     required this.item,
-    this.onPressed,
-    this.onRemove,
   }) : super(key: key);
 
   final WishlistItem item;
-  final VoidCallback? onRemove;
-  final VoidCallback? onPressed;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onPressed,
+      onTap: () {
+        _navigateToProductDetail(context);
+      },
       child: Container(
         color: Colors.transparent,
         width: double.infinity,
@@ -70,19 +68,24 @@ class SnippetWishListItem extends StatelessWidget {
             ),
             const SizedBox(height: Dimens.spacingSizeExtraSmall),
             OutlinedButtonWidget(
-              label: 'Add to Cart',
+              label: 'Add to bag',
               fontSize: Dimens.fontSizeDefault,
               onPressed: () {
-                NavigationHelper.push(
-                  context,
-                  ProductDetailScreen(
-                    productId: item.id,
-                  ),
-                );
+                _navigateToProductDetail(context);
               },
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  void _navigateToProductDetail(BuildContext context) {
+    NavigationHelper.push(
+      context,
+      ProductDetailScreen(
+        productId: item.id,
+        product: item.product,
       ),
     );
   }

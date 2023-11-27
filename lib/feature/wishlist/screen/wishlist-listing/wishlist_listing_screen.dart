@@ -41,7 +41,7 @@ class _WishlistListingScreenState extends State<WishlistListingScreen> {
               return GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
-                  mainAxisExtent: 400,
+                  mainAxisExtent: 350,
                   mainAxisSpacing: Dimens.spacingSizeSmall,
                   crossAxisSpacing: Dimens.spacingSizeSmall,
                 ),
@@ -49,15 +49,6 @@ class _WishlistListingScreenState extends State<WishlistListingScreen> {
                 itemBuilder: (context, index) {
                   return SnippetWishListItem(
                     item: items[index],
-                    onPressed: () {
-                      NavigationHelper.push(
-                        context,
-                        ProductDetailScreen(
-                          productId: items[index].product.id,
-                          product: items[index].product,
-                        ),
-                      );
-                    },
                   );
                 },
               );

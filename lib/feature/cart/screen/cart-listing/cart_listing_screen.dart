@@ -4,7 +4,9 @@ import 'package:flamingo/feature/cart/screen/cart-listing/snippet_cart_listing_i
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/button/button.dart';
 import 'package:flamingo/widget/screen/screen.dart';
+import 'package:flamingo/widget/space/space.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class CartListingScreen extends StatefulWidget {
@@ -36,13 +38,24 @@ class _CartListingScreenState extends State<CartListingScreen> {
                 return TitledScreen(
                   scrollable: false,
                   title: 'SHOPPING BAG (2)',
-                  child: ListView.builder(
-                    itemCount: cartItems.length,
-                    itemBuilder: (context, index) {
-                      return SnippetCartListingItem(
-                        cartItem: cartItems[index],
-                      );
-                    },
+                  child: Column(
+                    children: [
+                      _buildCartSummary(),
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: cartItems.length,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: const EdgeInsets.only(
+                                  top: Dimens.spacingSizeSmall),
+                              child: SnippetCartListingItem(
+                                cartItem: cartItems[index],
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
                   ),
                 );
               },
@@ -51,6 +64,47 @@ class _CartListingScreenState extends State<CartListingScreen> {
           ],
         );
       },
+    );
+  }
+
+  Widget _buildCartSummary() {
+    return Column(
+      children: [
+        _buildSummaryItem(title: 'Subtotal', amount: 120000),
+        _buildSummaryItem(title: 'Discount', amount: 0, isDiscount: true),
+        const VerticalSpaceWidget(height: Dimens.spacingSizeExtraSmall),
+        _buildSummaryItem(title: 'Total', amount: 120000, boldText: true),
+        const VerticalSpaceWidget(height: Dimens.spacingSizeSmall),
+        const Divider(
+          height: 1,
+        )
+      ],
+    );
+  }
+
+  Widget _buildSummaryItem({
+    required String title,
+    required int amount,
+    bool boldText = false,
+    bool isDiscount = false,
+  }) {
+    final textStyle = textTheme(context).titleSmall!.copyWith(
+          fontWeight: boldText ? FontWeight.bold : null,
+        );
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          title,
+          style: textStyle,
+        ),
+        Text(
+          isDiscount
+              ? '-Rs. ${formatNepaliCurrency(amount)}'
+              : 'Rs. ${formatNepaliCurrency(amount)}',
+          style: textStyle,
+        )
+      ],
     );
   }
 

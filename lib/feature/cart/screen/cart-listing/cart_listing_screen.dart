@@ -5,7 +5,6 @@ import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/button/button.dart';
 import 'package:flamingo/widget/screen/screen.dart';
 import 'package:flamingo/widget/space/space.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

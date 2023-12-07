@@ -6,6 +6,7 @@ import 'package:flamingo/feature/cart/data/local/cart_local.dart';
 import 'package:flamingo/feature/cart/data/model/add_to_cart_request.dart';
 import 'package:flamingo/feature/cart/data/model/cart.dart';
 import 'package:flamingo/feature/cart/data/model/cart_item.dart';
+import 'package:flamingo/feature/cart/data/model/update_cart_request.dart';
 import 'package:flamingo/feature/cart/data/remote/cart_remote.dart';
 
 class CartRepositoryImpl implements CartRepository {
@@ -30,5 +31,15 @@ class CartRepositoryImpl implements CartRepository {
   Future<FetchResponse<CartItem>> getUserCart() async {
     final customerId = (await _authRepository.getUserLocal())!.id;
     return await _cartRemote.getUserCart(customerId);
+  }
+
+  @override
+  Future updateCart(String cartId, UpdateCartRequest request) async {
+    return await _cartRemote.updateCart(cartId, request);
+  }
+
+  @override
+  Future deleteCart(String cartId) async {
+    return await _cartRemote.deleteCart(cartId);
   }
 }

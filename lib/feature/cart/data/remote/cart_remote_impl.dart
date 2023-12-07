@@ -2,6 +2,7 @@ import 'package:flamingo/data/data.dart';
 import 'package:flamingo/feature/cart/data/model/add_to_cart_request.dart';
 import 'package:flamingo/feature/cart/data/model/cart.dart';
 import 'package:flamingo/feature/cart/data/model/cart_item.dart';
+import 'package:flamingo/feature/cart/data/model/update_cart_request.dart';
 import 'package:flamingo/feature/cart/data/remote/cart_remote.dart';
 
 class CartRemoteImpl implements CartRemote {
@@ -24,5 +25,17 @@ class CartRemoteImpl implements CartRemote {
       apiResponse.data,
       CartItem.fromJsonList,
     );
+  }
+
+  @override
+  Future updateCart(String cartId, UpdateCartRequest request) async {
+    final url = '${ApiUrls.carts}/$cartId';
+    await _apiClient.patch(url, body: request.toJson());
+  }
+
+  @override
+  Future deleteCart(String cartId) async {
+    final url = '${ApiUrls.carts}/$cartId';
+    await _apiClient.delete(url);
   }
 }

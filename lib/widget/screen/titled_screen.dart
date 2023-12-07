@@ -66,11 +66,14 @@ class TitledScreen extends StatelessWidget {
   Widget _buildBackButton(BuildContext context) {
     if (!NavigationHelper.canPop(context)) return const SizedBox();
 
-    return GestureDetector(
-      onTap: () {
-        NavigationHelper.pop(context);
-      },
-      child: const Icon(CupertinoIcons.back),
+    return Padding(
+      padding: const EdgeInsets.only(left: Dimens.spacingSizeSmall),
+      child: GestureDetector(
+        onTap: () {
+          NavigationHelper.pop(context);
+        },
+        child: const Icon(CupertinoIcons.back),
+      ),
     );
   }
 }

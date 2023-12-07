@@ -29,9 +29,16 @@ class CartListingViewModel extends ChangeNotifier {
     }
   }
 
-  void removeFromCartState(String productId) {
-    cartUseCase.data?.rows
-        .removeWhere((element) => element.product.id == productId);
+  void removeFromCartState(String cartId) {
+    cartUseCase.data?.rows.removeWhere((element) => element.id == cartId);
+    notifyListeners();
+  }
+
+  void updateCartQuantity(String cartId, int quantity) {
+    if (cartUseCase.data == null) return;
+    final index =
+        cartUseCase.data!.rows.indexWhere((element) => element.id == cartId);
+    cartUseCase.data!.rows[index].quantity = quantity;
     notifyListeners();
   }
 }

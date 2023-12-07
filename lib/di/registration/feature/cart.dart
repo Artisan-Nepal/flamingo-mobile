@@ -8,6 +8,7 @@ import 'package:flamingo/feature/cart/data/local/cart_local_impl.dart';
 import 'package:flamingo/feature/cart/data/remote/cart_remote.dart';
 import 'package:flamingo/feature/cart/data/remote/cart_remote_impl.dart';
 import 'package:flamingo/feature/cart/screen/cart-listing/cart_listing_view_model.dart';
+import 'package:flamingo/feature/cart/update_cart_view_model.dart';
 import 'package:get_it/get_it.dart';
 
 void registerCartFeature(GetIt locator) {
@@ -31,5 +32,8 @@ void registerCartFeature(GetIt locator) {
   );
   locator.registerFactory<CartListingViewModel>(
     () => CartListingViewModel(cartRepository: locator<CartRepository>()),
+  );
+  locator.registerFactory<UpdateCartViewModel>(
+    () => UpdateCartViewModel(cartRepository: locator<CartRepository>()),
   );
 }

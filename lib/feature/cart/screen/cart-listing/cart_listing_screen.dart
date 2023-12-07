@@ -3,6 +3,7 @@ import 'package:flamingo/feature/cart/screen/cart-listing/cart_listing_view_mode
 import 'package:flamingo/feature/cart/screen/cart-listing/snippet_cart_listing_item.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/button/button.dart';
+import 'package:flamingo/widget/loader/circular_progress_indicator_widget.dart';
 import 'package:flamingo/widget/screen/screen.dart';
 import 'package:flamingo/widget/space/space.dart';
 import 'package:flutter/material.dart';
@@ -36,23 +37,28 @@ class _CartListingScreenState extends State<CartListingScreen> {
                 final cartItems = viewModel.cartUseCase.data?.rows ?? [];
                 return TitledScreen(
                   scrollable: false,
+                  padding: EdgeInsets.zero,
                   title: 'SHOPPING BAG (2)',
                   child: Column(
                     children: [
                       _buildCartSummary(),
                       Expanded(
-                        child: ListView.builder(
-                          itemCount: cartItems.length,
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding: const EdgeInsets.only(
-                                  top: Dimens.spacingSizeSmall),
-                              child: SnippetCartListingItem(
-                                cartItem: cartItems[index],
+                        child: !viewModel.cartUseCase.hasCompleted
+                            ? _buildLoader()
+                            : ListView.builder(
+                                itemCount: cartItems.length,
+                                itemBuilder: (context, index) {
+                                  return Padding(
+                                    padding: EdgeInsets.only(
+                                        top: index == 0
+                                            ? Dimens.spacingSizeSmall
+                                            : 0),
+                                    child: SnippetCartListingItem(
+                                      cartItem: cartItems[index],
+                                    ),
+                                  );
+                                },
                               ),
-                            );
-                          },
-                        ),
                       ),
                     ],
                   ),
@@ -66,18 +72,36 @@ class _CartListingScreenState extends State<CartListingScreen> {
     );
   }
 
+  Widget _buildLoader() {
+    return const Padding(
+      padding: EdgeInsets.only(bottom: Dimens.spacing_64),
+      child: Center(
+        child: CircularProgressIndicatorWidget(
+          size: Dimens.iconSizeLarge,
+        ),
+      ),
+    );
+  }
+
   Widget _buildCartSummary() {
-    return Column(
-      children: [
-        _buildSummaryItem(title: 'Subtotal', amount: 120000),
-        _buildSummaryItem(title: 'Discount', amount: 0, isDiscount: true),
-        const VerticalSpaceWidget(height: Dimens.spacingSizeExtraSmall),
-        _buildSummaryItem(title: 'Total', amount: 120000, boldText: true),
-        const VerticalSpaceWidget(height: Dimens.spacingSizeSmall),
-        const Divider(
-          height: 1,
-        )
-      ],
+    return Padding(
+      padding: const EdgeInsets.only(
+        left: Dimens.spacingSizeDefault,
+        right: Dimens.spacingSizeDefault,
+        top: Dimens.spacingSizeDefault,
+      ),
+      child: Column(
+        children: [
+          _buildSummaryItem(title: 'Subtotal', amount: 120000),
+          _buildSummaryItem(title: 'Discount', amount: 0, isDiscount: true),
+          const VerticalSpaceWidget(height: Dimens.spacingSizeExtraSmall),
+          _buildSummaryItem(title: 'Total', amount: 120000, boldText: true),
+          const VerticalSpaceWidget(height: Dimens.spacingSizeSmall),
+          const Divider(
+            height: 1,
+          )
+        ],
+      ),
     );
   }
 

@@ -1,9 +1,14 @@
+import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/cart/data/model/cart_item.dart';
+import 'package:flamingo/feature/cart/screen/cart-listing/cart_listing_view_model.dart';
+import 'package:flamingo/feature/cart/update_cart_view_model.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/button/button.dart';
 import 'package:flamingo/widget/image/cached_network_image_widget.dart';
+import 'package:flamingo/widget/loader/circular_progress_indicator_widget.dart';
 import 'package:flamingo/widget/space/space.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SnippetCartListingItem extends StatefulWidget {
   const SnippetCartListingItem({
@@ -18,76 +23,120 @@ class SnippetCartListingItem extends StatefulWidget {
 }
 
 class _SnippetCartListingItemState extends State<SnippetCartListingItem> {
+  final _viewModel = locator<UpdateCartViewModel>();
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.transparent,
-      width: double.infinity,
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: Dimens.spacingSizeLarge),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Flexible(
-              flex: 2,
-              child: CachedNetworkImageWidget(
-                image: widget.cartItem.productVariant.image.url,
-                fit: BoxFit.cover,
-                height: 150,
-              ),
-            ),
-            const HorizontalSpaceWidget(width: Dimens.spacingSizeDefault),
-            Flexible(
-              flex: 4,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // title
-                  Row(
+    return ChangeNotifierProvider(
+      create: (context) => _viewModel,
+      builder: (context, child) {
+        return Consumer<UpdateCartViewModel>(
+          builder: (context, viewModel, child) {
+            return Stack(
+              children: [
+                Container(
+                  color: Colors.transparent,
+                  width: double.infinity,
+                  padding: const EdgeInsets.only(
+                    top: Dimens.spacingSizeLarge,
+                    bottom: Dimens.spacingSizeLarge,
+                    right: Dimens.spacingSizeDefault,
+                    left: Dimens.spacingSizeDefault,
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(
-                        child: Text(
-                          widget.cartItem.product.title,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
+                      Flexible(
+                        flex: 2,
+                        child: CachedNetworkImageWidget(
+                          image: widget.cartItem.productVariant.image.url,
+                          fit: BoxFit.cover,
+                          height: 150,
                         ),
                       ),
                       const HorizontalSpaceWidget(
                           width: Dimens.spacingSizeDefault),
+                      Flexible(
+                        flex: 4,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // title
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    widget.cartItem.product.title,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                                const HorizontalSpaceWidget(
+                                    width: Dimens.spacingSizeDefault),
 
-                      // Remove button
-                      GestureDetector(
-                        onTap: () {
-                          _onRemove();
-                        },
-                        child: const Icon(
-                          Icons.close,
-                          color: AppColors.black,
+                                // Remove button
+                                GestureDetector(
+                                  onTap: () {
+                                    _onRemove(viewModel);
+                                  },
+                                  child: const Icon(
+                                    Icons.close,
+                                    color: AppColors.black,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const VerticalSpaceWidget(
+                                height: Dimens.spacingSizeExtraSmall),
+                            _buildVariantDetails(),
+                            const VerticalSpaceWidget(
+                                height: Dimens.spacingSizeSmall),
+                            _buildQuantityInStock(),
+                            const VerticalSpaceWidget(
+                                height: Dimens.spacingSizeSmall),
+                            _buildQuantityAdjuster(viewModel),
+                            const VerticalSpaceWidget(
+                                height: Dimens.spacingSizeDefault),
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: Text(
+                                'Rs. ${formatNepaliCurrency(widget.cartItem.productVariant.price)}',
+                                style: textTheme(context).labelLarge!.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
                   ),
-                  const VerticalSpaceWidget(
-                      height: Dimens.spacingSizeExtraSmall),
-                  _buildVariantDetails(),
-                  const VerticalSpaceWidget(height: Dimens.spacingSizeSmall),
-                  _buildQuantityInStock(),
-                  const VerticalSpaceWidget(height: Dimens.spacingSizeSmall),
-                  _buildQuantityAdjuster(),
-                  const VerticalSpaceWidget(height: Dimens.spacingSizeDefault),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Text(
-                      'Rs. ${formatNepaliCurrency(widget.cartItem.productVariant.price)}',
-                      style: textTheme(context).labelLarge!.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
+                ),
+                _buildLoader(viewModel),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildLoader(UpdateCartViewModel viewModel) {
+    if (!(viewModel.updateCartUseCase.isLoading ||
+        viewModel.removeCartUseCase.isLoading)) {
+      return const SizedBox();
+    }
+
+    return Positioned.fill(
+      child: Container(
+        color: themedLoaderBackground(context),
+        child: const Align(
+          alignment: Alignment.center,
+          child: SizedBox(
+            height: 20,
+            width: 20,
+            child: CircularProgressIndicatorWidget(),
+          ),
         ),
       ),
     );
@@ -131,7 +180,7 @@ class _SnippetCartListingItemState extends State<SnippetCartListingItem> {
     );
   }
 
-  Widget _buildQuantityAdjuster() {
+  Widget _buildQuantityAdjuster(UpdateCartViewModel viewModel) {
     return Row(
       children: [
         SmallButtonWidget(
@@ -140,7 +189,7 @@ class _SnippetCartListingItemState extends State<SnippetCartListingItem> {
           enabled: widget.cartItem.quantity > 1,
           icon: Icons.remove,
           onPressed: () {
-            _onDecrement();
+            _onDecrement(viewModel);
           },
         ),
         const SizedBox(
@@ -172,48 +221,55 @@ class _SnippetCartListingItemState extends State<SnippetCartListingItem> {
           // enabled: widget.product.inStock == 1,
           icon: Icons.add,
           onPressed: () {
-            _onIncrement();
+            _onIncrement(viewModel);
           },
         ),
       ],
     );
   }
 
-  _onRemove() {}
-
-  _onIncrement() {
-    // showDialog(
-    //     context: context,
-    //     barrierDismissible: false,
-    //     builder: (context) => const CustomLoader());
-    // Provider.of<CartProvider>(context, listen: false)
-    //     .updateUserCart(cartId, quantity + 1, context, _afterUpdate);
+  _onRemove(UpdateCartViewModel viewModel) async {
+    await viewModel.removeFromCart(widget.cartItem.id);
+    _obserseRemoveResponse(viewModel);
   }
 
-  _onDecrement() {
-    // showDialog(
-    //     context: context,
-    //     barrierDismissible: false,
-    //     builder: (context) => const CustomLoader());
-
-    // Provider.of<CartProvider>(context, listen: false)
-    //     .updateUserCart(cartId, quantity - 1, context, _afterUpdate);
+  _onIncrement(UpdateCartViewModel viewModel) async {
+    final updatedQuantity = widget.cartItem.quantity + 1;
+    await viewModel.updateCart(widget.cartItem.id, updatedQuantity);
+    _obserseUpdateResponse(viewModel, updatedQuantity);
   }
 
-  _afterUpdate(bool success, String message, int cartId, int updatedQuantity,
-      BuildContext context) {
-    // // pop loading
-    // Navigator.pop(context);
-    // // Update quantity in selected cart list
-    // if (success) {
-    //   Provider.of<CheckoutProvider>(context, listen: false)
-    //       .updateSelectedCartQuantity(cartId, updatedQuantity);
-    // }
-    // if (!success) {
-    //   showDialog(
-    //     context: context,
-    //     builder: (context) => CustomAlertDialog(title: message),
-    //   );
-    // }
+  _onDecrement(UpdateCartViewModel viewModel) async {
+    final updatedQuantity = widget.cartItem.quantity - 1;
+
+    await viewModel.updateCart(widget.cartItem.id, updatedQuantity);
+    _obserseUpdateResponse(viewModel, updatedQuantity);
+  }
+
+  void _obserseUpdateResponse(
+      UpdateCartViewModel viewModel, int updatedQuantity) {
+    if (viewModel.updateCartUseCase.hasCompleted) {
+      Provider.of<CartListingViewModel>(context, listen: false)
+          .updateCartQuantity(widget.cartItem.id, updatedQuantity);
+    } else {
+      showToast(
+        context,
+        message: viewModel.removeCartUseCase.exception,
+        isSuccess: false,
+      );
+    }
+  }
+
+  void _obserseRemoveResponse(UpdateCartViewModel viewModel) {
+    if (viewModel.removeCartUseCase.hasCompleted) {
+      Provider.of<CartListingViewModel>(context, listen: false)
+          .removeFromCartState(widget.cartItem.id);
+    } else {
+      showToast(
+        context,
+        message: viewModel.removeCartUseCase.exception,
+        isSuccess: false,
+      );
+    }
   }
 }

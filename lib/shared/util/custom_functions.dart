@@ -33,6 +33,12 @@ Color themedPrimaryColor(BuildContext context) {
   return Theme.of(context).primaryColor;
 }
 
+Color themedLoaderBackground(BuildContext context) {
+  return isLightMode(context)
+      ? AppColors.black.withOpacity(0.4)
+      : AppColors.grayLighter.withOpacity(0.3);
+}
+
 double getScaledValueForSmallerDevice(
     {required double value, double? scale, double? minScaleValue}) {
   bool isMediumScreen = SizeConfig.isMediumDevice;

@@ -2,7 +2,7 @@ import 'package:flamingo/feature/product/data/model/product.dart';
 
 class CartItem {
   final String id;
-  final int quantity;
+  int quantity;
   final CartItemProduct product;
   final ProductVariant productVariant;
 

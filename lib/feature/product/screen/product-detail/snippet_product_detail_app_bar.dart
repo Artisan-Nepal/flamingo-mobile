@@ -1,8 +1,7 @@
-import 'package:flamingo/feature/cart/screen/cart-listing/cart_listing_screen.dart';
 import 'package:flamingo/feature/product/screen/product-detail/product_detail_app_bar_view_model.dart';
 import 'package:flamingo/feature/product/screen/product-detail/product_detail_view_model.dart';
 import 'package:flamingo/shared/shared.dart';
-import 'package:flamingo/widget/space/space.dart';
+import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -73,38 +72,15 @@ class SnippetProductDetailAppBar extends StatelessWidget {
                     ),
                   ),
                 ),
-                actions: [
+                actions: const [
                   // Shopping bag
-                  GestureDetector(
-                    onTap: () {
-                      NavigationHelper.push(context, const CartListingScreen());
-                    },
-                    child: Container(
-                      height: 30,
-                      // width: 30,
-                      margin: const EdgeInsets.symmetric(
-                        horizontal: Dimens.spacingSizeDefault,
-                        vertical: Dimens.spacing_8,
-                      ),
-                      child: Row(
-                        children: [
-                          Text(
-                            '2',
-                            style: TextStyle(
-                              color: iconColor,
-                            ),
-                          ),
-                          const HorizontalSpaceWidget(
-                              width: Dimens.spacingSizeExtraSmall),
-                          Icon(
-                            CupertinoIcons.bag,
-                            size: 22,
-                            color: iconColor,
-                          ),
-                        ],
-                      ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: Dimens.spacingSizeDefault,
+                      vertical: Dimens.spacing_8,
                     ),
-                  ),
+                    child: CartButtonWidget(),
+                  )
                 ],
               );
             },

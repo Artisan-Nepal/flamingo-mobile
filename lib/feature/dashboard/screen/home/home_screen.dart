@@ -1,5 +1,6 @@
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/space/space.dart';
+import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -46,14 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 letterSpacing: 0.05,
               ),
         ),
-        GestureDetector(
-          onTap: () {},
-          child: Icon(
-            Icons.notifications_rounded,
-            color: themedPrimaryColor(context),
-            size: Dimens.iconSizeDefault,
-          ),
-        )
+        const CartButtonWidget()
       ],
     );
   }

@@ -1,4 +1,5 @@
-import 'package:flamingo/widget/screen/default_screen.dart';
+import 'package:flamingo/widget/button/button.dart';
+import 'package:flamingo/widget/screen/screen.dart';
 import 'package:flutter/cupertino.dart';
 
 class BrandListingScreen extends StatelessWidget {
@@ -6,9 +7,10 @@ class BrandListingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const DefaultScreen(
-      appBarTitle: Text('Brands'),
-      child: SizedBox(),
+    return TitledScreen(
+      title: 'Brands',
+      appbarActions: const [CartButtonWidget()],
+      child: Column(children: []),
     );
   }
 }

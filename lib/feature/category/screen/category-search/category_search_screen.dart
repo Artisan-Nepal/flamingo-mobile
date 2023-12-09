@@ -32,6 +32,7 @@ class _CategorySearchScreenState extends State<CategorySearchScreen>
       create: (context) => _viewModel,
       builder: (context, child) {
         return TitledScreen(
+          appbarActions: const [CartButtonWidget()],
           scrollable: false,
           title: 'CATEGORY',
           child: Consumer<CategorySearchViewModel>(

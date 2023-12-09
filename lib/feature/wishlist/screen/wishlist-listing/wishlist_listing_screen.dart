@@ -29,6 +29,7 @@ class _WishlistListingScreenState extends State<WishlistListingScreen> {
       create: (context) => _viewModel,
       builder: (context, child) {
         return TitledScreen(
+          appbarActions: const [CartButtonWidget()],
           title: 'WISHLIST (5)',
           scrollable: false,
           child: Consumer<WishlistListingViewModel>(

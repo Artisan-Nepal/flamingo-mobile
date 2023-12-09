@@ -22,7 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const VerticalSpaceWidget(height: Dimens.spacingSizeLarge),
+                const VerticalSpaceWidget(height: Dimens.spacingSizeDefault),
                 _buildAppBar(),
                 const VerticalSpaceWidget(height: Dimens.spacingSizeDefault),
               ],
@@ -36,6 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildAppBar() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           'Flamingo',

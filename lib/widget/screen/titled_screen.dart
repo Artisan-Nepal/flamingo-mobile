@@ -14,12 +14,15 @@ class TitledScreen extends StatelessWidget {
       horizontal: Dimens.spacingSizeDefault,
       vertical: Dimens.spacingSizeDefault,
     ),
+    this.appbarActions,
   });
 
   final String title;
   final Widget child;
   final bool scrollable;
   final EdgeInsets padding;
+  final List<Widget>? appbarActions;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,7 +31,20 @@ class TitledScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const VerticalSpaceWidget(height: Dimens.spacingSizeDefault),
-            _buildBackButton(context),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                  horizontal: Dimens.spacingSizeSmall),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _buildBackButton(context),
+                  if (appbarActions != null)
+                    Row(
+                      children: appbarActions!,
+                    )
+                ],
+              ),
+            ),
             const VerticalSpaceWidget(height: Dimens.spacingSizeDefault),
             Padding(
               padding: const EdgeInsets.only(left: Dimens.spacingSizeDefault),
@@ -66,14 +82,11 @@ class TitledScreen extends StatelessWidget {
   Widget _buildBackButton(BuildContext context) {
     if (!NavigationHelper.canPop(context)) return const SizedBox();
 
-    return Padding(
-      padding: const EdgeInsets.only(left: Dimens.spacingSizeSmall),
-      child: GestureDetector(
-        onTap: () {
-          NavigationHelper.pop(context);
-        },
-        child: const Icon(CupertinoIcons.back),
-      ),
+    return GestureDetector(
+      onTap: () {
+        NavigationHelper.pop(context);
+      },
+      child: const Icon(CupertinoIcons.back),
     );
   }
 }

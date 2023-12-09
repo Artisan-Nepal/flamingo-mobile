@@ -2,7 +2,7 @@ import 'package:flamingo/feature/auth/auth.dart';
 import 'package:flamingo/feature/auth/auth_view_model.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/button/button.dart';
-import 'package:flamingo/widget/screen/default_screen.dart';
+import 'package:flamingo/widget/screen/screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -16,8 +16,9 @@ class AccountScreen extends StatefulWidget {
 class _AccountScreenState extends State<AccountScreen> {
   @override
   Widget build(BuildContext context) {
-    return DefaultScreen(
-      appBarTitle: const Text('Account'),
+    return TitledScreen(
+      title: 'Account',
+      appbarActions: const [CartButtonWidget()],
       child: Column(children: [
         Consumer<AuthViewModel>(
           builder: (context, authViewModel, child) {

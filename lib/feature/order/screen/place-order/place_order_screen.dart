@@ -1,10 +1,13 @@
 import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/address/screen/address-listing/address_listing_screen.dart';
 import 'package:flamingo/feature/cart/screen/cart-listing/cart_listing_view_model.dart';
+import 'package:flamingo/feature/order/screen/place-order/payment_method_selection_screen.dart';
 import 'package:flamingo/feature/order/screen/place-order/place_order_view_model.dart';
+import 'package:flamingo/feature/order/screen/place-order/shipping_method_selection_screen.dart';
 import 'package:flamingo/feature/order/screen/place-order/snippet_checkout_input.dart';
 import 'package:flamingo/feature/order/screen/place-order/snippet_order_detail.dart';
 import 'package:flamingo/shared/shared.dart';
+import 'package:flamingo/widget/alert-dialog/alert_dialog_widget.dart';
 import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -37,7 +40,9 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
                 appBarTitle: const Text('Checkout'),
                 bottomNavBarWithButton: true,
                 bottomNavBarWithButtonLabel: 'Place Order',
-                bottomNavBarWithButtonOnPressed: () {},
+                bottomNavBarWithButtonOnPressed: () {
+                  _onPlaceOrder(viewModel);
+                },
                 // bottomNavigationBar: _buildBottomBar(context),
                 child: Column(
                   children: [
@@ -53,7 +58,7 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
                           ),
                         );
                       },
-                      isSet: false,
+                      isSet: viewModel.selectedShippingAddress != null,
                       placeholder: 'Select a shipping address',
                       value:
                           '${viewModel.selectedShippingAddress?.name}, ${viewModel.selectedShippingAddress?.area.name}',
@@ -72,7 +77,7 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
                           ),
                         );
                       },
-                      isSet: false,
+                      isSet: viewModel.selectedBillingAddress != null,
                       placeholder: 'Select a billing address',
                       value:
                           '${viewModel.selectedBillingAddress?.name}, ${viewModel.selectedBillingAddress?.area.name}',
@@ -82,16 +87,16 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
                     SnippetCheckoutInput(
                       label: 'Shipping Method',
                       onPressed: () {
-                        // NavigationHelper.push(
-                        //   context,
-                        //   AddressListingScreen(
-                        //     onAddressPressed: (address) {
-                        //       viewModel.setSelectedBillingAddress(address);
-                        //     },
-                        //   ),
-                        // );
+                        NavigationHelper.push(
+                          context,
+                          ChangeNotifierProvider.value(
+                            value: viewModel,
+                            builder: (context, child) =>
+                                const ShippingMethodSelectionScreen(),
+                          ),
+                        );
                       },
-                      isSet: false,
+                      isSet: viewModel.selectedShippingMethod != null,
                       placeholder: 'Select a shipping method',
                       value: viewModel.selectedShippingAddress?.name ?? "",
                     ),
@@ -100,16 +105,15 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
                     SnippetCheckoutInput(
                       label: 'Payment Method',
                       onPressed: () {
-                        // NavigationHelper.push(
-                        //   context,
-                        //   AddressListingScreen(
-                        //     onAddressPressed: (address) {
-                        //       viewModel.setSelectedBillingAddress(address);
-                        //     },
-                        //   ),
-                        // );
+                        NavigationHelper.push(
+                          context,
+                          ChangeNotifierProvider.value(
+                            value: viewModel,
+                            child: const PaymentMethodSelectionScreen(),
+                          ),
+                        );
                       },
-                      isSet: false,
+                      isSet: viewModel.selectedPaymentMethod != null,
                       placeholder: 'Select a payment method',
                       value: viewModel.selectedPaymentMethod?.name ?? "",
                     ),
@@ -275,5 +279,44 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
         ],
       ),
     );
+  }
+
+  _onPlaceOrder(PlaceOrderViewModel viewModel) {
+    if (viewModel.selectedShippingAddress == null) {
+      showToast(context,
+          message: 'Please select a shipping address.', isSuccess: false);
+    } else if (viewModel.selectedBillingAddress == null) {
+      showToast(context,
+          message: 'Please select a billing address.', isSuccess: false);
+    } else if (viewModel.selectedShippingMethod == null) {
+      showToast(context,
+          message: 'Please select a shipping method.', isSuccess: false);
+    } else if (viewModel.selectedPaymentMethod == null) {
+      showToast(context,
+          message: 'Please select a payment method.', isSuccess: false);
+    } else {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialogWidget(
+          title: 'Confirm checkout?',
+          needSecondButton: true,
+          firstButtonLabel: 'Checkout',
+          firstButtonOnPressed: () {
+            // pop confimation dialog
+            Navigator.pop(context);
+
+            // showDialog(
+            //     context: context, builder: (context) => const CustomLoader());
+            // viewModel.placeUserOrder(
+            //     Provider.of<CartProvider>(context, listen: false)
+            //         .cartList
+            //         .length,
+            //     viewModel.selectedShippingAddress,
+            //     viewModel.selectedBillingAddress,
+            //     _afterCheckout);
+          },
+        ),
+      );
+    }
   }
 }

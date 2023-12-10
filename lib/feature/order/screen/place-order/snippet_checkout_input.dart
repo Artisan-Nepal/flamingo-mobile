@@ -23,43 +23,46 @@ class SnippetCheckoutInput extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: enabled ? onPressed : null,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 20,
-            child: isSet
-                ? const Icon(
-                    Icons.check_circle_outline,
-                    size: Dimens.iconSize_22,
-                    color: AppColors.success,
-                  )
-                : const SizedBox(),
-          ),
-          const SizedBox(
-            width: Dimens.spacingSizeDefault,
-          ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  label,
-                  style: textTheme(context)
-                      .titleMedium!
-                      .copyWith(fontWeight: FontWeight.bold),
-                ),
-                isSet ? Text(value) : Text(placeholder)
-              ],
+      child: Container(
+        color: AppColors.transparent,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: 20,
+              child: isSet
+                  ? const Icon(
+                      Icons.check_circle_outline,
+                      size: Dimens.iconSize_22,
+                      color: AppColors.success,
+                    )
+                  : const SizedBox(),
             ),
-          ),
-          const SizedBox(
-            width: 10,
-          ),
-          const Icon(
-            Icons.chevron_right,
-          ),
-        ],
+            const SizedBox(
+              width: Dimens.spacingSizeDefault,
+            ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    label,
+                    style: textTheme(context)
+                        .titleMedium!
+                        .copyWith(fontWeight: FontWeight.bold),
+                  ),
+                  isSet ? Text(value) : Text(placeholder)
+                ],
+              ),
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            const Icon(
+              Icons.chevron_right,
+            ),
+          ],
+        ),
       ),
     );
   }

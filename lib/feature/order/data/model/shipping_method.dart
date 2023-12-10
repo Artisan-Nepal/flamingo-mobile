@@ -1,5 +1,5 @@
 class ShippingMethod {
-  final int id;
+  final String id;
   final String duration;
   final int cost;
   final String title;

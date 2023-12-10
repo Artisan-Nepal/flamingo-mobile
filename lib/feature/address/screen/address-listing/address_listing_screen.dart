@@ -14,9 +14,11 @@ class AddressListingScreen extends StatefulWidget {
   const AddressListingScreen({
     Key? key,
     this.onAddressPressed,
+    required this.title,
   }) : super(key: key);
 
   final Function(Address address)? onAddressPressed;
+  final String title;
 
   @override
   State<AddressListingScreen> createState() => _AddressListingScreenState();
@@ -44,12 +46,12 @@ class _AddressListingScreenState extends State<AddressListingScreen> {
     return ChangeNotifierProvider(
       create: (context) => _viewModel,
       child: DefaultScreen(
-        appBarTitle: const Text('Delivery Address'),
+        appBarTitle: Text(widget.title),
         scrollable: false,
         child: Consumer<AddressListingViewModel>(
           builder: (context, viewModel, child) {
             final addresses = viewModel.getAddressesUseCase.data?.rows ?? [];
-            return viewModel.getAddressesUseCase.hasCompleted
+            return !viewModel.getAddressesUseCase.hasCompleted
                 ? const Center(
                     child: CircularProgressIndicatorWidget(
                       size: Dimens.iconSizeLarge,

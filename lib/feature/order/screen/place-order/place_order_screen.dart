@@ -43,15 +43,20 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
                 bottomNavBarWithButtonOnPressed: () {
                   _onPlaceOrder(viewModel);
                 },
+                isLoading: viewModel.placeOrderUseCase.isLoading,
                 // bottomNavigationBar: _buildBottomBar(context),
                 child: Column(
                   children: [
+                    _buildOrderDetails(),
+                    _buildBillingDetails(),
+                    _buildDivider(),
                     SnippetCheckoutInput(
                       label: 'Shipping Address',
                       onPressed: () {
                         NavigationHelper.push(
                           context,
                           AddressListingScreen(
+                            title: 'Shipping Address',
                             onAddressPressed: (address) {
                               viewModel.setSelectedShippingAddress(address);
                             },
@@ -71,6 +76,7 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
                         NavigationHelper.push(
                           context,
                           AddressListingScreen(
+                            title: 'Billing Address',
                             onAddressPressed: (address) {
                               viewModel.setSelectedBillingAddress(address);
                             },
@@ -117,9 +123,6 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
                       placeholder: 'Select a payment method',
                       value: viewModel.selectedPaymentMethod?.name ?? "",
                     ),
-                    _buildDivider(),
-                    _buildOrderDetails(),
-                    _buildBillingDetails(),
                   ],
                 ),
               );
@@ -301,19 +304,27 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
           title: 'Confirm checkout?',
           needSecondButton: true,
           firstButtonLabel: 'Checkout',
-          firstButtonOnPressed: () {
+          firstButtonOnPressed: () async {
             // pop confimation dialog
             Navigator.pop(context);
 
-            // showDialog(
-            //     context: context, builder: (context) => const CustomLoader());
-            // viewModel.placeUserOrder(
-            //     Provider.of<CartProvider>(context, listen: false)
-            //         .cartList
-            //         .length,
-            //     viewModel.selectedShippingAddress,
-            //     viewModel.selectedBillingAddress,
-            //     _afterCheckout);
+            await viewModel.placeOrder();
+            if (!context.mounted) return;
+            if (viewModel.placeOrderUseCase.hasCompleted) {
+              NavigationHelper.pop(context);
+              NavigationHelper.pop(context);
+              showToast(
+                context,
+                message: 'You order has been placed.',
+                isSuccess: false,
+              );
+            } else {
+              showToast(
+                context,
+                message: viewModel.placeOrderUseCase.exception,
+                isSuccess: false,
+              );
+            }
           },
         ),
       );

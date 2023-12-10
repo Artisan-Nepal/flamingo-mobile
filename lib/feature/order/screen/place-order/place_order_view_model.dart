@@ -1,7 +1,9 @@
 import 'package:flamingo/feature/address/data/model/address.dart';
+import 'package:flamingo/feature/order/data/model/create_order.dart';
 import 'package:flamingo/feature/order/data/model/payment_method.dart';
 import 'package:flamingo/feature/order/data/model/shipping_method.dart';
 import 'package:flamingo/feature/order/data/order_repository.dart';
+import 'package:flamingo/shared/shared.dart';
 import 'package:flutter/cupertino.dart';
 
 class PlaceOrderViewModel extends ChangeNotifier {
@@ -15,12 +17,19 @@ class PlaceOrderViewModel extends ChangeNotifier {
   PaymentMethod? _selectedPaymentMethod;
   Address? _selectedShippingAddress;
   Address? _selectedBillingAddress;
+  Response _placeOrderUseCase = Response();
 
   int get orderIndex => _orderIndex;
   ShippingMethod? get selectedShippingMethod => _selectedShippingMethod;
   PaymentMethod? get selectedPaymentMethod => _selectedPaymentMethod;
   Address? get selectedShippingAddress => _selectedShippingAddress;
   Address? get selectedBillingAddress => _selectedBillingAddress;
+  Response get placeOrderUseCase => _placeOrderUseCase;
+
+  void setPlaceOrderUseCase(Response response) {
+    _placeOrderUseCase = response;
+    notifyListeners();
+  }
 
   setSelectedShippingAddress(Address address) {
     _selectedShippingAddress = address;
@@ -65,33 +74,20 @@ class PlaceOrderViewModel extends ChangeNotifier {
     }
   }
 
-  // placeUserOrder(int userCartLength, UserAddressModel? selectedShippingAddress,
-  //     UserAddressModel? selectedBillingAddress, Function callback) async {
-  //   _checkingOut = true;
-  //   notifyListeners();
-
-  //   // whether to clear user cart or not by checking if all the products are selected for checkout
-  //   bool clearCart = _selectedCartList.length == userCartLength;
-  //   var placeOrderModel = PlaceOrderModel(
-  //       couponDiscount: _couponDiscount,
-  //       billingAddressId: selectedBillingAddress!.id,
-  //       shippingAddressId: selectedShippingAddress!.id,
-  //       paymentType: _selectedPaymentMethod!.paymentModeId,
-  //       productDetails: List<int>.from(
-  //         _selectedCartList.map(
-  //           (selectedCart) => selectedCart.id,
-  //         ),
-  //       ),
-  //       shippingMethodId: _selectedShippingMethod!.id);
-  //   var apiResponse = await checkoutRepo.placeUserOrder(placeOrderModel);
-  //   if (apiResponse.status == Status.success) {
-  //     _selectedCartList = [];
-  //     _couponDiscount = 0;
-  //     callback(true, apiResponse.message, clearCart);
-  //   } else {
-  //     callback(false, apiResponse.message, false);
-  //   }
-  //   _checkingOut = false;
-  //   notifyListeners();
-  // }
+  Future<void> placeOrder() async {
+    try {
+      setPlaceOrderUseCase(Response.loading());
+      await _orderRepository.placeOrder(
+        CreateOrderRequest(
+          billingAddressId: _selectedBillingAddress!.id,
+          shippingAddressId: _selectedShippingAddress!.id,
+          paymentMethodId: _selectedPaymentMethod!.id,
+          shippingMethodId: _selectedShippingMethod!.id,
+        ),
+      );
+      setPlaceOrderUseCase(Response.complete(null));
+    } catch (exception) {
+      setPlaceOrderUseCase(Response.error(exception));
+    }
+  }
 }

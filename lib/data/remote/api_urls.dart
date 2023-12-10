@@ -23,4 +23,5 @@ class ApiUrls {
   static String addresses = '/addresses';
   static String shippingMethods = '/shipping-methods';
   static String paymentMethods = '/payment-methods';
+  static String orders = '/orders';
 }

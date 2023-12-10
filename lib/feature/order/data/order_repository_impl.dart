@@ -2,6 +2,7 @@
 import 'package:flamingo/data/model/fetch_response.dart';
 import 'package:flamingo/feature/auth/auth.dart';
 import 'package:flamingo/feature/order/data/local/order_local.dart';
+import 'package:flamingo/feature/order/data/model/create_order.dart';
 import 'package:flamingo/feature/order/data/model/payment_method.dart';
 import 'package:flamingo/feature/order/data/model/shipping_method.dart';
 import 'package:flamingo/feature/order/data/order_repository.dart';
@@ -28,5 +29,10 @@ class OrderRepositoryImpl implements OrderRepository {
   @override
   Future<FetchResponse<ShippingMethod>> getShippingMethods() async {
     return await _orderRemote.getShippingMethods();
+  }
+
+  @override
+  Future placeOrder(CreateOrderRequest request) async {
+    return await _orderRemote.placeOrder(request);
   }
 }

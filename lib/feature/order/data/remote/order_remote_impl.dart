@@ -1,10 +1,10 @@
 import 'package:flamingo/data/data.dart';
+import 'package:flamingo/feature/order/data/model/create_order.dart';
 import 'package:flamingo/feature/order/data/model/payment_method.dart';
 import 'package:flamingo/feature/order/data/model/shipping_method.dart';
 import 'package:flamingo/feature/order/data/remote/order_remote.dart';
 
 class OrderRemoteImpl implements OrderRemote {
-  // ignore: unused_field
   final ApiClient _apiClient;
 
   OrderRemoteImpl({required ApiClient apiClient}) : _apiClient = apiClient;
@@ -25,5 +25,10 @@ class OrderRemoteImpl implements OrderRemote {
       apiResponse.data,
       ShippingMethod.fromJsonList,
     );
+  }
+
+  @override
+  Future placeOrder(CreateOrderRequest request) async {
+    await _apiClient.post(ApiUrls.orders, body: request.toJson());
   }
 }

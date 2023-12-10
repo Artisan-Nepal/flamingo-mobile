@@ -41,7 +41,7 @@ class _CartListingScreenState extends State<CartListingScreen> {
                   title: 'SHOPPING BAG (2)',
                   child: Column(
                     children: [
-                      _buildCartSummary(),
+                      _buildCartSummary(viewModel),
                       Expanded(
                         child: !viewModel.cartUseCase.hasCompleted
                             ? _buildLoader()
@@ -83,7 +83,7 @@ class _CartListingScreenState extends State<CartListingScreen> {
     );
   }
 
-  Widget _buildCartSummary() {
+  Widget _buildCartSummary(CartListingViewModel viewModel) {
     return Padding(
       padding: const EdgeInsets.only(
         left: Dimens.spacingSizeDefault,
@@ -92,10 +92,11 @@ class _CartListingScreenState extends State<CartListingScreen> {
       ),
       child: Column(
         children: [
-          _buildSummaryItem(title: 'Subtotal', amount: 120000),
-          _buildSummaryItem(title: 'Discount', amount: 0, isDiscount: true),
-          const VerticalSpaceWidget(height: Dimens.spacingSizeExtraSmall),
-          _buildSummaryItem(title: 'Total', amount: 120000, boldText: true),
+          // _buildSummaryItem(title: 'Subtotal', amount: 120000),
+          // _buildSummaryItem(title: 'Discount', amount: 0, isDiscount: true),
+          // const VerticalSpaceWidget(height: Dimens.spacingSizeExtraSmall),
+          _buildSummaryItem(
+              title: 'Total', amount: viewModel.cartTotal, boldText: true),
           const VerticalSpaceWidget(height: Dimens.spacingSizeSmall),
           const Divider(
             height: 1,

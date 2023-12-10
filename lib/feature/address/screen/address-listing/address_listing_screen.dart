@@ -1,4 +1,5 @@
 import 'package:flamingo/di/di.dart';
+import 'package:flamingo/feature/address/data/model/address.dart';
 import 'package:flamingo/feature/address/screen/address-listing/address_listing_view_model.dart';
 import 'package:flamingo/feature/address/screen/manage-address/manage_address_screen.dart';
 import 'package:flamingo/shared/shared.dart';
@@ -12,7 +13,10 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 class AddressListingScreen extends StatefulWidget {
   const AddressListingScreen({
     Key? key,
+    this.onAddressPressed,
   }) : super(key: key);
+
+  final Function(Address address)? onAddressPressed;
 
   @override
   State<AddressListingScreen> createState() => _AddressListingScreenState();
@@ -101,7 +105,9 @@ class _AddressListingScreenState extends State<AddressListingScreen> {
                             ),
                             child: ListTile(
                               onTap: () {
-                                // TODO: show details
+                                if (widget.onAddressPressed != null) {
+                                  widget.onAddressPressed!(addresses[index]);
+                                }
                               },
                               // edit Button
                               leading: const SizedBox(

@@ -30,74 +30,108 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
       builder: (context, child) {
         return GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
-          child: DefaultScreen(
-            scrollController: _scrollController,
-            appBarTitle: const Text('Checkout'),
-            // bottomNavigationBar: _buildBottomBar(context),
-            child: Column(
-              children: [
-                _buildOrderDetails(),
-                _buildBillingDetails(),
-                const VerticalSpaceWidget(height: Dimens.spacingSizeDefault),
-                SnippetCheckoutInput(
-                  label: 'Shipping Address',
-                  onPressed: () {
-                    NavigationHelper.push(
-                        context, const AddressListingScreen());
-                  },
-                  isSet: false,
-                  placeholder: 'Select a shipping address',
-                  value: "abc, nepal",
+          child: Consumer<PlaceOrderViewModel>(
+            builder: (context, viewModel, child) {
+              return DefaultScreen(
+                scrollController: _scrollController,
+                appBarTitle: const Text('Checkout'),
+                bottomNavBarWithButton: true,
+                bottomNavBarWithButtonLabel: 'Place Order',
+                bottomNavBarWithButtonOnPressed: () {},
+                // bottomNavigationBar: _buildBottomBar(context),
+                child: Column(
+                  children: [
+                    SnippetCheckoutInput(
+                      label: 'Shipping Address',
+                      onPressed: () {
+                        NavigationHelper.push(
+                          context,
+                          AddressListingScreen(
+                            onAddressPressed: (address) {
+                              viewModel.setSelectedShippingAddress(address);
+                            },
+                          ),
+                        );
+                      },
+                      isSet: false,
+                      placeholder: 'Select a shipping address',
+                      value:
+                          '${viewModel.selectedShippingAddress?.name}, ${viewModel.selectedShippingAddress?.area.name}',
+                    ),
+                    _buildDivider(),
+                    // // Billing Address
+                    SnippetCheckoutInput(
+                      label: 'Billing Address',
+                      onPressed: () {
+                        NavigationHelper.push(
+                          context,
+                          AddressListingScreen(
+                            onAddressPressed: (address) {
+                              viewModel.setSelectedBillingAddress(address);
+                            },
+                          ),
+                        );
+                      },
+                      isSet: false,
+                      placeholder: 'Select a billing address',
+                      value:
+                          '${viewModel.selectedBillingAddress?.name}, ${viewModel.selectedBillingAddress?.area.name}',
+                    ),
+                    _buildDivider(),
+                    // Shipping Method
+                    SnippetCheckoutInput(
+                      label: 'Shipping Method',
+                      onPressed: () {
+                        // NavigationHelper.push(
+                        //   context,
+                        //   AddressListingScreen(
+                        //     onAddressPressed: (address) {
+                        //       viewModel.setSelectedBillingAddress(address);
+                        //     },
+                        //   ),
+                        // );
+                      },
+                      isSet: false,
+                      placeholder: 'Select a shipping method',
+                      value: viewModel.selectedShippingAddress?.name ?? "",
+                    ),
+                    _buildDivider(),
+                    // Payment Method
+                    SnippetCheckoutInput(
+                      label: 'Payment Method',
+                      onPressed: () {
+                        // NavigationHelper.push(
+                        //   context,
+                        //   AddressListingScreen(
+                        //     onAddressPressed: (address) {
+                        //       viewModel.setSelectedBillingAddress(address);
+                        //     },
+                        //   ),
+                        // );
+                      },
+                      isSet: false,
+                      placeholder: 'Select a payment method',
+                      value: viewModel.selectedPaymentMethod?.name ?? "",
+                    ),
+                    _buildDivider(),
+                    _buildOrderDetails(),
+                    _buildBillingDetails(),
+                  ],
                 ),
-                // // Billing Address
-                // SnippetCheckoutInput(
-                //   label: 'Billing Address',
-                //   onTapPage: const SelectAddressPage(isShipping: false),
-                //   isNotSet: addressProvider.selectedBillingAddress == null,
-                //   notSetValue: 'Select a billing address',
-                //   title: addressProvider.selectedBillingAddress == null
-                //       ? ""
-                //       : addressProvider.selectedBillingAddress!.street,
-                //   subTitle: addressProvider.selectedBillingAddress == null
-                //       ? ""
-                //       : addressProvider.selectedBillingAddress!.districtName,
-                //   disabled: provider.checkingOut,
-                //   icon: Icons.location_on,
-                // ),
-                // // _buildGap(),
-                // // Shipping Method
-                // SnippetCheckoutInput(
-                //   label: 'Shipping Method',
-                //   onTapPage: const SelectShippingMethodPage(),
-                //   isNotSet: provider.selectedShippingMethod == null,
-                //   notSetValue: 'Select a shipping method',
-                //   title: provider.selectedShippingMethod == null
-                //       ? ""
-                //       : provider.selectedShippingMethod!.title,
-                //   subTitle: provider.selectedShippingMethod == null
-                //       ? ""
-                //       : provider.selectedShippingMethod!.duration,
-                //   disabled: provider.checkingOut,
-                //   icon: Icons.delivery_dining,
-                // ),
-                // Payment Method
-                // SnippetCheckoutInput(
-                //   label: 'Payment Method',
-                //   onTapPage: const SelectPaymentMethodPage(),
-                //   isNotSet: provider.selectedPaymentMethod == null,
-                //   notSetValue: 'Select a payment method',
-                //   title: provider.selectedPaymentMethod == null
-                //       ? ""
-                //       : provider.selectedPaymentMethod!.name,
-                //   subTitle: "",
-                //   disabled: provider.checkingOut,
-                //   icon: Icons.attach_money,
-                // ),
-              ],
-            ),
+              );
+            },
           ),
         );
       },
+    );
+  }
+
+  Widget _buildDivider() {
+    return const Padding(
+      padding: EdgeInsets.symmetric(vertical: Dimens.spacingSizeDefault),
+      child: Divider(
+        thickness: 0.5,
+      ),
     );
   }
 
@@ -184,7 +218,7 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Divider(
-                thickness: 1,
+                thickness: 0.5,
               ),
               const SizedBox(height: 5),
               _buildOrderDetailItem(
@@ -199,7 +233,7 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
                 amount: 0,
               ),
               const Divider(
-                thickness: 1,
+                thickness: 0.5,
               ),
               const SizedBox(height: 5),
               _buildOrderDetailItem(

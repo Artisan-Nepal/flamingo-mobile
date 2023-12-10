@@ -1,3 +1,4 @@
+import 'package:flamingo/feature/address/data/model/address.dart';
 import 'package:flamingo/feature/order/data/model/payment_method.dart';
 import 'package:flamingo/feature/order/data/model/shipping_method.dart';
 import 'package:flamingo/feature/order/data/order_repository.dart';
@@ -12,10 +13,24 @@ class PlaceOrderViewModel extends ChangeNotifier {
   int _orderIndex = 0;
   ShippingMethod? _selectedShippingMethod;
   PaymentMethod? _selectedPaymentMethod;
+  Address? _selectedShippingAddress;
+  Address? _selectedBillingAddress;
 
   int get orderIndex => _orderIndex;
   ShippingMethod? get selectedShippingMethod => _selectedShippingMethod;
   PaymentMethod? get selectedPaymentMethod => _selectedPaymentMethod;
+  Address? get selectedShippingAddress => _selectedShippingAddress;
+  Address? get selectedBillingAddress => _selectedBillingAddress;
+
+  setSelectedShippingAddress(Address address) {
+    _selectedShippingAddress = address;
+    notifyListeners();
+  }
+
+  setSelectedBillingAddress(Address address) {
+    _selectedBillingAddress = address;
+    notifyListeners();
+  }
 
   incOrderIndex() {
     _orderIndex++;

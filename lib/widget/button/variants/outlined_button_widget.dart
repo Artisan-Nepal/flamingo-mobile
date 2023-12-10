@@ -12,7 +12,7 @@ class OutlinedButtonWidget extends StatelessWidget {
     this.child,
     this.loadingMsg,
     this.height,
-    this.fontSize,
+    this.fontSize = 14,
   });
 
   final String label;

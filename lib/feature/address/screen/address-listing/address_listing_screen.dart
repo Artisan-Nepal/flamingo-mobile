@@ -40,73 +40,85 @@ class _AddressListingScreenState extends State<AddressListingScreen> {
     return ChangeNotifierProvider(
       create: (context) => _viewModel,
       child: DefaultScreen(
-        appBarTitle: const Text('My Address'),
+        appBarTitle: const Text('Delivery Address'),
         scrollable: false,
         child: Consumer<AddressListingViewModel>(
           builder: (context, viewModel, child) {
             final addresses = viewModel.getAddressesUseCase.data?.rows ?? [];
-            return !viewModel.getAddressesUseCase.hasCompleted
+            return viewModel.getAddressesUseCase.hasCompleted
                 ? const Center(
                     child: CircularProgressIndicatorWidget(
                       size: Dimens.iconSizeLarge,
                     ),
                   )
-                : ListView.builder(
-                    padding: EdgeInsets.zero,
-                    physics: const BouncingScrollPhysics(),
-                    itemCount: addresses.length,
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) {
-                      return Slidable(
-                        endActionPane: ActionPane(
-                          motion: const ScrollMotion(),
-                          children: [
-                            // edit
-                            SlidableAction(
-                              onPressed: (context1) {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => ManageAddressScreen(
-                                      existingAddress: addresses[index],
-                                    ),
-                                  ),
-                                );
+                : Column(
+                    children: [
+                      OutlinedButtonWidget(
+                        label: 'Add New Address',
+                        onPressed: () {
+                          NavigationHelper.push(
+                              context, const ManageAddressScreen());
+                        },
+                      ),
+                      ListView.builder(
+                        padding: EdgeInsets.zero,
+                        physics: const BouncingScrollPhysics(),
+                        itemCount: addresses.length,
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) {
+                          return Slidable(
+                            endActionPane: ActionPane(
+                              motion: const ScrollMotion(),
+                              children: [
+                                // edit
+                                SlidableAction(
+                                  onPressed: (context1) {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            ManageAddressScreen(
+                                          existingAddress: addresses[index],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  label: 'Edit',
+                                  backgroundColor: Colors.blue,
+                                  icon: Icons.edit,
+                                ),
+                                // delete
+                                SlidableAction(
+                                  onPressed: (context2) {
+                                    _handleOnRemoveAddress(
+                                        context, addresses[index].id);
+                                  },
+                                  label: 'Delete',
+                                  backgroundColor: Colors.red,
+                                  icon: Icons.delete,
+                                ),
+                              ],
+                            ),
+                            child: ListTile(
+                              onTap: () {
+                                // TODO: show details
                               },
-                              label: 'Edit',
-                              backgroundColor: Colors.blue,
-                              icon: Icons.edit,
+                              // edit Button
+                              leading: const SizedBox(
+                                height: 50,
+                                width: 50,
+                                child: Icon(
+                                  Icons.location_on,
+                                  color: AppColors.primaryMain,
+                                ),
+                              ),
+                              title: Text(addresses[index].name),
+                              subtitle: Text(addresses[index].area.name),
                             ),
-                            // delete
-                            SlidableAction(
-                              onPressed: (context2) {
-                                _handleOnRemoveAddress(
-                                    context, addresses[index].id);
-                              },
-                              label: 'Delete',
-                              backgroundColor: Colors.red,
-                              icon: Icons.delete,
-                            ),
-                          ],
-                        ),
-                        child: ListTile(
-                          onTap: () {
-                            // TODO: show details
-                          },
-                          // edit Button
-                          leading: const SizedBox(
-                            height: 50,
-                            width: 50,
-                            child: Icon(
-                              Icons.location_on,
-                              color: AppColors.primaryMain,
-                            ),
-                          ),
-                          title: Text(addresses[index].name),
-                          subtitle: Text(addresses[index].area.name),
-                        ),
-                      );
-                    },
+                          );
+                        },
+                      ),
+                    ],
                   );
           },
         ),

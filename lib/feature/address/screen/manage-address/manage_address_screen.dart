@@ -46,8 +46,17 @@ class _ManageAddressScreenState extends State<ManageAddressScreen> {
       child: Consumer<ManageAddressViewModel>(
         builder: (context, viewModel, child) {
           return DefaultScreen(
-            appBarTitle: const Text('Address'),
-            bottomNavigationBar: _buildBottomBar(viewModel),
+            appBarTitle: Text(
+              widget.existingAddress == null
+                  ? 'Add New Address'
+                  : 'Edit Address',
+            ),
+            bottomNavBarWithButton: true,
+            bottomNavBarWithButtonLabel: 'Save And Continue',
+            bottomNavBarWithButtonOnPressed: () {
+              _onSubmit(viewModel);
+            },
+            isLoading: viewModel.manageAddressUseCase.isLoading,
             child: Form(
               key: _formKey,
               child: Column(
@@ -146,7 +155,11 @@ class _ManageAddressScreenState extends State<ManageAddressScreen> {
 
   _onSubmit(ManageAddressViewModel viewModel) async {
     if (_formKey.currentState!.validate()) {
-      await viewModel.manageAddress(widget.existingAddress?.id);
+      await viewModel.manageAddress(
+        _addressController.text,
+        _landmarkController.text,
+        widget.existingAddress?.id,
+      );
 
       if (!context.mounted) return;
       if (viewModel.manageAddressUseCase.hasCompleted) {
@@ -159,15 +172,5 @@ class _ManageAddressScreenState extends State<ManageAddressScreen> {
         );
       }
     }
-  }
-
-  Widget _buildBottomBar(ManageAddressViewModel viewModel) {
-    return RoundedFilledButtonWidget(
-      label: 'Submit',
-      isLoading: viewModel.manageAddressUseCase.isLoading,
-      onPressed: () {
-        _onSubmit(viewModel);
-      },
-    );
   }
 }

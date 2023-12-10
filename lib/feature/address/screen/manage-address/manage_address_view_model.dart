@@ -1,6 +1,8 @@
 import 'package:flamingo/feature/address/data/address_repository.dart';
 import 'package:flamingo/feature/address/data/model/address.dart';
+import 'package:flamingo/feature/address/data/model/create_address_request.dart';
 import 'package:flamingo/feature/address/data/model/sub_address.dart';
+import 'package:flamingo/feature/address/data/model/update_address_request.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flutter/material.dart';
 
@@ -117,11 +119,23 @@ class ManageAddressViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> manageAddress(String? existingAddressId) async {
+  Future<void> manageAddress(
+      String address, String? landmark, String? existingAddressId) async {
     try {
       setManageAddressUseCase(Response.loading());
-      // await _addressRepository.getAreasByCity(selectedCity!.id);
-      // _selectedArea = null;
+      if (existingAddressId == null) {
+        await _addressRepository.createAddress(CreateAddressRequest(
+            name: address, areaId: _selectedArea!.id, landmark: landmark));
+      } else {
+        await _addressRepository.udpateAddress(
+          existingAddressId,
+          UpdateAddressRequest(
+            name: address,
+            areaId: _selectedArea!.id,
+            landmark: landmark,
+          ),
+        );
+      }
       setManageAddressUseCase(Response.complete(null));
     } catch (exception) {
       setManageAddressUseCase(Response.error(exception));

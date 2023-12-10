@@ -1,6 +1,8 @@
 import 'package:flamingo/data/data.dart';
 import 'package:flamingo/feature/address/data/model/address.dart';
+import 'package:flamingo/feature/address/data/model/create_address_request.dart';
 import 'package:flamingo/feature/address/data/model/sub_address.dart';
+import 'package:flamingo/feature/address/data/model/update_address_request.dart';
 import 'package:flamingo/feature/address/data/remote/address_remote.dart';
 
 class AddressRemoteImpl implements AddressRemote {
@@ -44,5 +46,16 @@ class AddressRemoteImpl implements AddressRemote {
       apiResponse.data,
       Address.fromJsonList,
     );
+  }
+
+  @override
+  Future createAddress(CreateAddressRequest request) async {
+    await _apiClient.post(ApiUrls.customerAddress, body: request.toJson());
+  }
+
+  @override
+  Future updateAddress(String addressId, UpdateAddressRequest request) async {
+    final url = '${ApiUrls.addresses}/$addressId';
+    return await _apiClient.post(url, body: request.toJson());
   }
 }

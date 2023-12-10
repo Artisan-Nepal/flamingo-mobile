@@ -1,4 +1,5 @@
 import 'package:flamingo/data/data.dart';
+import 'package:flamingo/feature/address/data/model/address.dart';
 import 'package:flamingo/feature/address/data/model/sub_address.dart';
 import 'package:flamingo/feature/address/data/remote/address_remote.dart';
 
@@ -33,6 +34,15 @@ class AddressRemoteImpl implements AddressRemote {
     return FetchResponse.fromJson(
       apiResponse.data,
       City.fromJsonList,
+    );
+  }
+
+  @override
+  Future<FetchResponse<Address>> getCustomerAddresses() async {
+    final apiResponse = await _apiClient.get(ApiUrls.customerAddress);
+    return FetchResponse.fromJson(
+      apiResponse.data,
+      Address.fromJsonList,
     );
   }
 }

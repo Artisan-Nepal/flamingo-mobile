@@ -18,6 +18,7 @@ class DefaultScreen extends StatelessWidget {
     this.scrollable = true,
     this.bottomBarPadding = const EdgeInsets.all(Dimens.spacingSizeDefault),
     this.statusBarIconBrightness,
+    this.scrollController,
   });
 
   final Widget child;
@@ -31,6 +32,7 @@ class DefaultScreen extends StatelessWidget {
   final bool automaticallyImplyAppBarLeading;
   final bool scrollable;
   final Brightness? statusBarIconBrightness;
+  final ScrollController? scrollController;
 
   @override
   Widget build(BuildContext context) {
@@ -68,6 +70,7 @@ class DefaultScreen extends StatelessWidget {
           child: GestureDetector(
             child: scrollable
                 ? SingleChildScrollView(
+                    controller: scrollController,
                     child: Padding(
                       padding: padding,
                       child: child,

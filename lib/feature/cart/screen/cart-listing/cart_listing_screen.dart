@@ -1,6 +1,7 @@
 import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/cart/screen/cart-listing/cart_listing_view_model.dart';
 import 'package:flamingo/feature/cart/screen/cart-listing/snippet_cart_listing_item.dart';
+import 'package:flamingo/feature/order/screen/place-order/place_order_screen.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/button/button.dart';
 import 'package:flamingo/widget/loader/circular_progress_indicator_widget.dart';
@@ -30,22 +31,22 @@ class _CartListingScreenState extends State<CartListingScreen> {
     return ChangeNotifierProvider(
       create: (context) => _viewModel,
       builder: (context, child) {
-        return Stack(
-          children: [
-            Consumer<CartListingViewModel>(
-              builder: (context, viewModel, child) {
-                final cartItems = viewModel.cartUseCase.data?.rows ?? [];
-                return TitledScreen(
-                  scrollable: false,
-                  padding: EdgeInsets.zero,
-                  title: 'SHOPPING BAG (2)',
-                  child: Column(
-                    children: [
-                      _buildCartSummary(viewModel),
-                      Expanded(
-                        child: !viewModel.cartUseCase.hasCompleted
-                            ? _buildLoader()
-                            : ListView.builder(
+        return Consumer<CartListingViewModel>(
+          builder: (context, viewModel, child) {
+            final cartItems = viewModel.cartUseCase.data?.rows ?? [];
+            return TitledScreen(
+              scrollable: false,
+              padding: EdgeInsets.zero,
+              title: 'SHOPPING BAG (2)',
+              child: !viewModel.cartUseCase.hasCompleted
+                  ? _buildLoader()
+                  : Stack(
+                      children: [
+                        Column(
+                          children: [
+                            _buildCartSummary(viewModel),
+                            Expanded(
+                              child: ListView.builder(
                                 itemCount: cartItems.length,
                                 itemBuilder: (context, index) {
                                   return Padding(
@@ -59,14 +60,14 @@ class _CartListingScreenState extends State<CartListingScreen> {
                                   );
                                 },
                               ),
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
-            _buildCheckoutButton()
-          ],
+                            ),
+                          ],
+                        ),
+                        _buildCheckoutButton()
+                      ],
+                    ),
+            );
+          },
         );
       },
     );
@@ -140,7 +141,17 @@ class _CartListingScreenState extends State<CartListingScreen> {
       child: FilledButtonWidget(
         label: 'Proceed To Checkout',
         width: SizeConfig.screenWidth - 2 * Dimens.spacingSizeDefault,
-        onPressed: () async {},
+        onPressed: () {
+          NavigationHelper.push(
+            context,
+            ChangeNotifierProvider.value(
+              value: _viewModel,
+              builder: (context, child) {
+                return const PlaceOrderScreen();
+              },
+            ),
+          );
+        },
       ),
     );
   }

@@ -19,4 +19,5 @@ class ApiUrls {
   static String carts = '/carts';
   static String wishlists = '/wishlists';
   static String updateWishlist = '/wishlists/update';
+  static String customerAddress = '/customer/address';
 }

@@ -51,9 +51,13 @@ class _CartListingScreenState extends State<CartListingScreen> {
                                 itemBuilder: (context, index) {
                                   return Padding(
                                     padding: EdgeInsets.only(
-                                        top: index == 0
-                                            ? Dimens.spacingSizeSmall
-                                            : 0),
+                                      top: index == 0
+                                          ? Dimens.spacingSizeSmall
+                                          : 0,
+                                      bottom: index == cartItems.length - 1
+                                          ? 80
+                                          : 0,
+                                    ),
                                     child: SnippetCartListingItem(
                                       cartItem: cartItems[index],
                                     ),

@@ -7,11 +7,13 @@ import 'package:flamingo/feature/product/data/model/product.dart';
 class Order {
   final String id;
   final String customerId;
+  final int orderTotal;
   final Address shippingAddress;
   final Address billingAddress;
   final PaymentMethod paymentMethod;
   final ShippingMethod shippingMethod;
   List<OrderItem> orderItems;
+  final DateTime createdAt;
 
   Order({
     required this.id,
@@ -20,17 +22,22 @@ class Order {
     required this.billingAddress,
     required this.paymentMethod,
     required this.shippingMethod,
+    required this.orderTotal,
     required this.orderItems,
+    required this.createdAt,
   });
 
   factory Order.fromJson(Map<String, dynamic> json) => Order(
-      id: json['id'],
-      customerId: json['customerId'],
-      shippingAddress: Address.fromJson(json['shippingAddress']),
-      billingAddress: Address.fromJson(json['billingAddress']),
-      paymentMethod: PaymentMethod.fromJson(json['paymentMethod']),
-      shippingMethod: ShippingMethod.fromJson(json['shippingMethod']),
-      orderItems: OrderItem.fromJsonList(json['orderItems']));
+        id: json['id'],
+        customerId: json['customerId'],
+        orderTotal: json['orderTotal'],
+        shippingAddress: Address.fromJson(json['shippingAddress']),
+        billingAddress: Address.fromJson(json['billingAddress']),
+        paymentMethod: PaymentMethod.fromJson(json['paymentMethod']),
+        shippingMethod: ShippingMethod.fromJson(json['shippingMethod']),
+        orderItems: OrderItem.fromJsonList(json['orderItems']),
+        createdAt: DateTime.parse(json['createdAt']),
+      );
 
   static List<Order> fromJsonList(dynamic json) => List<Order>.from(
         json.map(

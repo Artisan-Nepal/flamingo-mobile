@@ -1,5 +1,5 @@
 import 'package:flamingo/data/data.dart';
-import 'package:flamingo/feature/order/data/model/order_item.dart';
+import 'package:flamingo/feature/order/data/model/order.dart';
 import 'package:flamingo/feature/order/data/order_repository.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flutter/cupertino.dart';
@@ -19,7 +19,7 @@ class OrderListingViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getCart() async {
+  Future<void> getUserOrders() async {
     try {
       setOrderUseCase(Response.loading());
       final response = await _orderRepository.getUserOrders();

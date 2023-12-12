@@ -1,8 +1,10 @@
 import 'package:flamingo/feature/auth/auth.dart';
 import 'package:flamingo/feature/auth/auth_view_model.dart';
+import 'package:flamingo/feature/order/screen/order-listing/order_listing_screen.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/button/button.dart';
 import 'package:flamingo/widget/screen/screen.dart';
+import 'package:flamingo/widget/space/space.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -20,6 +22,14 @@ class _AccountScreenState extends State<AccountScreen> {
       title: 'Account',
       appbarActions: const [CartButtonWidget()],
       child: Column(children: [
+        FilledButtonWidget(
+          label: 'Orders',
+          width: double.infinity,
+          onPressed: () {
+            NavigationHelper.push(context, const OrderListingScreen());
+          },
+        ),
+        const VerticalSpaceWidget(height: Dimens.spacingSizeDefault),
         Consumer<AuthViewModel>(
           builder: (context, authViewModel, child) {
             return FilledButtonWidget(

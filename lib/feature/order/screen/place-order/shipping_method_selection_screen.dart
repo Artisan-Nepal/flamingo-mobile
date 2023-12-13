@@ -59,7 +59,8 @@ class _ShippingMethodSelectionScreenState
                               color: AppColors.primaryMain,
                             ),
                             title: Text(shippingMethods[index].title),
-                            subtitle: Text(shippingMethods[index].duration),
+                            subtitle: Text(
+                                shippingMethods[index].duration.toString()),
                             trailing:
                                 (placeOrderViewModel.selectedShippingMethod !=
                                             null &&

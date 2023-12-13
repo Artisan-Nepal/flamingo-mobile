@@ -57,8 +57,11 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
                           context,
                           AddressListingScreen(
                             title: 'Shipping Address',
+                            selectedAddressId:
+                                viewModel.selectedShippingAddress?.id,
                             onAddressPressed: (address) {
                               viewModel.setSelectedShippingAddress(address);
+                              NavigationHelper.pop(context);
                             },
                           ),
                         );
@@ -77,8 +80,11 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
                           context,
                           AddressListingScreen(
                             title: 'Billing Address',
+                            selectedAddressId:
+                                viewModel.selectedBillingAddress?.id,
                             onAddressPressed: (address) {
                               viewModel.setSelectedBillingAddress(address);
+                              NavigationHelper.pop(context);
                             },
                           ),
                         );

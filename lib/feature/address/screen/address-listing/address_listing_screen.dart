@@ -15,10 +15,12 @@ class AddressListingScreen extends StatefulWidget {
     Key? key,
     this.onAddressPressed,
     required this.title,
+    this.selectedAddressId,
   }) : super(key: key);
 
   final Function(Address address)? onAddressPressed;
   final String title;
+  final String? selectedAddressId;
 
   @override
   State<AddressListingScreen> createState() => _AddressListingScreenState();
@@ -36,7 +38,7 @@ class _AddressListingScreenState extends State<AddressListingScreen> {
     await _viewModel.getAddresses();
     if (!context.mounted) return;
     if (_viewModel.getAddressesUseCase.hasCompleted &&
-        _viewModel.getAddressesUseCase.data!.rows.isEmpty) {
+        _viewModel.getAddressesUseCase.data!.isEmpty) {
       NavigationHelper.push(context, const ManageAddressScreen());
     }
   }
@@ -50,7 +52,6 @@ class _AddressListingScreenState extends State<AddressListingScreen> {
         scrollable: false,
         child: Consumer<AddressListingViewModel>(
           builder: (context, viewModel, child) {
-            final addresses = viewModel.getAddressesUseCase.data?.rows ?? [];
             return !viewModel.getAddressesUseCase.hasCompleted
                 ? const Center(
                     child: CircularProgressIndicatorWidget(
@@ -59,78 +60,127 @@ class _AddressListingScreenState extends State<AddressListingScreen> {
                   )
                 : Column(
                     children: [
-                      OutlinedButtonWidget(
-                        label: 'Add New Address',
-                        onPressed: () {
-                          NavigationHelper.push(
-                              context, const ManageAddressScreen());
-                        },
-                      ),
-                      ListView.builder(
-                        padding: EdgeInsets.zero,
-                        physics: const BouncingScrollPhysics(),
-                        itemCount: addresses.length,
-                        shrinkWrap: true,
-                        itemBuilder: (context, index) {
-                          return Slidable(
-                            endActionPane: ActionPane(
-                              motion: const ScrollMotion(),
-                              children: [
-                                // edit
-                                SlidableAction(
-                                  onPressed: (context1) {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            ManageAddressScreen(
-                                          existingAddress: addresses[index],
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  label: 'Edit',
-                                  backgroundColor: Colors.blue,
-                                  icon: Icons.edit,
-                                ),
-                                // delete
-                                SlidableAction(
-                                  onPressed: (context2) {
-                                    _handleOnRemoveAddress(
-                                        context, addresses[index].id);
-                                  },
-                                  label: 'Delete',
-                                  backgroundColor: Colors.red,
-                                  icon: Icons.delete,
-                                ),
-                              ],
-                            ),
-                            child: ListTile(
-                              onTap: () {
-                                if (widget.onAddressPressed != null) {
-                                  widget.onAddressPressed!(addresses[index]);
-                                }
-                              },
-                              // edit Button
-                              leading: const SizedBox(
-                                height: 50,
-                                width: 50,
-                                child: Icon(
-                                  Icons.location_on,
-                                  color: AppColors.primaryMain,
-                                ),
-                              ),
-                              title: Text(addresses[index].name),
-                              subtitle: Text(addresses[index].area.name),
-                            ),
-                          );
-                        },
-                      ),
+                      _buildAddNewButton(viewModel),
+                      const VerticalSpaceWidget(
+                          height: Dimens.spacingSizeSmall),
+                      _buildAddressList(viewModel),
                     ],
                   );
           },
         ),
       ),
+    );
+  }
+
+  Widget _buildAddressList(AddressListingViewModel viewModel) {
+    final addresses = viewModel.getAddressesUseCase.data ?? [];
+    return ListView.builder(
+      padding: EdgeInsets.zero,
+      physics: const BouncingScrollPhysics(),
+      itemCount: addresses.length,
+      shrinkWrap: true,
+      itemBuilder: (context, index) {
+        return Slidable(
+          endActionPane: ActionPane(
+            motion: const ScrollMotion(),
+            children: [
+              // edit
+              SlidableAction(
+                onPressed: (context1) {
+                  NavigationHelper.push(
+                    context,
+                    ChangeNotifierProvider.value(
+                      value: viewModel,
+                      builder: (context, child) {
+                        return ManageAddressScreen(
+                          existingAddress: addresses[index].address,
+                        );
+                      },
+                    ),
+                  );
+                },
+                label: 'Edit',
+                backgroundColor: Colors.blue,
+                icon: Icons.edit,
+              ),
+              // delete
+              SlidableAction(
+                onPressed: (context2) {
+                  _handleOnRemoveAddress(context, addresses[index].address.id);
+                },
+                label: 'Delete',
+                backgroundColor: Colors.red,
+                icon: Icons.delete,
+              ),
+            ],
+          ),
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: Dimens.spacingSizeDefault),
+            child: ListTile(
+              onTap: () {
+                if (widget.onAddressPressed != null) {
+                  widget.onAddressPressed!(addresses[index].address);
+                }
+                // NavigationHelper.pop(context);
+              },
+              title: Text(
+                addresses[index].address.name,
+                style: textTheme(context).bodyMedium!.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(addresses[index].address.area.name),
+                  Text(addresses[index].address.area.city.name),
+                  Text(addresses[index].address.area.city.province.name)
+                ],
+              ),
+              trailing: _selectionStatus(addresses[index].address.id),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _selectionStatus(String addressId) {
+    if (widget.selectedAddressId == null) return const SizedBox();
+
+    return Container(
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(
+          color: isLightMode(context) ? AppColors.black : AppColors.white,
+        ),
+      ),
+      height: 12,
+      width: 12,
+      padding: const EdgeInsets.all(Dimens.spacing_2),
+      child: widget.selectedAddressId! == addressId
+          ? Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: isLightMode(context) ? AppColors.black : AppColors.white,
+              ),
+            )
+          : const SizedBox(),
+    );
+  }
+
+  Widget _buildAddNewButton(AddressListingViewModel viewModel) {
+    return OutlinedButtonWidget(
+      label: 'Add New Address',
+      onPressed: () {
+        NavigationHelper.push(
+          context,
+          ChangeNotifierProvider.value(
+            value: viewModel,
+            builder: (context, child) => const ManageAddressScreen(),
+          ),
+        );
+      },
     );
   }
 

@@ -16,6 +16,7 @@ class Dimens {
   static const double spacingSizeOverLarge = 35.0;
   static const double spacing_12 = 12.0;
   static const double spacing_8 = 8.0;
+  static const double spacing_2 = 2.0;
   static const double spacing_30 = 30.0;
   static const double spacing_32 = 32.0;
   static const double spacing_48 = 48.0;

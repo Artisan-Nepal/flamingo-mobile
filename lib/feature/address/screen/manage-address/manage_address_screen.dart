@@ -1,6 +1,7 @@
 import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/address/data/model/address.dart';
 import 'package:flamingo/feature/address/data/model/sub_address.dart';
+import 'package:flamingo/feature/address/screen/address-listing/address_listing_view_model.dart';
 import 'package:flamingo/feature/address/screen/manage-address/manage_address_view_model.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/widget.dart';
@@ -163,6 +164,8 @@ class _ManageAddressScreenState extends State<ManageAddressScreen> {
 
       if (!context.mounted) return;
       if (viewModel.manageAddressUseCase.hasCompleted) {
+        Provider.of<AddressListingViewModel>(context, listen: false)
+            .getAddresses();
         NavigationHelper.pop(context);
       } else {
         showToast(

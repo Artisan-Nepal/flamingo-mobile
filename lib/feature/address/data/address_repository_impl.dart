@@ -4,8 +4,8 @@ import 'package:flamingo/data/data.dart';
 import 'package:flamingo/data/model/fetch_response.dart';
 import 'package:flamingo/feature/address/data/address_repository.dart';
 import 'package:flamingo/feature/address/data/local/address_local.dart';
-import 'package:flamingo/feature/address/data/model/address.dart';
 import 'package:flamingo/feature/address/data/model/create_address_request.dart';
+import 'package:flamingo/feature/address/data/model/customer_address.dart';
 import 'package:flamingo/feature/address/data/model/sub_address.dart';
 import 'package:flamingo/feature/address/data/model/update_address_request.dart';
 import 'package:flamingo/feature/address/data/remote/address_remote.dart';
@@ -36,7 +36,7 @@ class AddressRepositoryImpl implements AddressRepository {
   }
 
   @override
-  Future<FetchResponse<Address>> getCustomerAddresses() async {
+  Future<List<CustomerAddress>> getCustomerAddresses() async {
     return await _addressRemote.getCustomerAddresses();
   }
 

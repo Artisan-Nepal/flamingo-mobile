@@ -16,7 +16,7 @@ class CreateOrderRequest {
       'billingAddressId': billingAddressId,
       'shippingAddressId': shippingAddressId,
       'paymentMethodId': paymentMethodId,
-      'shipping_method_id': shippingMethodId,
+      'shippingMethodId': shippingMethodId,
     };
   }
 }

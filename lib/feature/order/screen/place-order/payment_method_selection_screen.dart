@@ -4,6 +4,7 @@ import 'package:flamingo/feature/order/screen/place-order/place_order_view_model
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/loader/circular_progress_indicator_widget.dart';
 import 'package:flamingo/widget/screen/default_screen.dart';
+import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -54,22 +55,15 @@ class _PaymentMethodSelectionScreenState
                                   paymentMethods[index]);
                               Navigator.pop(context);
                             },
-                            leading: const Icon(
-                              Icons.attach_money,
-                              color: AppColors.primaryMain,
-                            ),
                             title: Text(paymentMethods[index].name),
-                            trailing:
-                                (placeOrderViewModel.selectedPaymentMethod !=
-                                            null &&
-                                        placeOrderViewModel
-                                                .selectedPaymentMethod!.id ==
-                                            paymentMethods[index].id)
-                                    ? const Icon(
-                                        Icons.check,
-                                        color: AppColors.primaryMain,
-                                      )
-                                    : null,
+                            trailing: SelectionIndicatorWidget(
+                              isSelected:
+                                  placeOrderViewModel.selectedPaymentMethod !=
+                                          null &&
+                                      placeOrderViewModel
+                                              .selectedPaymentMethod!.id ==
+                                          paymentMethods[index].id,
+                            ),
                           );
                         },
                       );

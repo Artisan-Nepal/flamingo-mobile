@@ -4,6 +4,7 @@ import 'package:flamingo/feature/order/screen/place-order/place_order_view_model
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/loader/circular_progress_indicator_widget.dart';
 import 'package:flamingo/widget/screen/default_screen.dart';
+import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -54,24 +55,17 @@ class _ShippingMethodSelectionScreenState
                                   shippingMethods[index]);
                               Navigator.pop(context);
                             },
-                            leading: const Icon(
-                              Icons.delivery_dining,
-                              color: AppColors.primaryMain,
+                            title: Text(shippingMethods[index].name),
+                            subtitle: Text(hoursToDaysString(
+                                shippingMethods[index].duration)),
+                            trailing: SelectionIndicatorWidget(
+                              isSelected:
+                                  placeOrderViewModel.selectedShippingMethod !=
+                                          null &&
+                                      placeOrderViewModel
+                                              .selectedShippingMethod?.id ==
+                                          shippingMethods[index].id,
                             ),
-                            title: Text(shippingMethods[index].title),
-                            subtitle: Text(
-                                shippingMethods[index].duration.toString()),
-                            trailing:
-                                (placeOrderViewModel.selectedShippingMethod !=
-                                            null &&
-                                        placeOrderViewModel
-                                                .selectedShippingMethod?.id ==
-                                            shippingMethods[index].id)
-                                    ? const Icon(
-                                        Icons.check,
-                                        color: AppColors.primaryMain,
-                                      )
-                                    : null,
                           );
                         },
                       );

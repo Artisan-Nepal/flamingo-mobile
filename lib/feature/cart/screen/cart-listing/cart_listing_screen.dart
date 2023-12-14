@@ -67,7 +67,7 @@ class _CartListingScreenState extends State<CartListingScreen> {
                             ),
                           ],
                         ),
-                        _buildCheckoutButton()
+                        _buildCheckoutButton(viewModel)
                       ],
                     ),
             );
@@ -137,7 +137,7 @@ class _CartListingScreenState extends State<CartListingScreen> {
     );
   }
 
-  Widget _buildCheckoutButton() {
+  Widget _buildCheckoutButton(CartListingViewModel viewModel) {
     return Positioned(
       bottom: Dimens.spacingSizeDefault,
       right: Dimens.spacingSizeDefault,
@@ -149,9 +149,11 @@ class _CartListingScreenState extends State<CartListingScreen> {
           NavigationHelper.push(
             context,
             ChangeNotifierProvider.value(
-              value: _viewModel,
+              value: viewModel,
               builder: (context, child) {
-                return const PlaceOrderScreen();
+                return PlaceOrderScreen(
+                  items: viewModel.cartUseCase.data?.rows ?? [],
+                );
               },
             ),
           );

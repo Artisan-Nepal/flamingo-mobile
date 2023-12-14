@@ -1,4 +1,5 @@
 import 'package:flamingo/feature/address/data/model/address.dart';
+import 'package:flamingo/feature/cart/data/model/cart_item.dart';
 import 'package:flamingo/feature/order/data/model/create_order.dart';
 import 'package:flamingo/feature/order/data/model/payment_method.dart';
 import 'package:flamingo/feature/order/data/model/shipping_method.dart';
@@ -18,6 +19,7 @@ class PlaceOrderViewModel extends ChangeNotifier {
   Address? _selectedShippingAddress;
   Address? _selectedBillingAddress;
   Response _placeOrderUseCase = Response();
+  List<CartItem> _items = [];
 
   int get orderIndex => _orderIndex;
   ShippingMethod? get selectedShippingMethod => _selectedShippingMethod;
@@ -25,6 +27,11 @@ class PlaceOrderViewModel extends ChangeNotifier {
   Address? get selectedShippingAddress => _selectedShippingAddress;
   Address? get selectedBillingAddress => _selectedBillingAddress;
   Response get placeOrderUseCase => _placeOrderUseCase;
+  List<CartItem> get items => _items;
+
+  void setCartItems(List<CartItem> items) {
+    _items = items;
+  }
 
   void setPlaceOrderUseCase(Response response) {
     _placeOrderUseCase = response;
@@ -89,5 +96,17 @@ class PlaceOrderViewModel extends ChangeNotifier {
     } catch (exception) {
       setPlaceOrderUseCase(Response.error(exception));
     }
+  }
+
+  int get subTotal {
+    int price = 0;
+    for (CartItem cart in items) {
+      price = price + (cart.productVariant.price * cart.quantity);
+    }
+    return price;
+  }
+
+  int get orderTotal {
+    return subTotal + (_selectedShippingMethod?.cost ?? 0);
   }
 }

@@ -10,7 +10,7 @@ class FilledButtonWidget extends StatelessWidget {
     this.enabled = true,
     this.child,
     this.loadingMsg,
-    this.width,
+    this.width = double.infinity,
   });
 
   final String label;

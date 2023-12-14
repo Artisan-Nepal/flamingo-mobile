@@ -1,6 +1,6 @@
 import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/address/screen/address-listing/address_listing_screen.dart';
-import 'package:flamingo/feature/cart/screen/cart-listing/cart_listing_view_model.dart';
+import 'package:flamingo/feature/cart/data/model/cart_item.dart';
 import 'package:flamingo/feature/order/screen/place-order/payment_method_selection_screen.dart';
 import 'package:flamingo/feature/order/screen/place-order/place_order_view_model.dart';
 import 'package:flamingo/feature/order/screen/place-order/shipping_method_selection_screen.dart';
@@ -13,7 +13,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class PlaceOrderScreen extends StatefulWidget {
-  const PlaceOrderScreen({Key? key}) : super(key: key);
+  const PlaceOrderScreen({
+    Key? key,
+    required this.items,
+  }) : super(key: key);
+
+  final List<CartItem> items;
 
   @override
   State<PlaceOrderScreen> createState() => _PlaceOrderScreenState();
@@ -21,15 +26,18 @@ class PlaceOrderScreen extends StatefulWidget {
 
 class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
   final _scrollController = ScrollController();
+  final _viewModel = locator<PlaceOrderViewModel>();
+
   @override
   void initState() {
     super.initState();
+    _viewModel.setCartItems(widget.items);
   }
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => locator<PlaceOrderViewModel>(),
+      create: (context) => _viewModel,
       builder: (context, child) {
         return GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
@@ -110,7 +118,7 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
                       },
                       isSet: viewModel.selectedShippingMethod != null,
                       placeholder: 'Select a shipping method',
-                      value: viewModel.selectedShippingAddress?.name ?? "",
+                      value: viewModel.selectedShippingMethod?.name ?? "",
                     ),
                     _buildDivider(),
                     // Payment Method
@@ -149,9 +157,9 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
   }
 
   Widget _buildOrderDetails() {
-    return Consumer<CartListingViewModel>(
+    return Consumer<PlaceOrderViewModel>(
       builder: (context, viewModel, child) {
-        final cartItems = viewModel.cartUseCase.data?.rows ?? [];
+        final cartItems = viewModel.items;
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -225,37 +233,34 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
 
   Widget _buildBillingDetails() {
     return Consumer<PlaceOrderViewModel>(
-      builder: (context, placeOrderViewModel, child) {
-        return Consumer<CartListingViewModel>(
-          builder: (context, cartListingViewModel, child) => Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Divider(
-                thickness: 0.5,
-              ),
-              const SizedBox(height: 5),
-              _buildOrderDetailItem(
-                  title: 'Order Cost', amount: cartListingViewModel.cartTotal),
-              _buildOrderDetailItem(
-                  title: 'Shipping Fee',
-                  amount:
-                      placeOrderViewModel.selectedShippingMethod?.cost ?? 0),
-              _buildOrderDetailItem(
-                title: 'Discount',
-                isDiscount: true,
-                amount: 0,
-              ),
-              const Divider(
-                thickness: 0.5,
-              ),
-              const SizedBox(height: 5),
-              _buildOrderDetailItem(
-                title: 'Total ',
-                amount: cartListingViewModel.cartTotal,
-                boldText: true,
-              ),
-            ],
-          ),
+      builder: (context, viewModel, child) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Divider(
+              thickness: 0.5,
+            ),
+            const SizedBox(height: 5),
+            _buildOrderDetailItem(
+                title: 'Order Cost', amount: viewModel.subTotal),
+            _buildOrderDetailItem(
+                title: 'Shipping Fee',
+                amount: viewModel.selectedShippingMethod?.cost ?? 0),
+            _buildOrderDetailItem(
+              title: 'Discount',
+              isDiscount: true,
+              amount: 0,
+            ),
+            const Divider(
+              thickness: 0.5,
+            ),
+            const SizedBox(height: 5),
+            _buildOrderDetailItem(
+              title: 'Total ',
+              amount: viewModel.orderTotal,
+              boldText: true,
+            ),
+          ],
         );
       },
     );

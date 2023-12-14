@@ -2,20 +2,20 @@ class ShippingMethod {
   final String id;
   final double duration;
   final int cost;
-  final String title;
+  final String name;
 
   ShippingMethod({
     required this.id,
     required this.duration,
     required this.cost,
-    required this.title,
+    required this.name,
   });
 
   factory ShippingMethod.fromJson(Map<String, dynamic> json) => ShippingMethod(
         id: json["id"],
-        duration: json["duration"],
-        cost: double.parse(json["cost"].toString()).toInt(),
-        title: json["title"],
+        duration: double.parse(json["duration"].toString()),
+        cost: json["cost"],
+        name: json["name"],
       );
 
   static List<ShippingMethod> fromJsonList(dynamic json) =>

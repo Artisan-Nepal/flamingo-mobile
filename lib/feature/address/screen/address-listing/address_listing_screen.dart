@@ -16,11 +16,13 @@ class AddressListingScreen extends StatefulWidget {
     this.onAddressPressed,
     required this.title,
     this.selectedAddressId,
+    this.showSelectionIndication = true,
   }) : super(key: key);
 
   final Function(Address address)? onAddressPressed;
   final String title;
   final String? selectedAddressId;
+  final bool showSelectionIndication;
 
   @override
   State<AddressListingScreen> createState() => _AddressListingScreenState();
@@ -146,27 +148,10 @@ class _AddressListingScreenState extends State<AddressListingScreen> {
   }
 
   Widget _selectionStatus(String addressId) {
-    if (widget.selectedAddressId == null) return const SizedBox();
-
-    return Container(
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        border: Border.all(
-          color: isLightMode(context) ? AppColors.black : AppColors.white,
-        ),
-      ),
-      height: 12,
-      width: 12,
-      padding: const EdgeInsets.all(Dimens.spacing_2),
-      child: widget.selectedAddressId! == addressId
-          ? Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: isLightMode(context) ? AppColors.black : AppColors.white,
-              ),
-            )
-          : const SizedBox(),
-    );
+    if (!widget.showSelectionIndication) return const SizedBox();
+    return SelectionIndicatorWidget(
+        isSelected: widget.selectedAddressId != null &&
+            widget.selectedAddressId == addressId);
   }
 
   Widget _buildAddNewButton(AddressListingViewModel viewModel) {

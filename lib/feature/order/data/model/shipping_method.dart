@@ -12,8 +12,8 @@ class ShippingMethod {
   });
 
   factory ShippingMethod.fromJson(Map<String, dynamic> json) => ShippingMethod(
-        id: json["id"],
-        duration: double.parse(json["duration"].toString()),
+        id: json['id'],
+        duration: json["duration"].toDouble(),
         cost: json["cost"],
         name: json["name"],
       );

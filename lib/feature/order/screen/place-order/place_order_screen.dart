@@ -311,13 +311,13 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
     } else {
       showDialog(
         context: context,
-        builder: (context) => AlertDialogWidget(
+        builder: (ctx) => AlertDialogWidget(
           title: 'Confirm checkout?',
           needSecondButton: true,
           firstButtonLabel: 'Checkout',
           firstButtonOnPressed: () async {
             // pop confimation dialog
-            Navigator.pop(context);
+            Navigator.pop(ctx);
 
             await viewModel.placeOrder();
             if (!context.mounted) return;
@@ -327,7 +327,6 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
               showToast(
                 context,
                 message: 'You order has been placed.',
-                isSuccess: false,
               );
             } else {
               showToast(

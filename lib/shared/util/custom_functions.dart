@@ -109,7 +109,7 @@ String hoursToDaysString(double hours) {
 String formatDate(
   DateTime date, {
   String format = DateFormatConstant.defaultFormat,
-  bool convertToLocalTime = false,
+  bool convertToLocalTime = true,
 }) {
   if (convertToLocalTime) {
     date = date.toLocal();

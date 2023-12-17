@@ -37,7 +37,7 @@ class _OrderListingScreenState extends State<OrderListingScreen> {
                 : ListView.builder(
                     itemCount: orders.length,
                     itemBuilder: (context, index) {
-                      return OrdersListItem(
+                      return SnippetOrderListingItem(
                         order: orders[index],
                       );
                     },

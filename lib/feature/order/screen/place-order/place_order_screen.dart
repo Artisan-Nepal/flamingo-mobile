@@ -216,8 +216,10 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
                       return Padding(
                         padding: const EdgeInsets.only(
                             bottom: Dimens.spacingSizeDefault),
-                        child: SnippetOrderDetail(
-                          cartItem: cartItems[index],
+                        child: SnippetOrderItem(
+                          quantity: cartItems[index].quantity,
+                          productTitle: cartItems[index].product.title,
+                          productVariant: cartItems[index].productVariant,
                         ),
                       );
                     },

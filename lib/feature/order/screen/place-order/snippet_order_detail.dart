@@ -1,14 +1,20 @@
-import 'package:flamingo/feature/cart/data/model/cart_item.dart';
+import 'package:flamingo/feature/product/data/model/product.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/image/cached_network_image_widget.dart';
 import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/material.dart';
 
-class SnippetOrderDetail extends StatelessWidget {
-  const SnippetOrderDetail({Key? key, required this.cartItem})
-      : super(key: key);
+class SnippetOrderItem extends StatelessWidget {
+  const SnippetOrderItem({
+    Key? key,
+    required this.productTitle,
+    required this.productVariant,
+    required this.quantity,
+  }) : super(key: key);
 
-  final CartItem cartItem;
+  final String productTitle;
+  final ProductVariant productVariant;
+  final int quantity;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +45,7 @@ class SnippetOrderDetail extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                     child: CachedNetworkImageWidget(
                       fit: BoxFit.cover,
-                      image: cartItem.productVariant.image.url,
+                      image: productVariant.image.url,
                     ),
                   ),
                 ),
@@ -56,7 +62,7 @@ class SnippetOrderDetail extends StatelessWidget {
                       color: AppColors.grayDark),
                   child: Center(
                     child: Text(
-                      cartItem.quantity.toString(),
+                      quantity.toString(),
                       style: const TextStyle(
                         fontSize: 10,
                         color: Colors.white,
@@ -76,7 +82,7 @@ class SnippetOrderDetail extends StatelessWidget {
                 const SizedBox(height: 5),
                 // Title
                 Text(
-                  cartItem.product.title,
+                  productTitle,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -87,12 +93,11 @@ class SnippetOrderDetail extends StatelessWidget {
                   spacing: Dimens.spacingSizeExtraSmall,
                   runSpacing: Dimens.spacingSizeExtraSmall,
                   children: [
-                    Text('Color: ${cartItem.productVariant.color.name}'),
+                    Text('Color: ${productVariant.color.name}'),
                     ...List<Widget>.generate(
-                      cartItem.productVariant.attributes.length,
+                      productVariant.attributes.length,
                       (index) {
-                        final attribute =
-                            cartItem.productVariant.attributes[index];
+                        final attribute = productVariant.attributes[index];
                         return Text(
                             '${attribute.name}: ${attribute.option.value}');
                       },
@@ -102,7 +107,7 @@ class SnippetOrderDetail extends StatelessWidget {
                 const VerticalSpaceWidget(height: Dimens.spacingSizeExtraSmall),
                 // Price
                 Text(
-                  'Rs.${formatNepaliCurrency(cartItem.quantity * cartItem.productVariant.price)}',
+                  'Rs.${formatNepaliCurrency(quantity * productVariant.price)}',
                   style: const TextStyle(
                     color: AppColors.primaryMain,
                     fontSize: Dimens.fontSizeLarge,

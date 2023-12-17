@@ -1,5 +1,6 @@
 import 'package:flamingo/feature/order/data/model/order.dart';
 import 'package:flamingo/feature/order/screen/order-detail/snippet_order_detail_info.dart';
+import 'package:flamingo/feature/order/screen/order-status.dart/order_status_screen.dart';
 import 'package:flamingo/feature/order/screen/place-order/snippet_order_detail.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/button/button.dart';
@@ -151,6 +152,12 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     return FilledButtonWidget(
       label: 'View Order Status',
       onPressed: () {
+        NavigationHelper.push(
+            context,
+            OrderStatusScreen(
+              order: widget.order,
+            ));
+
         // Navigator.push(
         //     context,
         //     MaterialPageRoute(

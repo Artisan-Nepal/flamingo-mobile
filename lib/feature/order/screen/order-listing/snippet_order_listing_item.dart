@@ -1,6 +1,7 @@
 import 'package:flamingo/feature/order/data/model/order.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/image/cached_network_image_widget.dart';
+import 'package:flamingo/widget/space/space.dart';
 import 'package:flutter/material.dart';
 
 class OrdersListItem extends StatelessWidget {
@@ -15,7 +16,7 @@ class OrdersListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      height: 90,
+      // height: 90,
       child: Row(
         children: [
           // Images
@@ -25,11 +26,11 @@ class OrdersListItem extends StatelessWidget {
             width: 80,
             decoration: BoxDecoration(
               color: AppColors.grayLight,
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(Dimens.radius_5),
             ),
             child: Container(
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(Dimens.radius_5),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.grey.shade300.withOpacity(0.6),
@@ -39,7 +40,7 @@ class OrdersListItem extends StatelessWidget {
                 ],
               ),
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(Dimens.radius_5),
                 child: _buildGrid(order.orderItems
                     .map((e) => e.productVariant.image.url)
                     .toList()),
@@ -49,63 +50,58 @@ class OrdersListItem extends StatelessWidget {
 
           // Description
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // OrderListItemTitleValue(
-                  //   title: 'Order ID',
-                  //   value: orderId.toString(),
-                  // ),
-                  // Order Id
-                  Container(
-                    // height: 20,
-                    // width: 70,
-                    decoration: BoxDecoration(
-                      color: AppColors.primaryMain,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    padding: const EdgeInsets.all(5),
-                    child: Wrap(
-                      children: [
-                        const Text(
-                          'Order ID:  ',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: Dimens.fontSizeSmall,
-                          ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // Order Id
+                Container(
+                  decoration: BoxDecoration(
+                    color: themedPrimaryColor(context),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  padding: const EdgeInsets.all(5),
+                  child: Wrap(
+                    children: [
+                      Text(
+                        'Order ID:  ',
+                        style: TextStyle(
+                          color: isLightMode(context)
+                              ? AppColors.white
+                              : AppColors.black,
+                          fontSize: Dimens.fontSizeSmall,
                         ),
-                        Text(
-                          order.id,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: Dimens.fontSizeSmall,
-                            fontWeight: FontWeight.w600,
-                          ),
+                      ),
+                      Text(
+                        order.orderId.toString(),
+                        style: TextStyle(
+                          color: isLightMode(context)
+                              ? AppColors.white
+                              : AppColors.black,
+                          fontSize: Dimens.fontSizeSmall,
+                          fontWeight: FontWeight.w600,
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                  OrderListItemTitleValue(
-                    title: 'Order Date',
-                    value: order.createdAt.toString(),
+                ),
+                const VerticalSpaceWidget(height: Dimens.spacingSizeExtraSmall),
+                OrderListItemTitleValue(
+                  title: 'Order Date',
+                  value: formatDate(order.createdAt,
+                      format: DateFormatConstant.fullDate),
+                ),
+                const VerticalSpaceWidget(height: Dimens.spacingSizeExtraSmall),
+
+                OrderListItemTitleValue(
+                  title: 'Total Price',
+                  value: 'Rs. ${formatNepaliCurrency(order.orderTotal)}',
+                  valueStyle: const TextStyle(
+                    color: AppColors.primaryMain,
+                    fontWeight: FontWeight.w600,
                   ),
-                  // OrderListItemTitleValue(
-                  //   title: 'Est. Delivery Date',
-                  //   value: deliveryDate,
-                  // ),
-                  OrderListItemTitleValue(
-                    title: 'Total Price',
-                    value: 'Rs. ${order.orderTotal}',
-                    valueStyle: const TextStyle(
-                      color: AppColors.primaryMain,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
 

@@ -14,6 +14,8 @@ class Order {
   final ShippingMethod shippingMethod;
   List<OrderItem> orderItems;
   final DateTime createdAt;
+  final DateTime estimatedDelivery;
+  final int orderId;
 
   Order({
     required this.id,
@@ -25,6 +27,8 @@ class Order {
     required this.orderTotal,
     required this.orderItems,
     required this.createdAt,
+    required this.orderId,
+    required this.estimatedDelivery,
   });
 
   factory Order.fromJson(Map<String, dynamic> json) => Order(
@@ -37,6 +41,8 @@ class Order {
         shippingMethod: ShippingMethod.fromJson(json['shippingMethod']),
         orderItems: OrderItem.fromJsonList(json['orderItems']),
         createdAt: DateTime.parse(json['createdAt']),
+        estimatedDelivery: DateTime.parse(json['estimatedDelivery']),
+        orderId: json['orderId'],
       );
 
   static List<Order> fromJsonList(dynamic json) => List<Order>.from(
@@ -53,6 +59,7 @@ class OrderItem {
   final int price;
   final OrderItemProduct product;
   final ProductVariant productVariant;
+  final OrderStatus orderStatus;
 
   OrderItem({
     required this.id,
@@ -61,6 +68,7 @@ class OrderItem {
     required this.productVariant,
     required this.orderId,
     required this.price,
+    required this.orderStatus,
   });
 
   factory OrderItem.fromJson(Map<String, dynamic> json) => OrderItem(
@@ -70,6 +78,7 @@ class OrderItem {
         price: json['price'],
         product: OrderItemProduct.fromJson(json['productVariant']['product']),
         productVariant: ProductVariant.fromJson(json['productVariant']),
+        orderStatus: OrderStatus.fromJson(json['orderStatus']),
       );
 
   static List<OrderItem> fromJsonList(dynamic json) => List<OrderItem>.from(
@@ -83,13 +92,11 @@ class OrderItemProduct {
   final String id;
   final String title;
   final String body;
-  final OrderStatus status;
 
   OrderItemProduct({
     required this.id,
     required this.title,
     required this.body,
-    required this.status,
   });
 
   factory OrderItemProduct.fromJson(Map<String, dynamic> json) =>
@@ -97,6 +104,5 @@ class OrderItemProduct {
         id: json['id'],
         title: json['title'],
         body: json['body'],
-        status: OrderStatus.fromJson(json['status']),
       );
 }

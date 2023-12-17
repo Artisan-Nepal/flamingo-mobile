@@ -34,6 +34,7 @@ class Dimens {
   static const double iconSizeLarge = 32.0;
   static const double iconSizeExtraLarge = 40.0;
 
+  static const double radius_5 = 5.0;
   static const double radius_10 = 10.0;
   static const double radiusSmall = 8.0;
   static const double radiusDefault = 16.0;

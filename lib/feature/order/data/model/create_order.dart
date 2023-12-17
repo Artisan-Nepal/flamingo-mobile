@@ -1,13 +1,13 @@
 class CreateOrderRequest {
   final String billingAddressId;
   final String shippingAddressId;
-  final String paymentMethodId;
+  final String paymentMethodCode;
   final String shippingMethodId;
 
   CreateOrderRequest({
     required this.billingAddressId,
     required this.shippingAddressId,
-    required this.paymentMethodId,
+    required this.paymentMethodCode,
     required this.shippingMethodId,
   });
 
@@ -15,7 +15,7 @@ class CreateOrderRequest {
     return <String, dynamic>{
       'billingAddressId': billingAddressId,
       'shippingAddressId': shippingAddressId,
-      'paymentMethodId': paymentMethodId,
+      'paymentMethodCode': paymentMethodCode,
       'shippingMethodId': shippingMethodId,
     };
   }

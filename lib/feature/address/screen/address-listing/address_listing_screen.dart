@@ -41,7 +41,13 @@ class _AddressListingScreenState extends State<AddressListingScreen> {
     if (!context.mounted) return;
     if (_viewModel.getAddressesUseCase.hasCompleted &&
         _viewModel.getAddressesUseCase.data!.isEmpty) {
-      NavigationHelper.push(context, const ManageAddressScreen());
+      NavigationHelper.push(
+        context,
+        ChangeNotifierProvider.value(
+          value: _viewModel,
+          child: const ManageAddressScreen(),
+        ),
+      );
     }
   }
 

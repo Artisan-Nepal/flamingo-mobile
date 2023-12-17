@@ -105,3 +105,15 @@ String hoursToDaysString(double hours) {
   }
   return daysInString;
 }
+
+String formatDate(
+  DateTime date, {
+  String format = DateFormatConstant.defaultFormat,
+  bool convertToLocalTime = false,
+}) {
+  if (convertToLocalTime) {
+    date = date.toLocal();
+  }
+  String formattedDate = DateFormat(format).format(date);
+  return formattedDate;
+}

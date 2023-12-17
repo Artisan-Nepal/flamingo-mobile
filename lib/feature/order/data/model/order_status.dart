@@ -13,7 +13,7 @@ class OrderStatus {
 
   factory OrderStatus.fromJson(Map<String, dynamic> json) => OrderStatus(
         id: json['id'],
-        name: json['tinametle'],
+        name: json['name'],
         description: json['description'],
         sequenceNumber: json['sequenceNumber'],
       );

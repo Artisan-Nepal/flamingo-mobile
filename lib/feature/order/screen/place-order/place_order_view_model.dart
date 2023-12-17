@@ -88,7 +88,7 @@ class PlaceOrderViewModel extends ChangeNotifier {
         CreateOrderRequest(
           billingAddressId: _selectedBillingAddress!.id,
           shippingAddressId: _selectedShippingAddress!.id,
-          paymentMethodId: _selectedPaymentMethod!.id,
+          paymentMethodCode: _selectedPaymentMethod!.code,
           shippingMethodId: _selectedShippingMethod!.id,
         ),
       );

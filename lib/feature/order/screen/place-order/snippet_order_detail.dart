@@ -107,7 +107,7 @@ class SnippetOrderItem extends StatelessWidget {
                 const VerticalSpaceWidget(height: Dimens.spacingSizeExtraSmall),
                 // Price
                 Text(
-                  'Rs.${formatNepaliCurrency(quantity * productVariant.price)}',
+                  'Rs. ${formatNepaliCurrency(quantity * productVariant.price)}',
                   style: const TextStyle(
                     color: AppColors.primaryMain,
                     fontSize: Dimens.fontSizeLarge,

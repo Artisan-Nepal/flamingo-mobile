@@ -1,9 +1,7 @@
 import 'package:flamingo/feature/order/data/model/order.dart';
 import 'package:flamingo/feature/order/screen/order-detail/snippet_order_detail_info.dart';
-import 'package:flamingo/feature/order/screen/order-status.dart/order_status_screen.dart';
 import 'package:flamingo/feature/order/screen/place-order/snippet_order_detail.dart';
 import 'package:flamingo/shared/shared.dart';
-import 'package:flamingo/widget/button/button.dart';
 import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/material.dart';
 
@@ -25,7 +23,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return DefaultScreen(
-      appBarTitle: const Text('Order Details'),
+      appBarTitle: Text('Order ID: ${widget.order.orderId.toString()}'),
       bottomNavigationBar: _buildBottomBar(),
       child: Column(
         children: [
@@ -150,20 +148,12 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
 
   _buildBottomBar() {
     return FilledButtonWidget(
-      label: 'View Order Status',
+      label: 'Track Order',
       onPressed: () {
-        NavigationHelper.push(
-            context,
-            OrderStatusScreen(
-              order: widget.order,
-            ));
-
-        // Navigator.push(
+        // NavigationHelper.push(
         //     context,
-        //     MaterialPageRoute(
-        //       builder: (context) => OrderStatusDetailsPage(
-        //           orderCode: widget.order.code,
-        //           orderDetails: widget.order.detail),
+        //     OrderStatusScreen(
+        //       order: widget.order,
         //     ));
       },
     );
@@ -173,18 +163,8 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            const Text(
-              'YOUR PRODUCT(S)',
-            ),
-            Text(
-              ' (${widget.order.orderItems.length})',
-              style: textTheme(context)
-                  .bodyMedium!
-                  .copyWith(fontWeight: FontWeight.bold),
-            ),
-          ],
+        const Text(
+          'YOUR PRODUCT',
         ),
         const SizedBox(
           height: 20,
@@ -219,23 +199,11 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                     .jumpTo(_scrollController.offset + value.overscroll);
                 return true;
               },
-              child: ListView.builder(
-                  // physics: const BouncingScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: widget.order.orderItems.length,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.only(
-                          bottom: Dimens.spacingSizeDefault),
-                      child: SnippetOrderItem(
-                        quantity: widget.order.orderItems[index].quantity,
-                        productTitle:
-                            widget.order.orderItems[index].product.title,
-                        productVariant:
-                            widget.order.orderItems[index].productVariant,
-                      ),
-                    );
-                  }),
+              child: SnippetOrderItem(
+                quantity: widget.order.quantity,
+                productTitle: widget.order.product.title,
+                productVariant: widget.order.productVariant,
+              ),
             ),
           ),
         )

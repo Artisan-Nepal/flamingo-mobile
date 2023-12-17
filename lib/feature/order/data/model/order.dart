@@ -13,7 +13,11 @@ class Order {
   final Address billingAddress;
   final PaymentMethod paymentMethod;
   final ShippingMethod shippingMethod;
-  List<OrderItem> orderItems;
+  final int quantity;
+  final int price;
+  final OrderItemProduct product;
+  final ProductVariant productVariant;
+  final OrderStatus orderStatus;
   final DateTime createdAt;
   final DateTime estimatedDelivery;
   final int orderId;
@@ -26,10 +30,14 @@ class Order {
     required this.paymentMethod,
     required this.shippingMethod,
     required this.orderTotal,
-    required this.orderItems,
     required this.createdAt,
     required this.orderId,
     required this.estimatedDelivery,
+    required this.quantity,
+    required this.product,
+    required this.productVariant,
+    required this.price,
+    required this.orderStatus,
   });
 
   factory Order.fromJson(Map<String, dynamic> json) => Order(
@@ -40,51 +48,19 @@ class Order {
         billingAddress: Address.fromJson(json['billingAddress']),
         paymentMethod: PaymentMethod.fromJson(json['paymentMethod']),
         shippingMethod: ShippingMethod.fromJson(json['shippingMethod']),
-        orderItems: OrderItem.fromJsonList(json['orderItems']),
         createdAt: DateTime.parse(json['createdAt']),
         estimatedDelivery: DateTime.parse(json['estimatedDelivery']),
         orderId: json['orderId'],
-      );
-
-  static List<Order> fromJsonList(dynamic json) => List<Order>.from(
-        json.map(
-          (data) => Order.fromJson(data),
-        ),
-      );
-}
-
-class OrderItem {
-  final String id;
-  final String orderId;
-  final int quantity;
-  final int price;
-  final OrderItemProduct product;
-  final ProductVariant productVariant;
-  final OrderStatus orderStatus;
-
-  OrderItem({
-    required this.id,
-    required this.quantity,
-    required this.product,
-    required this.productVariant,
-    required this.orderId,
-    required this.price,
-    required this.orderStatus,
-  });
-
-  factory OrderItem.fromJson(Map<String, dynamic> json) => OrderItem(
-        id: json['id'],
         quantity: json['quantity'],
-        orderId: json['orderId'],
         price: json['price'],
         product: OrderItemProduct.fromJson(json['productVariant']['product']),
         productVariant: ProductVariant.fromJson(json['productVariant']),
         orderStatus: OrderStatus.fromJson(json['orderStatus']),
       );
 
-  static List<OrderItem> fromJsonList(dynamic json) => List<OrderItem>.from(
+  static List<Order> fromJsonList(dynamic json) => List<Order>.from(
         json.map(
-          (data) => OrderItem.fromJson(data),
+          (data) => Order.fromJson(data),
         ),
       );
 }

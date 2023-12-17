@@ -9,9 +9,11 @@ class SnippetOrderListingItem extends StatelessWidget {
   const SnippetOrderListingItem({
     Key? key,
     required this.order,
+    required this.showStatus,
   }) : super(key: key);
 
   final Order order;
+  final bool showStatus;
 
   @override
   Widget build(BuildContext context) {
@@ -47,9 +49,11 @@ class SnippetOrderListingItem extends StatelessWidget {
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(Dimens.radius_5),
-                  child: _buildGrid(order.orderItems
-                      .map((e) => e.productVariant.image.url)
-                      .toList()),
+                  child: CachedNetworkImageWidget(
+                    image: order.productVariant.image.url,
+                    fit: BoxFit.cover,
+                    height: 80,
+                  ),
                 ),
               ),
             ),
@@ -122,64 +126,6 @@ class SnippetOrderListingItem extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  _buildGrid(List<String> images) {
-    if (images.length == 1) {
-      return CachedNetworkImageWidget(
-        image: images[0],
-        fit: BoxFit.cover,
-      );
-    } else if (images.length == 2) {
-      return Row(
-        children: [
-          Expanded(
-            child: CachedNetworkImageWidget(
-              image: images[0],
-              fit: BoxFit.cover,
-              height: 80,
-            ),
-          ),
-          Expanded(
-            child: CachedNetworkImageWidget(
-              image: images[1],
-              fit: BoxFit.cover,
-              height: 80,
-            ),
-          ),
-        ],
-      );
-    } else {
-      return GridView.builder(
-        physics: const NeverScrollableScrollPhysics(),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: 0,
-          mainAxisSpacing: 0,
-          mainAxisExtent: 40,
-        ),
-        itemCount: images.length > 3 ? 4 : images.length,
-        itemBuilder: (context, gridIndex) => Stack(
-          children: [
-            CachedNetworkImageWidget(
-              image: images[gridIndex],
-              fit: BoxFit.cover,
-            ),
-            if (gridIndex == 3)
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.4),
-                ),
-                child: Center(
-                    child: Text(
-                  '+${(images.length - 4).toString()}',
-                  style: const TextStyle(color: Colors.white),
-                )),
-              )
-          ],
-        ),
-      );
-    }
   }
 }
 

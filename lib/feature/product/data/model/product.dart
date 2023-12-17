@@ -106,7 +106,7 @@ class ProductAttributeResponse {
     return ProductAttributeResponse(
       id: attribute["id"],
       name: attribute["name"],
-      description: attribute["description"],
+      description: attribute["description"] ?? "",
       categoryId: attribute["categoryId"],
       option: ProductAttributeOptionResponse.fromJson(json['attributeOption']),
     );

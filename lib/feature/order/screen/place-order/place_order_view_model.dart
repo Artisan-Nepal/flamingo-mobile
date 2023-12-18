@@ -106,7 +106,11 @@ class PlaceOrderViewModel extends ChangeNotifier {
     return price;
   }
 
+  int get shippingCost {
+    return (_selectedShippingMethod?.cost ?? 0) * items.length;
+  }
+
   int get orderTotal {
-    return subTotal + (_selectedShippingMethod?.cost ?? 0);
+    return subTotal + shippingCost;
   }
 }

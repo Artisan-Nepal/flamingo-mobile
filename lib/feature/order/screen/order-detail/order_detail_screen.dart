@@ -18,8 +18,6 @@ class OrderDetailScreen extends StatefulWidget {
 }
 
 class _OrderDetailScreenState extends State<OrderDetailScreen> {
-  final _scrollController = ScrollController();
-
   @override
   Widget build(BuildContext context) {
     return DefaultScreen(
@@ -164,48 +162,13 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'YOUR PRODUCT',
+          'PRODUCT DETAIL',
         ),
-        const SizedBox(
-          height: 20,
-        ),
-        Container(
-          // height: SizeConfig.screenHeight * 0.14,
-          constraints: BoxConstraints(maxHeight: SizeConfig.screenHeight * 0.4),
-          child: NotificationListener<OverscrollIndicatorNotification>(
-            onNotification: (overscroll) {
-              overscroll.disallowIndicator();
-              return false;
-            },
-            child: NotificationListener<OverscrollNotification>(
-              onNotification: (OverscrollNotification value) {
-                if (value.overscroll < 0 &&
-                    _scrollController.offset + value.overscroll <= 0) {
-                  if (_scrollController.offset != 0) {
-                    _scrollController.jumpTo(0);
-                  }
-                  return true;
-                }
-                if (_scrollController.offset + value.overscroll >=
-                    _scrollController.position.maxScrollExtent) {
-                  if (_scrollController.offset !=
-                      _scrollController.position.maxScrollExtent) {
-                    _scrollController
-                        .jumpTo(_scrollController.position.maxScrollExtent);
-                  }
-                  return true;
-                }
-                _scrollController
-                    .jumpTo(_scrollController.offset + value.overscroll);
-                return true;
-              },
-              child: SnippetOrderItem(
-                quantity: widget.order.quantity,
-                productTitle: widget.order.product.title,
-                productVariant: widget.order.productVariant,
-              ),
-            ),
-          ),
+        const VerticalSpaceWidget(height: Dimens.spacingSizeDefault),
+        SnippetOrderItem(
+          quantity: widget.order.quantity,
+          productTitle: widget.order.product.title,
+          productVariant: widget.order.productVariant,
         )
       ],
     );

@@ -246,8 +246,7 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
             _buildOrderDetailItem(
                 title: 'Order Cost', amount: viewModel.subTotal),
             _buildOrderDetailItem(
-                title: 'Shipping Fee',
-                amount: viewModel.selectedShippingMethod?.cost ?? 0),
+                title: 'Shipping Fee', amount: viewModel.shippingCost),
             _buildOrderDetailItem(
               title: 'Discount',
               isDiscount: true,

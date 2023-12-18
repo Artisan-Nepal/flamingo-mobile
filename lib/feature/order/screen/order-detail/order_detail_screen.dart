@@ -1,5 +1,6 @@
 import 'package:flamingo/feature/order/data/model/order.dart';
 import 'package:flamingo/feature/order/screen/order-detail/snippet_order_detail_info.dart';
+import 'package:flamingo/feature/order/screen/order-detail/track_order_screen.dart';
 import 'package:flamingo/feature/order/screen/place-order/snippet_order_item.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/widget.dart';
@@ -148,11 +149,12 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     return FilledButtonWidget(
       label: 'Track Order',
       onPressed: () {
-        // NavigationHelper.push(
-        //     context,
-        //     OrderStatusScreen(
-        //       order: widget.order,
-        //     ));
+        NavigationHelper.push(
+          context,
+          TrackOrderScreen(
+            order: widget.order,
+          ),
+        );
       },
     );
   }

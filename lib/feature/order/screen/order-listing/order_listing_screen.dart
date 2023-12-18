@@ -35,7 +35,7 @@ class _OrderListingScreenState extends State<OrderListingScreen> {
             scrollable: false,
             child: DefaultTabController(
               animationDuration: Duration.zero,
-              length: orderStatus.length + 1,
+              length: orderStatusLookup.length + 1,
               child: Column(
                 children: [
                   _buildTabBar(),
@@ -85,7 +85,7 @@ class _OrderListingScreenState extends State<OrderListingScreen> {
               child: Text('All'),
             ),
             ...List<Tab>.from(
-              orderStatus.map(
+              orderStatusLookup.map(
                 (e) => Tab(
                   child: Text(e.name),
                 ),
@@ -111,7 +111,7 @@ class _OrderListingScreenState extends State<OrderListingScreen> {
             ),
 
             ...List<SnippetOrderListingTab>.from(
-              orderStatus.map(
+              orderStatusLookup.map(
                 (status) => SnippetOrderListingTab(
                   tabName: status.name,
                   orders: List<Order>.from(

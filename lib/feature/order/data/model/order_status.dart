@@ -3,12 +3,14 @@ class OrderStatus {
   final String name;
   final String description;
   final int sequenceNumber;
+  final String code;
 
   OrderStatus({
     required this.id,
     required this.name,
     required this.description,
     required this.sequenceNumber,
+    required this.code,
   });
 
   factory OrderStatus.fromJson(Map<String, dynamic> json) => OrderStatus(
@@ -16,5 +18,6 @@ class OrderStatus {
         name: json['name'],
         description: json['description'],
         sequenceNumber: json['sequenceNumber'],
+        code: json['code'],
       );
 }

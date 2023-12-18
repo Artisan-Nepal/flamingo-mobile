@@ -5,3 +5,4 @@ export 'space/space.dart';
 export 'page-indicator/page_indicator.dart';
 export 'countdown/countdown_widget.dart';
 export 'screen/screen.dart';
+export 'selection-indicator/selection_indicator.dart';

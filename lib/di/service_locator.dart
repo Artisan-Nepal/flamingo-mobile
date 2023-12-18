@@ -3,6 +3,7 @@ import 'package:flamingo/di/registration/feature/address.dart';
 import 'package:flamingo/di/registration/feature/cart.dart';
 import 'package:flamingo/di/registration/feature/category.dart';
 import 'package:flamingo/di/registration/feature/dashboard.dart';
+import 'package:flamingo/di/registration/feature/order.dart';
 import 'package:flamingo/di/registration/feature/product.dart';
 import 'package:flamingo/di/registration/feature/upload_file.dart';
 import 'package:flamingo/di/registration/feature/user.dart';
@@ -29,4 +30,5 @@ Future setUpServiceLocator() async {
   registerUploadFileFeature(locator);
   registerCartFeature(locator);
   registerWishlistFeature(locator);
+  registerOrderFeature(locator);
 }

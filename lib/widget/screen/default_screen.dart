@@ -1,4 +1,5 @@
 import 'package:flamingo/shared/shared.dart';
+import 'package:flamingo/widget/button/button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -18,6 +19,11 @@ class DefaultScreen extends StatelessWidget {
     this.scrollable = true,
     this.bottomBarPadding = const EdgeInsets.all(Dimens.spacingSizeDefault),
     this.statusBarIconBrightness,
+    this.scrollController,
+    this.bottomNavBarWithButton = false,
+    this.bottomNavBarWithButtonLabel,
+    this.bottomNavBarWithButtonOnPressed,
+    this.isLoading = false,
   });
 
   final Widget child;
@@ -31,6 +37,11 @@ class DefaultScreen extends StatelessWidget {
   final bool automaticallyImplyAppBarLeading;
   final bool scrollable;
   final Brightness? statusBarIconBrightness;
+  final bool bottomNavBarWithButton;
+  final ScrollController? scrollController;
+  final String? bottomNavBarWithButtonLabel;
+  final VoidCallback? bottomNavBarWithButtonOnPressed;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -68,6 +79,7 @@ class DefaultScreen extends StatelessWidget {
           child: GestureDetector(
             child: scrollable
                 ? SingleChildScrollView(
+                    controller: scrollController,
                     child: Padding(
                       padding: padding,
                       child: child,
@@ -80,8 +92,14 @@ class DefaultScreen extends StatelessWidget {
           ),
         ),
         bottomNavigationBar: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: bottomNavigationBar,
+          padding: const EdgeInsets.all(Dimens.spacingSizeDefault),
+          child: bottomNavBarWithButton
+              ? FilledButtonWidget(
+                  label: bottomNavBarWithButtonLabel ?? "",
+                  onPressed: bottomNavBarWithButtonOnPressed,
+                  isLoading: isLoading,
+                )
+              : bottomNavigationBar,
         ),
       ),
     );

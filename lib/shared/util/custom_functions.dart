@@ -88,3 +88,32 @@ String formatNepaliCurrency(int amount) {
   final amountInRupees = amount / 100;
   return formatCurrency.format(amountInRupees);
 }
+
+int hoursToDays(double hours) {
+  const double hoursInDay = 24.0;
+
+  int days = (hours / hoursInDay).round();
+
+  return days;
+}
+
+String hoursToDaysString(double hours) {
+  final days = hoursToDays(hours);
+  String daysInString = '$days day';
+  if (days > 1) {
+    daysInString += 's';
+  }
+  return daysInString;
+}
+
+String formatDate(
+  DateTime date, {
+  String format = DateFormatConstant.defaultFormat,
+  bool convertToLocalTime = true,
+}) {
+  if (convertToLocalTime) {
+    date = date.toLocal();
+  }
+  String formattedDate = DateFormat(format).format(date);
+  return formattedDate;
+}

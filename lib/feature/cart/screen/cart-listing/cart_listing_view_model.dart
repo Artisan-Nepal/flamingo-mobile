@@ -41,4 +41,12 @@ class CartListingViewModel extends ChangeNotifier {
     cartUseCase.data!.rows[index].quantity = quantity;
     notifyListeners();
   }
+
+  int get cartTotal {
+    int price = 0;
+    for (CartItem cart in _cartUseCase.data?.rows ?? []) {
+      price = price + (cart.productVariant.price * cart.quantity);
+    }
+    return price;
+  }
 }

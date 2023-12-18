@@ -5,7 +5,7 @@ import 'package:flamingo/feature/order/screen/place-order/payment_method_selecti
 import 'package:flamingo/feature/order/screen/place-order/place_order_view_model.dart';
 import 'package:flamingo/feature/order/screen/place-order/shipping_method_selection_screen.dart';
 import 'package:flamingo/feature/order/screen/place-order/snippet_checkout_input.dart';
-import 'package:flamingo/feature/order/screen/place-order/snippet_order_detail.dart';
+import 'package:flamingo/feature/order/screen/place-order/snippet_order_item.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/alert-dialog/alert_dialog_widget.dart';
 import 'package:flamingo/widget/widget.dart';

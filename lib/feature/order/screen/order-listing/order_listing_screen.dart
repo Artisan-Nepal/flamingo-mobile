@@ -56,25 +56,30 @@ class _OrderListingScreenState extends State<OrderListingScreen> {
       width: double.infinity,
       height: 55,
       decoration: BoxDecoration(
-          color: isLightMode(context) ? AppColors.white : AppColors.black,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
-              spreadRadius: 0.5,
-              blurRadius: 1,
-              offset: const Offset(0, 0), // changes position of shadow
-            ),
-          ]),
+        border: Border(
+          bottom: BorderSide(
+            color: isLightMode(context)
+                ? AppColors.grayLighter
+                : AppColors.grayDarker,
+            width: 1,
+          ),
+        ),
+      ),
       child: Consumer(
         builder: (context, provider, child) => TabBar(
           unselectedLabelColor:
-              isLightMode(context) ? AppColors.grayMain : AppColors.grayLight,
-          labelColor: themedPrimaryColor(context),
+              isLightMode(context) ? AppColors.grayDarker : AppColors.white,
+          labelColor:
+              isLightMode(context) ? AppColors.grayDarker : AppColors.white,
           isScrollable: true,
-          labelStyle: const TextStyle(
-              fontSize: Dimens.fontSizeDefault, fontWeight: FontWeight.bold),
-          indicatorColor: themedPrimaryColor(context),
-          labelPadding: const EdgeInsets.symmetric(horizontal: 20),
+          labelStyle: textTheme(context)
+              .titleSmall!
+              .copyWith(fontWeight: FontWeight.bold),
+          unselectedLabelStyle: textTheme(context).titleSmall!,
+          indicatorColor:
+              isLightMode(context) ? AppColors.grayDarker : AppColors.white,
+          labelPadding:
+              const EdgeInsets.symmetric(horizontal: Dimens.spacingSizeSmall),
           tabs: [
             const Tab(
               child: Text('All'),

@@ -8,6 +8,7 @@ import 'package:flamingo/di/registration/feature/order.dart';
 import 'package:flamingo/di/registration/feature/product.dart';
 import 'package:flamingo/di/registration/feature/upload_file.dart';
 import 'package:flamingo/di/registration/feature/user.dart';
+import 'package:flamingo/di/registration/feature/vendor.dart';
 import 'package:flamingo/di/registration/feature/wishlist.dart';
 import 'package:flamingo/di/registration/registration.dart';
 import 'package:get_it/get_it.dart';
@@ -33,4 +34,5 @@ Future setUpServiceLocator() async {
   registerWishlistFeature(locator);
   registerOrderFeature(locator);
   registerCustomerActivityFeature(locator);
+  registerVendorFeature(locator);
 }

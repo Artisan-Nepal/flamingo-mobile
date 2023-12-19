@@ -2,7 +2,7 @@ import 'package:flamingo/feature/address/data/model/address.dart';
 import 'package:flamingo/feature/upload-file/data/model/upload_file_response.dart';
 import 'package:flamingo/shared/shared.dart';
 
-class Vendor extends JsonSerializable {
+class Vendor {
   final String id;
   final DateTime createdAt;
   final String? name;
@@ -12,8 +12,8 @@ class Vendor extends JsonSerializable {
   final String? registrationNumber;
   final String? description;
   final String? websiteUrl;
-  final String? displayImageUrl;
-  final String? backgroundImageUrl;
+  final UploadFileResponse? displayImage;
+  final UploadFileResponse? backgroundImage;
   final String? bankName;
   final String? bankAccName;
   final String? bankBranchName;
@@ -37,8 +37,8 @@ class Vendor extends JsonSerializable {
     this.registrationDocument,
     this.registrationNumber,
     this.websiteUrl,
-    this.displayImageUrl,
-    this.backgroundImageUrl,
+    this.displayImage,
+    this.backgroundImage,
     this.bankAccName,
     this.bankBranchName,
     this.bankName,
@@ -57,8 +57,12 @@ class Vendor extends JsonSerializable {
         name: json['name'],
         description: json['description'],
         websiteUrl: json['websiteUrl'],
-        displayImageUrl: json['displayImageUrl'],
-        backgroundImageUrl: json['backgroundImageUrl'],
+        displayImage: json['displayImage'] == null
+            ? null
+            : UploadFileResponse.fromJson(json['displayImage']),
+        backgroundImage: json['backgroundImage'] == null
+            ? null
+            : UploadFileResponse.fromJson(json['backgroundImage']),
         bankAccName: json['bankAccName'],
         bankAccNumber: json['bankAccNumber'],
         bankBranchName: json['bankBranchName'],
@@ -87,28 +91,9 @@ class Vendor extends JsonSerializable {
               ),
       );
 
-  @override
-  Map<String, dynamic> toJson() => {
-        "id": id,
-        "createdAt": createdAt.toIso8601String(),
-        "storeName": storeName,
-        "legalName": legalName,
-        "name": name,
-        "description": description,
-        "websiteUrl": websiteUrl,
-        "displayImageUrl": displayImageUrl,
-        "backgroundImageUrl": backgroundImageUrl,
-        "bankAccName": bankAccName,
-        "bankBranchName": bankBranchName,
-        "bankName": bankName,
-        "pan": pan,
-        "status": status.name,
-        "enrolledDate": enrolledDate.toIso8601String(),
-        "registrationDocument": registrationDocument?.toJson(),
-        "registrationNumber": registrationNumber,
-        "bankAccNumber": bankAccNumber,
-        "businessAddress": businessAddress?.toJson(),
-        "returnAddress": returnAddress?.toJson(),
-        "warehouseAddress": warehouseAddress?.toJson(),
-      };
+  static List<Vendor> fromJsonList(dynamic json) => List<Vendor>.from(
+        json.map(
+          (data) => Vendor.fromJson(data),
+        ),
+      );
 }

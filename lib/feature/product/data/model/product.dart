@@ -1,6 +1,6 @@
 import 'package:flamingo/feature/product/data/model/product_color.dart';
-import 'package:flamingo/feature/product/data/model/vendor.dart';
 import 'package:flamingo/feature/upload-file/data/model/upload_file_response.dart';
+import 'package:flamingo/feature/vendor/data/model/vendor.dart';
 
 class Product {
   final String id;

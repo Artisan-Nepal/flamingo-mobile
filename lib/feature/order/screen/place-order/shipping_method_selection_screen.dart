@@ -3,7 +3,6 @@ import 'package:flamingo/feature/order/screen/place-order/checkout_method_view_m
 import 'package:flamingo/feature/order/screen/place-order/place_order_view_model.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/loader/circular_progress_indicator_widget.dart';
-import 'package:flamingo/widget/screen/default_screen.dart';
 import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

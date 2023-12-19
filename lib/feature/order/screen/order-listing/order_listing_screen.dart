@@ -1,4 +1,5 @@
 import 'package:flamingo/di/di.dart';
+import 'package:flamingo/feature/customer-activity/customer_activity_view_model.dart';
 import 'package:flamingo/feature/order/data/model/order.dart';
 import 'package:flamingo/feature/order/screen/order-listing/order_listing_view_model.dart';
 import 'package:flamingo/feature/order/screen/order-listing/snippet_order_listing_tab.dart';
@@ -26,12 +27,15 @@ class _OrderListingScreenState extends State<OrderListingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final orderCount =
+        Provider.of<CustomerActivityViewModel>(context).orderCount;
+
     return ChangeNotifierProvider(
       create: (context) => _viewModel,
       child: Consumer<OrderListingViewModel>(
         builder: (context, viewModel, child) {
           return TitledScreen(
-            title: 'Orders (2)',
+            title: 'Orders ($orderCount)',
             scrollable: false,
             child: DefaultTabController(
               animationDuration: Duration.zero,
@@ -40,7 +44,9 @@ class _OrderListingScreenState extends State<OrderListingScreen> {
                 children: [
                   _buildTabBar(),
                   !viewModel.orderUseCase.hasCompleted
-                      ? const DefaultScreenLoaderWidget()
+                      ? const DefaultScreenLoaderWidget(
+                          manuallyCenter: true,
+                        )
                       : _buildTabBarView(viewModel),
                 ],
               ),

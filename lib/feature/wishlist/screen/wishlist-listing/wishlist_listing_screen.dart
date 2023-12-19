@@ -1,4 +1,5 @@
 import 'package:flamingo/di/di.dart';
+import 'package:flamingo/feature/customer-activity/customer_activity_view_model.dart';
 import 'package:flamingo/feature/wishlist/screen/wishlist-listing/snippet_wishlist_item.dart';
 import 'package:flamingo/feature/wishlist/screen/wishlist-listing/wishlist_listing_view_model.dart';
 import 'package:flamingo/shared/shared.dart';
@@ -25,12 +26,15 @@ class _WishlistListingScreenState extends State<WishlistListingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final wishlistCount =
+        Provider.of<CustomerActivityViewModel>(context).wishlistCount;
     return ChangeNotifierProvider(
       create: (context) => _viewModel,
       builder: (context, child) {
         return TitledScreen(
+          automaticallyImplyAppBarLeading: false,
           appbarActions: const [CartButtonWidget()],
-          title: 'WISHLIST (5)',
+          title: 'WISHLIST ($wishlistCount)',
           scrollable: false,
           child: Consumer<WishlistListingViewModel>(
             builder: (context, viewModel, child) {

@@ -1,8 +1,10 @@
 // ignore_for_file: unused_field
 
+import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/cart/data/cart_repository.dart';
 import 'package:flamingo/feature/cart/data/model/add_to_cart_request.dart';
 import 'package:flamingo/feature/cart/data/model/cart.dart';
+import 'package:flamingo/feature/customer-activity/customer_activity_view_model.dart';
 import 'package:flamingo/feature/product/data/model/product.dart';
 import 'package:flamingo/feature/product/data/model/product_color.dart';
 import 'package:flamingo/feature/product/data/product_repository.dart';
@@ -96,6 +98,7 @@ class ProductDetailViewModel extends ChangeNotifier {
           quantity: 1,
         ),
       );
+      locator<CustomerActivityViewModel>().getCustomerCountInfo();
       setAddToCartUseCase(Response.complete(response));
     } catch (exception) {
       setAddToCartUseCase(Response.error(exception));

@@ -1,5 +1,7 @@
+import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/cart/data/cart_repository.dart';
 import 'package:flamingo/feature/cart/data/model/update_cart_request.dart';
+import 'package:flamingo/feature/customer-activity/customer_activity_view_model.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flutter/material.dart';
 
@@ -45,6 +47,7 @@ class UpdateCartViewModel extends ChangeNotifier {
     try {
       setRemoveCartUseCase(Response.loading());
       final response = await _cartRepository.deleteCart(cartId);
+      locator<CustomerActivityViewModel>().getCustomerCountInfo();
       setRemoveCartUseCase(Response.complete(response));
     } catch (exception) {
       setRemoveCartUseCase(Response.error(exception));

@@ -8,6 +8,7 @@ class BrandListingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TitledScreen(
+      automaticallyImplyAppBarLeading: false,
       title: 'Brands',
       appbarActions: const [CartButtonWidget()],
       child: Column(children: []),

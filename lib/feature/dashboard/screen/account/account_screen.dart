@@ -19,6 +19,7 @@ class _AccountScreenState extends State<AccountScreen> {
   @override
   Widget build(BuildContext context) {
     return TitledScreen(
+      automaticallyImplyAppBarLeading: false,
       title: 'Account',
       appbarActions: const [CartButtonWidget()],
       child: Column(children: [

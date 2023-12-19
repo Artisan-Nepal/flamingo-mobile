@@ -1,4 +1,5 @@
 import 'package:flamingo/di/di.dart';
+import 'package:flamingo/feature/customer-activity/customer_activity_view_model.dart';
 import 'package:flamingo/feature/wishlist/data/model/add_to_wishlist_request.dart';
 import 'package:flamingo/feature/wishlist/data/wishlist_repository.dart';
 import 'package:flamingo/feature/wishlist/wishlist_view_model.dart';
@@ -31,6 +32,7 @@ class UpdateWishlistViewModel extends ChangeNotifier {
           productId: productId,
         ),
       );
+      locator<CustomerActivityViewModel>().getCustomerCountInfo();
       setUpdateWishlistUseCase(Response.complete(response));
     } catch (exception) {
       locator<WishlistViewModel>()

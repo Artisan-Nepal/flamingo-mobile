@@ -57,7 +57,8 @@ class DefaultScreen extends StatelessWidget {
                 title: appBarTitle,
                 actions: appBarActions,
                 leading: appBarLeading ??
-                    (NavigationHelper.canPop(context)
+                    (NavigationHelper.canPop(context) &&
+                            automaticallyImplyAppBarLeading
                         ? GestureDetector(
                             onTap: () {
                               NavigationHelper.pop(context);

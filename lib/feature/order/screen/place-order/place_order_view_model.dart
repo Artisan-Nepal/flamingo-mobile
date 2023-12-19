@@ -1,5 +1,7 @@
+import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/address/data/model/address.dart';
 import 'package:flamingo/feature/cart/data/model/cart_item.dart';
+import 'package:flamingo/feature/customer-activity/customer_activity_view_model.dart';
 import 'package:flamingo/feature/order/data/model/create_order.dart';
 import 'package:flamingo/feature/order/data/model/payment_method.dart';
 import 'package:flamingo/feature/order/data/model/shipping_method.dart';
@@ -92,6 +94,7 @@ class PlaceOrderViewModel extends ChangeNotifier {
           shippingMethodId: _selectedShippingMethod!.id,
         ),
       );
+      locator<CustomerActivityViewModel>().getCustomerCountInfo();
       setPlaceOrderUseCase(Response.complete(null));
     } catch (exception) {
       setPlaceOrderUseCase(Response.error(exception));

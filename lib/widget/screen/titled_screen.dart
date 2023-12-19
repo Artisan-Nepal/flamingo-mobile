@@ -15,6 +15,7 @@ class TitledScreen extends StatelessWidget {
       vertical: Dimens.spacingSizeDefault,
     ),
     this.appbarActions,
+    this.automaticallyImplyAppBarLeading = true,
   });
 
   final String title;
@@ -22,6 +23,7 @@ class TitledScreen extends StatelessWidget {
   final bool scrollable;
   final EdgeInsets padding;
   final List<Widget>? appbarActions;
+  final bool automaticallyImplyAppBarLeading;
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +82,9 @@ class TitledScreen extends StatelessWidget {
   }
 
   Widget _buildBackButton(BuildContext context) {
-    if (!NavigationHelper.canPop(context)) return const SizedBox();
+    if (!NavigationHelper.canPop(context) && !automaticallyImplyAppBarLeading) {
+      return const SizedBox();
+    }
 
     return GestureDetector(
       onTap: () {

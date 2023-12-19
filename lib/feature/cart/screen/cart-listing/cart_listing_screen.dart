@@ -1,6 +1,7 @@
 import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/cart/screen/cart-listing/cart_listing_view_model.dart';
 import 'package:flamingo/feature/cart/screen/cart-listing/snippet_cart_listing_item.dart';
+import 'package:flamingo/feature/customer-activity/customer_activity_view_model.dart';
 import 'package:flamingo/feature/order/screen/place-order/place_order_screen.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/button/button.dart';
@@ -28,6 +29,7 @@ class _CartListingScreenState extends State<CartListingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final cartCount = Provider.of<CustomerActivityViewModel>(context).cartCount;
     return ChangeNotifierProvider(
       create: (context) => _viewModel,
       builder: (context, child) {
@@ -37,7 +39,7 @@ class _CartListingScreenState extends State<CartListingScreen> {
             return TitledScreen(
               scrollable: false,
               padding: EdgeInsets.zero,
-              title: 'SHOPPING BAG (2)',
+              title: 'SHOPPING BAG ($cartCount)',
               child: !viewModel.cartUseCase.hasCompleted
                   ? _buildLoader()
                   : Stack(

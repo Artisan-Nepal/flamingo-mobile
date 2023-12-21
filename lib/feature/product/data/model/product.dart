@@ -32,7 +32,9 @@ class Product {
         tags: List<String>.from(
             json['productToTag'].map((e) => e['productTag']['name'])),
         variants: ProductVariant.fromJsonList(json['variants']),
-        isInWishlist: json['isInWishlist'] ?? false,
+        isInWishlist: json['wishlist'] == null
+            ? false
+            : List.from(json['wishlist']).isNotEmpty,
       );
 
   static List<Product> fromJsonList(dynamic json) => List<Product>.from(

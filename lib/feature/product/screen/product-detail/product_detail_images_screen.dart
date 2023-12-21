@@ -59,12 +59,9 @@ class _ProductDetailImageScreenState extends State<ProductDetailImageScreen> {
               controller: _pageController,
               itemCount: widget.variants.length,
               itemBuilder: (context, index) => InteractiveViewer(
-                child: Hero(
-                  tag: widget.variants[index].image.id,
-                  child: CachedNetworkImageWidget(
-                    image: widget.variants[index].image.url,
-                    fit: BoxFit.fitWidth,
-                  ),
+                child: CachedNetworkImageWidget(
+                  image: widget.variants[index].image.url,
+                  fit: BoxFit.fitWidth,
                 ),
               ),
             ),

@@ -58,12 +58,9 @@ class _SnippetProductDetailImagesState
                   ),
                 );
               },
-              child: Hero(
-                tag: widget.variants[index].image.id,
-                child: CachedNetworkImageWidget(
-                  image: widget.variants[index].image.url,
-                  fit: BoxFit.fitWidth,
-                ),
+              child: CachedNetworkImageWidget(
+                image: widget.variants[index].image.url,
+                fit: BoxFit.fitWidth,
               ),
             ),
           ),

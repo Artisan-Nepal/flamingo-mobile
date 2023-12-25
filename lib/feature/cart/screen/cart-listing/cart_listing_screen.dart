@@ -65,6 +65,9 @@ class _CartListingScreenState extends State<CartListingScreen> {
                                           manuallyCenter: true,
                                           errorMessage:
                                               viewModel.cartUseCase.exception!,
+                                          onActionButtonPressed: () async {
+                                            await _viewModel.getCart();
+                                          },
                                         ),
                                       )
                                     : cartItems.isEmpty
@@ -163,6 +166,7 @@ class _CartListingScreenState extends State<CartListingScreen> {
   }
 
   Widget _buildCheckoutButton(CartListingViewModel viewModel) {
+    if (!viewModel.cartUseCase.hasCompleted) return const SizedBox();
     return Positioned(
       bottom: Dimens.spacingSizeDefault,
       right: Dimens.spacingSizeDefault,

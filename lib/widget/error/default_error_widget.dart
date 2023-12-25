@@ -11,6 +11,7 @@ class DefaultErrorWidget extends StatelessWidget {
     this.fontSize = Dimens.fontSizeOverLarge,
     this.actionButtonLabel = 'Try again',
     this.manuallyCenter = false,
+    this.manualTop,
   }) : super(key: key);
 
   final String errorMessage;
@@ -19,13 +20,16 @@ class DefaultErrorWidget extends StatelessWidget {
   final bool needImage;
   final double fontSize;
   final bool manuallyCenter;
+  final double? manualTop;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
           bottom: Dimens.spacing_64,
-          top: manuallyCenter ? SizeConfig.screenHeight * 0.2 : 0),
+          top: manuallyCenter
+              ? SizeConfig.screenHeight * (manualTop ?? 0.2)
+              : 0),
       child: SizedBox(
         width: double.infinity,
         child: Column(
@@ -37,8 +41,7 @@ class DefaultErrorWidget extends StatelessWidget {
                 if (needImage) ...[
                   Image.asset(
                     ImageConstants.appLogo,
-                    height: 200,
-                    width: 280,
+                    height: 100,
                     color: AppColors.grayMain,
                   ),
                   const SizedBox(

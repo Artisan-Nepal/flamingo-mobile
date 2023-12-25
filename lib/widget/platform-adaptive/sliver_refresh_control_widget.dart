@@ -4,24 +4,27 @@ import 'package:flutter/material.dart';
 
 class SliverRefreshControlWidget
     extends PlatformAdaptiveWidget<CustomScrollView, RefreshIndicator> {
-  const SliverRefreshControlWidget(
-      {Key? key,
-      required this.slivers,
-      required this.onRefresh,
-      this.scrollController})
-      : super(key: key);
+  const SliverRefreshControlWidget({
+    Key? key,
+    required this.slivers,
+    required this.onRefresh,
+    this.scrollController,
+    this.physics,
+  }) : super(key: key);
 
   final List<Widget> slivers;
   final Future<void> Function() onRefresh;
   final ScrollController? scrollController;
+  final ScrollPhysics? physics;
 
   @override
   RefreshIndicator buildMaterialWidget(BuildContext context) {
     return RefreshIndicator(
       onRefresh: onRefresh,
       child: CustomScrollView(
-        physics: const ClampingScrollPhysics(
-            parent: AlwaysScrollableScrollPhysics()),
+        physics: physics ??
+            const ClampingScrollPhysics(
+                parent: AlwaysScrollableScrollPhysics()),
         controller: scrollController,
         slivers: slivers,
       ),
@@ -32,7 +35,7 @@ class SliverRefreshControlWidget
   CustomScrollView buildCupertinoWidget(BuildContext context) {
     return CustomScrollView(
       controller: scrollController,
-      physics:
+      physics: physics ??
           const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
       slivers: [
         CupertinoSliverRefreshControl(

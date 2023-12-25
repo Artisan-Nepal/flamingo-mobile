@@ -20,13 +20,13 @@ class CategorySearchViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getCategories() async {
+  Future<void> getCategories({bool isRefresh = false}) async {
     try {
-      setCategoriesUseCase(Response.loading());
+      if (!isRefresh) setCategoriesUseCase(Response.loading());
       final response = await _categoryRepository.getAllCategories();
       setCategoriesUseCase(Response.complete(response.rows));
     } catch (exception) {
-      setCategoriesUseCase(Response.error(exception));
+      if (!isRefresh) setCategoriesUseCase(Response.error(exception));
     }
   }
 }

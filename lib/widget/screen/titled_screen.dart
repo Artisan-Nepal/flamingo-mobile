@@ -82,7 +82,7 @@ class TitledScreen extends StatelessWidget {
   }
 
   Widget _buildBackButton(BuildContext context) {
-    if (!NavigationHelper.canPop(context) && !automaticallyImplyAppBarLeading) {
+    if (!NavigationHelper.canPop(context) || !automaticallyImplyAppBarLeading) {
       return const SizedBox();
     }
 

@@ -18,6 +18,7 @@ class SnippetProductListing extends StatelessWidget {
       mainAxisSpacing: Dimens.spacingSizeSmall,
       crossAxisSpacing: Dimens.spacingSizeSmall,
       itemCount: products.length,
+      shrinkWrap: true,
       gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
       ),

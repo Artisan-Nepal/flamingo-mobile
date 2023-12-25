@@ -3,6 +3,7 @@ import 'package:flamingo/feature/product/screen/product-listing/product_listing_
 import 'package:flamingo/feature/product/screen/product-listing/snippet_filter_products_bottomsheet.dart';
 import 'package:flamingo/feature/product/screen/product-listing/snippet_product_listing.dart';
 import 'package:flamingo/shared/shared.dart';
+import 'package:flamingo/widget/error/default_error_widget.dart';
 import 'package:flamingo/widget/screen/default_screen.dart';
 import 'package:flamingo/widget/shimmer/shimmer.dart';
 import 'package:flutter/cupertino.dart';
@@ -36,13 +37,15 @@ class _ProductListingScreenState extends State<ProductListingScreen> {
     getData();
   }
 
-  getData() {
+  getData({bool isRefresh = false}) async {
     if (widget.productListingType.isCategory && widget.categoryId != null) {
-      _viewModel.getCategoryProducts(widget.categoryId!);
+      await _viewModel.getCategoryProducts(widget.categoryId!,
+          isRefresh: isRefresh);
     } else if (widget.productListingType.isVendor && widget.vendorId != null) {
-      _viewModel.getVendorProducts(widget.vendorId!);
+      await _viewModel.getVendorProducts(widget.vendorId!,
+          isRefresh: isRefresh);
     } else {
-      _viewModel.getProducts();
+      await _viewModel.getProducts(isRefresh: isRefresh);
     }
   }
 
@@ -66,7 +69,25 @@ class _ProductListingScreenState extends State<ProductListingScreen> {
               if (viewModel.getProductsUseCase.isLoading) {
                 return const ProductViewShimmerWidget();
               }
-              return SnippetProductListing(products: products);
+              if (viewModel.getProductsUseCase.hasError) {
+                return DefaultErrorWidget(
+                  errorMessage: viewModel.getProductsUseCase.exception!,
+                  onActionButtonPressed: () async {
+                    await getData();
+                  },
+                );
+              }
+              if (products.isEmpty) {
+                return const DefaultErrorWidget(
+                  errorMessage: 'No products available.',
+                );
+              }
+              return RefreshIndicator.adaptive(
+                child: SnippetProductListing(products: products),
+                onRefresh: () async {
+                  await getData(isRefresh: true);
+                },
+              );
             },
           ),
         );

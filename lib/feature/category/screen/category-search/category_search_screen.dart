@@ -3,8 +3,10 @@ import 'package:flamingo/feature/category/screen/category-listing/category_listi
 import 'package:flamingo/feature/category/screen/category-search/category_search_view_model.dart';
 import 'package:flamingo/feature/product/screen/product-listing/product_listing_screen.dart';
 import 'package:flamingo/shared/shared.dart';
+import 'package:flamingo/widget/error/default_error_widget.dart';
 import 'package:flamingo/widget/list-tile/list_tile.dart';
 import 'package:flamingo/widget/loader/loader.dart';
+import 'package:flamingo/widget/platform-adaptive/sliver_refresh_control_widget.dart';
 import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -38,27 +40,43 @@ class _CategorySearchScreenState extends State<CategorySearchScreen>
           title: 'CATEGORY',
           child: Consumer<CategorySearchViewModel>(
             builder: (context, viewModel, child) {
-              if (!viewModel.categoriesUseCase.hasCompleted) {
-                return const Center(
-                  child: CircularProgressIndicatorWidget(
-                    size: Dimens.iconSizeLarge,
-                  ),
+              if (viewModel.categoriesUseCase.isLoading) {
+                return const DefaultScreenLoaderWidget();
+              }
+              if (viewModel.categoriesUseCase.hasError) {
+                return DefaultErrorWidget(
+                  manuallyCenter: true,
+                  manualTop: 0.05,
+                  errorMessage: viewModel.categoriesUseCase.exception!,
+                  onActionButtonPressed: () async {
+                    await _viewModel.getCategories();
+                  },
                 );
               }
               final categories = viewModel.categoriesUseCase.data ?? [];
-              return SizedBox(
-                height: SizeConfig.screenHeight,
-                child: DefaultTabController(
-                  animationDuration: Duration.zero,
-                  length: categories.length,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildTabBar(),
-                      _buildTabBarView(),
-                    ],
-                  ),
-                ),
+              return SliverRefreshControlWidget(
+                // physics: const NeverScrollableScrollPhysics(),
+                onRefresh: () async {
+                  await _viewModel.getCategories(isRefresh: true);
+                },
+                slivers: [
+                  SliverToBoxAdapter(
+                    child: SizedBox(
+                      height: SizeConfig.screenHeight,
+                      child: DefaultTabController(
+                        animationDuration: Duration.zero,
+                        length: categories.length,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildTabBar(),
+                            _buildTabBarView(),
+                          ],
+                        ),
+                      ),
+                    ),
+                  )
+                ],
               );
             },
           ),

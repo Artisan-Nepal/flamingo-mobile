@@ -58,36 +58,38 @@ class ProductListingViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getVendorProducts(String vendorId) async {
+  Future<void> getVendorProducts(String vendorId,
+      {bool isRefresh = false}) async {
     try {
-      setProductsUseCase(Response.loading());
+      if (!isRefresh) setProductsUseCase(Response.loading());
       final response = await _productRepository.getVendorProducts(vendorId);
       locator<WishlistViewModel>().initWishlistStatus(response.rows);
       setProductsUseCase(Response.complete(response));
     } catch (exception) {
-      setProductsUseCase(Response.error(exception));
+      if (!isRefresh) setProductsUseCase(Response.error(exception));
     }
   }
 
-  Future<void> getProducts() async {
+  Future<void> getProducts({bool isRefresh = false}) async {
     try {
-      setProductsUseCase(Response.loading());
+      if (!isRefresh) setProductsUseCase(Response.loading());
       final response = await _productRepository.getProducts();
       locator<WishlistViewModel>().initWishlistStatus(response.rows);
       setProductsUseCase(Response.complete(response));
     } catch (exception) {
-      setProductsUseCase(Response.error(exception));
+      if (!isRefresh) setProductsUseCase(Response.error(exception));
     }
   }
 
-  Future<void> getCategoryProducts(String catgeoryId) async {
+  Future<void> getCategoryProducts(String catgeoryId,
+      {bool isRefresh = false}) async {
     try {
-      setProductsUseCase(Response.loading());
+      if (!isRefresh) setProductsUseCase(Response.loading());
       final response = await _productRepository.getCategoryProducts(catgeoryId);
       locator<WishlistViewModel>().initWishlistStatus(response.rows);
       setProductsUseCase(Response.complete(response));
     } catch (exception) {
-      setProductsUseCase(Response.error(exception));
+      if (!isRefresh) setProductsUseCase(Response.error(exception));
     }
   }
 }

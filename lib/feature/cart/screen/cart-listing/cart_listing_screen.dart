@@ -7,7 +7,6 @@ import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/button/button.dart';
 import 'package:flamingo/widget/error/default_error_widget.dart';
 import 'package:flamingo/widget/loader/loader.dart';
-import 'package:flamingo/widget/platform-adaptive/sliver_refresh_control_widget.dart';
 import 'package:flamingo/widget/screen/screen.dart';
 import 'package:flamingo/widget/space/space.dart';
 import 'package:flutter/material.dart';
@@ -48,61 +47,46 @@ class _CartListingScreenState extends State<CartListingScreen> {
                     children: [
                       _buildCartSummary(viewModel),
                       Expanded(
-                        child: SliverRefreshControlWidget(
-                          onRefresh: () async {
-                            await _viewModel.getCart(isRefresh: true);
-                          },
-                          slivers: [
-                            viewModel.cartUseCase.isLoading
-                                ? const SliverToBoxAdapter(
-                                    child: DefaultScreenLoaderWidget(
-                                      manuallyCenter: true,
-                                    ),
+                        child: viewModel.cartUseCase.isLoading
+                            ? const DefaultScreenLoaderWidget()
+                            : viewModel.cartUseCase.hasError
+                                ? DefaultErrorWidget(
+                                    errorMessage:
+                                        viewModel.cartUseCase.exception!,
+                                    onActionButtonPressed: () async {
+                                      await _viewModel.getCart();
+                                    },
                                   )
-                                : viewModel.cartUseCase.hasError
-                                    ? SliverToBoxAdapter(
-                                        child: DefaultErrorWidget(
-                                          manuallyCenter: true,
-                                          errorMessage:
-                                              viewModel.cartUseCase.exception!,
-                                          onActionButtonPressed: () async {
-                                            await _viewModel.getCart();
-                                          },
-                                        ),
+                                : cartItems.isEmpty
+                                    ? const DefaultErrorWidget(
+                                        errorMessage:
+                                            'You do not have any products in your cart.',
                                       )
-                                    : cartItems.isEmpty
-                                        ? const SliverToBoxAdapter(
-                                            child: DefaultErrorWidget(
-                                              manuallyCenter: true,
-                                              errorMessage:
-                                                  'You do not have any products in your cart.',
-                                            ),
-                                          )
-                                        : SliverList(
-                                            delegate:
-                                                SliverChildBuilderDelegate(
-                                              (context, index) {
-                                                return Padding(
-                                                  padding: EdgeInsets.only(
-                                                    top: index == 0
-                                                        ? Dimens
-                                                            .spacingSizeSmall
-                                                        : 0,
-                                                    bottom: index ==
-                                                            cartItems.length - 1
-                                                        ? 80
-                                                        : 0,
-                                                  ),
-                                                  child: SnippetCartListingItem(
-                                                    cartItem: cartItems[index],
-                                                  ),
-                                                );
-                                              },
-                                              childCount: cartItems.length,
-                                            ),
-                                          )
-                          ],
-                        ),
+                                    : RefreshIndicator.adaptive(
+                                        onRefresh: () async {
+                                          await _viewModel.getCart(
+                                              isRefresh: true);
+                                        },
+                                        child: ListView.builder(
+                                          itemBuilder: (context, index) {
+                                            return Padding(
+                                              padding: EdgeInsets.only(
+                                                top: index == 0
+                                                    ? Dimens.spacingSizeSmall
+                                                    : 0,
+                                                bottom: index ==
+                                                        cartItems.length - 1
+                                                    ? 80
+                                                    : 0,
+                                              ),
+                                              child: SnippetCartListingItem(
+                                                cartItem: cartItems[index],
+                                              ),
+                                            );
+                                          },
+                                          itemCount: cartItems.length,
+                                        ),
+                                      ),
                       )
                     ],
                   ),

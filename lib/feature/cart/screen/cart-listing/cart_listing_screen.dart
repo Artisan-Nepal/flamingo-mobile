@@ -5,7 +5,9 @@ import 'package:flamingo/feature/customer-activity/customer_activity_view_model.
 import 'package:flamingo/feature/order/screen/place-order/place_order_screen.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/button/button.dart';
-import 'package:flamingo/widget/loader/circular_progress_indicator_widget.dart';
+import 'package:flamingo/widget/error/default_error_widget.dart';
+import 'package:flamingo/widget/loader/loader.dart';
+import 'package:flamingo/widget/platform-adaptive/sliver_refresh_control_widget.dart';
 import 'package:flamingo/widget/screen/screen.dart';
 import 'package:flamingo/widget/space/space.dart';
 import 'package:flutter/material.dart';
@@ -40,53 +42,74 @@ class _CartListingScreenState extends State<CartListingScreen> {
               scrollable: false,
               padding: EdgeInsets.zero,
               title: 'SHOPPING BAG ($cartCount)',
-              child: !viewModel.cartUseCase.hasCompleted
-                  ? _buildLoader()
-                  : Stack(
-                      children: [
-                        Column(
-                          children: [
-                            _buildCartSummary(viewModel),
-                            Expanded(
-                              child: ListView.builder(
-                                itemCount: cartItems.length,
-                                itemBuilder: (context, index) {
-                                  return Padding(
-                                    padding: EdgeInsets.only(
-                                      top: index == 0
-                                          ? Dimens.spacingSizeSmall
-                                          : 0,
-                                      bottom: index == cartItems.length - 1
-                                          ? 80
-                                          : 0,
+              child: Stack(
+                children: [
+                  Column(
+                    children: [
+                      _buildCartSummary(viewModel),
+                      Expanded(
+                        child: SliverRefreshControlWidget(
+                          onRefresh: () async {
+                            await _viewModel.getCart(isRefresh: true);
+                          },
+                          slivers: [
+                            viewModel.cartUseCase.isLoading
+                                ? const SliverToBoxAdapter(
+                                    child: DefaultScreenLoaderWidget(
+                                      manuallyCenter: true,
                                     ),
-                                    child: SnippetCartListingItem(
-                                      cartItem: cartItems[index],
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
+                                  )
+                                : viewModel.cartUseCase.hasError
+                                    ? SliverToBoxAdapter(
+                                        child: DefaultErrorWidget(
+                                          manuallyCenter: true,
+                                          errorMessage:
+                                              viewModel.cartUseCase.exception!,
+                                        ),
+                                      )
+                                    : cartItems.isEmpty
+                                        ? const SliverToBoxAdapter(
+                                            child: DefaultErrorWidget(
+                                              manuallyCenter: true,
+                                              errorMessage:
+                                                  'You do not have any products in your cart.',
+                                            ),
+                                          )
+                                        : SliverList(
+                                            delegate:
+                                                SliverChildBuilderDelegate(
+                                              (context, index) {
+                                                return Padding(
+                                                  padding: EdgeInsets.only(
+                                                    top: index == 0
+                                                        ? Dimens
+                                                            .spacingSizeSmall
+                                                        : 0,
+                                                    bottom: index ==
+                                                            cartItems.length - 1
+                                                        ? 80
+                                                        : 0,
+                                                  ),
+                                                  child: SnippetCartListingItem(
+                                                    cartItem: cartItems[index],
+                                                  ),
+                                                );
+                                              },
+                                              childCount: cartItems.length,
+                                            ),
+                                          )
                           ],
                         ),
-                        _buildCheckoutButton(viewModel)
-                      ],
-                    ),
+                      )
+                    ],
+                  ),
+                  _buildCheckoutButton(viewModel)
+                ],
+              ),
             );
           },
         );
       },
-    );
-  }
-
-  Widget _buildLoader() {
-    return const Padding(
-      padding: EdgeInsets.only(bottom: Dimens.spacing_64),
-      child: Center(
-        child: CircularProgressIndicatorWidget(
-          size: Dimens.iconSizeLarge,
-        ),
-      ),
     );
   }
 

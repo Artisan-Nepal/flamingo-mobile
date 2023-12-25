@@ -19,13 +19,13 @@ class CartListingViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getCart() async {
+  Future<void> getCart({bool isRefresh = false}) async {
     try {
-      setCartUseCase(Response.loading());
+      if (!isRefresh) setCartUseCase(Response.loading());
       final response = await _cartRepository.getUserCart();
       setCartUseCase(Response.complete(response));
     } catch (exception) {
-      setCartUseCase(Response.error(exception));
+      if (!isRefresh) setCartUseCase(Response.error(exception));
     }
   }
 

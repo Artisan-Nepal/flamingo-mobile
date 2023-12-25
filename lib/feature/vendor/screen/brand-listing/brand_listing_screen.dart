@@ -59,7 +59,11 @@ class _BrandListingScreenState extends State<BrandListingScreen> {
                       ),
                     );
                   },
-                  child: Text(vendors[index].storeName),
+                  child: Text(
+                    vendors[index].storeName,
+                    textAlign: TextAlign.center,
+                    style: textTheme(context).bodyMedium,
+                  ),
                 );
               },
             );

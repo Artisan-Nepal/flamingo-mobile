@@ -1,4 +1,5 @@
 import 'package:flamingo/feature/product/data/model/product_color.dart';
+import 'package:flamingo/feature/product/data/model/product_size.dart';
 import 'package:flamingo/feature/upload-file/data/model/upload_file_response.dart';
 import 'package:flamingo/feature/vendor/data/model/vendor.dart';
 
@@ -51,6 +52,7 @@ class ProductVariant {
   final int price;
   final String productId;
   final ProductColor color;
+  final ProductSizeOption size;
   final List<ProductAttributeResponse> attributes;
   final UploadFileResponse image;
 
@@ -63,6 +65,7 @@ class ProductVariant {
     required this.color,
     required this.attributes,
     required this.image,
+    required this.size,
   });
 
   factory ProductVariant.fromJson(Map<String, dynamic> json) => ProductVariant(
@@ -71,6 +74,7 @@ class ProductVariant {
         quantityInStock: json['quantityInStock'],
         price: json['price'],
         productId: json['productId'],
+        size: ProductSizeOption.fromJson(json['productSizeOption']),
         color: ProductColor.fromJson(
             json['productVariantColor'][0]['productColor']),
         attributes: ProductAttributeResponse.fromJsonList(

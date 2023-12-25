@@ -107,7 +107,7 @@ class SnippetOrderListingItem extends StatelessWidget {
 
                   OrderListItemTitleValue(
                     title: 'Total Price',
-                    value: 'Rs. ${formatNepaliCurrency(order.orderTotal)}',
+                    value: 'Rs. ${formatNepaliCurrency(order.netTotal)}',
                     valueStyle: const TextStyle(
                       color: AppColors.primaryMain,
                       fontWeight: FontWeight.w600,

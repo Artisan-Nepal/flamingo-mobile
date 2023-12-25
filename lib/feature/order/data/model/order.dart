@@ -9,6 +9,7 @@ class Order {
   final String id;
   final String customerId;
   final int orderTotal;
+  final int netTotal;
   final Address shippingAddress;
   final Address billingAddress;
   final PaymentMethod paymentMethod;
@@ -38,12 +39,14 @@ class Order {
     required this.productVariant,
     required this.price,
     required this.orderStatus,
+    required this.netTotal,
   });
 
   factory Order.fromJson(Map<String, dynamic> json) => Order(
         id: json['id'],
         customerId: json['customerId'],
         orderTotal: json['orderTotal'],
+        netTotal: json['netTotal'],
         shippingAddress: Address.fromJson(json['shippingAddress']),
         billingAddress: Address.fromJson(json['billingAddress']),
         paymentMethod: PaymentMethod.fromJson(json['paymentMethod']),

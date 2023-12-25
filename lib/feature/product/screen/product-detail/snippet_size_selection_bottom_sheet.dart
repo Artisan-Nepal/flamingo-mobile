@@ -1,4 +1,4 @@
-import 'package:flamingo/feature/product/data/model/product.dart';
+import 'package:flamingo/feature/product/data/model/product_size.dart';
 import 'package:flamingo/feature/product/screen/product-detail/product_detail_view_model.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/widget.dart';
@@ -16,7 +16,7 @@ class SnippetSizeSelectionBottomSheet extends StatefulWidget {
 
 class _SnippetSizeSelectionBottomSheetState
     extends State<SnippetSizeSelectionBottomSheet> {
-  late ProductAttributeOptionResponse _selectedSize;
+  late ProductSizeOption? _selectedSize;
   late FixedExtentScrollController _scrollController;
 
   @override
@@ -24,9 +24,10 @@ class _SnippetSizeSelectionBottomSheetState
     super.initState();
     final viewModel =
         Provider.of<ProductDetailViewModel>(context, listen: false);
-    _selectedSize = viewModel.selectedSize;
+    _selectedSize = viewModel.selectedSizeOption;
     _scrollController = FixedExtentScrollController(
-      initialItem: viewModel.availableSizes.indexOf(viewModel.selectedSize),
+      initialItem:
+          viewModel.availableSizes.indexOf(viewModel.selectedSizeOption),
     );
   }
 
@@ -61,7 +62,7 @@ class _SnippetSizeSelectionBottomSheetState
                 width: double.infinity,
                 onPressed: () {
                   Provider.of<ProductDetailViewModel>(context, listen: false)
-                      .setSelectedSize(_selectedSize);
+                      .setSelectedSize(_selectedSize!);
                   NavigationHelper.pop(context);
                 },
               )

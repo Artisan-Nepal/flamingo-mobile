@@ -113,7 +113,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                     height: Dimens.spacingSizeDefault),
                                 _buildAttributeSelection(
                                   name: 'Size',
-                                  value: viewModel.selectedSize.value,
+                                  value: viewModel.selectedSizeOption.value,
                                   onPressed: () {
                                     showCupertinoModalPopup(
                                       context: context,

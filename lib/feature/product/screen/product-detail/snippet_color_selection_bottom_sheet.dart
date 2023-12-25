@@ -95,7 +95,8 @@ class _SnippetColorSelectionBottomSheetState
               viewModel.availableColors.length,
               (index) {
                 final productVariant = viewModel.getVariantByColorAndSize(
-                    viewModel.availableColors[index], viewModel.selectedSize);
+                    viewModel.availableColors[index],
+                    viewModel.selectedSizeOption);
                 return Row(
                   children: [
                     Expanded(

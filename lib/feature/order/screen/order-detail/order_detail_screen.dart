@@ -185,8 +185,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
         ),
         const SizedBox(height: 5),
         _buildOrderDetailItem(
-            title: 'Order Cost',
-            amount: widget.order.orderTotal - widget.order.shippingMethod.cost),
+            title: 'Order Cost', amount: widget.order.orderTotal),
         _buildOrderDetailItem(
             title: 'Shipping Fee', amount: widget.order.shippingMethod.cost),
         _buildOrderDetailItem(
@@ -197,7 +196,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
         const SizedBox(height: 5),
         _buildOrderDetailItem(
           title: 'Total ',
-          amount: widget.order.orderTotal,
+          amount: widget.order.netTotal,
           boldText: true,
         ),
       ],

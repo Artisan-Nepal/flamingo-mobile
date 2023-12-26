@@ -62,84 +62,86 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             padding: EdgeInsets.zero,
             needAppBar: false,
             statusBarIconBrightness: Brightness.dark,
-            child: Stack(
-              children: [
-                CustomScrollView(
-                  controller: _scrollController,
-                  slivers: [
-                    SliverToBoxAdapter(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SnippetProductDetailImages(
-                            productId: viewModel.product.id,
-                            variants: viewModel.product.variants,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: Dimens.spacingSizeDefault),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const VerticalSpaceWidget(
-                                    height: Dimens.spacingSizeDefault),
-                                ..._buildProductInformation(viewModel),
-                                const VerticalSpaceWidget(
-                                    height: Dimens.spacingSizeDefault),
-                                Html(
-                                  data: viewModel.product.body,
-                                ),
-                                const VerticalSpaceWidget(
-                                    height: Dimens.spacingSizeDefault),
-                                _buildAttributeSelection(
-                                  name: 'Color',
-                                  value: viewModel.selectedColor.name,
-                                  onPressed: () {
-                                    showCupertinoModalPopup(
-                                      context: context,
-                                      builder: (context) => Wrap(
-                                        children: [
-                                          ChangeNotifierProvider.value(
-                                            value: _viewModel,
-                                            child:
-                                                const SnippetColorSelectionBottomSheet(),
-                                          )
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                ),
-                                const SizedBox(
-                                    height: Dimens.spacingSizeDefault),
-                                _buildAttributeSelection(
-                                  name: 'Size',
-                                  value: viewModel.selectedSizeOption.value,
-                                  onPressed: () {
-                                    showCupertinoModalPopup(
-                                      context: context,
-                                      builder: (context) => Wrap(
-                                        children: [
-                                          ChangeNotifierProvider.value(
-                                            value: _viewModel,
-                                            child:
-                                                const SnippetSizeSelectionBottomSheet(),
-                                          )
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ],
+            child: SafeArea(
+              child: Stack(
+                children: [
+                  CustomScrollView(
+                    controller: _scrollController,
+                    slivers: [
+                      SliverToBoxAdapter(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SnippetProductDetailImages(
+                              productId: viewModel.product.id,
+                              variants: viewModel.product.variants,
                             ),
-                          ),
-                        ],
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: Dimens.spacingSizeDefault),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const VerticalSpaceWidget(
+                                      height: Dimens.spacingSizeDefault),
+                                  ..._buildProductInformation(viewModel),
+                                  const VerticalSpaceWidget(
+                                      height: Dimens.spacingSizeDefault),
+                                  Html(
+                                    data: viewModel.product.body,
+                                  ),
+                                  const VerticalSpaceWidget(
+                                      height: Dimens.spacingSizeDefault),
+                                  _buildAttributeSelection(
+                                    name: 'Color',
+                                    value: viewModel.selectedColor.name,
+                                    onPressed: () {
+                                      showCupertinoModalPopup(
+                                        context: context,
+                                        builder: (context) => Wrap(
+                                          children: [
+                                            ChangeNotifierProvider.value(
+                                              value: _viewModel,
+                                              child:
+                                                  const SnippetColorSelectionBottomSheet(),
+                                            )
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  const SizedBox(
+                                      height: Dimens.spacingSizeDefault),
+                                  _buildAttributeSelection(
+                                    name: 'Size',
+                                    value: viewModel.selectedSizeOption.value,
+                                    onPressed: () {
+                                      showCupertinoModalPopup(
+                                        context: context,
+                                        builder: (context) => Wrap(
+                                          children: [
+                                            ChangeNotifierProvider.value(
+                                              value: _viewModel,
+                                              child:
+                                                  const SnippetSizeSelectionBottomSheet(),
+                                            )
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                const SnippetProductDetailAppBar(),
-                _buildAddToBagButton(viewModel),
-              ],
+                    ],
+                  ),
+                  const SnippetProductDetailAppBar(),
+                  _buildAddToBagButton(viewModel),
+                ],
+              ),
             ),
           );
         },

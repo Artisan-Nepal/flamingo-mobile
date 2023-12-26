@@ -40,7 +40,7 @@ class DefaultErrorWidget extends StatelessWidget {
               children: [
                 if (needImage) ...[
                   Image.asset(
-                    ImageConstants.appLogo,
+                    ImageConstants.errorPlaceholder,
                     height: 100,
                     color: AppColors.grayMain,
                   ),

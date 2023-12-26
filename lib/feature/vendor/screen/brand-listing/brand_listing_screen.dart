@@ -42,7 +42,7 @@ class _BrandListingScreenState extends State<BrandListingScreen> {
             return GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                mainAxisExtent: 350,
+                mainAxisExtent: 60,
                 mainAxisSpacing: Dimens.spacingSizeSmall,
                 crossAxisSpacing: Dimens.spacingSizeSmall,
               ),
@@ -59,10 +59,12 @@ class _BrandListingScreenState extends State<BrandListingScreen> {
                       ),
                     );
                   },
-                  child: Text(
-                    vendors[index].storeName,
-                    textAlign: TextAlign.center,
-                    style: textTheme(context).bodyMedium,
+                  child: Center(
+                    child: Text(vendors[index].storeName,
+                        textAlign: TextAlign.center,
+                        style: textTheme(context).bodyMedium!.copyWith(
+                              fontWeight: FontWeight.bold,
+                            )),
                   ),
                 );
               },

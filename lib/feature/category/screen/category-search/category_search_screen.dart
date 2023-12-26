@@ -100,6 +100,7 @@ class _CategorySearchScreenState extends State<CategorySearchScreen>
             highlightColor: AppColors.transparent,
           ),
           child: TabBar(
+            tabAlignment: TabAlignment.start,
             unselectedLabelColor:
                 isLightMode(context) ? AppColors.grayDarker : AppColors.white,
             labelColor:

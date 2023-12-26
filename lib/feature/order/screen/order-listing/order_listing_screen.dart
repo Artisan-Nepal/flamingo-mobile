@@ -73,6 +73,7 @@ class _OrderListingScreenState extends State<OrderListingScreen> {
       ),
       child: Consumer(
         builder: (context, provider, child) => TabBar(
+          tabAlignment: TabAlignment.start,
           unselectedLabelColor:
               isLightMode(context) ? AppColors.grayDarker : AppColors.white,
           labelColor:

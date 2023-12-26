@@ -6,7 +6,6 @@ import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/error/default_error_widget.dart';
 import 'package:flamingo/widget/list-tile/list_tile.dart';
 import 'package:flamingo/widget/loader/loader.dart';
-import 'package:flamingo/widget/platform-adaptive/sliver_refresh_control_widget.dart';
 import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -54,29 +53,24 @@ class _CategorySearchScreenState extends State<CategorySearchScreen>
                 );
               }
               final categories = viewModel.categoriesUseCase.data ?? [];
-              return SliverRefreshControlWidget(
-                // physics: const NeverScrollableScrollPhysics(),
+              return RefreshIndicator.adaptive(
                 onRefresh: () async {
                   await _viewModel.getCategories(isRefresh: true);
                 },
-                slivers: [
-                  SliverToBoxAdapter(
-                    child: SizedBox(
-                      height: SizeConfig.screenHeight,
-                      child: DefaultTabController(
-                        animationDuration: Duration.zero,
-                        length: categories.length,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _buildTabBar(),
-                            _buildTabBarView(),
-                          ],
-                        ),
-                      ),
+                child: SizedBox(
+                  height: SizeConfig.screenHeight,
+                  child: DefaultTabController(
+                    animationDuration: Duration.zero,
+                    length: categories.length,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildTabBar(),
+                        _buildTabBarView(),
+                      ],
                     ),
-                  )
-                ],
+                  ),
+                ),
               );
             },
           ),

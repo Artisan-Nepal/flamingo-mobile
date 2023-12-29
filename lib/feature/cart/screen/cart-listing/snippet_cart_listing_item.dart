@@ -100,7 +100,7 @@ class _SnippetCartListingItemState extends State<SnippetCartListingItem> {
                             Align(
                               alignment: Alignment.centerRight,
                               child: Text(
-                                'Rs. ${formatNepaliCurrency(widget.cartItem.productVariant.price)}',
+                                'Rs. ${formatNepaliCurrency(widget.cartItem.productVariant.price * widget.cartItem.quantity)}',
                                 style: textTheme(context).labelLarge!.copyWith(
                                       fontWeight: FontWeight.bold,
                                     ),

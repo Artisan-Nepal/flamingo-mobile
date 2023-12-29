@@ -10,8 +10,7 @@ class ThemeRepositoryImpl implements ThemeRepository {
 
   @override
   Future<ThemeMode> getTheme() async {
-    String themeMode =
-        await _themeLocal.getThemeMode() ?? ThemeMode.system.name;
+    String themeMode = await _themeLocal.getThemeMode() ?? ThemeMode.light.name;
     return themeModeEnumFromString(themeMode);
   }
 

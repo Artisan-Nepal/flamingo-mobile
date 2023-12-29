@@ -25,15 +25,13 @@ class App extends StatelessWidget {
             create: (ctx) => locator<CustomerActivityViewModel>()),
       ],
       builder: (ctx, child) {
-        final themeService = Provider.of<ThemeService>(ctx);
         final navigationService = locator<NavigationService>();
 
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           title: Strings.appName,
           theme: lightTheme,
-          darkTheme: darkTheme,
-          themeMode: themeService.themeMode,
+          themeMode: ThemeMode.light,
           initialRoute: navigationService.initialRoute,
           routes: navigationRoutes,
         );

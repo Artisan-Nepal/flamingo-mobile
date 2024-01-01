@@ -1,9 +1,11 @@
 import 'package:flamingo/feature/address/screen/address-listing/address_listing_screen.dart';
 import 'package:flamingo/feature/auth/auth.dart';
 import 'package:flamingo/feature/auth/auth_view_model.dart';
+import 'package:flamingo/feature/cart/screen/cart-listing/cart_listing_screen.dart';
 import 'package:flamingo/feature/customer-activity/customer_activity_view_model.dart';
 import 'package:flamingo/feature/dashboard/screen/account/snippet_display_picture.dart';
 import 'package:flamingo/feature/order/screen/order-listing/order_listing_screen.dart';
+import 'package:flamingo/feature/wishlist/screen/wishlist-listing/wishlist_listing_screen.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/alert-dialog/alert_dialog_widget.dart';
 import 'package:flamingo/widget/button/button.dart';
@@ -25,8 +27,8 @@ class _AccountScreenState extends State<AccountScreen> {
   @override
   Widget build(BuildContext context) {
     final authViewModel = Provider.of<AuthViewModel>(context);
-    final orderCount =
-        Provider.of<CustomerActivityViewModel>(context).orderCount;
+    final customerActivityViewModel =
+        Provider.of<CustomerActivityViewModel>(context);
     return TitledScreen(
       automaticallyImplyAppBarLeading: false,
       title: 'Account',
@@ -60,9 +62,21 @@ class _AccountScreenState extends State<AccountScreen> {
             },
           ),
           ListTileV2Wdiget(
-            title: 'Orders ($orderCount)',
+            title: 'Orders (${customerActivityViewModel.orderCount})',
             onPressed: () {
               NavigationHelper.push(context, const OrderListingScreen());
+            },
+          ),
+          ListTileV2Wdiget(
+            title: 'Cart (${customerActivityViewModel.cartCount})',
+            onPressed: () {
+              NavigationHelper.push(context, const CartListingScreen());
+            },
+          ),
+          ListTileV2Wdiget(
+            title: 'Wishlist (${customerActivityViewModel.wishlistCount})',
+            onPressed: () {
+              NavigationHelper.push(context, const WishlistListingScreen());
             },
           ),
           ListTileV2Wdiget(

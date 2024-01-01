@@ -31,6 +31,10 @@ class AuthViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  bool get hasName {
+    return _user?.firstName != null || _user?.lastName != null;
+  }
+
   Future<void> syncLocally() async {
     _isLoggedIn = await _authRepository.getIsLoggedIn();
     _user = await _authRepository.getUserLocal();

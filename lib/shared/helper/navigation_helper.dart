@@ -46,4 +46,23 @@ class NavigationHelper {
         ),
         (route) => false);
   }
+
+  static Future pushNamed(BuildContext context, String routeName) async {
+    return await Navigator.pushNamed(context, routeName);
+  }
+
+  static Future pushReplacementNamed(
+      BuildContext context, String routeName) async {
+    return await Navigator.pushReplacementNamed(context, routeName);
+  }
+
+  static void pushNamedAndReplaceAll(
+      BuildContext context, String routeName) async {
+    await Navigator.pushNamedAndRemoveUntil(
+        context, routeName, (route) => false);
+  }
+
+  static void popUntil(BuildContext context, int count) {
+    Navigator.of(context).popUntil((route) => count-- <= 0);
+  }
 }

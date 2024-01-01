@@ -1,6 +1,8 @@
 import 'package:flamingo/data/data.dart';
 import 'package:flamingo/di/service_names.dart';
+import 'package:flamingo/feature/dashboard/screen/account/change_display_picture_view_model.dart';
 import 'package:flamingo/feature/feature.dart';
+import 'package:flamingo/feature/upload-file/data/upload_file_repository.dart';
 import 'package:flamingo/feature/user/data/local/user_local.dart';
 import 'package:flamingo/feature/user/data/local/user_local_impl.dart';
 import 'package:flamingo/feature/user/data/remote/user_remote.dart';
@@ -32,6 +34,12 @@ void registerUserFeature(GetIt locator) {
   );
   locator.registerFactory(
     () => UpdateUserViewModel(
+      userRepository: locator<UserRepository>(),
+    ),
+  );
+  locator.registerFactory(
+    () => ChangeDisplayPictureViewModel(
+      uploadFileRepository: locator<UploadFileRepository>(),
       userRepository: locator<UserRepository>(),
     ),
   );

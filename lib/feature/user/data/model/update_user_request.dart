@@ -3,12 +3,14 @@ class UpdateUserRequest {
   String? email;
   String? firstName;
   String? lastName;
+  String? displayImageUrl;
 
   UpdateUserRequest({
     this.mobileNumber,
     this.email,
     this.firstName,
     this.lastName,
+    this.displayImageUrl,
   });
 
   Map<String, dynamic> toJson() {
@@ -19,6 +21,9 @@ class UpdateUserRequest {
     if (firstName != null) jsonMap['firstName'] = firstName;
     if (lastName != null) {
       jsonMap['lastName'] = lastName;
+    }
+    if (displayImageUrl != null) {
+      jsonMap['displayImageUrl'] = displayImageUrl;
     }
 
     return jsonMap;

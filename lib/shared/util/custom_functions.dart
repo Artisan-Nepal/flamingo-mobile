@@ -117,3 +117,21 @@ String formatDate(
   String formattedDate = DateFormat(format).format(date);
   return formattedDate;
 }
+
+String getFullName({String? firstName, String? middleName, String? lastName}) {
+  List<String> nameParts = [];
+
+  if (firstName != null) {
+    nameParts.add(firstName.trim());
+  }
+
+  if (middleName != null) {
+    nameParts.add(middleName.trim());
+  }
+
+  if (lastName != null) {
+    nameParts.add(lastName.trim());
+  }
+
+  return nameParts.join(' ');
+}

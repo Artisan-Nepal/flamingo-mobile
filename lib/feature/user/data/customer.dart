@@ -9,6 +9,7 @@ class Customer extends JsonSerializable {
   final String? firstName;
   final String? lastName;
   final String? email;
+  final String? displayImageUrl;
 
   Customer({
     required this.roles,
@@ -16,6 +17,7 @@ class Customer extends JsonSerializable {
     required this.mobileNumber,
     required this.userId,
     required this.createdAt,
+    this.displayImageUrl,
     this.firstName,
     this.lastName,
     this.email,
@@ -29,6 +31,7 @@ class Customer extends JsonSerializable {
         userId: json["userId"],
         createdAt: DateTime.parse(json["createdAt"]),
         firstName: json['firstName'],
+        displayImageUrl: json['displayImageUrl'],
         lastName: json['lastName'],
         email: json['email'],
       );
@@ -43,5 +46,6 @@ class Customer extends JsonSerializable {
         "firstName": firstName,
         "lastName": lastName,
         "email": email,
+        "displayImageUrl": displayImageUrl,
       };
 }

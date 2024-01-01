@@ -30,57 +30,58 @@ class _SnippetDisplayPictureState extends State<SnippetDisplayPicture> {
       create: (context) => _viewModel,
       child: Consumer<ChangeDisplayPictureViewModel>(
         builder: (context, viewModel, child) {
-          return GestureDetector(
-            onTap: !authViewModel.isLoggedIn
-                ? null
-                : () async {
-                    // if new pp has not been selected
-                    if (viewModel.selectedImage == null) {
-                      final image = await ImagePickerHelper.pickImage(context);
-                      if (image != null) {
-                        viewModel.setSelectedImage(image);
-                        NavigationHelper.push(
-                          context,
-                          ChangeNotifierProvider.value(
-                            value: viewModel,
-                            child: const ChangeDisplayPictureScreen(),
-                          ),
-                        );
-                      }
-                      // if new pp has been selected
-                    } else {
-                      NavigationHelper.push(
-                        context,
-                        ChangeNotifierProvider.value(
-                          value: viewModel,
-                          child: const ChangeDisplayPictureScreen(),
-                        ),
-                      );
-                    }
-                  },
-            child: Stack(
-              children: [
-                ClipOval(
-                  child: authViewModel.isLoggedIn &&
-                          authViewModel.user?.displayImageUrl != null
-                      ? CachedNetworkImageWidget(
-                          placeHolder: ImageConstants.displayPicturePlaceHolder,
-                          image: authViewModel.user!.displayImageUrl!,
-                          fit: BoxFit.cover,
-                          height: SizeConfig.screenHeight * 0.1,
-                          width: SizeConfig.screenHeight * 0.1,
-                        )
-                      : Image.asset(
-                          ImageConstants.displayPicturePlaceHolder,
-                          height: SizeConfig.screenHeight * 0.1,
-                          width: SizeConfig.screenHeight * 0.1,
-                        ),
-                ),
-                // Edit icon
-                if (authViewModel.isLoggedIn)
-                  Positioned(
-                    right: 0,
-                    bottom: 4,
+          return Stack(
+            children: [
+              ClipOval(
+                child: authViewModel.isLoggedIn &&
+                        authViewModel.user?.displayImageUrl != null
+                    ? CachedNetworkImageWidget(
+                        placeHolder: ImageConstants.displayPicturePlaceHolder,
+                        image: authViewModel.user!.displayImageUrl!,
+                        fit: BoxFit.cover,
+                        height: SizeConfig.screenHeight * 0.1,
+                        width: SizeConfig.screenHeight * 0.1,
+                      )
+                    : Image.asset(
+                        ImageConstants.displayPicturePlaceHolder,
+                        height: SizeConfig.screenHeight * 0.1,
+                        width: SizeConfig.screenHeight * 0.1,
+                      ),
+              ),
+              // Edit icon
+              if (authViewModel.isLoggedIn)
+                Positioned(
+                  right: 0,
+                  bottom: 4,
+                  child: GestureDetector(
+                    onTap: !authViewModel.isLoggedIn
+                        ? null
+                        : () async {
+                            // if new pp has not been selected
+                            if (viewModel.selectedImage == null) {
+                              final image =
+                                  await ImagePickerHelper.pickImage(context);
+                              if (image != null) {
+                                viewModel.setSelectedImage(image);
+                                NavigationHelper.push(
+                                  context,
+                                  ChangeNotifierProvider.value(
+                                    value: viewModel,
+                                    child: const ChangeDisplayPictureScreen(),
+                                  ),
+                                );
+                              }
+                              // if new pp has been selected
+                            } else {
+                              NavigationHelper.push(
+                                context,
+                                ChangeNotifierProvider.value(
+                                  value: viewModel,
+                                  child: const ChangeDisplayPictureScreen(),
+                                ),
+                              );
+                            }
+                          },
                     child: CircleAvatar(
                       radius: 12,
                       backgroundColor: AppColors.primaryMain,
@@ -98,8 +99,8 @@ class _SnippetDisplayPictureState extends State<SnippetDisplayPicture> {
                       ),
                     ),
                   ),
-              ],
-            ),
+                ),
+            ],
           );
         },
       ),

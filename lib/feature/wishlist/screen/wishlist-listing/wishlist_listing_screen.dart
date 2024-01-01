@@ -3,7 +3,8 @@ import 'package:flamingo/feature/customer-activity/customer_activity_view_model.
 import 'package:flamingo/feature/wishlist/screen/wishlist-listing/snippet_wishlist_item.dart';
 import 'package:flamingo/feature/wishlist/screen/wishlist-listing/wishlist_listing_view_model.dart';
 import 'package:flamingo/shared/shared.dart';
-import 'package:flamingo/widget/shimmer/shimmer.dart';
+import 'package:flamingo/widget/error/default_error_widget.dart';
+import 'package:flamingo/widget/loader/default_screen_loader_widget.dart';
 import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
@@ -38,10 +39,24 @@ class _WishlistListingScreenState extends State<WishlistListingScreen> {
           scrollable: false,
           child: Consumer<WishlistListingViewModel>(
             builder: (context, viewModel, child) {
-              if (!viewModel.wishlistUseCase.hasCompleted) {
-                return const ProductViewShimmerWidget();
+              if (viewModel.wishlistUseCase.isLoading) {
+                return const DefaultScreenLoaderWidget();
+              }
+              if (viewModel.wishlistUseCase.hasError) {
+                return DefaultErrorWidget(
+                  errorMessage: viewModel.wishlistUseCase.exception!,
+                  onActionButtonPressed: () async {
+                    await _viewModel.getWishlist();
+                  },
+                );
               }
               final items = viewModel.wishlistUseCase.data?.rows ?? [];
+              if (items.isEmpty) {
+                return const DefaultErrorWidget(
+                  errorMessage:
+                      'You do not have any products in your wishlist.',
+                );
+              }
               return GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,

@@ -150,7 +150,8 @@ class _CartListingScreenState extends State<CartListingScreen> {
   }
 
   Widget _buildCheckoutButton(CartListingViewModel viewModel) {
-    if (!viewModel.cartUseCase.hasCompleted) return const SizedBox();
+    if (!viewModel.cartUseCase.hasCompleted ||
+        viewModel.cartUseCase.data!.rows.isEmpty) return const SizedBox();
     return Positioned(
       bottom: Dimens.spacingSizeDefault,
       right: Dimens.spacingSizeDefault,

@@ -57,6 +57,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       ],
       child: Consumer<ProductDetailViewModel>(
         builder: (context, viewModel, child) {
+          final images = [...viewModel.product.images];
+          images.addAll(viewModel.product.variants.map((e) => e.image.url));
           return DefaultScreen(
             scrollable: false,
             padding: EdgeInsets.zero,
@@ -74,9 +76,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           children: [
                             SnippetProductDetailImages(
                               productId: viewModel.product.id,
-                              images: viewModel.product.images
-                                ..addAll(viewModel.product.variants
-                                    .map((e) => e.image.url)),
+                              images: images,
                             ),
                             Padding(
                               padding: const EdgeInsets.symmetric(

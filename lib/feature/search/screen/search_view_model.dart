@@ -10,18 +10,18 @@ class SearchViewModel extends ChangeNotifier {
   SearchViewModel({required SearchRepository searchRepository})
       : _searchRepository = searchRepository;
 
-  Response<List<Product>> _searchedProductsUseCase = Response();
+  Response<List<Product>> _searchProductsUseCase = Response();
   List<Product> _recentlySearchedProducts = [];
   List<String> _searchTextHistory = [];
   String _title = '';
 
-  Response<List<Product>> get searchedProducts => _searchedProductsUseCase;
+  Response<List<Product>> get searchProductsUseCase => _searchProductsUseCase;
   List<Product> get recentlySearchedProducts => _recentlySearchedProducts;
   List<String> get searchTextHistory => _searchTextHistory;
   String get title => _title;
 
-  void setSendOtpUseCase(Response<List<Product>> response) {
-    _searchedProductsUseCase = response;
+  void setSearchProductsUseCase(Response<List<Product>> response) {
+    _searchProductsUseCase = response;
     notifyListeners();
   }
 
@@ -38,13 +38,12 @@ class SearchViewModel extends ChangeNotifier {
 
   clearSearchHistory() {
     _searchRepository.clearSearchHistory();
-    _searchedProductsUseCase.data = [];
+    _searchProductsUseCase.data = [];
   }
 
   searchProducts(String text, {bool isNewSearch = true}) async {
     try {
       if (isNewSearch) {
-        _searchedProductsUseCase = Response.loading();
         _title = 'Search Result :';
         // _offset = 0;
 
@@ -53,19 +52,18 @@ class SearchViewModel extends ChangeNotifier {
         removeSearchedText(text);
         _searchTextHistory.add(text);
         _searchRepository.saveSearchedText(_searchTextHistory);
-        notifyListeners();
+        setSearchProductsUseCase(Response.loading());
       }
 
       final response =
           await _searchRepository.searchProducts(SearchRequest(key: text));
       if (isNewSearch) {
-        _searchedProductsUseCase.data?.clear();
+        _searchProductsUseCase.data?.clear();
       }
-      _searchedProductsUseCase.data?.addAll(response.rows);
-
+      _searchProductsUseCase.data?.addAll(response.rows);
       notifyListeners();
     } catch (exception) {
-      _searchedProductsUseCase = Response.error(exception);
+      setSearchProductsUseCase(Response.error(exception));
     }
   }
 }

@@ -1,4 +1,3 @@
-import 'package:flamingo/feature/product/data/model/product.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/image/cached_network_image_widget.dart';
 import 'package:flutter/material.dart';
@@ -8,11 +7,11 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 class ProductDetailImageScreen extends StatefulWidget {
   const ProductDetailImageScreen({
     Key? key,
-    required this.variants,
+    required this.images,
     required this.selectedIndex,
   }) : super(key: key);
 
-  final List<ProductVariant> variants;
+  final List<String> images;
   final int selectedIndex;
 
   @override
@@ -57,10 +56,10 @@ class _ProductDetailImageScreenState extends State<ProductDetailImageScreen> {
             // Interactive Image
             PageView.builder(
               controller: _pageController,
-              itemCount: widget.variants.length,
+              itemCount: widget.images.length,
               itemBuilder: (context, index) => InteractiveViewer(
                 child: CachedNetworkImageWidget(
-                  image: widget.variants[index].image.url,
+                  image: widget.images[index],
                   fit: BoxFit.fitWidth,
                 ),
               ),
@@ -92,18 +91,18 @@ class _ProductDetailImageScreenState extends State<ProductDetailImageScreen> {
             ),
 
             // Images List
-            if (widget.variants.length > 1)
+            if (widget.images.length > 1)
               Positioned(
                 bottom: 10,
                 child: SmoothPageIndicator(
                   controller: _pageController,
-                  count: widget.variants.length,
+                  count: widget.images.length,
                   effect: ColorTransitionEffect(
                     dotHeight: 2.5,
                     dotWidth: (SizeConfig.screenWidth -
                             5 -
                             2 * Dimens.spacingSizeDefault) /
-                        widget.variants.length,
+                        widget.images.length,
                     spacing: 5,
                     activeDotColor: AppColors.primaryMain,
                   ),

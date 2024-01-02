@@ -11,6 +11,7 @@ class Product {
   final Vendor vendor;
   final List<String> tags;
   final List<ProductVariant> variants;
+  final List<String> images;
   final bool isInWishlist;
 
   Product({
@@ -22,6 +23,7 @@ class Product {
     required this.tags,
     required this.variants,
     required this.isInWishlist,
+    required this.images,
   });
 
   factory Product.fromJson(Map<String, dynamic> json) => Product(
@@ -33,6 +35,9 @@ class Product {
         tags: List<String>.from(
             json['productToTag'].map((e) => e['productTag']['name'])),
         variants: ProductVariant.fromJsonList(json['variants']),
+        images: json['images'] == null
+            ? []
+            : List<String>.from(json['images'].map((e) => e['imageUrl'])),
         isInWishlist: json['wishlist'] == null
             ? false
             : List.from(json['wishlist']).isNotEmpty,

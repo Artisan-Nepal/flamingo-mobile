@@ -74,7 +74,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           children: [
                             SnippetProductDetailImages(
                               productId: viewModel.product.id,
-                              variants: viewModel.product.variants,
+                              images: viewModel.product.images
+                                ..addAll(viewModel.product.variants
+                                    .map((e) => e.image.url)),
                             ),
                             Padding(
                               padding: const EdgeInsets.symmetric(

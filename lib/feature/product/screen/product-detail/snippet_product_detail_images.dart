@@ -1,4 +1,3 @@
-import 'package:flamingo/feature/product/data/model/product.dart';
 import 'package:flamingo/feature/product/screen/product-detail/product_detail_app_bar_view_model.dart';
 import 'package:flamingo/feature/product/screen/product-detail/product_detail_images_screen.dart';
 import 'package:flamingo/shared/shared.dart';
@@ -12,11 +11,11 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 class SnippetProductDetailImages extends StatefulWidget {
   const SnippetProductDetailImages({
     Key? key,
-    required this.variants,
+    required this.images,
     required this.productId,
   }) : super(key: key);
 
-  final List<ProductVariant> variants;
+  final List<String> images;
   final String productId;
 
   @override
@@ -47,19 +46,19 @@ class _SnippetProductDetailImagesState
         children: [
           PageView.builder(
             controller: _pageController,
-            itemCount: widget.variants.length,
+            itemCount: widget.images.length,
             itemBuilder: (context, index) => GestureDetector(
               onTap: () {
                 NavigationHelper.pushWithoutAnimation(
                   context,
                   ProductDetailImageScreen(
-                    variants: widget.variants,
+                    images: widget.images,
                     selectedIndex: index,
                   ),
                 );
               },
               child: CachedNetworkImageWidget(
-                image: widget.variants[index].image.url,
+                image: widget.images[index],
                 fit: BoxFit.cover,
               ),
             ),
@@ -72,17 +71,17 @@ class _SnippetProductDetailImagesState
   }
 
   Widget _buildIndicator() {
-    if (widget.variants.length < 2) return const SizedBox();
+    if (widget.images.length < 2) return const SizedBox();
     return Positioned(
       bottom: 10,
       child: SmoothPageIndicator(
         controller: _pageController,
-        count: widget.variants.length,
+        count: widget.images.length,
         effect: ColorTransitionEffect(
           dotHeight: 2.5,
           dotWidth:
               (SizeConfig.screenWidth - 5 - 2 * Dimens.spacingSizeDefault) /
-                  widget.variants.length,
+                  widget.images.length,
           spacing: 5,
           activeDotColor: AppColors.primaryMain,
         ),

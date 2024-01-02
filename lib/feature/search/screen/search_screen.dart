@@ -11,9 +11,29 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
+  final _searchController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: SearchBarFieldWidget(
+          controller: _searchController,
+          autofocus: true,
+        ),
+        actions: [
+          TextButtonWidget(
+            label: 'Cancel',
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+            padding: EdgeInsets.zero,
+            onPressed: () {
+              NavigationHelper.pop(context);
+            },
+          )
+        ],
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -23,26 +43,6 @@ class _SearchScreenState extends State<SearchScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const VerticalSpaceWidget(height: Dimens.spacingSizeDefault),
-                Row(
-                  children: [
-                    Expanded(
-                      child: SearchBarFieldWidget(
-                        autofocus: true,
-                      ),
-                    ),
-                    TextButtonWidget(
-                      label: 'Cancel',
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      padding: EdgeInsets.only(
-                        left: 10,
-                      ),
-                      onPressed: () {
-                        NavigationHelper.pop(context);
-                      },
-                    )
-                  ],
-                ),
               ],
             ),
           ),

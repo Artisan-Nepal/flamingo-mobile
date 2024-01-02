@@ -7,4 +7,22 @@ class SearchLocalImpl implements SearchLocal {
 
   SearchLocalImpl({required LocalStorageClient sharedPrefManager})
       : _sharedPrefManager = sharedPrefManager;
+
+  @override
+  Future<void> clearSearchHistory() async {
+    await _sharedPrefManager.remove(LocalStorageKeys.searchedTextHistory);
+  }
+
+  @override
+  Future<List<String>> getSearchedText() async {
+    return (await _sharedPrefManager
+            .getStringList(LocalStorageKeys.searchedTextHistory)) ??
+        [];
+  }
+
+  @override
+  Future<void> saveSearchedText(List<String> texts) async {
+    await _sharedPrefManager.setStringList(
+        LocalStorageKeys.searchedTextHistory, texts);
+  }
 }

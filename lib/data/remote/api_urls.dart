@@ -1,6 +1,5 @@
 class ApiUrls {
-  static String baseUrl =
-      'https://1587-2400-1a00-b080-2fd3-acb7-c640-282e-68d1.ngrok-free.app/api';
+  static String baseUrl = 'https://e3f1-202-51-76-36.ngrok-free.app//api';
 
   // AUTH
   static String sendLoginOtp = '/auth/send-otp';
@@ -14,6 +13,7 @@ class ApiUrls {
   static String citiesbyProvince = '/cities/province';
   static String areasByCity = '/areas/city';
   static String products = '/products';
+  static String productSearch = '/products/search';
   static String productsByVendorId = '/products/vendor/:id';
   static String productsByCategoryId = '/products/category/:id';
   static String carts = '/carts';

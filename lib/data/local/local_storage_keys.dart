@@ -4,4 +4,5 @@ class LocalStorageKeys {
   static const String accessToken = "access_token";
   static const String themeMode = 'theme_mode';
   static const String user = 'user';
+  static const String searchedTextHistory = 'searched_text_history';
 }

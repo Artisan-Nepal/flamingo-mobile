@@ -1,6 +1,6 @@
 class ApiUrls {
   static String baseUrl =
-      'https://56a0-2400-1a00-b080-2fd3-ac5c-8166-b5d6-baa1.ngrok-free.app/api';
+      'https://1587-2400-1a00-b080-2fd3-acb7-c640-282e-68d1.ngrok-free.app/api';
 
   // AUTH
   static String sendLoginOtp = '/auth/send-otp';

@@ -22,6 +22,7 @@ class ButtonWidget extends StatelessWidget {
     ),
     this.loaderSize = 24,
     this.borderRaidus,
+    this.fontWeight,
   }) : super(key: key);
 
   final String label;
@@ -40,6 +41,7 @@ class ButtonWidget extends StatelessWidget {
   final double loaderSize;
   final Color? textColor;
   final BorderRadius? borderRaidus;
+  final FontWeight? fontWeight;
 
   @override
   Widget build(BuildContext context) {
@@ -52,6 +54,7 @@ class ButtonWidget extends StatelessWidget {
     final textStyle = TypographyStyles.bodyLarge.copyWith(
       color: themedTextColor,
       fontSize: fontSize,
+      fontWeight: fontWeight,
     );
     return SizedBox(
       width: width,

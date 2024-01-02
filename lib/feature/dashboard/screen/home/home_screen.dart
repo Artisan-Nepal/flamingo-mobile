@@ -1,3 +1,4 @@
+import 'package:flamingo/feature/search/screen/search_screen.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/material.dart';
@@ -9,9 +10,14 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -24,6 +30,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 const VerticalSpaceWidget(height: Dimens.spacingSizeDefault),
                 _buildAppBar(),
                 const VerticalSpaceWidget(height: Dimens.spacingSizeDefault),
+                SearchBarFieldWidget(
+                  readOnly: true,
+                  onTap: () {
+                    NavigationHelper.pushWithoutAnimation(
+                      context,
+                      const SearchScreen(),
+                    );
+                  },
+                ),
               ],
             ),
           ),

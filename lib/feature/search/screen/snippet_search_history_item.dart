@@ -22,9 +22,11 @@ class SnippetSearchHistoryItem extends StatelessWidget {
         GestureDetector(
           onTap: onTap,
           child: Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: Dimens.spacingSizeDefault,
-                vertical: Dimens.spacingSizeExtraSmall,
+              padding: const EdgeInsets.only(
+                left: Dimens.spacingSizeSmall,
+                right: Dimens.spacingSizeExtraSmall,
+                top: Dimens.spacingSizeExtraSmall,
+                bottom: Dimens.spacingSizeExtraSmall,
               ),
               margin: const EdgeInsets.only(
                 left: Dimens.spacingSizeDefault,
@@ -32,22 +34,25 @@ class SnippetSearchHistoryItem extends StatelessWidget {
               ),
               decoration: BoxDecoration(
                 border: Border.all(color: AppColors.primaryMain),
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(Dimens.radiusSmall),
               ),
-              child: Text(title)),
-        ),
-        const SizedBox(width: 5),
-        GestureDetector(
-          onTap: onCancel,
-          child: const Padding(
-            padding: EdgeInsets.only(
-              bottom: Dimens.spacingSizeDefault,
-            ),
-            child: Icon(
-              Icons.cancel,
-              color: AppColors.primaryMain,
-            ),
-          ),
+              child: Row(
+                children: [
+                  Text(
+                    title,
+                    style: textTheme(context).bodySmall,
+                  ),
+                  const SizedBox(width: 5),
+                  GestureDetector(
+                    onTap: onCancel,
+                    child: Icon(
+                      Icons.close,
+                      size: Dimens.iconSize_15,
+                      color: AppColors.primaryMain,
+                    ),
+                  ),
+                ],
+              )),
         ),
       ],
     );

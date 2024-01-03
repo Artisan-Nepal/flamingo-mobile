@@ -1,4 +1,5 @@
 import 'package:flamingo/di/di.dart';
+import 'package:flamingo/feature/product/screen/product-listing/snippet_product_listing.dart';
 import 'package:flamingo/feature/search/screen/search_view_model.dart';
 import 'package:flamingo/feature/search/screen/snippet_search_history_item.dart';
 import 'package:flamingo/shared/shared.dart';
@@ -31,35 +32,32 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => _viewModel,
-      child: Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          title: SearchBarFieldWidget(
-            controller: _searchController,
-            autofocus: true,
-            onSubmitted: (text) {
-              if (text != null && text.isNotEmpty) {
-                _viewModel.searchProducts(text);
-              }
-            },
-          ),
-          actions: [
-            TextButtonWidget(
-              label: 'Cancel',
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
-              padding: EdgeInsets.zero,
-              onPressed: () {
-                NavigationHelper.pop(context);
-              },
-            )
-          ],
-        ),
-        body: Consumer<SearchViewModel>(
-          builder: (context, viewModel, child) {
-            if (viewModel.searchProductsUseCase.isLoading) {
-              return const DefaultScreenLoaderWidget();
+      child: DefaultScreen(
+        scrollable: false,
+        automaticallyImplyAppBarLeading: false,
+        appBarTitle: SearchBarFieldWidget(
+          controller: _searchController,
+          autofocus: true,
+          onSubmitted: (text) {
+            if (text != null && text.isNotEmpty) {
+              _viewModel.searchProducts(text);
             }
+          },
+        ),
+        appBarActions: [
+          TextButtonWidget(
+            label: 'Cancel',
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+            padding: EdgeInsets.zero,
+            onPressed: () {
+              NavigationHelper.pop(context);
+            },
+          )
+        ],
+        padding: EdgeInsets.zero,
+        child: Consumer<SearchViewModel>(
+          builder: (context, viewModel, child) {
             if (viewModel.searchProductsUseCase.hasError) {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -75,18 +73,48 @@ class _SearchScreenState extends State<SearchScreen> {
                 ],
               );
             }
-            return SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: Dimens.spacingSizeSmall),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const VerticalSpaceWidget(
-                        height: Dimens.spacingSizeDefault),
-                  ],
+            final products = viewModel.searchProductsUseCase.data ?? [];
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (viewModel.searchTextHistory.isNotEmpty)
+                  _buildSearchHistory(viewModel),
+                Expanded(
+                  child: Container(
+                    child: viewModel.searchProductsUseCase.isLoading
+                        ? const DefaultScreenLoaderWidget(
+                            manuallyCenter: true,
+                            manualTop: 0.1,
+                          )
+                        : viewModel.searchProductsUseCase.hasError
+                            ? DefaultErrorWidget(
+                                manuallyCenter: true,
+                                manualTop: 0.1,
+                                errorMessage:
+                                    viewModel.searchProductsUseCase.exception ??
+                                        "",
+                              )
+                            : !viewModel.searchProductsUseCase.hasCompleted
+                                ? const SizedBox()
+                                : products.isEmpty
+                                    ? DefaultErrorWidget(
+                                        manuallyCenter: true,
+                                        manualTop: 0.1,
+                                        errorMessage:
+                                            'Sorry, no products found',
+                                      )
+                                    : Padding(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: Dimens.spacingSizeDefault,
+                                        ),
+                                        child: SnippetProductListing(
+                                          products: products,
+                                          shrinkWrap: false,
+                                        ),
+                                      ),
+                  ),
                 ),
-              ),
+              ],
             );
           },
         ),
@@ -98,18 +126,18 @@ class _SearchScreenState extends State<SearchScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: Dimens.spacingSizeDefault,
-            vertical: Dimens.spacingSizeSmall,
-          ),
-          child: Text(
-            'Search History :',
-            style: TextStyle(
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
+        // const Padding(
+        //   padding: EdgeInsets.symmetric(
+        //     horizontal: Dimens.spacingSizeDefault,
+        //     vertical: Dimens.spacingSizeSmall,
+        //   ),
+        //   child: Text(
+        //     'Search History :',
+        //     style: TextStyle(
+        //       fontWeight: FontWeight.w600,
+        //     ),
+        //   ),
+        // ),
         Wrap(
           children:
               List<Widget>.generate(viewModel.searchTextHistory.length, (i) {
@@ -118,6 +146,7 @@ class _SearchScreenState extends State<SearchScreen> {
               title: viewModel.searchTextHistory[index],
               onTap: () {
                 _searchController.text = viewModel.searchTextHistory[index];
+                FocusScope.of(context).unfocus();
                 viewModel.searchProducts(viewModel.searchTextHistory[index]);
               },
               onCancel: () {

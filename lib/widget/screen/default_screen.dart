@@ -24,7 +24,6 @@ class DefaultScreen extends StatelessWidget {
     this.bottomNavBarWithButtonLabel,
     this.bottomNavBarWithButtonOnPressed,
     this.isLoading = false,
-    this.onRefresh,
   });
 
   final Widget child;
@@ -43,7 +42,6 @@ class DefaultScreen extends StatelessWidget {
   final String? bottomNavBarWithButtonLabel;
   final VoidCallback? bottomNavBarWithButtonOnPressed;
   final bool isLoading;
-  final Future<void> Function()? onRefresh;
 
   @override
   Widget build(BuildContext context) {
@@ -53,61 +51,60 @@ class DefaultScreen extends StatelessWidget {
         statusBarIconBrightness: statusBarIconBrightness ??
             (isLightMode(context) ? Brightness.dark : Brightness.light),
       ),
-      child: Scaffold(
-        appBar: needAppBar
-            ? AppBar(
-                title: appBarTitle,
-                actions: appBarActions,
-                leading: appBarLeading ??
-                    (NavigationHelper.canPop(context) &&
-                            automaticallyImplyAppBarLeading
-                        ? GestureDetector(
-                            onTap: () {
-                              NavigationHelper.pop(context);
-                            },
-                            child: const Icon(
-                              CupertinoIcons.back,
-                              size: Dimens.iconSizeLarge,
-                            ),
-                          )
-                        : null),
-                automaticallyImplyLeading: automaticallyImplyAppBarLeading,
-              )
-            : null,
-        body: _buildBody(),
-        bottomNavigationBar: Padding(
-          padding: const EdgeInsets.all(Dimens.spacingSizeDefault),
-          child: bottomNavBarWithButton
-              ? FilledButtonWidget(
-                  label: bottomNavBarWithButtonLabel ?? "",
-                  onPressed: bottomNavBarWithButtonOnPressed,
-                  isLoading: isLoading,
-                )
-              : bottomNavigationBar,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildBody() {
-    return NotificationListener<OverscrollIndicatorNotification>(
-      onNotification: (notification) {
-        notification.disallowIndicator();
-        return false;
-      },
       child: GestureDetector(
-        child: scrollable
-            ? SingleChildScrollView(
-                controller: scrollController,
-                child: Padding(
-                  padding: padding,
-                  child: child,
-                ),
-              )
-            : Padding(
-                padding: padding,
-                child: child,
-              ),
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: Scaffold(
+          appBar: needAppBar
+              ? AppBar(
+                  title: appBarTitle,
+                  actions: appBarActions,
+                  leading: appBarLeading ??
+                      (NavigationHelper.canPop(context) &&
+                              automaticallyImplyAppBarLeading
+                          ? GestureDetector(
+                              onTap: () {
+                                NavigationHelper.pop(context);
+                              },
+                              child: const Icon(
+                                CupertinoIcons.back,
+                                size: Dimens.iconSizeLarge,
+                              ),
+                            )
+                          : null),
+                  automaticallyImplyLeading: automaticallyImplyAppBarLeading,
+                )
+              : null,
+          body: NotificationListener<OverscrollIndicatorNotification>(
+            onNotification: (notification) {
+              notification.disallowIndicator();
+              return false;
+            },
+            child: scrollable
+                ? SingleChildScrollView(
+                    controller: scrollController,
+                    child: Padding(
+                      padding: padding,
+                      child: child,
+                    ),
+                  )
+                : Padding(
+                    padding: padding,
+                    child: child,
+                  ),
+          ),
+          bottomNavigationBar: Padding(
+            padding: const EdgeInsets.all(Dimens.spacingSizeDefault),
+            child: bottomNavBarWithButton
+                ? FilledButtonWidget(
+                    label: bottomNavBarWithButtonLabel ?? "",
+                    onPressed: bottomNavBarWithButtonOnPressed,
+                    isLoading: isLoading,
+                  )
+                : bottomNavigationBar,
+          ),
+        ),
       ),
     );
   }

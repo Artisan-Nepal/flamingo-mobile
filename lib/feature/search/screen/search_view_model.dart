@@ -25,6 +25,16 @@ class SearchViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void appendSearchProductsUseCase(List<Product> products) {
+    if (_searchProductsUseCase.data != null) {
+      _searchProductsUseCase.data!.addAll(products);
+    } else {
+      _searchProductsUseCase.data = [...products];
+    }
+    _searchProductsUseCase.state = ResponseState.complete;
+    notifyListeners();
+  }
+
   void init() async {
     _searchTextHistory = await _searchRepository.getSearchedText();
     notifyListeners();
@@ -57,11 +67,12 @@ class SearchViewModel extends ChangeNotifier {
 
       final response =
           await _searchRepository.searchProducts(SearchRequest(key: text));
+
       if (isNewSearch) {
-        _searchProductsUseCase.data?.clear();
+        setSearchProductsUseCase(Response.complete(response.rows));
+      } else {
+        appendSearchProductsUseCase(response.rows);
       }
-      _searchProductsUseCase.data?.addAll(response.rows);
-      notifyListeners();
     } catch (exception) {
       setSearchProductsUseCase(Response.error(exception));
     }

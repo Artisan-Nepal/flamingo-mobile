@@ -8,9 +8,11 @@ class SnippetProductListing extends StatelessWidget {
   const SnippetProductListing({
     super.key,
     required this.products,
+    this.shrinkWrap = true,
   });
 
   final List<Product> products;
+  final bool shrinkWrap;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +20,7 @@ class SnippetProductListing extends StatelessWidget {
       mainAxisSpacing: Dimens.spacingSizeSmall,
       crossAxisSpacing: Dimens.spacingSizeSmall,
       itemCount: products.length,
-      shrinkWrap: true,
+      shrinkWrap: shrinkWrap,
       gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
       ),

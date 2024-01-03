@@ -5,4 +5,5 @@ abstract class ProductRemote {
   Future<FetchResponse<Product>> getVendorProducts(String vendorId);
   Future<FetchResponse<Product>> getProducts();
   Future<FetchResponse<Product>> getCategoryProducts(String categoryId);
+  Future<Product> getSingleProduct(String productId);
 }

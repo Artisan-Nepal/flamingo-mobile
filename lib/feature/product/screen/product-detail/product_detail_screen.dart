@@ -19,10 +19,12 @@ class ProductDetailScreen extends StatefulWidget {
     super.key,
     this.product,
     required this.productId,
+    required this.title,
   });
 
   final Product? product;
   final String productId;
+  final String title;
 
   @override
   State<ProductDetailScreen> createState() => _ProductDetailScreenState();
@@ -37,7 +39,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   @override
   void initState() {
     super.initState();
-    _viewModel.setProduct(widget.product);
+    _viewModel.setProduct(widget.productId, widget.product);
     _appBarViewModel.init();
     _scrollController.addListener(() {
       _appBarViewModel.setScrollOffset(_scrollController.offset);
@@ -57,8 +59,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       ],
       child: Consumer<ProductDetailViewModel>(
         builder: (context, viewModel, child) {
-          final images = [...viewModel.product.images];
-          images.addAll(viewModel.product.variants.map((e) => e.image.url));
+          final images = [...viewModel.productUseCase.data!.images];
+          images.addAll(
+              viewModel.productUseCase.data!.variants.map((e) => e.image.url));
           return DefaultScreen(
             scrollable: false,
             padding: EdgeInsets.zero,
@@ -75,7 +78,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             SnippetProductDetailImages(
-                              productId: viewModel.product.id,
+                              productId: viewModel.productUseCase.data!.id,
                               images: images,
                             ),
                             Padding(
@@ -90,7 +93,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                   const VerticalSpaceWidget(
                                       height: Dimens.spacingSizeDefault),
                                   Html(
-                                    data: viewModel.product.body,
+                                    data: viewModel.productUseCase.data!.body,
                                   ),
                                   const VerticalSpaceWidget(
                                       height: Dimens.spacingSizeDefault),
@@ -140,7 +143,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       ),
                     ],
                   ),
-                  const SnippetProductDetailAppBar(),
+                  SnippetProductDetailAppBar(
+                    title: widget.title,
+                  ),
                   _buildAddToBagButton(viewModel),
                 ],
               ),
@@ -236,14 +241,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   List<Widget> _buildProductInformation(ProductDetailViewModel viewModel) {
     return [
       TextWidget(
-        viewModel.product.vendor.storeName,
+        viewModel.productUseCase.data!.vendor.storeName,
         textOverflow: TextOverflow.ellipsis,
         style: textTheme(context).bodyMedium!.copyWith(
               fontWeight: FontWeight.bold,
             ),
       ),
       TextWidget(
-        viewModel.product.title,
+        viewModel.productUseCase.data!.title,
         textOverflow: TextOverflow.ellipsis,
         style: textTheme(context).bodyMedium!,
       ),

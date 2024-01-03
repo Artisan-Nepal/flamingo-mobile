@@ -118,6 +118,7 @@ class _SnippetWishListItemState extends State<SnippetWishListItem> {
       ProductDetailScreen(
         productId: widget.item.id,
         product: widget.item.product,
+        title: widget.item.product.title,
       ),
     );
   }

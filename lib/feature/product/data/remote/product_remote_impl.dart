@@ -36,4 +36,11 @@ class ProductRemoteImpl implements ProductRemote {
       Product.fromJsonList,
     );
   }
+
+  @override
+  Future<Product> getSingleProduct(String productId) async {
+    final url = ApiUrls.products + '/$productId';
+    final apiResponse = await _apiClient.get(url);
+    return Product.fromJson(apiResponse.data);
+  }
 }

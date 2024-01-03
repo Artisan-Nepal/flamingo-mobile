@@ -22,11 +22,11 @@ class ProductDetailViewModel extends ChangeNotifier {
   })  : _productRepository = productRepository,
         _cartRepository = cartRepository;
 
-  late Product _product;
+  late Response<Product> _productUseCase;
   late ProductColor _selectedColor;
   late ProductSizeOption _selectedSizeOption;
 
-  Product get product => _product;
+  Response<Product> get productUseCase => _productUseCase;
   ProductColor get selectedColor => _selectedColor;
   ProductSizeOption get selectedSizeOption => _selectedSizeOption;
 
@@ -39,15 +39,27 @@ class ProductDetailViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  setProduct(Product? product) {
-    if (product != null) {
-      _product = product;
-    } else {
-      // get from api
-    }
-    _selectedColor = _product.variants.first.color;
+  void setProductUseCase(Response<Product> response) {
+    _productUseCase = response;
+    notifyListeners();
+  }
 
-    _selectedSizeOption = _product.variants.first.size;
+  setProduct(String productId, Product? product) async {
+    if (product != null) {
+      setProductUseCase(Response.complete(product));
+    } else {
+      try {
+        final response = await _productRepository.getSingleProduct(productId);
+        setProductUseCase(Response.complete(response));
+      } catch (exception) {
+        setProductUseCase(Response.error(exception));
+      }
+    }
+    if (_productUseCase.hasCompleted) {
+      _selectedColor = _productUseCase.data!.variants.first.color;
+
+      _selectedSizeOption = _productUseCase.data!.variants.first.size;
+    }
   }
 
   setSelectedColor(ProductColor color) {
@@ -62,7 +74,7 @@ class ProductDetailViewModel extends ChangeNotifier {
 
   List<ProductColor> get availableColors {
     final List<ProductColor> colors = [];
-    for (var variant in _product.variants) {
+    for (var variant in _productUseCase.data!.variants) {
       if (!colors.any((color) => color.id == variant.color.id)) {
         colors.add(variant.color);
       }
@@ -72,7 +84,7 @@ class ProductDetailViewModel extends ChangeNotifier {
 
   List<ProductSizeOption> get availableSizes {
     final List<ProductSizeOption> sizes = [];
-    for (var variant in _product.variants) {
+    for (var variant in _productUseCase.data!.variants) {
       if (!sizes.any((size) => size.id == variant.size.id)) {
         sizes.add(variant.size);
       }
@@ -86,7 +98,7 @@ class ProductDetailViewModel extends ChangeNotifier {
 
   ProductVariant getVariantByColorAndSize(
       ProductColor color, ProductSizeOption? size) {
-    return product.variants.firstWhere((variant) =>
+    return productUseCase.data!.variants.firstWhere((variant) =>
         variant.color.id == color.id && variant.size.id == size?.id);
   }
 

@@ -26,7 +26,7 @@ class _SnippetAddToCartSummaryBottomSheetState
     return BottomSheetWidget(
       child: Consumer<ProductDetailViewModel>(
         builder: (context, viewModel, child) {
-          final product = viewModel.product;
+          final product = viewModel.productUseCase.data!;
           final variant = viewModel.selectedVariant;
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,

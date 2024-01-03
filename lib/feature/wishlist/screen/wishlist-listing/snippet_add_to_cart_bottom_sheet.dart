@@ -31,7 +31,7 @@ class _SnippetAddToCartBottomSheetState
   @override
   void initState() {
     super.initState();
-    _viewModel.setProduct(widget.product);
+    _viewModel.setProduct(widget.product.id, widget.product);
   }
 
   @override
@@ -42,7 +42,7 @@ class _SnippetAddToCartBottomSheetState
         return BottomSheetWidget(
           child: Consumer<ProductDetailViewModel>(
             builder: (context, viewModel, child) {
-              final product = viewModel.product;
+              final product = viewModel.productUseCase.data!;
               final variant = viewModel.selectedVariant;
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

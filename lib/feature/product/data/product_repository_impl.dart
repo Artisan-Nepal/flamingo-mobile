@@ -34,4 +34,9 @@ class ProductRepositoryImpl implements ProductRepository {
   Future<FetchResponse<Product>> getProducts() async {
     return await _productRemote.getProducts();
   }
+
+  @override
+  Future<Product> getSingleProduct(String productId) async {
+    return await _productRemote.getSingleProduct(productId);
+  }
 }

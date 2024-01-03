@@ -8,7 +8,12 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class SnippetProductDetailAppBar extends StatelessWidget {
-  const SnippetProductDetailAppBar({super.key});
+  const SnippetProductDetailAppBar({
+    super.key,
+    required this.title,
+  });
+
+  final String title;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +40,7 @@ class SnippetProductDetailAppBar extends StatelessWidget {
                     statusBarColor: Colors.transparent,
                     statusBarIconBrightness: Brightness.dark),
                 title: Text(
-                  productDetailViewModel.product.title,
+                  title,
                   style: TextStyle(
                     color: Color.lerp(
                       Colors.transparent,

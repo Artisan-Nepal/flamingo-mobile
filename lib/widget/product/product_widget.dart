@@ -27,6 +27,7 @@ class ProductWidget extends StatelessWidget {
           ProductDetailScreen(
             productId: product.id,
             product: product,
+            title: product.title,
           ),
         );
       },

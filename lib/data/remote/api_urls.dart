@@ -1,6 +1,5 @@
 class ApiUrls {
-  static String baseUrl =
-      'https://4669-2400-1a00-b080-2fd3-618c-a8b3-10aa-cad7.ngrok-free.app/api';
+  static String baseUrl = 'http://10.0.2.2:8848/api';
 
   // AUTH
   static String sendLoginOtp = '/auth/send-otp';
@@ -28,4 +27,5 @@ class ApiUrls {
   static String orders = '/orders';
   static String vendors = '/vendors';
   static String customersCountInfo = '/customers/count-info';
+  static String advertisements = '/advertisements';
 }

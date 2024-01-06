@@ -28,4 +28,11 @@ class UploadFileResponse {
       'mimetype': mimetype,
     };
   }
+
+  static List<UploadFileResponse> fromJsonList(dynamic json) =>
+      List<UploadFileResponse>.from(
+        json.map(
+          (data) => UploadFileResponse.fromJson(data),
+        ),
+      );
 }

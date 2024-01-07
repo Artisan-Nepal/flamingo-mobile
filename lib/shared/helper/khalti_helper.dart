@@ -18,7 +18,7 @@ class KhaltiHelper {
         amount: amount,
         productIdentity: productId,
         productName: productName,
-        productUrl: 'https://www.khalti.com/#/bazaar',
+        productUrl: productUrl,
         mobile: mobileNumber,
         additionalData: additionalData);
     await KhaltiScope.of(context).pay(

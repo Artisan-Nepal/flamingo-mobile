@@ -3,6 +3,7 @@ import 'package:flamingo/feature/advertisement/screen/advertisement_screen.dart'
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/image/cached_network_image_widget.dart';
 import 'package:flamingo/widget/widget.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -101,7 +102,7 @@ class _SnippetHomeAdvertisementState extends State<SnippetHomeAdvertisement> {
                       },
                       image: advertisements[index].images.first.url,
                       title: advertisements[index].title,
-                      body: advertisements[index].description,
+                      body: advertisements[index].vendor.storeName,
                     );
                   },
                 ),
@@ -183,29 +184,37 @@ class SninppetHomeAdvertisementItem extends StatelessWidget {
               ),
             ),
             VerticalSpaceWidget(height: Dimens.spacingSizeDefault),
-            Container(
-              padding: const EdgeInsets.only(right: Dimens.spacingSizeDefault),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: Dimens.fontSizeExtraLarge,
-                        color: AppColors.black),
+            Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: Dimens.fontSizeExtraLarge,
+                            color: AppColors.black),
+                      ),
+                      VerticalSpaceWidget(height: Dimens.spacingSizeExtraSmall),
+                      Text(
+                        body,
+                        style: const TextStyle(
+                          fontSize: Dimens.fontSizeLarge,
+                          color: AppColors.primaryMain,
+                        ),
+                        textAlign: TextAlign.right,
+                      )
+                    ],
                   ),
-                  VerticalSpaceWidget(height: Dimens.spacingSizeExtraSmall),
-                  Text(
-                    body,
-                    style: const TextStyle(
-                      fontSize: Dimens.fontSizeLarge,
-                      color: AppColors.primaryMain,
-                    ),
-                    textAlign: TextAlign.right,
-                  )
-                ],
-              ),
+                ),
+                HorizontalSpaceWidget(width: Dimens.spacingSizeDefault),
+                Icon(
+                  Icons.arrow_forward,
+                  color: AppColors.grayDark,
+                ),
+              ],
             ),
           ],
         ),

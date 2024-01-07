@@ -1,4 +1,5 @@
 import 'package:flamingo/feature/feature.dart';
+import 'package:flamingo/feature/order/data/model/order_status.dart';
 import 'package:flamingo/feature/product/data/model/product.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flutter/material.dart';
@@ -134,4 +135,21 @@ String getFullName({String? firstName, String? middleName, String? lastName}) {
   }
 
   return nameParts.join(' ');
+}
+
+Color getOrderStatusColor(String code) {
+  switch (code) {
+    case 'PENDING':
+      return AppColors.warning;
+    case 'PROCESSING':
+      return AppColors.info;
+    case 'OUT_FOR_DELIVERY':
+      return AppColors.success;
+    case 'DELIVERED':
+      return AppColors.black;
+    case 'CANCELLED':
+      return AppColors.error;
+    default:
+      return AppColors.grayMain;
+  }
 }

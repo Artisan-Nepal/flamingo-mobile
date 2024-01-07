@@ -37,6 +37,7 @@ class SnippetOrderListingTab extends StatelessWidget {
                   showStatus: showStatus,
                 ),
               );
-            });
+            },
+          );
   }
 }

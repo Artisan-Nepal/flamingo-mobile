@@ -8,13 +8,40 @@ class SnippetProductListing extends StatelessWidget {
     super.key,
     required this.products,
     this.shrinkWrap = true,
+    this.useSliver = false,
+    this.padding = Dimens.spacingSizeDefault,
   });
 
   final List<GenericProduct> products;
   final bool shrinkWrap;
+  final bool useSliver;
+  final double padding;
 
   @override
   Widget build(BuildContext context) {
+    if (useSliver)
+      return SliverMasonryGrid(
+        delegate: SliverChildBuilderDelegate(
+          (context, index) {
+            return Padding(
+              padding: EdgeInsets.only(
+                left: index % 2 == 0 ? padding : 0,
+                right: index % 2 != 0 ? padding : 0,
+              ),
+              child: ProductWidget(
+                payload: products[index],
+              ),
+            );
+          },
+          childCount: products.length,
+        ),
+        mainAxisSpacing: Dimens.spacingSizeSmall,
+        crossAxisSpacing: Dimens.spacingSizeSmall,
+        gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+        ),
+      );
+
     return MasonryGridView.builder(
       mainAxisSpacing: Dimens.spacingSizeSmall,
       crossAxisSpacing: Dimens.spacingSizeSmall,

@@ -64,7 +64,7 @@ class _SnippetHomeAdvertisementState extends State<SnippetHomeAdvertisement> {
                 child: CarouselSlider.builder(
                   carouselController: _sliderController,
                   options: CarouselOptions(
-                    enableInfiniteScroll: false,
+                    enableInfiniteScroll: true,
                     viewportFraction: 0.99,
                     disableCenter: true,
                     scrollPhysics: const NeverScrollableScrollPhysics(),

@@ -13,7 +13,7 @@ class ApiUrls {
   static String citiesbyProvince = '/cities/province';
   static String areasByCity = '/areas/city';
   static String products = '/products';
-  static String recentProducts = '/products/recent';
+  static String latestProducts = '/products/latest';
   static String productSearch = '/products/search';
   static String productsByVendorId = '/products/vendor/:id';
   static String productsByCategoryId = '/products/category/:id';

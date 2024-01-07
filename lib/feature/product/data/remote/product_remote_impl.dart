@@ -46,8 +46,7 @@ class ProductRemoteImpl implements ProductRemote {
 
   @override
   Future<FetchResponse<Product>> getLatestProducts() async {
-    final url = ApiUrls.products;
-    final apiResponse = await _apiClient.get(url);
+    final apiResponse = await _apiClient.get(ApiUrls.latestProducts);
     return FetchResponse.fromJson(
       apiResponse.data,
       Product.fromJsonList,

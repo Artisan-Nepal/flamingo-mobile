@@ -6,6 +6,7 @@ import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/button/variants/text_button_widget.dart';
 import 'package:flamingo/widget/error/default_error_widget.dart';
 import 'package:flamingo/widget/loader/loader.dart';
+import 'package:flamingo/widget/product/product.dart';
 import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -108,7 +109,21 @@ class _SearchScreenState extends State<SearchScreen> {
                                           horizontal: Dimens.spacingSizeDefault,
                                         ),
                                         child: SnippetProductListing(
-                                          products: products,
+                                          products: products
+                                              .map(
+                                                (product) => GenericProduct(
+                                                  image: product
+                                                      .variants.first.image.url,
+                                                  price: product
+                                                      .variants.first.price,
+                                                  productId: product.id,
+                                                  title: product.title,
+                                                  vendor:
+                                                      product.vendor.storeName,
+                                                  product: product,
+                                                ),
+                                              )
+                                              .toList(),
                                           shrinkWrap: false,
                                         ),
                                       ),

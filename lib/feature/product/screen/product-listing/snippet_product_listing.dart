@@ -1,4 +1,3 @@
-import 'package:flamingo/feature/product/data/model/product.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/product/product.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +10,7 @@ class SnippetProductListing extends StatelessWidget {
     this.shrinkWrap = true,
   });
 
-  final List<Product> products;
+  final List<GenericProduct> products;
   final bool shrinkWrap;
 
   @override
@@ -26,7 +25,7 @@ class SnippetProductListing extends StatelessWidget {
       ),
       itemBuilder: (context, index) {
         return ProductWidget(
-          product: products[index],
+          payload: products[index],
         );
       },
     );

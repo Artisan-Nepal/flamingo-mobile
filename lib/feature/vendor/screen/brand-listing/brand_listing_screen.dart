@@ -55,7 +55,7 @@ class _BrandListingScreenState extends State<BrandListingScreen> {
                       ProductListingScreen(
                         title: vendors[index].storeName,
                         productListingType: ProductListingType.vendor,
-                        vendorId: vendors[index].id,
+                        vendor: vendors[index],
                       ),
                     );
                   },

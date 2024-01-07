@@ -27,4 +27,5 @@ class ApiUrls {
   static String orders = '/orders';
   static String vendors = '/vendors';
   static String customersCountInfo = '/customers/count-info';
+  static String advertisements = '/advertisements';
 }

@@ -9,14 +9,14 @@ import 'package:flutter/material.dart';
 class ProductWidget extends StatelessWidget {
   const ProductWidget({
     Key? key,
-    required this.product,
     this.nameMaxLines = 2,
     this.needFavIcon = true,
+    required this.payload,
   }) : super(key: key);
 
-  final Product product;
   final int nameMaxLines;
   final bool needFavIcon;
+  final GenericProduct payload;
 
   @override
   Widget build(BuildContext context) {
@@ -25,9 +25,9 @@ class ProductWidget extends StatelessWidget {
         NavigationHelper.push(
           context,
           ProductDetailScreen(
-            productId: product.id,
-            product: product,
-            title: product.title,
+            productId: payload.productId,
+            product: payload.product,
+            title: payload.title,
           ),
         );
       },
@@ -48,10 +48,10 @@ class ProductWidget extends StatelessWidget {
               Stack(
                 children: [
                   SizedBox(
-                    height: 170,
+                    height: SizeConfig.screenHeight * 0.3,
                     width: double.infinity,
                     child: CachedNetworkImageWidget(
-                      image: product.variants[0].image.url,
+                      image: payload.image,
                       fit: BoxFit.cover,
                       placeHolder: ImageConstants.imagePlaceholder,
                     ),
@@ -61,7 +61,7 @@ class ProductWidget extends StatelessWidget {
                       top: 10,
                       right: 10,
                       child: FavButtonWidget(
-                        productId: product.id,
+                        productId: payload.productId,
                       ),
                     ),
                 ],
@@ -75,7 +75,7 @@ class ProductWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     TextWidget(
-                      product.vendor.storeName,
+                      payload.vendor,
                       textOverflow: TextOverflow.ellipsis,
                       style: textTheme(context).bodyMedium!.copyWith(
                             fontWeight: FontWeight.bold,
@@ -83,14 +83,14 @@ class ProductWidget extends StatelessWidget {
                     ),
                     // const SizedBox(height: Dimens.spacingSizeExtraSmall),
                     TextWidget(
-                      product.title,
+                      payload.title,
                       maxLines: nameMaxLines,
                       textOverflow: TextOverflow.ellipsis,
                       style: textTheme(context).bodyMedium!,
                     ),
                     const SizedBox(height: Dimens.spacingSizeExtraSmall),
                     TextWidget(
-                      'Rs. ${formatNepaliCurrency(product.variants[0].price)}',
+                      'Rs. ${formatNepaliCurrency(payload.price)}',
                       style: textTheme(context).labelLarge!,
                     ),
                     const SizedBox(height: Dimens.spacingSizeSmall),
@@ -103,4 +103,22 @@ class ProductWidget extends StatelessWidget {
       ),
     );
   }
+}
+
+class GenericProduct {
+  final String productId;
+  final String title;
+  final String image;
+  final String vendor;
+  final int price;
+  final Product? product;
+
+  GenericProduct({
+    required this.image,
+    required this.price,
+    required this.productId,
+    required this.title,
+    required this.vendor,
+    this.product,
+  });
 }

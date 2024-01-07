@@ -1,5 +1,6 @@
 import 'package:flamingo/di/registration/data.dart';
 import 'package:flamingo/di/registration/feature/address.dart';
+import 'package:flamingo/di/registration/feature/advertisement.dart';
 import 'package:flamingo/di/registration/feature/cart.dart';
 import 'package:flamingo/di/registration/feature/category.dart';
 import 'package:flamingo/di/registration/feature/customer_activity.dart';
@@ -37,4 +38,5 @@ Future setUpServiceLocator() async {
   registerCustomerActivityFeature(locator);
   registerVendorFeature(locator);
   registerSearchFeature(locator);
+  registerAdvertisementFeature(locator);
 }

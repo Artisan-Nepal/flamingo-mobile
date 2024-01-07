@@ -58,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen>
                     },
                   ),
                 ),
-                const VerticalSpaceWidget(height: Dimens.spacingSizeDefault),
+                const VerticalSpaceWidget(height: Dimens.spacingSizeLarge),
                 SnippetHomeAdvertisement(),
               ],
             ),

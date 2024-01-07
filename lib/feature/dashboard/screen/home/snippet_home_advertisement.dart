@@ -1,7 +1,6 @@
 import 'package:flamingo/feature/advertisement/advertisement_listing_view_model.dart';
 import 'package:flamingo/feature/advertisement/screen/advertisement_screen.dart';
 import 'package:flamingo/shared/shared.dart';
-import 'package:flamingo/shared/util/util.dart';
 import 'package:flamingo/widget/image/cached_network_image_widget.dart';
 import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/material.dart';
@@ -55,7 +54,19 @@ class _SnippetHomeAdvertisementState extends State<SnippetHomeAdvertisement> {
         return Padding(
           padding: const EdgeInsets.only(bottom: 10),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: Dimens.spacingSizeSmall),
+                child: TextWidget(
+                  'EXPLORE',
+                  style: textTheme(context).bodyLarge!.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+              ),
+              VerticalSpaceWidget(height: Dimens.spacingSizeSmall),
               SizedBox(
                 width: double.infinity,
                 child: CarouselSlider.builder(

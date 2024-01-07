@@ -37,11 +37,8 @@ class _SnippetCartListingItemState extends State<SnippetCartListingItem> {
                 Container(
                   color: Colors.transparent,
                   width: double.infinity,
-                  padding: const EdgeInsets.only(
-                    top: Dimens.spacingSizeLarge,
-                    bottom: Dimens.spacingSizeLarge,
-                    right: Dimens.spacingSizeDefault,
-                    left: Dimens.spacingSizeDefault,
+                  padding: const EdgeInsets.all(
+                    Dimens.spacingSizeDefault,
                   ),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -143,18 +140,19 @@ class _SnippetCartListingItemState extends State<SnippetCartListingItem> {
   }
 
   Widget _buildVariantDetails() {
-    final attributes = widget.cartItem.productVariant.attributes;
+    // final attributes = widget.cartItem.productVariant.attributes;
     return Wrap(
       spacing: Dimens.spacingSizeExtraSmall,
       runSpacing: Dimens.spacingSizeExtraSmall,
       children: [
         _buildInfoWrapper(widget.cartItem.productVariant.color.name),
-        ...List<Widget>.generate(
-          attributes.length,
-          (index) {
-            return _buildInfoWrapper(attributes[index].option.value);
-          },
-        )
+        _buildInfoWrapper(widget.cartItem.productVariant.size.value),
+        // ...List<Widget>.generate(
+        //   attributes.length,
+        //   (index) {
+        //     return _buildInfoWrapper(attributes[index].option.value);
+        //   },
+        // )
       ],
     );
   }

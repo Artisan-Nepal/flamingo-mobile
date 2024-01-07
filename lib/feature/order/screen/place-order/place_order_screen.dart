@@ -1,11 +1,14 @@
 import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/address/screen/address-listing/address_listing_screen.dart';
+import 'package:flamingo/feature/auth/auth_view_model.dart';
 import 'package:flamingo/feature/cart/data/model/cart_item.dart';
+import 'package:flamingo/feature/order/screen/order-listing/order_listing_screen.dart';
 import 'package:flamingo/feature/order/screen/place-order/payment_method_selection_screen.dart';
 import 'package:flamingo/feature/order/screen/place-order/place_order_view_model.dart';
 import 'package:flamingo/feature/order/screen/place-order/shipping_method_selection_screen.dart';
 import 'package:flamingo/feature/order/screen/place-order/snippet_checkout_input.dart';
 import 'package:flamingo/feature/order/screen/place-order/snippet_order_item.dart';
+import 'package:flamingo/shared/constant/payment_method.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/alert-dialog/alert_dialog_widget.dart';
 import 'package:flamingo/widget/widget.dart';
@@ -320,24 +323,43 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
             // pop confimation dialog
             Navigator.pop(ctx);
 
-            await viewModel.placeOrder();
-            if (!context.mounted) return;
-            if (viewModel.placeOrderUseCase.hasCompleted) {
-              NavigationHelper.pop(context);
-              NavigationHelper.pop(context);
-              showToast(
-                context,
-                message: 'You order has been placed.',
-              );
+            if (viewModel.selectedPaymentMethod!.code == PaymentMethod.KHALTI) {
+              await _checkoutWithKhalti(viewModel);
             } else {
-              showToast(
-                context,
-                message: viewModel.placeOrderUseCase.exception,
-                isSuccess: false,
-              );
+              await viewModel.placeOrder();
             }
+
+            if (!context.mounted) return;
+            _observeCheckoutResponse(viewModel);
           },
         ),
+      );
+    }
+  }
+
+  Future<void> _checkoutWithKhalti(PlaceOrderViewModel viewModel) async {
+    final response = await KhaltiHelper.pay(
+      context,
+      amount: viewModel.orderTotal,
+      productId: viewModel.orderItemIds,
+      productName: viewModel.orderItemNames,
+      mobileNumber:
+          Provider.of<AuthViewModel>(context, listen: false).user!.mobileNumber,
+    );
+    if (response.success) {
+      await viewModel.placeOrder(paymentToken: response.token);
+    }
+  }
+
+  _observeCheckoutResponse(PlaceOrderViewModel viewModel) {
+    if (viewModel.placeOrderUseCase.hasCompleted) {
+      NavigationHelper.popUntil(context, 2);
+      NavigationHelper.push(context, const OrderListingScreen());
+    } else {
+      showToast(
+        context,
+        message: viewModel.placeOrderUseCase.exception,
+        isSuccess: false,
       );
     }
   }

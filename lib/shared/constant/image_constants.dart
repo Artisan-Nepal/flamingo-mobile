@@ -9,4 +9,8 @@ class ImageConstants {
   static const String nepalFlag = "assets/drawable/nepal_flag.svg";
   static const String displayPicturePlaceHolder =
       "assets/drawable/displayPicturePlaceholder.jpg";
+  static const String IC_PAYMENT_CASH = 'assets/drawable/cash_on_delivery.png';
+  static const String IC_PAYMENT_ESEWA = 'assets/drawable/esewa.png';
+  static const String IC_PAYMENT_KHALTI = 'assets/drawable/khalti.png';
+  static const String IC_PAYMENT_IME = 'assets/drawable/ime.png';
 }

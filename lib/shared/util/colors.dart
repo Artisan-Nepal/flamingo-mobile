@@ -10,8 +10,8 @@ class AppColors {
 
   // secondary colors
   static const secondaryDark = Color(0xFF804000);
-  static const secondaryMain = Color(0xFFB67700);
-  static const secondaryLight = Color(0xFFD2A366);
+  static const secondaryMain = Color.fromARGB(255, 182, 0, 103);
+  static const secondaryLight = Color.fromARGB(255, 240, 219, 233);
 
   // support colors
   static const success = Color(0xFF007750);

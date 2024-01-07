@@ -52,7 +52,7 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
               physics: const NeverScrollableScrollPhysics(),
               itemCount: orderStatuses.length,
               itemBuilder: (context, index) => SnippetOrderStatusStepper(
-                title: orderStatuses[index].name,
+                title: orderStatuses[index].description,
                 color: themedPrimaryColor(context),
                 isLastItem: index == orderStatuses.length - 1,
                 isSecondLastItem: index == orderStatuses.length - 2,

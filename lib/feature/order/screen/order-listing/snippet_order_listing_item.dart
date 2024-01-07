@@ -3,6 +3,7 @@ import 'package:flamingo/feature/order/screen/order-detail/order_detail_screen.d
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/image/cached_network_image_widget.dart';
 import 'package:flamingo/widget/space/space.dart';
+import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/material.dart';
 
 class SnippetOrderListingItem extends StatelessWidget {
@@ -23,15 +24,17 @@ class SnippetOrderListingItem extends StatelessWidget {
       },
       child: Container(
         width: double.infinity,
+        margin: EdgeInsets.symmetric(horizontal: Dimens.spacingSizeDefault),
         color: AppColors.transparent,
-        // height: 90,
+        // height: 150,
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Images
             Container(
-              margin: const EdgeInsets.symmetric(horizontal: 10),
-              height: 80,
-              width: 80,
+              margin: const EdgeInsets.only(right: Dimens.spacingSizeDefault),
+              // height: 80,
+              // width: 80,
               decoration: BoxDecoration(
                 color: AppColors.grayLight,
                 borderRadius: BorderRadius.circular(Dimens.radius_5),
@@ -52,7 +55,8 @@ class SnippetOrderListingItem extends StatelessWidget {
                   child: CachedNetworkImageWidget(
                     image: order.productVariant.image.url,
                     fit: BoxFit.cover,
-                    height: 80,
+                    height: 150,
+                    width: 130,
                   ),
                 ),
               ),
@@ -61,69 +65,100 @@ class SnippetOrderListingItem extends StatelessWidget {
             // Description
             Expanded(
               child: Column(
+                mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   // Order Id
-                  Container(
-                    decoration: BoxDecoration(
-                      color: themedPrimaryColor(context),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    padding: const EdgeInsets.all(5),
-                    child: Wrap(
-                      children: [
-                        Text(
-                          'Order ID:  ',
-                          style: TextStyle(
-                            color: isLightMode(context)
-                                ? AppColors.white
-                                : AppColors.black,
-                            fontSize: Dimens.fontSizeSmall,
-                          ),
+                  Row(
+                    children: [
+                      Text(
+                        'Order ID:  ',
+                        style: TextStyle(
+                          fontSize: Dimens.fontSizeDefault,
+                          fontStyle: FontStyle.italic,
+                          color: AppColors.grayMain,
                         ),
-                        Text(
-                          order.orderId.toString(),
-                          style: TextStyle(
-                            color: isLightMode(context)
-                                ? AppColors.white
-                                : AppColors.black,
-                            fontSize: Dimens.fontSizeSmall,
-                            fontWeight: FontWeight.w600,
-                          ),
+                      ),
+                      Text(
+                        order.orderId.toString(),
+                        style: TextStyle(
+                          fontSize: Dimens.fontSizeDefault,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.grayMain,
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                   const VerticalSpaceWidget(
                       height: Dimens.spacingSizeExtraSmall),
-                  OrderListItemTitleValue(
-                    title: 'Order Date',
-                    value: formatDate(order.createdAt,
-                        format: DateFormatConstant.fullDate),
+                  TextWidget(
+                    order.product.vendor.storeName,
+                    textOverflow: TextOverflow.ellipsis,
+                    style: textTheme(context).bodyMedium!,
+                  ),
+                  const SizedBox(height: Dimens.spacingSizeExtraSmall),
+                  TextWidget(
+                    '${order.product.title} (${order.quantity})',
+                    maxLines: 1,
+                    textOverflow: TextOverflow.ellipsis,
+                    style: textTheme(context).bodyMedium!.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
                   ),
                   const VerticalSpaceWidget(
                       height: Dimens.spacingSizeExtraSmall),
 
-                  OrderListItemTitleValue(
-                    title: 'Total Price',
-                    value: 'Rs. ${formatNepaliCurrency(order.netTotal)}',
-                    valueStyle: const TextStyle(
-                      color: AppColors.primaryMain,
-                      fontWeight: FontWeight.w600,
-                    ),
+                  Row(
+                    children: [
+                      _buildInfoWrapper(
+                          context, order.productVariant.color.name),
+                      HorizontalSpaceWidget(
+                          width: Dimens.spacingSizeExtraSmall),
+                      _buildInfoWrapper(
+                          context, order.productVariant.size.value),
+                    ],
                   ),
+                  const VerticalSpaceWidget(height: Dimens.spacingSizeSmall),
+
+                  Text(
+                    'Rs. ${formatNepaliCurrency(order.netTotal)}',
+                    style: textTheme(context).labelLarge!.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+
+                  if (showStatus)
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                        order.orderStatus.name,
+                        style: textTheme(context).bodyMedium!.copyWith(
+                              fontStyle: FontStyle.italic,
+                              color: AppColors.grayMain,
+                            ),
+                      ),
+                    ),
                 ],
               ),
             ),
-
-            // Arrow Icon
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10.0),
-              child: Icon(Icons.chevron_right),
-            ),
           ],
         ),
+      ),
+    );
+  }
+
+  _buildInfoWrapper(BuildContext context, String info) {
+    return Container(
+      color:
+          isLightMode(context) ? AppColors.grayLighter : AppColors.grayDarker,
+      padding: const EdgeInsets.symmetric(
+        vertical: Dimens.spacingSizeExtraSmall,
+        horizontal: Dimens.spacingSizeSmall,
+      ),
+      child: Text(
+        info,
+        style: textTheme(context).bodySmall,
       ),
     );
   }
@@ -149,7 +184,7 @@ class OrderListItemTitleValue extends StatelessWidget {
           '$title:',
           style: const TextStyle(
             color: AppColors.grayMain,
-            fontSize: Dimens.fontSizeSmall,
+            fontSize: Dimens.fontSizeDefault,
           ),
         ),
         const SizedBox(
@@ -159,7 +194,7 @@ class OrderListItemTitleValue extends StatelessWidget {
           child: Text(
             value,
             style: valueStyle.copyWith(
-              fontSize: Dimens.fontSizeSmall,
+              fontSize: Dimens.fontSizeDefault,
             ),
             overflow: TextOverflow.ellipsis,
             maxLines: 1,

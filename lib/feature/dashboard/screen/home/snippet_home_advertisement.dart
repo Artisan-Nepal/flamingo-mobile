@@ -3,7 +3,6 @@ import 'package:flamingo/feature/advertisement/screen/advertisement_screen.dart'
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/image/cached_network_image_widget.dart';
 import 'package:flamingo/widget/widget.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -25,24 +24,16 @@ class _SnippetHomeAdvertisementState extends State<SnippetHomeAdvertisement> {
     super.initState();
   }
 
-  int _sliderIndex = 0;
-
-  setSliderIndex(int value) {
-    _sliderIndex = value;
-    setState(() {});
-  }
-
   @override
   Widget build(BuildContext context) {
     return Consumer<AdvertisementListingViewModel>(
       builder: (context, viewModel, child) {
         final advertisements =
             viewModel.getAdvertisementsUseCase.data?.rows ?? [];
-        final hasSingleItem = advertisements.length == 1;
 
         if (viewModel.getAdvertisementsUseCase.isLoading) {
           return Container(
-            height: SizeConfig.screenHeight * 0.4,
+            height: SizeConfig.screenHeight * 0.5,
             width: double.infinity,
             margin: EdgeInsets.symmetric(horizontal: Dimens.spacingSizeSmall),
             color: AppColors.grayLighter,
@@ -74,20 +65,15 @@ class _SnippetHomeAdvertisementState extends State<SnippetHomeAdvertisement> {
                   carouselController: _sliderController,
                   options: CarouselOptions(
                     enableInfiniteScroll: false,
-                    viewportFraction: hasSingleItem ? 0.95 : 0.85,
+                    viewportFraction: 0.99,
                     disableCenter: true,
-                    scrollPhysics: hasSingleItem
-                        ? const NeverScrollableScrollPhysics()
-                        : null,
-                    autoPlay: false,
+                    scrollPhysics: const NeverScrollableScrollPhysics(),
+                    autoPlay: true,
                     // enlargeCenterPage: true,
-                    autoPlayInterval: const Duration(seconds: 8),
+                    autoPlayInterval: const Duration(seconds: 30),
                     autoPlayAnimationDuration:
                         const Duration(milliseconds: 300),
-                    onPageChanged: (index, changedReason) {
-                      setSliderIndex(index);
-                    },
-                    height: SizeConfig.screenHeight * 0.5,
+                    height: SizeConfig.screenHeight * 0.6,
                   ),
                   itemCount: advertisements.length,
                   itemBuilder: (context, index, pgIndex) {
@@ -100,7 +86,7 @@ class _SnippetHomeAdvertisementState extends State<SnippetHomeAdvertisement> {
                           ),
                         );
                       },
-                      image: advertisements[index].images.first.url,
+                      image: advertisements[index].primaryImageUrl,
                       title: advertisements[index].title,
                       body: advertisements[index].vendor.storeName,
                     );
@@ -108,40 +94,10 @@ class _SnippetHomeAdvertisementState extends State<SnippetHomeAdvertisement> {
                 ),
               ),
               VerticalSpaceWidget(height: Dimens.spacingSizeDefault),
-              if (advertisements.length > 1)
-                SizedBox(
-                  width: SizeConfig.screenWidth,
-                  child: _buildDots(advertisements.length),
-                ),
             ],
           ),
         );
       },
-    );
-  }
-
-  _buildDots(int count) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: List.generate(
-        count,
-        (index) {
-          return AnimatedContainer(
-            duration: const Duration(milliseconds: 100),
-            height: 8,
-            width: 8,
-            margin: const EdgeInsets.only(
-              right: Dimens.spacingSizeExtraSmall,
-            ),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              color: index == _sliderIndex
-                  ? AppColors.primaryMain
-                  : AppColors.grayLight,
-            ),
-          );
-        },
-      ),
     );
   }
 }

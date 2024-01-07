@@ -1,7 +1,7 @@
 import 'package:flamingo/feature/advertisement/data/model/advertisement.dart';
+import 'package:flamingo/feature/advertisement/screen/snippet_advertisement_images.dart';
 import 'package:flamingo/feature/product/screen/product-listing/snippet_product_listing.dart';
 import 'package:flamingo/shared/util/util.dart';
-import 'package:flamingo/widget/image/cached_network_image_widget.dart';
 import 'package:flamingo/widget/product/product_widget.dart';
 import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/material.dart';
@@ -30,16 +30,10 @@ class AdvertisementScreen extends StatelessWidget {
           // VerticalSpaceWidget(height: Dimens.spacingSizeDefault),
 
           // Advertisement image
-          Container(
-            color: AppColors.grayLighter,
-            width: double.infinity,
-            child: CachedNetworkImageWidget(
-              image: advertisement.images.first.url,
-              height: SizeConfig.screenHeight * 0.3,
-              fit: BoxFit.cover,
-              needPlaceHolder: false,
-            ),
+          SnippetAdvertisementImages(
+            images: advertisement.images.map((e) => e.url).toList(),
           ),
+
           VerticalSpaceWidget(height: Dimens.spacingSizeDefault),
 
           // Advertisement details and products
@@ -57,14 +51,15 @@ class AdvertisementScreen extends StatelessWidget {
                   ),
                 ),
                 VerticalSpaceWidget(height: Dimens.spacingSizeExtraSmall),
-                Text(
-                  advertisement.description,
-                  style: const TextStyle(
-                    fontSize: Dimens.fontSizeDefault,
+                if (advertisement.description != null) ...[
+                  Text(
+                    advertisement.description!,
+                    style: const TextStyle(
+                      fontSize: Dimens.fontSizeDefault,
+                    ),
                   ),
-                  textAlign: TextAlign.right,
-                ),
-                VerticalSpaceWidget(height: Dimens.spacingSizeDefault),
+                  VerticalSpaceWidget(height: Dimens.spacingSizeDefault),
+                ],
                 SnippetProductListing(
                   products: advertisement.collection.products
                       .map(

@@ -5,11 +5,12 @@ import 'package:flamingo/feature/vendor/data/model/vendor.dart';
 class Advertisement {
   final String id;
   final String title;
-  final String description;
+  final String? description;
   final String vendorId;
   final Vendor vendor;
   final List<UploadFileResponse> images;
   final VendorCollection collection;
+  final String primaryImageUrl;
 
   Advertisement({
     required this.id,
@@ -19,6 +20,7 @@ class Advertisement {
     required this.vendor,
     required this.images,
     required this.collection,
+    required this.primaryImageUrl,
   });
 
   factory Advertisement.fromJson(Map<String, dynamic> json) => Advertisement(
@@ -26,6 +28,7 @@ class Advertisement {
         title: json['title'],
         description: json['description'],
         vendorId: json['vendorId'],
+        primaryImageUrl: json['primaryImageUrl'],
         vendor: Vendor.fromJson(json['vendor']),
         images: UploadFileResponse.fromJsonList(
             json['advertisementImages'].map((e) => e['image'])),

@@ -2,7 +2,7 @@ import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/address/data/model/address.dart';
 import 'package:flamingo/feature/cart/data/model/cart_item.dart';
 import 'package:flamingo/feature/customer-activity/customer_activity_view_model.dart';
-import 'package:flamingo/feature/order/data/model/create_order.dart';
+import 'package:flamingo/feature/order/data/model/create_order_request.dart';
 import 'package:flamingo/feature/order/data/model/payment_method.dart';
 import 'package:flamingo/feature/order/data/model/shipping_method.dart';
 import 'package:flamingo/feature/order/data/order_repository.dart';
@@ -83,7 +83,7 @@ class PlaceOrderViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> placeOrder() async {
+  Future<void> placeOrder({String? paymentToken}) async {
     try {
       setPlaceOrderUseCase(Response.loading());
       await _orderRepository.placeOrder(
@@ -92,6 +92,7 @@ class PlaceOrderViewModel extends ChangeNotifier {
           shippingAddressId: _selectedShippingAddress!.id,
           paymentMethodCode: _selectedPaymentMethod!.code,
           shippingMethodId: _selectedShippingMethod!.id,
+          paymentToken: paymentToken,
         ),
       );
       locator<CustomerActivityViewModel>().getCustomerCountInfo();
@@ -115,5 +116,13 @@ class PlaceOrderViewModel extends ChangeNotifier {
 
   int get orderTotal {
     return subTotal + shippingCost;
+  }
+
+  String get orderItemIds {
+    return items.map((i) => i.productVariant.id).join(',');
+  }
+
+  String get orderItemNames {
+    return items.map((i) => i.product.title).join(',');
   }
 }

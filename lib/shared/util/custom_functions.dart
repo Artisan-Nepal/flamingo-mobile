@@ -1,6 +1,7 @@
 import 'package:flamingo/feature/feature.dart';
 import 'package:flamingo/feature/order/data/model/order_status.dart';
 import 'package:flamingo/feature/product/data/model/product.dart';
+import 'package:flamingo/shared/constant/payment_method.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -151,5 +152,20 @@ Color getOrderStatusColor(String code) {
       return AppColors.error;
     default:
       return AppColors.grayMain;
+  }
+}
+
+String getPaymentMethodIcon(String code) {
+  switch (code) {
+    case PaymentMethod.CASH:
+      return ImageConstants.IC_PAYMENT_CASH;
+    case PaymentMethod.KHALTI:
+      return ImageConstants.IC_PAYMENT_KHALTI;
+    case PaymentMethod.ESEWA:
+      return ImageConstants.IC_PAYMENT_ESEWA;
+    case PaymentMethod.IME_PAY:
+      return ImageConstants.IC_PAYMENT_IME;
+    default:
+      return '';
   }
 }

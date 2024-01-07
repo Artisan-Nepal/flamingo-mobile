@@ -46,6 +46,8 @@ class _ProductListingScreenState extends State<ProductListingScreen> {
     } else if (widget.productListingType.isVendor && widget.vendor != null) {
       await _viewModel.getVendorProducts(widget.vendor!.id,
           isRefresh: isRefresh);
+    } else if (widget.productListingType.isLatest) {
+      await _viewModel.getLatestProducts(isRefresh: isRefresh);
     } else {
       await _viewModel.getProducts(isRefresh: isRefresh);
     }

@@ -1,5 +1,5 @@
 class ApiUrls {
-  static String baseUrl = 'http://localhost:8848/api';
+  static String baseUrl = 'http://10.0.2.2:8848/api';
 
   // AUTH
   static String sendLoginOtp = '/auth/send-otp';
@@ -13,6 +13,7 @@ class ApiUrls {
   static String citiesbyProvince = '/cities/province';
   static String areasByCity = '/areas/city';
   static String products = '/products';
+  static String recentProducts = '/products/recent';
   static String productSearch = '/products/search';
   static String productsByVendorId = '/products/vendor/:id';
   static String productsByCategoryId = '/products/category/:id';

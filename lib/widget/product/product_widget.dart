@@ -12,11 +12,13 @@ class ProductWidget extends StatelessWidget {
     this.nameMaxLines = 2,
     this.needFavIcon = true,
     required this.payload,
+    this.imageHeight,
   }) : super(key: key);
 
   final int nameMaxLines;
   final bool needFavIcon;
   final GenericProduct payload;
+  final double? imageHeight;
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +50,7 @@ class ProductWidget extends StatelessWidget {
               Stack(
                 children: [
                   SizedBox(
-                    height: SizeConfig.screenHeight * 0.3,
+                    height:imageHeight ??  SizeConfig.screenHeight * 0.3,
                     width: double.infinity,
                     child: CachedNetworkImageWidget(
                       image: payload.image,

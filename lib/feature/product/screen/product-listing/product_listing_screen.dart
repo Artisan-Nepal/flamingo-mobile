@@ -2,8 +2,10 @@ import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/product/screen/product-listing/product_listing_view_model.dart';
 import 'package:flamingo/feature/product/screen/product-listing/snippet_filter_products_bottomsheet.dart';
 import 'package:flamingo/feature/product/screen/product-listing/snippet_product_listing.dart';
+import 'package:flamingo/feature/vendor/data/model/vendor.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/error/default_error_widget.dart';
+import 'package:flamingo/widget/product/product.dart';
 import 'package:flamingo/widget/screen/default_screen.dart';
 import 'package:flamingo/widget/shimmer/shimmer.dart';
 import 'package:flutter/cupertino.dart';
@@ -16,12 +18,12 @@ class ProductListingScreen extends StatefulWidget {
     required this.title,
     required this.productListingType,
     this.categoryId,
-    this.vendorId,
+    this.vendor,
   });
 
   final String title;
   final ProductListingType productListingType;
-  final String? vendorId;
+  final Vendor? vendor;
   final String? categoryId;
 
   @override
@@ -41,8 +43,8 @@ class _ProductListingScreenState extends State<ProductListingScreen> {
     if (widget.productListingType.isCategory && widget.categoryId != null) {
       await _viewModel.getCategoryProducts(widget.categoryId!,
           isRefresh: isRefresh);
-    } else if (widget.productListingType.isVendor && widget.vendorId != null) {
-      await _viewModel.getVendorProducts(widget.vendorId!,
+    } else if (widget.productListingType.isVendor && widget.vendor != null) {
+      await _viewModel.getVendorProducts(widget.vendor!.id,
           isRefresh: isRefresh);
     } else {
       await _viewModel.getProducts(isRefresh: isRefresh);
@@ -83,7 +85,20 @@ class _ProductListingScreenState extends State<ProductListingScreen> {
                 );
               }
               return RefreshIndicator.adaptive(
-                child: SnippetProductListing(products: products),
+                child: SnippetProductListing(
+                  products: products
+                      .map(
+                        (product) => GenericProduct(
+                          image: product.variants.first.image.url,
+                          price: product.variants.first.price,
+                          productId: product.id,
+                          title: product.title,
+                          vendor: product.vendor.storeName,
+                          product: product,
+                        ),
+                      )
+                      .toList(),
+                ),
                 onRefresh: () async {
                   await getData(isRefresh: true);
                 },

@@ -159,6 +159,7 @@ class SninppetHomeAdvertisementItem extends StatelessWidget {
         margin: const EdgeInsets.symmetric(
             horizontal: Dimens.spacingSizeExtraSmall),
         width: double.infinity,
+        color: AppColors.transparent,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

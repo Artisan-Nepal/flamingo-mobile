@@ -60,7 +60,6 @@ class _HomeScreenState extends State<HomeScreen>
                 ),
                 const VerticalSpaceWidget(height: Dimens.spacingSizeDefault),
                 SnippetHomeAdvertisement(),
-                SnippetHomeAdvertisement(),
               ],
             ),
           ),

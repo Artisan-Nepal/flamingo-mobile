@@ -39,13 +39,7 @@ class _BrandListingScreenState extends State<BrandListingScreen> {
               return const DefaultScreenLoaderWidget();
             }
             final vendors = viewModel.vendorUseCase.data?.rows ?? [];
-            return GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisExtent: 60,
-                mainAxisSpacing: Dimens.spacingSizeSmall,
-                crossAxisSpacing: Dimens.spacingSizeSmall,
-              ),
+            return ListView.builder(
               itemCount: vendors.length,
               itemBuilder: (context, index) {
                 return GestureDetector(
@@ -59,13 +53,49 @@ class _BrandListingScreenState extends State<BrandListingScreen> {
                       ),
                     );
                   },
-                  child: Center(
-                    child: Text(vendors[index].storeName,
-                        textAlign: TextAlign.center,
-                        style: textTheme(context).bodyMedium!.copyWith(
-                              fontWeight: FontWeight.bold,
-                            )),
+                  child: Container(
+                    height: 70,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: Dimens.spacingSizeDefault,
+                    ),
+                    margin: const EdgeInsets.only(
+                        bottom: Dimens.spacingSizeDefault),
+                    color: AppColors.grayLighter,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          vendors[index].storeName,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        // IconButton(
+                        //   onPressed: () {
+                        //     setState(() {
+                        //       if (isFavorite) {
+                        //         favorites.remove(vendors[index].storeName);
+                        //       } else {
+                        //         favorites.add(vendors[index].storeName);
+                        //       }
+                        //     });
+                        //   },
+                        //   icon: Icon(
+                        //     isFavorite ? Icons.favorite : Icons.favorite_border,
+                        //     color: isFavorite ? Colors.red : null,
+                        //   ),
+                        // ),
+                      ],
+                    ),
                   ),
+                  // child: Center(
+                  //   child: Text(vendors[index].storeName,
+                  //       textAlign: TextAlign.center,
+                  //       style: textTheme(context).bodyMedium!.copyWith(
+                  //             fontWeight: FontWeight.bold,
+                  //           )),
+                  // ),
                 );
               },
             );

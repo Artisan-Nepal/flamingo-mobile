@@ -1,5 +1,6 @@
 import 'package:flamingo/feature/order/data/model/order.dart';
 import 'package:flamingo/feature/order/screen/order-listing/snippet_order_listing_item.dart';
+import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/error/default_error_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -25,7 +26,8 @@ class SnippetOrderListingTab extends StatelessWidget {
             itemCount: orders.length,
             itemBuilder: (context, index) {
               return Padding(
-                padding: const EdgeInsets.all(10.0),
+                padding: const EdgeInsets.symmetric(
+                    vertical: Dimens.spacingSizeSmall),
                 child: SnippetOrderListingItem(
                   // productTitle: orders[index].product.title,
                   // productVariant: orders[index].productVariant,

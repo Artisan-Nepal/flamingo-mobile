@@ -29,7 +29,7 @@ class SnippetOrderListingItem extends StatelessWidget {
           children: [
             // Images
             Container(
-              margin: const EdgeInsets.symmetric(horizontal: 10),
+              margin: const EdgeInsets.only(right: Dimens.spacingSizeSmall),
               height: 80,
               width: 80,
               decoration: BoxDecoration(

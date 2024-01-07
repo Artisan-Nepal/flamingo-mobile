@@ -85,20 +85,24 @@ class _SnippetAddToCartBottomSheetState
                               'Color:  ${variant.color.name}',
                               style: textTheme(context).bodyMedium!,
                             ),
-                            // attributes
-                            ...List<Widget>.generate(
-                              variant.attributes.length,
-                              (index) => Column(
-                                children: [
-                                  const SizedBox(
-                                      height: Dimens.spacingSizeExtraSmall),
-                                  TextWidget(
-                                    '${variant.attributes[index].name}:  ${variant.attributes[index].option.value}',
-                                    style: textTheme(context).bodyMedium!,
-                                  ),
-                                ],
-                              ),
+                            TextWidget(
+                              'Size:  ${variant.size.value}',
+                              style: textTheme(context).bodyMedium!,
                             ),
+                            // attributes
+                            // ...List<Widget>.generate(
+                            //   variant.attributes.length,
+                            //   (index) => Column(
+                            //     children: [
+                            //       const SizedBox(
+                            //           height: Dimens.spacingSizeExtraSmall),
+                            //       TextWidget(
+                            //         '${variant.attributes[index].name}:  ${variant.attributes[index].option.value}',
+                            //         style: textTheme(context).bodyMedium!,
+                            //       ),
+                            //     ],
+                            //   ),
+                            // ),
                             const SizedBox(height: Dimens.spacingSizeDefault),
                             TextWidget(
                               'Rs. ${formatNepaliCurrency(variant.price)}',

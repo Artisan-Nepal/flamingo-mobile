@@ -94,14 +94,15 @@ class SnippetOrderItem extends StatelessWidget {
                   runSpacing: Dimens.spacingSizeExtraSmall,
                   children: [
                     Text('Color: ${productVariant.color.name}'),
-                    ...List<Widget>.generate(
-                      productVariant.attributes.length,
-                      (index) {
-                        final attribute = productVariant.attributes[index];
-                        return Text(
-                            '${attribute.name}: ${attribute.option.value}');
-                      },
-                    )
+                    Text('Size: ${productVariant.size.value}'),
+                    // ...List<Widget>.generate(
+                    //   productVariant.attributes.length,
+                    //   (index) {
+                    //     final attribute = productVariant.attributes[index];
+                    //     return Text(
+                    //         '${attribute.name}: ${attribute.option.value}');
+                    //   },
+                    // )
                   ],
                 ),
                 const VerticalSpaceWidget(height: Dimens.spacingSizeExtraSmall),

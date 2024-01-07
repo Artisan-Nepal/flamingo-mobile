@@ -58,6 +58,7 @@ dependencies:
   pull_to_refresh: ^2.0.0
   image_cropper: ^5.0.1
   image_picker: ^1.0.5
+  carousel_slider: ^4.2.1
 
 dev_dependencies:
   flutter_test:

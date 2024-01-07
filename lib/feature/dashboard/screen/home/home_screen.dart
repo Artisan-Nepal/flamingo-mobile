@@ -38,18 +38,17 @@ class _HomeScreenState extends State<HomeScreen>
         )
       ],
       child: Scaffold(
+        appBar: _buildAppBar(),
         body: SafeArea(
           child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: Dimens.spacingSizeSmall),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const VerticalSpaceWidget(height: Dimens.spacingSizeDefault),
-                  _buildAppBar(),
-                  const VerticalSpaceWidget(height: Dimens.spacingSizeDefault),
-                  SearchBarFieldWidget(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const VerticalSpaceWidget(height: Dimens.spacingSizeSmall),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: Dimens.spacingSizeSmall),
+                  child: SearchBarFieldWidget(
                     readOnly: true,
                     onTap: () {
                       NavigationHelper.pushWithoutAnimation(
@@ -58,21 +57,11 @@ class _HomeScreenState extends State<HomeScreen>
                       );
                     },
                   ),
-                  const VerticalSpaceWidget(height: Dimens.spacingSizeDefault),
-
-                  //
-                  if ((_advertisementListingViewModel
-                              .getAdvertisementsUseCase.data?.rows ??
-                          [])
-                      .isNotEmpty)
-                    SnippetHomeAdvertisement(
-                      advertisement: (_advertisementListingViewModel
-                                  .getAdvertisementsUseCase.data?.rows ??
-                              [])
-                          .first,
-                    ),
-                ],
-              ),
+                ),
+                const VerticalSpaceWidget(height: Dimens.spacingSizeDefault),
+                SnippetHomeAdvertisement(),
+                SnippetHomeAdvertisement(),
+              ],
             ),
           ),
         ),
@@ -80,22 +69,26 @@ class _HomeScreenState extends State<HomeScreen>
     );
   }
 
-  Widget _buildAppBar() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Flamingo',
-          style: textTheme(context).headlineSmall!.copyWith(
-                color: isLightMode(context)
-                    ? themedPrimaryColor(context)
-                    : AppColors.white,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 0.05,
-              ),
-        ),
-        const CartButtonWidget()
+  _buildAppBar() {
+    return AppBar(
+      title: Text(
+        'Flamingo',
+        style: textTheme(context).headlineSmall!.copyWith(
+              color: isLightMode(context)
+                  ? themedPrimaryColor(context)
+                  : AppColors.white,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 0.05,
+            ),
+      ),
+      actions: [
+        Padding(
+          padding: const EdgeInsets.only(
+            top: Dimens.spacingSizeExtraSmall - 1,
+            right: Dimens.spacingSizeSmall,
+          ),
+          child: const CartButtonWidget(),
+        )
       ],
     );
   }

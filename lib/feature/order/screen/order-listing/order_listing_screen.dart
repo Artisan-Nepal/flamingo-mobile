@@ -37,9 +37,10 @@ class _OrderListingScreenState extends State<OrderListingScreen> {
           return TitledScreen(
             title: 'Orders ($orderCount)',
             scrollable: false,
+            padding: EdgeInsets.zero,
             child: DefaultTabController(
               animationDuration: Duration.zero,
-              length: orderStatusLookup.length + 1,
+              length: 4,
               child: Column(
                 children: [
                   _buildTabBar(),
@@ -59,6 +60,7 @@ class _OrderListingScreenState extends State<OrderListingScreen> {
 
   Container _buildTabBar() {
     return Container(
+      margin: EdgeInsets.symmetric(horizontal: Dimens.spacingSizeDefault),
       width: double.infinity,
       height: 55,
       decoration: BoxDecoration(
@@ -91,12 +93,14 @@ class _OrderListingScreenState extends State<OrderListingScreen> {
             const Tab(
               child: Text('All'),
             ),
-            ...List<Tab>.from(
-              orderStatusLookup.map(
-                (e) => Tab(
-                  child: Text(e.name),
-                ),
-              ),
+            Tab(
+              child: Text('To Receive'),
+            ),
+            Tab(
+              child: Text('Received'),
+            ),
+            Tab(
+              child: Text('Cancelled'),
             ),
           ],
         ),
@@ -115,19 +119,35 @@ class _OrderListingScreenState extends State<OrderListingScreen> {
               orders: orders,
               tabName: 'All',
               showStatus: true,
+              emptyMessage: 'You have not placed any orders',
             ),
 
-            ...List<SnippetOrderListingTab>.from(
-              orderStatusLookup.map(
-                (status) => SnippetOrderListingTab(
-                  tabName: status.name,
-                  orders: List<Order>.from(
-                    orders.where(
-                      (order) =>
-                          order.orderStatus.sequenceNumber ==
-                          status.sequenceNumber,
-                    ),
-                  ),
+            // To Receive
+            SnippetOrderListingTab(
+              tabName: 'To Receive',
+              showStatus: true,
+              orders: List<Order>.from(
+                orders.where(
+                  (order) => ['PENDING', 'PROCESSING', 'OUT_FOR_DELIVERY']
+                      .contains(order.orderStatus.code),
+                ),
+              ),
+            ),
+            // Received
+            SnippetOrderListingTab(
+              tabName: 'Received',
+              orders: List<Order>.from(
+                orders.where(
+                  (order) => order.orderStatus.code == 'DELIVERED',
+                ),
+              ),
+            ),
+            // Cancelled
+            SnippetOrderListingTab(
+              tabName: 'Cancelled',
+              orders: List<Order>.from(
+                orders.where(
+                  (order) => order.orderStatus.code == 'CANCELLED',
                 ),
               ),
             ),

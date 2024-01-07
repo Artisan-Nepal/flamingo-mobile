@@ -24,6 +24,7 @@ class SnippetOrderListingItem extends StatelessWidget {
       },
       child: Container(
         width: double.infinity,
+        margin: EdgeInsets.symmetric(horizontal: Dimens.spacingSizeDefault),
         color: AppColors.transparent,
         // height: 150,
         child: Row(

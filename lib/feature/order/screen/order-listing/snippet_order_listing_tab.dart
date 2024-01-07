@@ -10,17 +10,19 @@ class SnippetOrderListingTab extends StatelessWidget {
     required this.orders,
     this.showStatus = false,
     required this.tabName,
+    this.emptyMessage,
   }) : super(key: key);
 
   final List<Order> orders;
   final bool showStatus;
   final String tabName;
+  final String? emptyMessage;
 
   @override
   Widget build(BuildContext context) {
     return orders.isEmpty
         ? DefaultErrorWidget(
-            errorMessage: 'No $tabName products.',
+            errorMessage: emptyMessage ?? 'No products here',
           )
         : ListView.builder(
             itemCount: orders.length,

@@ -1,4 +1,6 @@
 import 'package:flamingo/feature/advertisement/advertisement_listing_view_model.dart';
+import 'package:flamingo/feature/advertisement/screen/advertisement_screen.dart';
+import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/shared/util/util.dart';
 import 'package:flamingo/widget/image/cached_network_image_widget.dart';
 import 'package:flamingo/widget/widget.dart';
@@ -79,17 +81,12 @@ class _SnippetHomeAdvertisementState extends State<SnippetHomeAdvertisement> {
                   itemBuilder: (context, index, pgIndex) {
                     return SninppetHomeAdvertisementItem(
                       onTap: () {
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (context) => Products(
-                        //       slider: provider.sliderList[index],
-                        //       name: provider.sliderList[index].title,
-                        //       id: provider.sliderList[index].categoryId,
-                        //       productType: ProductType.categoryProduct,
-                        //     ),
-                        //   ),
-                        // );
+                        NavigationHelper.push(
+                          context,
+                          AdvertisementScreen(
+                            advertisement: advertisements[index],
+                          ),
+                        );
                       },
                       image: advertisements[index].images.first.url,
                       title: advertisements[index].title,

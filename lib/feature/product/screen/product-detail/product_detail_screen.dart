@@ -8,6 +8,8 @@ import 'package:flamingo/feature/product/screen/product-detail/snippet_product_d
 import 'package:flamingo/feature/product/screen/product-detail/snippet_product_detail_images.dart';
 import 'package:flamingo/feature/product/screen/product-detail/snippet_size_selection_bottom_sheet.dart';
 import 'package:flamingo/shared/shared.dart';
+import 'package:flamingo/widget/error/default_error_widget.dart';
+import 'package:flamingo/widget/loader/default_screen_loader_widget.dart';
 import 'package:flamingo/widget/loader/full_screen_loader.dart';
 import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/cupertino.dart';
@@ -59,97 +61,120 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       ],
       child: Consumer<ProductDetailViewModel>(
         builder: (context, viewModel, child) {
-          final images = [...viewModel.productUseCase.data!.images];
-          images.addAll(
-              viewModel.productUseCase.data!.variants.map((e) => e.image.url));
+          final List<String> images = [
+            ...viewModel.productUseCase.data?.images ?? []
+          ];
+          images.addAll(List<String>.from(
+              (viewModel.productUseCase.data?.variants ?? [])
+                  .map((e) => e.image.url)));
           return DefaultScreen(
             scrollable: false,
             padding: EdgeInsets.zero,
             needAppBar: false,
             statusBarIconBrightness: Brightness.dark,
-            child: SafeArea(
-              child: Stack(
-                children: [
-                  CustomScrollView(
-                    controller: _scrollController,
-                    slivers: [
-                      SliverToBoxAdapter(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+            child: viewModel.productUseCase.isLoading
+                ? const DefaultScreenLoaderWidget()
+                : viewModel.productUseCase.hasError
+                    ? DefaultErrorWidget(
+                        errorMessage: viewModel.productUseCase.exception!,
+                      )
+                    : SafeArea(
+                        child: Stack(
                           children: [
-                            SnippetProductDetailImages(
-                              productId: viewModel.productUseCase.data!.id,
-                              images: images,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: Dimens.spacingSizeDefault),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const VerticalSpaceWidget(
-                                      height: Dimens.spacingSizeDefault),
-                                  ..._buildProductInformation(viewModel),
-                                  const VerticalSpaceWidget(
-                                      height: Dimens.spacingSizeDefault),
-                                  Html(
-                                    data: viewModel.productUseCase.data!.body,
-                                  ),
-                                  const VerticalSpaceWidget(
-                                      height: Dimens.spacingSizeDefault),
-                                  _buildAttributeSelection(
-                                    name: 'Color',
-                                    value: viewModel.selectedColor.name,
-                                    onPressed: () {
-                                      showCupertinoModalPopup(
-                                        context: context,
-                                        builder: (context) => Wrap(
+                            CustomScrollView(
+                              controller: _scrollController,
+                              slivers: [
+                                SliverToBoxAdapter(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      SnippetProductDetailImages(
+                                        productId:
+                                            viewModel.productUseCase.data!.id,
+                                        images: images,
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal:
+                                                Dimens.spacingSizeDefault),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
-                                            ChangeNotifierProvider.value(
-                                              value: _viewModel,
-                                              child:
-                                                  const SnippetColorSelectionBottomSheet(),
-                                            )
+                                            const VerticalSpaceWidget(
+                                                height:
+                                                    Dimens.spacingSizeDefault),
+                                            ..._buildProductInformation(
+                                                viewModel),
+                                            const VerticalSpaceWidget(
+                                                height:
+                                                    Dimens.spacingSizeDefault),
+                                            Html(
+                                              data: viewModel
+                                                  .productUseCase.data!.body,
+                                            ),
+                                            const VerticalSpaceWidget(
+                                                height:
+                                                    Dimens.spacingSizeDefault),
+                                            _buildAttributeSelection(
+                                              name: 'Color',
+                                              value:
+                                                  viewModel.selectedColor.name,
+                                              onPressed: () {
+                                                showCupertinoModalPopup(
+                                                  context: context,
+                                                  builder: (context) => Wrap(
+                                                    children: [
+                                                      ChangeNotifierProvider
+                                                          .value(
+                                                        value: _viewModel,
+                                                        child:
+                                                            const SnippetColorSelectionBottomSheet(),
+                                                      )
+                                                    ],
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                            const SizedBox(
+                                                height:
+                                                    Dimens.spacingSizeDefault),
+                                            _buildAttributeSelection(
+                                              name: 'Size',
+                                              value: viewModel
+                                                  .selectedSizeOption.value,
+                                              onPressed: () {
+                                                showCupertinoModalPopup(
+                                                  context: context,
+                                                  builder: (context) => Wrap(
+                                                    children: [
+                                                      ChangeNotifierProvider
+                                                          .value(
+                                                        value: _viewModel,
+                                                        child:
+                                                            const SnippetSizeSelectionBottomSheet(),
+                                                      )
+                                                    ],
+                                                  ),
+                                                );
+                                              },
+                                            ),
                                           ],
                                         ),
-                                      );
-                                    },
+                                      ),
+                                    ],
                                   ),
-                                  const SizedBox(
-                                      height: Dimens.spacingSizeDefault),
-                                  _buildAttributeSelection(
-                                    name: 'Size',
-                                    value: viewModel.selectedSizeOption.value,
-                                    onPressed: () {
-                                      showCupertinoModalPopup(
-                                        context: context,
-                                        builder: (context) => Wrap(
-                                          children: [
-                                            ChangeNotifierProvider.value(
-                                              value: _viewModel,
-                                              child:
-                                                  const SnippetSizeSelectionBottomSheet(),
-                                            )
-                                          ],
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
+                            SnippetProductDetailAppBar(
+                              title: widget.title,
+                            ),
+                            _buildAddToBagButton(viewModel),
                           ],
                         ),
                       ),
-                    ],
-                  ),
-                  SnippetProductDetailAppBar(
-                    title: widget.title,
-                  ),
-                  _buildAddToBagButton(viewModel),
-                ],
-              ),
-            ),
           );
         },
       ),

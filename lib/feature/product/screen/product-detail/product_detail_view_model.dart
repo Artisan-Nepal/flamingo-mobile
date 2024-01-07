@@ -22,7 +22,7 @@ class ProductDetailViewModel extends ChangeNotifier {
   })  : _productRepository = productRepository,
         _cartRepository = cartRepository;
 
-  late Response<Product> _productUseCase;
+  Response<Product> _productUseCase = Response<Product>();
   late ProductColor _selectedColor;
   late ProductSizeOption _selectedSizeOption;
 
@@ -49,6 +49,7 @@ class ProductDetailViewModel extends ChangeNotifier {
       setProductUseCase(Response.complete(product));
     } else {
       try {
+        setProductUseCase(Response.loading());
         final response = await _productRepository.getSingleProduct(productId);
         setProductUseCase(Response.complete(response));
       } catch (exception) {

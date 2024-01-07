@@ -61,6 +61,7 @@ class AdvertisementScreen extends StatelessWidget {
                   VerticalSpaceWidget(height: Dimens.spacingSizeDefault),
                 ],
                 SnippetProductListing(
+                  // shrinkWrap: true,
                   products: advertisement.collection.products
                       .map(
                         (p) => GenericProduct(

@@ -1,6 +1,8 @@
 import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/advertisement/advertisement_listing_view_model.dart';
 import 'package:flamingo/feature/dashboard/screen/home/snippet_home_advertisement.dart';
+import 'package:flamingo/feature/dashboard/screen/home/snippet_latest_products.dart';
+import 'package:flamingo/feature/product/screen/product-listing/product_listing_view_model.dart';
 import 'package:flamingo/feature/search/screen/search_screen.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/widget.dart';
@@ -21,11 +23,13 @@ class _HomeScreenState extends State<HomeScreen>
 
   final _advertisementListingViewModel =
       locator<AdvertisementListingViewModel>();
+  final _latestProductListingViewModel = locator<ProductListingViewModel>();
 
   @override
   void initState() {
     super.initState();
     _advertisementListingViewModel.getAdvertisements();
+    _latestProductListingViewModel.getLatestProducts();
   }
 
   @override
@@ -35,7 +39,10 @@ class _HomeScreenState extends State<HomeScreen>
       providers: [
         ChangeNotifierProvider(
           create: (context) => _advertisementListingViewModel,
-        )
+        ),
+        ChangeNotifierProvider(
+          create: (context) => _latestProductListingViewModel,
+        ),
       ],
       child: Scaffold(
         appBar: _buildAppBar(),
@@ -60,6 +67,7 @@ class _HomeScreenState extends State<HomeScreen>
                 ),
                 const VerticalSpaceWidget(height: Dimens.spacingSizeLarge),
                 SnippetHomeAdvertisement(),
+                SnippetLatestProducts(),
               ],
             ),
           ),

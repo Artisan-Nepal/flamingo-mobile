@@ -32,12 +32,7 @@ class _SnippetHomeAdvertisementState extends State<SnippetHomeAdvertisement> {
             viewModel.getAdvertisementsUseCase.data?.rows ?? [];
 
         if (viewModel.getAdvertisementsUseCase.isLoading) {
-          return Container(
-            height: SizeConfig.screenHeight * 0.5,
-            width: double.infinity,
-            margin: EdgeInsets.symmetric(horizontal: Dimens.spacingSizeSmall),
-            color: AppColors.grayLighter,
-          );
+          return _buildLoader();
         }
 
         if (advertisements.isEmpty) {
@@ -98,6 +93,29 @@ class _SnippetHomeAdvertisementState extends State<SnippetHomeAdvertisement> {
           ),
         );
       },
+    );
+  }
+
+  Widget _buildLoader() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: Dimens.spacingSizeSmall),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            color: AppColors.grayLighter,
+            height: 15,
+            width: 200,
+          ),
+          VerticalSpaceWidget(height: Dimens.spacingSizeSmall),
+          Container(
+            height: SizeConfig.screenHeight * 0.5,
+            width: double.infinity,
+            color: AppColors.grayLighter,
+          ),
+          VerticalSpaceWidget(height: Dimens.spacingSizeDefault),
+        ],
+      ),
     );
   }
 }

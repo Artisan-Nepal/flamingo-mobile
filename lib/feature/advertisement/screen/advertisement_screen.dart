@@ -41,30 +41,35 @@ class AdvertisementScreen extends StatelessWidget {
                 VerticalSpaceWidget(height: Dimens.spacingSizeDefault),
 
                 // Advertisement details and products
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: Dimens.spacingSizeDefault),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        advertisement.title,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: Dimens.fontSizeExtraLarge,
-                        ),
-                      ),
-                      VerticalSpaceWidget(height: Dimens.spacingSizeExtraSmall),
-                      if (advertisement.description != null) ...[
+                SizedBox(
+                  width: double.infinity,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: Dimens.spacingSizeDefault),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
                         Text(
-                          advertisement.description!,
+                          advertisement.title,
                           style: const TextStyle(
-                            fontSize: Dimens.fontSizeDefault,
+                            fontWeight: FontWeight.bold,
+                            fontSize: Dimens.fontSizeExtraLarge,
                           ),
                         ),
-                        VerticalSpaceWidget(height: Dimens.spacingSizeDefault),
+                        VerticalSpaceWidget(
+                            height: Dimens.spacingSizeExtraSmall),
+                        if (advertisement.description != null) ...[
+                          Text(
+                            advertisement.description!,
+                            style: const TextStyle(
+                              fontSize: Dimens.fontSizeDefault,
+                            ),
+                          ),
+                          VerticalSpaceWidget(
+                              height: Dimens.spacingSizeDefault),
+                        ],
                       ],
-                    ],
+                    ),
                   ),
                 ),
               ],

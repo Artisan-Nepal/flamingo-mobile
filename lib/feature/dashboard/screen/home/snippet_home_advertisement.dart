@@ -121,8 +121,7 @@ class SninppetHomeAdvertisementItem extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        margin: const EdgeInsets.symmetric(
-            horizontal: Dimens.spacingSizeExtraSmall),
+        margin: const EdgeInsets.symmetric(horizontal: Dimens.spacingSizeSmall),
         width: double.infinity,
         color: AppColors.transparent,
         child: Column(

@@ -44,28 +44,74 @@ class _PaymentMethodSelectionScreenState
                           size: Dimens.iconSizeLarge,
                         ),
                       )
-                    : ListView.builder(
-                        padding: EdgeInsets.zero,
-                        itemCount: paymentMethods.length,
-                        itemBuilder: (context, index) {
-                          return ListTile(
-                            onTap: () {
-                              placeOrderViewModel.setSelectedPaymentMethod(
-                                  paymentMethods[index]);
-                              Navigator.pop(context);
-                            },
-                            title: Text(paymentMethods[index].name),
-                            trailing: SelectionIndicatorWidget(
-                              isSelected:
-                                  placeOrderViewModel.selectedPaymentMethod !=
-                                          null &&
-                                      placeOrderViewModel
-                                              .selectedPaymentMethod!.id ==
-                                          paymentMethods[index].id,
+                    : Wrap(
+                        children: List<Widget>.generate(paymentMethods.length,
+                            (index) {
+                          final isSelected = placeOrderViewModel
+                                      .selectedPaymentMethod !=
+                                  null &&
+                              placeOrderViewModel.selectedPaymentMethod!.id ==
+                                  paymentMethods[index].id;
+                          return Padding(
+                            padding:
+                                const EdgeInsets.only(right: Dimens.spacing_8),
+                            child: Container(
+                              height: 70,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: Dimens.spacingSizeDefault,
+                                vertical: Dimens.spacingSizeExtraSmall,
+                              ),
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.circular(Dimens.radiusSmall),
+                                color: isSelected
+                                    ? AppColors.secondaryLight
+                                    : AppColors.white,
+                                border: Border.all(
+                                  color: isSelected
+                                      ? AppColors.secondaryMain
+                                      : Theme.of(context).disabledColor,
+                                  width: 1,
+                                ),
+                              ),
+                              child: GestureDetector(
+                                onTap: () {
+                                  placeOrderViewModel.setSelectedPaymentMethod(
+                                      paymentMethods[index]);
+                                  Navigator.pop(context);
+                                },
+                                child: Image.asset(
+                                  getPaymentMethodIcon(
+                                      paymentMethods[index].code),
+                                  // color: selectedIndex == index ? AppColors.secondary_light : null,
+                                ),
+                              ),
                             ),
                           );
-                        },
+                        }),
                       );
+                // : ListView.builder(
+                //     padding: EdgeInsets.zero,
+                //     itemCount: paymentMethods.length,
+                //     itemBuilder: (context, index) {
+                //       return ListTile(
+                //         onTap: () {
+                //           placeOrderViewModel.setSelectedPaymentMethod(
+                //               paymentMethods[index]);
+                //           Navigator.pop(context);
+                //         },
+                //         title: Text(paymentMethods[index].name),
+                //         trailing: SelectionIndicatorWidget(
+                //           isSelected:
+                //               placeOrderViewModel.selectedPaymentMethod !=
+                //                       null &&
+                //                   placeOrderViewModel
+                //                           .selectedPaymentMethod!.id ==
+                //                       paymentMethods[index].id,
+                //         ),
+                //       );
+                //     },
+                //   );
               },
             );
           },

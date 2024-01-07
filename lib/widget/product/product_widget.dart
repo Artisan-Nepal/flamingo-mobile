@@ -48,7 +48,7 @@ class ProductWidget extends StatelessWidget {
               Stack(
                 children: [
                   SizedBox(
-                    height: 170,
+                    height: SizeConfig.screenHeight * 0.3,
                     width: double.infinity,
                     child: CachedNetworkImageWidget(
                       image: payload.image,

@@ -2,6 +2,7 @@
 
 import 'package:flamingo/data/model/fetch_response.dart';
 import 'package:flamingo/feature/auth/auth.dart';
+import 'package:flamingo/feature/vendor/data/model/update_favourite_vendor_request.dart';
 import 'package:flamingo/feature/vendor/data/model/vendor.dart';
 import 'package:flamingo/feature/vendor/data/vendor_repository.dart';
 import 'package:flamingo/feature/vendor/data/local/vendor_local.dart';
@@ -23,5 +24,15 @@ class VendorRepositoryImpl implements VendorRepository {
   @override
   Future<FetchResponse<Vendor>> getVendors() async {
     return await _vendorRemote.getVendors();
+  }
+
+  @override
+  Future<FetchResponse<Vendor>> getFavouriteVendors() async {
+    return await _vendorRemote.getFavouriteVendors();
+  }
+
+  @override
+  Future updateFavouriteVendor(UpdateFavouriteVendorRequest request) async {
+    return await _vendorRemote.updateFavouriteVendor(request);
   }
 }

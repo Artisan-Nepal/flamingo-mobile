@@ -29,4 +29,7 @@ class ApiUrls {
   static String vendors = '/vendors';
   static String customersCountInfo = '/customers/count-info';
   static String advertisements = '/advertisements';
+  static String updateFavouriteVendor = '/customer-favourite-vendors/update';
+  static String customerFavouriteVendor =
+      '/customer-favourite-vendors/customer';
 }

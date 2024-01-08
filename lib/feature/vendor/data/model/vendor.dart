@@ -24,6 +24,7 @@ class Vendor {
   final Address? businessAddress;
   final Address? warehouseAddress;
   final Address? returnAddress;
+  final bool isFavourited;
 
   Vendor({
     required this.id,
@@ -47,6 +48,7 @@ class Vendor {
     this.businessAddress,
     this.returnAddress,
     this.warehouseAddress,
+    required this.isFavourited,
   });
 
   factory Vendor.fromJson(Map<String, dynamic> json) => Vendor(
@@ -71,6 +73,9 @@ class Vendor {
         status: vendorStatusFromString(json['status']),
         enrolledDate: DateTime.parse(json['enrolledDate']),
         registrationNumber: json['registrationNumber'],
+        isFavourited: json['customerFavourites'] == null
+            ? false
+            : List.from(json['customerFavourites']).isNotEmpty,
         registrationDocument: json['registrationDocument'] == null
             ? null
             : UploadFileResponse.fromJson(json['registrationDocument']),
@@ -94,6 +99,11 @@ class Vendor {
   static List<Vendor> fromJsonList(dynamic json) => List<Vendor>.from(
         json.map(
           (data) => Vendor.fromJson(data),
+        ),
+      );
+  static List<Vendor> fromFavouriteJsonList(dynamic json) => List<Vendor>.from(
+        json.map(
+          (data) => Vendor.fromJson(data['vendor']),
         ),
       );
 }

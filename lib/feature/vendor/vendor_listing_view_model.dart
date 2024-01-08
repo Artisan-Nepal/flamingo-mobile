@@ -1,6 +1,8 @@
 import 'package:flamingo/data/data.dart';
+import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/vendor/data/model/vendor.dart';
 import 'package:flamingo/feature/vendor/data/vendor_repository.dart';
+import 'package:flamingo/feature/vendor/favourite_vendor_view_model.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flutter/material.dart';
 
@@ -23,6 +25,8 @@ class VendorListingViewModel extends ChangeNotifier {
     try {
       setVendorUseCase(Response.loading());
       final response = await _vendorRepository.getVendors();
+      locator<FavouriteVendorViewModel>()
+          .initFavouriteVendorStatus(response.rows);
       setVendorUseCase(Response.complete(response));
     } catch (exception) {
       setVendorUseCase(Response.error(exception));

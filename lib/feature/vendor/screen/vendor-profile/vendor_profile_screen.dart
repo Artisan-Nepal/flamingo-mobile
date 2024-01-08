@@ -116,19 +116,25 @@ class _VendorProfileScreenState extends State<VendorProfileScreen> {
     final products = viewModel.sortedProducts;
 
     if (viewModel.getProductsUseCase.isLoading) {
-      return const ProductViewShimmerWidget();
+      return SliverToBoxAdapter(child: const ProductViewShimmerWidget());
     }
     if (viewModel.getProductsUseCase.hasError) {
-      return DefaultErrorWidget(
-        errorMessage: viewModel.getProductsUseCase.exception!,
-        onActionButtonPressed: () async {
-          await getData();
-        },
+      return SliverToBoxAdapter(
+        child: DefaultErrorWidget(
+          manuallyCenter: true,
+          errorMessage: viewModel.getProductsUseCase.exception!,
+          onActionButtonPressed: () async {
+            await getData();
+          },
+        ),
       );
     }
     if (products.isEmpty) {
-      return const DefaultErrorWidget(
-        errorMessage: 'No products available.',
+      return SliverToBoxAdapter(
+        child: const DefaultErrorWidget(
+          manuallyCenter: true,
+          errorMessage: 'No products available.',
+        ),
       );
     }
 

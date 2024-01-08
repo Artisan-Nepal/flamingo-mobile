@@ -24,6 +24,7 @@ class DefaultScreen extends StatelessWidget {
     this.bottomNavBarWithButtonLabel,
     this.bottomNavBarWithButtonOnPressed,
     this.isLoading = false,
+    this.floatingActionButton,
   });
 
   final Widget child;
@@ -42,6 +43,7 @@ class DefaultScreen extends StatelessWidget {
   final String? bottomNavBarWithButtonLabel;
   final VoidCallback? bottomNavBarWithButtonOnPressed;
   final bool isLoading;
+  final Widget? floatingActionButton;
 
   @override
   Widget build(BuildContext context) {
@@ -94,6 +96,7 @@ class DefaultScreen extends StatelessWidget {
                     child: child,
                   ),
           ),
+          floatingActionButton: floatingActionButton,
           bottomNavigationBar: Padding(
             padding: const EdgeInsets.all(Dimens.spacingSizeDefault),
             child: bottomNavBarWithButton

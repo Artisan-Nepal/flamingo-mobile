@@ -28,7 +28,15 @@ class AdvertisementScreen extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
       ),
-
+      appBarActions: [
+        Padding(
+          padding: const EdgeInsets.only(right: Dimens.spacingSizeDefault),
+          child: FavVendorButtonWidget(
+            vendorId: advertisement.vendorId,
+            iconSize: Dimens.iconSizeLarge,
+          ),
+        ),
+      ],
       scrollable: false,
       child: SafeArea(
         child: CustomScrollView(
@@ -36,10 +44,6 @@ class AdvertisementScreen extends StatelessWidget {
             SliverToBoxAdapter(
               child: Column(
                 children: [
-                  FavVendorButtonWidget(
-                    vendorId: advertisement.vendorId,
-                    iconSize: Dimens.iconSizeLarge,
-                  ),
                   // VerticalSpaceWidget(height: Dimens.spacingSizeSmall),
 
                   // TextWidget(
@@ -48,7 +52,7 @@ class AdvertisementScreen extends StatelessWidget {
                   //       fontWeight: FontWeight.bold,
                   //     ),
                   // ),
-                  VerticalSpaceWidget(height: Dimens.spacingSizeDefault),
+                  // VerticalSpaceWidget(height: Dimens.spacingSizeDefault),
 
                   // Advertisement image
                   SnippetAdvertisementImages(

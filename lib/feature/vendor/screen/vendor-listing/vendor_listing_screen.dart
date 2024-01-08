@@ -1,5 +1,5 @@
 import 'package:flamingo/di/di.dart';
-import 'package:flamingo/feature/product/screen/product-listing/product_listing_screen.dart';
+import 'package:flamingo/feature/vendor/screen/vendor-profile/vendor_profile_screen.dart';
 import 'package:flamingo/feature/vendor/vendor_listing_view_model.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/button/button.dart';
@@ -9,14 +9,14 @@ import 'package:flamingo/widget/screen/screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
-class BrandListingScreen extends StatefulWidget {
-  const BrandListingScreen({super.key});
+class VendorListingScreen extends StatefulWidget {
+  const VendorListingScreen({super.key});
 
   @override
-  State<BrandListingScreen> createState() => _BrandListingScreenState();
+  State<VendorListingScreen> createState() => _VendorListingScreenState();
 }
 
-class _BrandListingScreenState extends State<BrandListingScreen> {
+class _VendorListingScreenState extends State<VendorListingScreen> {
   final _viewModel = locator<VendorListingViewModel>();
 
   @override
@@ -47,9 +47,7 @@ class _BrandListingScreenState extends State<BrandListingScreen> {
                   onTap: () {
                     NavigationHelper.push(
                       context,
-                      ProductListingScreen(
-                        title: vendors[index].storeName,
-                        productListingType: ProductListingType.vendor,
+                      VendorProfileScreen(
                         vendor: vendors[index],
                       ),
                     );

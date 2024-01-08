@@ -7,6 +7,8 @@ import 'package:flamingo/feature/vendor/data/remote/vendor_remote.dart';
 import 'package:flamingo/feature/vendor/data/remote/vendor_remote_impl.dart';
 import 'package:flamingo/feature/vendor/data/vendor_repository.dart';
 import 'package:flamingo/feature/vendor/data/vendor_repository_impl.dart';
+import 'package:flamingo/feature/vendor/favourite_vendor_view_model.dart';
+import 'package:flamingo/feature/vendor/update_favourite_vendor_view_model.dart';
 import 'package:flamingo/feature/vendor/vendor_listing_view_model.dart';
 import 'package:get_it/get_it.dart';
 
@@ -32,6 +34,14 @@ void registerVendorFeature(GetIt locator) {
   );
   locator.registerFactory(
     () => VendorListingViewModel(
+      vendorRepository: locator<VendorRepository>(),
+    ),
+  );
+  locator.registerLazySingleton<FavouriteVendorViewModel>(
+    () => FavouriteVendorViewModel(),
+  );
+  locator.registerFactory<UpdateFavouriteVendorViewModel>(
+    () => UpdateFavouriteVendorViewModel(
       vendorRepository: locator<VendorRepository>(),
     ),
   );

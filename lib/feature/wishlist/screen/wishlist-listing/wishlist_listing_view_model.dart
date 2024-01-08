@@ -5,9 +5,9 @@ import 'package:flamingo/shared/shared.dart';
 import 'package:flutter/cupertino.dart';
 
 class WishlistListingViewModel extends ChangeNotifier {
-  final WishlistRepository _wishlistRepository;
+  final VendorRepository _wishlistRepository;
 
-  WishlistListingViewModel({required WishlistRepository wishlistRepository})
+  WishlistListingViewModel({required VendorRepository wishlistRepository})
       : _wishlistRepository = wishlistRepository;
 
   Response<FetchResponse<WishlistItem>> _wishlistUseCase =

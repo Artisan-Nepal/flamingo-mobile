@@ -5,8 +5,8 @@ import 'package:flamingo/shared/shared.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class FavButtonWidget extends StatefulWidget {
-  const FavButtonWidget({
+class FavProductButtonWidget extends StatefulWidget {
+  const FavProductButtonWidget({
     super.key,
     required this.productId,
     this.iconSize = Dimens.iconSize_22,
@@ -16,10 +16,10 @@ class FavButtonWidget extends StatefulWidget {
   final double iconSize;
 
   @override
-  State<FavButtonWidget> createState() => _FavButtonWidgetState();
+  State<FavProductButtonWidget> createState() => _FavProductButtonWidgetState();
 }
 
-class _FavButtonWidgetState extends State<FavButtonWidget> {
+class _FavProductButtonWidgetState extends State<FavProductButtonWidget> {
   final _updateWishlistViewModel = locator<UpdateWishlistViewModel>();
 
   @override

@@ -3,6 +3,7 @@ import 'package:flamingo/feature/product/screen/product-listing/product_listing_
 import 'package:flamingo/feature/vendor/vendor_listing_view_model.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/button/button.dart';
+import 'package:flamingo/widget/fav-button/fav_vendor_button_widget.dart';
 import 'package:flamingo/widget/loader/loader.dart';
 import 'package:flamingo/widget/screen/screen.dart';
 import 'package:flutter/cupertino.dart';
@@ -71,31 +72,10 @@ class _BrandListingScreenState extends State<BrandListingScreen> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        // IconButton(
-                        //   onPressed: () {
-                        //     setState(() {
-                        //       if (isFavorite) {
-                        //         favorites.remove(vendors[index].storeName);
-                        //       } else {
-                        //         favorites.add(vendors[index].storeName);
-                        //       }
-                        //     });
-                        //   },
-                        //   icon: Icon(
-                        //     isFavorite ? Icons.favorite : Icons.favorite_border,
-                        //     color: isFavorite ? Colors.red : null,
-                        //   ),
-                        // ),
+                        FavVendorButtonWidget(vendorId: vendors[index].id)
                       ],
                     ),
                   ),
-                  // child: Center(
-                  //   child: Text(vendors[index].storeName,
-                  //       textAlign: TextAlign.center,
-                  //       style: textTheme(context).bodyMedium!.copyWith(
-                  //             fontWeight: FontWeight.bold,
-                  //           )),
-                  // ),
                 );
               },
             );

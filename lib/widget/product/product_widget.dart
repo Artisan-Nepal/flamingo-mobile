@@ -1,7 +1,7 @@
 import 'package:flamingo/feature/product/data/model/product.dart';
 import 'package:flamingo/feature/product/screen/product-detail/product_detail_screen.dart';
 import 'package:flamingo/shared/shared.dart';
-import 'package:flamingo/widget/fav-button/fav_button_widget.dart';
+import 'package:flamingo/widget/fav-button/fav_product_button_widget.dart';
 import 'package:flamingo/widget/image/image.dart';
 import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/material.dart';
@@ -50,7 +50,7 @@ class ProductWidget extends StatelessWidget {
               Stack(
                 children: [
                   SizedBox(
-                    height:imageHeight ??  SizeConfig.screenHeight * 0.3,
+                    height: imageHeight ?? SizeConfig.screenHeight * 0.3,
                     width: double.infinity,
                     child: CachedNetworkImageWidget(
                       image: payload.image,
@@ -62,7 +62,7 @@ class ProductWidget extends StatelessWidget {
                     Positioned(
                       top: 10,
                       right: 10,
-                      child: FavButtonWidget(
+                      child: FavProductButtonWidget(
                         productId: payload.productId,
                       ),
                     ),

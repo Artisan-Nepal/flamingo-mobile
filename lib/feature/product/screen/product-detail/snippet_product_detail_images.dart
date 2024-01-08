@@ -1,7 +1,7 @@
 import 'package:flamingo/feature/product/screen/product-detail/product_detail_app_bar_view_model.dart';
 import 'package:flamingo/feature/product/screen/product-detail/product_detail_images_screen.dart';
 import 'package:flamingo/shared/shared.dart';
-import 'package:flamingo/widget/fav-button/fav_button_widget.dart';
+import 'package:flamingo/widget/fav-button/fav_product_button_widget.dart';
 import 'package:flamingo/widget/image/cached_network_image_widget.dart';
 import 'package:flamingo/widget/space/space.dart';
 import 'package:flutter/cupertino.dart';
@@ -105,7 +105,7 @@ class _SnippetProductDetailImagesState
             children: [
               Opacity(
                 opacity: favIconOpacity,
-                child: FavButtonWidget(productId: widget.productId),
+                child: FavProductButtonWidget(productId: widget.productId),
               ),
               const VerticalSpaceWidget(height: Dimens.spacingSizeLarge),
               Opacity(

@@ -4,11 +4,13 @@ import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/cart/data/cart_repository.dart';
 import 'package:flamingo/feature/cart/data/model/add_to_cart_request.dart';
 import 'package:flamingo/feature/cart/data/model/cart.dart';
+import 'package:flamingo/feature/customer-activity/create_activity_view_model.dart';
 import 'package:flamingo/feature/customer-activity/customer_activity_view_model.dart';
 import 'package:flamingo/feature/product/data/model/product.dart';
 import 'package:flamingo/feature/product/data/model/product_color.dart';
 import 'package:flamingo/feature/product/data/model/product_size.dart';
 import 'package:flamingo/feature/product/data/product_repository.dart';
+import 'package:flamingo/shared/constant/user_activity_type.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flutter/material.dart';
 
@@ -58,8 +60,13 @@ class ProductDetailViewModel extends ChangeNotifier {
     }
     if (_productUseCase.hasCompleted) {
       _selectedColor = _productUseCase.data!.variants.first.color;
-
       _selectedSizeOption = _productUseCase.data!.variants.first.size;
+
+      await locator<CreateActivityViewModel>().createUserActivity(
+        vendorId: _productUseCase.data!.vendor.id,
+        productId: productId,
+        activityType: UserActivityType.viewProduct,
+      );
     }
   }
 

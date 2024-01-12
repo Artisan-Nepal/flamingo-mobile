@@ -1,7 +1,9 @@
 import 'package:flamingo/di/di.dart';
+import 'package:flamingo/feature/customer-activity/create_activity_view_model.dart';
 import 'package:flamingo/feature/product/screen/product-listing/product_listing_view_model.dart';
 import 'package:flamingo/feature/product/screen/product-listing/snippet_product_listing.dart';
 import 'package:flamingo/feature/vendor/data/model/vendor.dart';
+import 'package:flamingo/shared/constant/user_activity_type.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/error/default_error_widget.dart';
 import 'package:flamingo/widget/fav-button/fav_vendor_button_widget.dart';
@@ -31,8 +33,19 @@ class _VendorProfileScreenState extends State<VendorProfileScreen> {
     getData();
   }
 
-  getData() {
-    _productListingViewModel.getVendorProducts(widget.vendor.id);
+  logActivity() async {
+    await locator<CreateActivityViewModel>().createUserActivity(
+      vendorId: widget.vendor.id,
+      activityType: UserActivityType.viewVendor,
+    );
+  }
+
+  getData() async {
+    await _productListingViewModel.getVendorProducts(widget.vendor.id);
+
+    if (_productListingViewModel.getProductsUseCase.hasCompleted) {
+      await logActivity();
+    }
   }
 
   @override

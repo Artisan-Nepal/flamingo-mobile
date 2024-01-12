@@ -1,5 +1,6 @@
 import 'package:flamingo/feature/product/data/model/product.dart';
 import 'package:flamingo/feature/product/screen/product-detail/product_detail_screen.dart';
+import 'package:flamingo/shared/enum/lead_source.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/fav-button/fav_product_button_widget.dart';
 import 'package:flamingo/widget/image/image.dart';
@@ -13,12 +14,16 @@ class ProductWidget extends StatelessWidget {
     this.needFavIcon = true,
     required this.payload,
     this.imageHeight,
+    this.leadSource,
+    this.advertisementId,
   }) : super(key: key);
 
   final int nameMaxLines;
   final bool needFavIcon;
   final GenericProduct payload;
   final double? imageHeight;
+  final LeadSource? leadSource;
+  final String? advertisementId;
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +35,8 @@ class ProductWidget extends StatelessWidget {
             productId: payload.productId,
             product: payload.product,
             title: payload.title,
+            advertisementId: advertisementId,
+            leadSource: leadSource,
           ),
         );
       },
@@ -64,6 +71,8 @@ class ProductWidget extends StatelessWidget {
                       right: 10,
                       child: FavProductButtonWidget(
                         productId: payload.productId,
+                        advertisementId: advertisementId,
+                        leadSource: leadSource,
                       ),
                     ),
                 ],

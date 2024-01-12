@@ -1,6 +1,10 @@
+import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/advertisement/data/model/advertisement.dart';
 import 'package:flamingo/feature/advertisement/screen/snippet_advertisement_images.dart';
+import 'package:flamingo/feature/customer-activity/create_activity_view_model.dart';
 import 'package:flamingo/feature/product/screen/product-listing/snippet_product_listing.dart';
+import 'package:flamingo/shared/constant/advertisement_activity_type.dart';
+import 'package:flamingo/shared/enum/lead_source.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/shared/util/util.dart';
 import 'package:flamingo/widget/fav-button/fav_vendor_button_widget.dart';
@@ -9,7 +13,7 @@ import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class AdvertisementScreen extends StatelessWidget {
+class AdvertisementScreen extends StatefulWidget {
   const AdvertisementScreen({
     super.key,
     required this.advertisement,
@@ -18,12 +22,30 @@ class AdvertisementScreen extends StatelessWidget {
   final Advertisement advertisement;
 
   @override
+  State<AdvertisementScreen> createState() => _AdvertisementScreenState();
+}
+
+class _AdvertisementScreenState extends State<AdvertisementScreen> {
+  @override
+  void initState() {
+    super.initState();
+    logActivity();
+  }
+
+  logActivity() async {
+    await locator<CreateActivityViewModel>().createAdvertisementActivity(
+      advertisementId: widget.advertisement.id,
+      activityType: AdvertisementActivityType.click,
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     return DefaultScreen(
       padding: EdgeInsets.zero,
       // needAppBar: false,
       appBarTitle: Text(
-        advertisement.vendor.storeName,
+        widget.advertisement.vendor.storeName,
         style: textTheme(context).titleLarge!.copyWith(
               fontWeight: FontWeight.bold,
             ),
@@ -32,7 +54,7 @@ class AdvertisementScreen extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(right: Dimens.spacingSizeDefault),
           child: FavVendorButtonWidget(
-            vendorId: advertisement.vendorId,
+            vendorId: widget.advertisement.vendorId,
             iconSize: Dimens.iconSizeLarge,
           ),
         ),
@@ -56,7 +78,8 @@ class AdvertisementScreen extends StatelessWidget {
 
                   // Advertisement image
                   SnippetAdvertisementImages(
-                    images: advertisement.images.map((e) => e.url).toList(),
+                    images:
+                        widget.advertisement.images.map((e) => e.url).toList(),
                   ),
 
                   VerticalSpaceWidget(height: Dimens.spacingSizeDefault),
@@ -71,7 +94,7 @@ class AdvertisementScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            advertisement.title,
+                            widget.advertisement.title,
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: Dimens.fontSizeExtraLarge,
@@ -79,9 +102,9 @@ class AdvertisementScreen extends StatelessWidget {
                           ),
                           VerticalSpaceWidget(
                               height: Dimens.spacingSizeExtraSmall),
-                          if (advertisement.description != null) ...[
+                          if (widget.advertisement.description != null) ...[
                             Text(
-                              advertisement.description!,
+                              widget.advertisement.description!,
                               style: const TextStyle(
                                 fontSize: Dimens.fontSizeDefault,
                               ),
@@ -98,14 +121,16 @@ class AdvertisementScreen extends StatelessWidget {
             ),
             SnippetProductListing(
               useSliver: true,
-              products: advertisement.collection.products
+              advertisementId: widget.advertisement.id,
+              leadSource: LeadSource.advertisement,
+              products: widget.advertisement.collection.products
                   .map(
                     (p) => GenericProduct(
                       image: p.images.firstOrNull ?? "",
                       price: p.price,
                       productId: p.id,
                       title: p.title,
-                      vendor: advertisement.vendor.storeName,
+                      vendor: widget.advertisement.vendor.storeName,
                     ),
                   )
                   .toList(),

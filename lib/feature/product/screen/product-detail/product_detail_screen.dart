@@ -7,6 +7,7 @@ import 'package:flamingo/feature/product/screen/product-detail/snippet_color_sel
 import 'package:flamingo/feature/product/screen/product-detail/snippet_product_detail_app_bar.dart';
 import 'package:flamingo/feature/product/screen/product-detail/snippet_product_detail_images.dart';
 import 'package:flamingo/feature/product/screen/product-detail/snippet_size_selection_bottom_sheet.dart';
+import 'package:flamingo/shared/enum/lead_source.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/error/default_error_widget.dart';
 import 'package:flamingo/widget/loader/default_screen_loader_widget.dart';
@@ -22,11 +23,15 @@ class ProductDetailScreen extends StatefulWidget {
     this.product,
     required this.productId,
     required this.title,
+    this.leadSource,
+    this.advertisementId,
   });
 
   final Product? product;
   final String productId;
   final String title;
+  final LeadSource? leadSource;
+  final String? advertisementId;
 
   @override
   State<ProductDetailScreen> createState() => _ProductDetailScreenState();
@@ -41,7 +46,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   @override
   void initState() {
     super.initState();
-    _viewModel.setProduct(widget.productId, widget.product);
+    _viewModel.setProduct(widget.productId, widget.product,
+        leadSource: widget.leadSource, advertisementId: widget.advertisementId);
     _appBarViewModel.init();
     _scrollController.addListener(() {
       _appBarViewModel.setScrollOffset(_scrollController.offset);
@@ -232,7 +238,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         width: SizeConfig.screenWidth - 2 * Dimens.spacingSizeDefault,
         onPressed: () async {
           showFullScreenLoader(context);
-          await viewModel.addToCart();
+          await viewModel.addToCart(
+            leadSource: widget.leadSource,
+            advertisementId: widget.advertisementId,
+          );
           _observeAddToCartResponse(viewModel);
         },
       ),

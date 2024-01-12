@@ -28,8 +28,12 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   void initState() {
     super.initState();
-    _advertisementListingViewModel.getAdvertisements();
+    getData();
+  }
+
+  getData() async {
     _latestProductListingViewModel.getLatestProducts();
+    _advertisementListingViewModel.getAdvertisements();
   }
 
   @override

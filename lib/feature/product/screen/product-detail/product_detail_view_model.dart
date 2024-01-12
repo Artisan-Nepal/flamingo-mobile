@@ -4,11 +4,15 @@ import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/cart/data/cart_repository.dart';
 import 'package:flamingo/feature/cart/data/model/add_to_cart_request.dart';
 import 'package:flamingo/feature/cart/data/model/cart.dart';
+import 'package:flamingo/feature/customer-activity/create_activity_view_model.dart';
 import 'package:flamingo/feature/customer-activity/customer_activity_view_model.dart';
 import 'package:flamingo/feature/product/data/model/product.dart';
 import 'package:flamingo/feature/product/data/model/product_color.dart';
 import 'package:flamingo/feature/product/data/model/product_size.dart';
 import 'package:flamingo/feature/product/data/product_repository.dart';
+import 'package:flamingo/shared/constant/advertisement_activity_type.dart';
+import 'package:flamingo/shared/constant/user_activity_type.dart';
+import 'package:flamingo/shared/enum/lead_source.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flutter/material.dart';
 
@@ -44,7 +48,12 @@ class ProductDetailViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  setProduct(String productId, Product? product) async {
+  setProduct(
+    String productId,
+    Product? product, {
+    LeadSource? leadSource,
+    String? advertisementId,
+  }) async {
     if (product != null) {
       setProductUseCase(Response.complete(product));
     } else {
@@ -58,8 +67,23 @@ class ProductDetailViewModel extends ChangeNotifier {
     }
     if (_productUseCase.hasCompleted) {
       _selectedColor = _productUseCase.data!.variants.first.color;
-
       _selectedSizeOption = _productUseCase.data!.variants.first.size;
+
+      await locator<CreateActivityViewModel>().createUserActivity(
+        vendorId: _productUseCase.data!.vendor.id,
+        productId: productId,
+        activityType: UserActivityType.viewProduct,
+      );
+
+      if (leadSource != null &&
+          advertisementId != null &&
+          leadSource.isAdvertisement) {
+        locator<CreateActivityViewModel>().createAdvertisementActivity(
+          advertisementId: advertisementId,
+          productId: productId,
+          activityType: AdvertisementActivityType.clickProduct,
+        );
+      }
     }
   }
 
@@ -103,7 +127,10 @@ class ProductDetailViewModel extends ChangeNotifier {
         variant.color.id == color.id && variant.size.id == size?.id);
   }
 
-  Future<void> addToCart() async {
+  Future<void> addToCart({
+    LeadSource? leadSource,
+    String? advertisementId,
+  }) async {
     try {
       setAddToCartUseCase(Response.loading());
       final response = await _cartRepository.addToCart(
@@ -114,6 +141,16 @@ class ProductDetailViewModel extends ChangeNotifier {
       );
       locator<CustomerActivityViewModel>().getCustomerCountInfo();
       setAddToCartUseCase(Response.complete(response));
+
+      if (leadSource != null &&
+          advertisementId != null &&
+          leadSource.isAdvertisement) {
+        locator<CreateActivityViewModel>().createAdvertisementActivity(
+          advertisementId: advertisementId,
+          productId: _productUseCase.data!.id,
+          activityType: AdvertisementActivityType.addToCartProduct,
+        );
+      }
     } catch (exception) {
       setAddToCartUseCase(Response.error(exception));
     }

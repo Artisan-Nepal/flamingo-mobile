@@ -1,5 +1,6 @@
 import 'package:flamingo/feature/product/screen/product-detail/product_detail_app_bar_view_model.dart';
 import 'package:flamingo/feature/product/screen/product-detail/product_detail_images_screen.dart';
+import 'package:flamingo/shared/enum/lead_source.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/fav-button/fav_product_button_widget.dart';
 import 'package:flamingo/widget/image/cached_network_image_widget.dart';
@@ -13,10 +14,14 @@ class SnippetProductDetailImages extends StatefulWidget {
     Key? key,
     required this.images,
     required this.productId,
+    this.leadSource,
+    this.advertisementId,
   }) : super(key: key);
 
   final List<String> images;
   final String productId;
+  final LeadSource? leadSource;
+  final String? advertisementId;
 
   @override
   State<SnippetProductDetailImages> createState() =>
@@ -105,7 +110,11 @@ class _SnippetProductDetailImagesState
             children: [
               Opacity(
                 opacity: favIconOpacity,
-                child: FavProductButtonWidget(productId: widget.productId),
+                child: FavProductButtonWidget(
+                  productId: widget.productId,
+                  advertisementId: widget.advertisementId,
+                  leadSource: widget.leadSource,
+                ),
               ),
               const VerticalSpaceWidget(height: Dimens.spacingSizeLarge),
               Opacity(

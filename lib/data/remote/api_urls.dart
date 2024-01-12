@@ -32,4 +32,6 @@ class ApiUrls {
   static String updateFavouriteVendor = '/customer-favourite-vendors/update';
   static String customerFavouriteVendor =
       '/customer-favourite-vendors/customer';
+  static String userActivity = '/user-activity';
+  static String advertisementActivity = '/advertisement-activity';
 }

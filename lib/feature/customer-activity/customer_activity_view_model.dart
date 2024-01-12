@@ -1,5 +1,5 @@
 import 'package:flamingo/feature/customer-activity/data/customer_activity_repository.dart';
-import 'package:flamingo/feature/customer-activity/data/model/wishlist_item.dart';
+import 'package:flamingo/feature/customer-activity/data/model/customer_count_info_response.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flutter/cupertino.dart';
 

@@ -1,3 +1,4 @@
+import 'package:flamingo/shared/enum/lead_source.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/product/product.dart';
 import 'package:flutter/material.dart';
@@ -10,12 +11,16 @@ class SnippetProductListing extends StatelessWidget {
     this.shrinkWrap = true,
     this.useSliver = false,
     this.padding = Dimens.spacingSizeDefault,
+    this.leadSource,
+    this.advertisementId,
   });
 
   final List<GenericProduct> products;
   final bool shrinkWrap;
   final bool useSliver;
   final double padding;
+  final LeadSource? leadSource;
+  final String? advertisementId;
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +35,8 @@ class SnippetProductListing extends StatelessWidget {
               ),
               child: ProductWidget(
                 payload: products[index],
+                advertisementId: advertisementId,
+                leadSource: leadSource,
               ),
             );
           },
@@ -53,6 +60,8 @@ class SnippetProductListing extends StatelessWidget {
       itemBuilder: (context, index) {
         return ProductWidget(
           payload: products[index],
+          advertisementId: advertisementId,
+          leadSource: leadSource,
         );
       },
     );

@@ -4,6 +4,7 @@ import 'package:flamingo/feature/advertisement/screen/snippet_advertisement_imag
 import 'package:flamingo/feature/customer-activity/create_activity_view_model.dart';
 import 'package:flamingo/feature/product/screen/product-listing/snippet_product_listing.dart';
 import 'package:flamingo/shared/constant/advertisement_activity_type.dart';
+import 'package:flamingo/shared/enum/lead_source.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/shared/util/util.dart';
 import 'package:flamingo/widget/fav-button/fav_vendor_button_widget.dart';
@@ -120,6 +121,8 @@ class _AdvertisementScreenState extends State<AdvertisementScreen> {
             ),
             SnippetProductListing(
               useSliver: true,
+              advertisementId: widget.advertisement.id,
+              leadSource: LeadSource.advertisement,
               products: widget.advertisement.collection.products
                   .map(
                     (p) => GenericProduct(

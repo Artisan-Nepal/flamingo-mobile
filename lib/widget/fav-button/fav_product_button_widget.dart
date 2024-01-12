@@ -1,6 +1,7 @@
 import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/wishlist/update_wishlist_view_model.dart';
 import 'package:flamingo/feature/wishlist/wishlist_view_model.dart';
+import 'package:flamingo/shared/enum/lead_source.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -10,10 +11,14 @@ class FavProductButtonWidget extends StatefulWidget {
     super.key,
     required this.productId,
     this.iconSize = Dimens.iconSize_22,
+    this.leadSource,
+    this.advertisementId,
   });
 
   final String productId;
   final double iconSize;
+  final LeadSource? leadSource;
+  final String? advertisementId;
 
   @override
   State<FavProductButtonWidget> createState() => _FavProductButtonWidgetState();
@@ -52,6 +57,10 @@ class _FavProductButtonWidgetState extends State<FavProductButtonWidget> {
   }
 
   Future<void> _onUpdateWishlist(UpdateWishlistViewModel viewModel) async {
-    await viewModel.updateWishlist(widget.productId);
+    await viewModel.updateWishlist(
+      widget.productId,
+      leadSource: widget.leadSource,
+      advertisementId: widget.advertisementId,
+    );
   }
 }

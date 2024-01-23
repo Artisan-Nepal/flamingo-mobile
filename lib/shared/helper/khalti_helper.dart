@@ -9,7 +9,7 @@ class KhaltiHelper {
     required String productId,
     required String productName,
     String productUrl = 'https://www.khalti.com/#/bazaar',
-    required String mobileNumber,
+    String? mobileNumber,
     Map<String, Object>? additionalData,
   }) async {
     late KhaltiPaymentResponse khaltiPaymentResponse;

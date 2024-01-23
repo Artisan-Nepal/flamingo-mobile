@@ -4,7 +4,7 @@ import 'package:flamingo/feature/user/data/customer.dart';
 
 abstract class AuthRepository {
   Future<void> onBoard();
-  Future<SendOtpResponse> sendLoginOtp(String mobileNumber);
+  Future<SendOtpResponse> sendLoginOtp(String email);
   Future<SendOtpResponse> resendLoginOtp(String otpToken);
   Future<LoginResponse> verifyLoginOtp(String otpToken, String otpCode);
   Future<void> setUserLocal(Customer user);

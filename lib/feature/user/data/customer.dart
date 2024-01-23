@@ -3,7 +3,7 @@ import 'package:flamingo/shared/shared.dart';
 class Customer extends JsonSerializable {
   final List<UserRole> roles;
   final String id;
-  final String mobileNumber;
+  final String? mobileNumber;
   final String userId;
   final DateTime createdAt;
   final String? firstName;

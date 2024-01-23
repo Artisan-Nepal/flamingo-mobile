@@ -1,11 +1,11 @@
 class SendOtpRequest {
-  String mobileNumber;
+  String email;
 
   SendOtpRequest({
-    required this.mobileNumber,
+    required this.email,
   });
 
   Map<String, dynamic> toJson() => {
-        "mobileNumber": mobileNumber,
+        "email": email,
       };
 }

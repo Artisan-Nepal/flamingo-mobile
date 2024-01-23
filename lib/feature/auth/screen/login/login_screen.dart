@@ -17,7 +17,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _viewModel = locator<LoginViewModel>();
 
-  final _mobileNumberController = TextEditingController();
+  final _emailController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -38,7 +38,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       height: Dimens.spacingSizeSmall,
                     ),
                     Text(
-                      'Connect with mobile number',
+                      'Connect with email',
                       style: Theme.of(context)
                           .textTheme
                           .titleLarge!
@@ -47,17 +47,23 @@ class _LoginScreenState extends State<LoginScreen> {
                     const VerticalSpaceWidget(
                         height: Dimens.spacingSizeExtraSmall),
                     Text(
-                      'Please enter your mobile number',
+                      'Please enter your email',
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     const VerticalSpaceWidget(
                         height: Dimens.spacingSizeExtraLarge),
-                    PhoneTextFieldWidget(
-                      controller: _mobileNumberController,
-                      maxLength: 10,
+                    // PhoneTextFieldWidget(
+                    //   controller: _mobileNumberController,
+                    //   maxLength: 10,
+                    //   enabled: !viewModel.sendOtpUseCase.isLoading,
+                    //   textInputAction: TextInputAction.done,
+                    //   validator: validatePhoneNumber,
+                    // ),
+                    TextFieldWidget(
+                      controller: _emailController,
                       enabled: !viewModel.sendOtpUseCase.isLoading,
                       textInputAction: TextInputAction.done,
-                      validator: validatePhoneNumber,
+                      validator: validateEmail,
                     ),
                     const VerticalSpaceWidget(
                       height: Dimens.spacingSizeOverLarge,
@@ -82,7 +88,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _onLogin(LoginViewModel viewModel) async {
     if (_formKey.currentState!.validate()) {
-      await viewModel.sendOtp(_mobileNumberController.text);
+      await viewModel.sendOtp(_emailController.text);
       _observeSendOtpResponse(viewModel);
     }
   }
@@ -94,7 +100,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ChangeNotifierProvider.value(
           value: viewModel,
           builder: (context, child) => VerifyOtpScreen(
-            otpReceiver: _mobileNumberController.text,
+            otpReceiver: _emailController.text,
           ),
         ),
       );

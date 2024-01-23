@@ -40,11 +40,11 @@ class LoginViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> sendOtp(String mobileNumber) async {
+  Future<void> sendOtp(String email) async {
     try {
       setVerifyOtpUseCase(Response());
       setSendOtpUseCase(Response.loading());
-      final response = await _authRepository.sendLoginOtp(mobileNumber);
+      final response = await _authRepository.sendLoginOtp(email);
       _canResendCode = false;
       _otpToken = response.otpToken;
       setSendOtpUseCase(Response.complete(response));

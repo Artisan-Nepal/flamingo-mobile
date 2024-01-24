@@ -42,7 +42,10 @@ class _SnippetAddToCartSummaryBottomSheetState
                   Flexible(
                     child: CachedNetworkImageWidget(
                       height: 200,
-                      image: viewModel.selectedVariant.image.url,
+                      image: extractProductVariantImage(
+                        viewModel.productUseCase.data!.images,
+                        viewModel.selectedVariant,
+                      ),
                     ),
                   ),
                   const HorizontalSpaceWidget(width: Dimens.spacingSizeDefault),

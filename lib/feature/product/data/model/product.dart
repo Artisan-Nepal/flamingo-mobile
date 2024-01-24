@@ -59,7 +59,7 @@ class ProductVariant {
   final ProductColor color;
   final ProductSizeOption size;
   final List<ProductAttributeResponse> attributes;
-  final UploadFileResponse image;
+  final UploadFileResponse? image;
 
   ProductVariant({
     required this.id,

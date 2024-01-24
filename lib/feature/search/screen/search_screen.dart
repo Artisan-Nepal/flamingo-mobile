@@ -112,8 +112,11 @@ class _SearchScreenState extends State<SearchScreen> {
                                           products: products
                                               .map(
                                                 (product) => GenericProduct(
-                                                  image: product
-                                                      .variants.first.image.url,
+                                                  image:
+                                                      extractProductDefaultImage(
+                                                    product.images,
+                                                    product.variants,
+                                                  ),
                                                   price: product
                                                       .variants.first.price,
                                                   productId: product.id,

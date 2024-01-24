@@ -10,11 +10,13 @@ class SnippetOrderItem extends StatelessWidget {
     required this.productTitle,
     required this.productVariant,
     required this.quantity,
+    required this.image,
   }) : super(key: key);
 
   final String productTitle;
   final ProductVariant productVariant;
   final int quantity;
+  final String image;
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +47,7 @@ class SnippetOrderItem extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                     child: CachedNetworkImageWidget(
                       fit: BoxFit.cover,
-                      image: productVariant.image.url,
+                      image: image,
                     ),
                   ),
                 ),

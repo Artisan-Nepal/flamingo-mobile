@@ -44,7 +44,10 @@ class _SnippetWishListItemState extends State<SnippetWishListItem> {
                   children: [
                     Positioned.fill(
                       child: CachedNetworkImageWidget(
-                        image: widget.item.product.variants.first.image.url,
+                        image: extractProductDefaultImage(
+                          widget.item.product.images,
+                          widget.item.product.variants,
+                        ),
                         fit: BoxFit.cover,
                       ),
                     ),

@@ -171,6 +171,10 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
           quantity: widget.order.quantity,
           productTitle: widget.order.product.title,
           productVariant: widget.order.productVariant,
+          image: extractProductVariantImage(
+            widget.order.product.images,
+            widget.order.productVariant,
+          ),
         )
       ],
     );

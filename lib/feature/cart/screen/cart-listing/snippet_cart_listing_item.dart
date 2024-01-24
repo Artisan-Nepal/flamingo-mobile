@@ -46,7 +46,10 @@ class _SnippetCartListingItemState extends State<SnippetCartListingItem> {
                       Flexible(
                         flex: 2,
                         child: CachedNetworkImageWidget(
-                          image: widget.cartItem.productVariant.image.url,
+                          image: extractProductVariantImage(
+                            widget.cartItem.product.images,
+                            widget.cartItem.productVariant,
+                          ),
                           fit: BoxFit.cover,
                           height: 150,
                         ),

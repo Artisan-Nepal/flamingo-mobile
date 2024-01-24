@@ -72,7 +72,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           ];
           images.addAll(List<String>.from(
               (viewModel.productUseCase.data?.variants ?? [])
-                  .map((e) => e.image.url)));
+                  .map((e) => e.image?.url)));
           return DefaultScreen(
             scrollable: false,
             padding: EdgeInsets.zero,

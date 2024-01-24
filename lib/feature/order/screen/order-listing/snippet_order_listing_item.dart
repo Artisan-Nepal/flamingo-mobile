@@ -2,7 +2,6 @@ import 'package:flamingo/feature/order/data/model/order.dart';
 import 'package:flamingo/feature/order/screen/order-detail/order_detail_screen.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/image/cached_network_image_widget.dart';
-import 'package:flamingo/widget/space/space.dart';
 import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/material.dart';
 
@@ -53,7 +52,10 @@ class SnippetOrderListingItem extends StatelessWidget {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(Dimens.radius_5),
                   child: CachedNetworkImageWidget(
-                    image: order.productVariant.image.url,
+                    image: extractProductVariantImage(
+                      order.product.images,
+                      order.productVariant,
+                    ),
                     fit: BoxFit.cover,
                     height: 150,
                     width: 130,

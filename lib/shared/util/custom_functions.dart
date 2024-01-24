@@ -1,5 +1,4 @@
 import 'package:flamingo/feature/feature.dart';
-import 'package:flamingo/feature/order/data/model/order_status.dart';
 import 'package:flamingo/feature/product/data/model/product.dart';
 import 'package:flamingo/shared/constant/payment_method.dart';
 import 'package:flamingo/shared/shared.dart';
@@ -168,4 +167,24 @@ String getPaymentMethodIcon(String code) {
     default:
       return '';
   }
+}
+
+String extractProductDefaultImage(
+    List<String> defaultImages, List<ProductVariant> variantImages) {
+  String imageUrl;
+  try {
+    imageUrl = variantImages
+            .firstWhere((element) => element.image != null)
+            .image
+            ?.url ??
+        "";
+  } catch (err) {
+    imageUrl = "";
+  }
+  return defaultImages.firstOrNull ?? imageUrl;
+}
+
+String extractProductVariantImage(
+    List<String> defaultImages, ProductVariant variantImage) {
+  return variantImage.image?.url ?? defaultImages.firstOrNull ?? "";
 }

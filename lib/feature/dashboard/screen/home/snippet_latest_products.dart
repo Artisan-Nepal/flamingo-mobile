@@ -56,7 +56,10 @@ class SnippetLatestProducts extends StatelessWidget {
                 child: ProductWidget(
                   payload: GenericProduct(
                     product: products[index],
-                    image: products[index].variants.first.image.url,
+                    image: extractProductDefaultImage(
+                      products[index].images,
+                      products[index].variants,
+                    ),
                     price: products[index].variants.first.price,
                     productId: products[index].id,
                     title: products[index].title,

@@ -73,12 +73,14 @@ class OrderItemProduct {
   final String title;
   final String body;
   final Vendor vendor;
+  final List<String> images;
 
   OrderItemProduct({
     required this.id,
     required this.title,
     required this.body,
     required this.vendor,
+    required this.images,
   });
 
   factory OrderItemProduct.fromJson(Map<String, dynamic> json) =>
@@ -87,5 +89,8 @@ class OrderItemProduct {
         vendor: Vendor.fromJson(json['vendor']),
         title: json['title'],
         body: json['body'],
+        images: json['images'] == null
+            ? []
+            : List<String>.from(json['images'].map((e) => e['imageUrl'])),
       );
 }

@@ -223,6 +223,10 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
                           quantity: cartItems[index].quantity,
                           productTitle: cartItems[index].product.title,
                           productVariant: cartItems[index].productVariant,
+                          image: extractProductVariantImage(
+                            cartItems[index].product.images,
+                            cartItems[index].productVariant,
+                          ),
                         ),
                       );
                     },

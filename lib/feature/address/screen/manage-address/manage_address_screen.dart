@@ -22,6 +22,8 @@ class ManageAddressScreen extends StatefulWidget {
 
 class _ManageAddressScreenState extends State<ManageAddressScreen> {
   final _formKey = GlobalKey<FormState>();
+  final _fullNameController = TextEditingController();
+  final _mobileNumberController = TextEditingController();
   final _addressController = TextEditingController();
   final _landmarkController = TextEditingController();
 
@@ -35,6 +37,8 @@ class _ManageAddressScreenState extends State<ManageAddressScreen> {
 
   _setAddressValues(Address? address) async {
     _viewModel.init(address);
+    _fullNameController.text = address?.fullName ?? "";
+    _mobileNumberController.text = address?.mobileNumber ?? "";
     _addressController.text = address?.name ?? "";
     _landmarkController.text = address?.landmark ?? "";
     _viewModel.getProvinces();
@@ -62,6 +66,25 @@ class _ManageAddressScreenState extends State<ManageAddressScreen> {
               key: _formKey,
               child: Column(
                 children: [
+                  TextFieldWidget(
+                    controller: _fullNameController,
+                    label: 'Full Name',
+                    hintText: 'Enter full name',
+                    validator: (text) {
+                      return checkIfEmpty('Full name', text);
+                    },
+                    enabled: !viewModel.manageAddressUseCase.isLoading,
+                  ),
+                  const VerticalSpaceWidget(height: Dimens.spacingSizeDefault),
+                  PhoneTextFieldWidget(
+                    label: 'Mobile number',
+                    controller: _mobileNumberController,
+                    maxLength: 10,
+                    enabled: !viewModel.manageAddressUseCase.isLoading,
+                    textInputAction: TextInputAction.done,
+                    validator: validatePhoneNumber,
+                  ),
+                  const VerticalSpaceWidget(height: Dimens.spacingSizeDefault),
                   DropDownFieldWidget<SubAddress>(
                     label: 'Province',
                     hintText: viewModel.provinceUseCase.isLoading
@@ -157,6 +180,8 @@ class _ManageAddressScreenState extends State<ManageAddressScreen> {
   _onSubmit(ManageAddressViewModel viewModel) async {
     if (_formKey.currentState!.validate()) {
       await viewModel.manageAddress(
+        _fullNameController.text,
+        _mobileNumberController.text,
         _addressController.text,
         _landmarkController.text,
         widget.existingAddress?.id,

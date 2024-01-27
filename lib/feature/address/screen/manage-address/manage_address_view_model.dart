@@ -120,12 +120,24 @@ class ManageAddressViewModel extends ChangeNotifier {
   }
 
   Future<void> manageAddress(
-      String address, String? landmark, String? existingAddressId) async {
+    String fullName,
+    String mobileNumber,
+    String address,
+    String? landmark,
+    String? existingAddressId,
+  ) async {
     try {
       setManageAddressUseCase(Response.loading());
       if (existingAddressId == null) {
-        await _addressRepository.createAddress(CreateAddressRequest(
-            name: address, areaId: _selectedArea!.id, landmark: landmark));
+        await _addressRepository.createAddress(
+          CreateAddressRequest(
+            fullName: fullName,
+            mobileNumber: mobileNumber,
+            name: address,
+            areaId: _selectedArea!.id,
+            landmark: landmark,
+          ),
+        );
       } else {
         await _addressRepository.udpateAddress(
           existingAddressId,

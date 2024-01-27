@@ -107,7 +107,6 @@ class _AddressListingScreenState extends State<AddressListingScreen> {
                     ),
                   );
                 },
-                label: 'Edit',
                 backgroundColor: Colors.blue,
                 icon: Icons.edit,
               ),
@@ -116,7 +115,6 @@ class _AddressListingScreenState extends State<AddressListingScreen> {
                 onPressed: (context2) {
                   _handleOnRemoveAddress(context, addresses[index].address.id);
                 },
-                label: 'Delete',
                 backgroundColor: Colors.red,
                 icon: Icons.delete,
               ),
@@ -140,6 +138,16 @@ class _AddressListingScreenState extends State<AddressListingScreen> {
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Row(
+                    children: [
+                      if (addresses[index].address.fullName != null)
+                        Text(addresses[index].address.fullName!),
+                      if (addresses[index].address.mobileNumber != null) ...[
+                        Text(', '),
+                        Text(addresses[index].address.mobileNumber!)
+                      ]
+                    ],
+                  ),
                   Text(addresses[index].address.area.name),
                   Text(addresses[index].address.area.city.name),
                   Text(addresses[index].address.area.city.province.name)

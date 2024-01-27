@@ -107,29 +107,33 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
           // Shipping address
           SnippetOrderDetailInfo(
             label: 'Shipping Address',
-            value:
+            title:
                 '${widget.order.shippingAddress.name}, ${widget.order.shippingAddress.area.name}',
+            subtitle:
+                '${widget.order.shippingAddress.fullName}, ${widget.order.shippingAddress.mobileNumber}',
           ),
           _buildDivider(),
           // Billing address
           SnippetOrderDetailInfo(
             label: 'Billing Address',
-            value:
+            title:
                 '${widget.order.billingAddress.name}, ${widget.order.billingAddress.area.name}',
+            subtitle:
+                '${widget.order.billingAddress.fullName}, ${widget.order.billingAddress.mobileNumber}',
           ),
           _buildDivider(),
 
           // Shipping Method
           SnippetOrderDetailInfo(
             label: 'Shipping Method',
-            value: widget.order.shippingMethod.name,
+            title: widget.order.shippingMethod.name,
           ),
           _buildDivider(),
 
           // Payment Method
           SnippetOrderDetailInfo(
             label: 'Payment Method',
-            value: widget.order.paymentMethod.name,
+            title: widget.order.paymentMethod.name,
           ),
         ],
       ),

@@ -5,17 +5,18 @@ class SnippetOrderDetailInfo extends StatelessWidget {
   const SnippetOrderDetailInfo({
     Key? key,
     required this.label,
-    required this.value,
+    required this.title,
+    this.subtitle,
   }) : super(key: key);
 
   final String label;
-  final String value;
+  final String title;
+  final String? subtitle;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       color: Colors.transparent,
-      height: 50,
       width: double.infinity,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -26,7 +27,8 @@ class SnippetOrderDetailInfo extends StatelessWidget {
                 .titleMedium!
                 .copyWith(fontWeight: FontWeight.bold),
           ),
-          Text(value)
+          Text(title),
+          if (subtitle != null) Text(subtitle!)
         ],
       ),
     );

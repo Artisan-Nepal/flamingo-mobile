@@ -79,8 +79,10 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
                       },
                       isSet: viewModel.selectedShippingAddress != null,
                       placeholder: 'Select a shipping address',
-                      value:
+                      title:
                           '${viewModel.selectedShippingAddress?.name}, ${viewModel.selectedShippingAddress?.area.name}',
+                      subtitle:
+                          '${viewModel.selectedShippingAddress?.fullName}, ${viewModel.selectedShippingAddress?.mobileNumber}',
                     ),
                     _buildDivider(),
                     // // Billing Address
@@ -102,8 +104,10 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
                       },
                       isSet: viewModel.selectedBillingAddress != null,
                       placeholder: 'Select a billing address',
-                      value:
+                      title:
                           '${viewModel.selectedBillingAddress?.name}, ${viewModel.selectedBillingAddress?.area.name}',
+                      subtitle:
+                          '${viewModel.selectedBillingAddress?.fullName}, ${viewModel.selectedBillingAddress?.mobileNumber}',
                     ),
                     _buildDivider(),
                     // Shipping Method
@@ -121,7 +125,7 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
                       },
                       isSet: viewModel.selectedShippingMethod != null,
                       placeholder: 'Select a shipping method',
-                      value: viewModel.selectedShippingMethod?.name ?? "",
+                      title: viewModel.selectedShippingMethod?.name ?? "",
                     ),
                     _buildDivider(),
                     // Payment Method
@@ -138,7 +142,7 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
                       },
                       isSet: viewModel.selectedPaymentMethod != null,
                       placeholder: 'Select a payment method',
-                      value: viewModel.selectedPaymentMethod?.name ?? "",
+                      title: viewModel.selectedPaymentMethod?.name ?? "",
                     ),
                   ],
                 ),

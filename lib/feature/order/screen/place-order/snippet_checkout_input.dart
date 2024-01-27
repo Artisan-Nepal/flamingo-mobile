@@ -8,7 +8,8 @@ class SnippetCheckoutInput extends StatelessWidget {
     this.onPressed,
     required this.isSet,
     required this.placeholder,
-    required this.value,
+    required this.title,
+    this.subtitle,
     this.enabled = true,
   }) : super(key: key);
 
@@ -16,7 +17,8 @@ class SnippetCheckoutInput extends StatelessWidget {
   final VoidCallback? onPressed;
   final bool isSet;
   final String placeholder;
-  final String value;
+  final String title;
+  final String? subtitle;
   final bool enabled;
 
   @override
@@ -51,7 +53,8 @@ class SnippetCheckoutInput extends StatelessWidget {
                         .titleMedium!
                         .copyWith(fontWeight: FontWeight.bold),
                   ),
-                  isSet ? Text(value) : Text(placeholder)
+                  isSet ? Text(title) : Text(placeholder),
+                  if (isSet && subtitle != null) Text(subtitle!)
                 ],
               ),
             ),

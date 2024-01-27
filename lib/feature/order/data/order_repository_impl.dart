@@ -4,6 +4,7 @@ import 'package:flamingo/feature/auth/auth.dart';
 import 'package:flamingo/feature/order/data/local/order_local.dart';
 import 'package:flamingo/feature/order/data/model/create_order_request.dart';
 import 'package:flamingo/feature/order/data/model/order.dart';
+import 'package:flamingo/feature/order/data/model/order_status_log.dart';
 import 'package:flamingo/feature/order/data/model/payment_method.dart';
 import 'package:flamingo/feature/order/data/model/shipping_method.dart';
 import 'package:flamingo/feature/order/data/order_repository.dart';
@@ -41,5 +42,10 @@ class OrderRepositoryImpl implements OrderRepository {
   Future<FetchResponse<Order>> getUserOrders() async {
     final customerId = (await _authRepository.getUserLocal())!.id;
     return await _orderRemote.getUserOrders(customerId);
+  }
+
+  @override
+  Future<List<OrderStatusLog>> trackOrder(String orderId) async {
+    return await _orderRemote.trackOrder(orderId);
   }
 }

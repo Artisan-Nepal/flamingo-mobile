@@ -39,3 +39,9 @@ final orderStatusLookup = [
     code: 'CANCELLED',
   ),
 ];
+
+OrderStatus getNextOrderStatus(int sequenceNumber) {
+  return orderStatusLookup.firstWhere(
+    (element) => element.sequenceNumber == sequenceNumber + 1,
+  );
+}

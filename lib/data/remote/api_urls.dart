@@ -1,6 +1,6 @@
 class ApiUrls {
   // static String baseUrl = 'https://api.flamingo.padmashreemedisales.com.np/api';
-  static String baseUrl = 'http://10.0.2.2:8848/api';
+  static String baseUrl = 'http://localhost:8848/api';
 
   // AUTH
   static String sendLoginOtp = '/auth/send-otp';
@@ -35,4 +35,5 @@ class ApiUrls {
       '/customer-favourite-vendors/customer';
   static String userActivity = '/user-activity';
   static String advertisementActivity = '/advertisement-activity';
+  static String trackOrder = '/orders/:id/track';
 }

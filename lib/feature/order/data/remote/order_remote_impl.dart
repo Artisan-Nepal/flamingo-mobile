@@ -1,6 +1,7 @@
 import 'package:flamingo/data/data.dart';
 import 'package:flamingo/feature/order/data/model/create_order_request.dart';
 import 'package:flamingo/feature/order/data/model/order.dart';
+import 'package:flamingo/feature/order/data/model/order_status_log.dart';
 import 'package:flamingo/feature/order/data/model/payment_method.dart';
 import 'package:flamingo/feature/order/data/model/shipping_method.dart';
 import 'package:flamingo/feature/order/data/remote/order_remote.dart';
@@ -41,5 +42,12 @@ class OrderRemoteImpl implements OrderRemote {
       apiResponse.data,
       Order.fromJsonList,
     );
+  }
+
+  @override
+  Future<List<OrderStatusLog>> trackOrder(String orderId) async {
+    final url = ApiUrls.trackOrder.replaceFirst(":id", orderId);
+    final apiReponse = await _apiClient.get(url);
+    return OrderStatusLog.fromJsonList(apiReponse.data);
   }
 }

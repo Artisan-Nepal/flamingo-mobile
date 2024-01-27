@@ -1,4 +1,5 @@
 import 'package:flamingo/shared/shared.dart';
+import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/material.dart';
 
 class LineDashedPainter extends CustomPainter {
@@ -29,6 +30,7 @@ class LineDashedPainter extends CustomPainter {
 
 class SnippetOrderStatusStepper extends StatelessWidget {
   final String title;
+  final String subTitle;
   final Color color;
   final bool isLastItem;
   final bool isSecondLastItem;
@@ -36,6 +38,7 @@ class SnippetOrderStatusStepper extends StatelessWidget {
   const SnippetOrderStatusStepper({
     Key? key,
     required this.title,
+    required this.subTitle,
     required this.color,
     this.isLastItem = false,
     this.isSecondLastItem = false,
@@ -75,7 +78,22 @@ class SnippetOrderStatusStepper extends StatelessWidget {
                     ),
             ],
           ),
-          Flexible(child: Text(title))
+          Flexible(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title),
+                VerticalSpaceWidget(height: Dimens.spacingSizeExtraSmall),
+                Text(
+                  subTitle,
+                  style: textTheme(context).bodyMedium!.copyWith(
+                        color: AppColors.grayLight,
+                        fontWeight: FontWeight.w600,
+                      ),
+                ),
+              ],
+            ),
+          )
         ],
       ),
     );

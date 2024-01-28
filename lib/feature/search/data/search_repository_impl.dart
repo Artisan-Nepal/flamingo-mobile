@@ -37,4 +37,9 @@ class SearchRepositoryImpl implements SearchRepository {
   Future<FetchResponse<Product>> searchProducts(SearchRequest request) async {
     return await _searchRemote.searchProducts(request);
   }
+
+  @override
+  Future<List<String>> getSearchSuggestions(SearchRequest request) async {
+    return await _searchRemote.getSearchSuggestions(request);
+  }
 }

@@ -7,4 +7,5 @@ abstract class SearchRepository {
   Future<List<String>> getSearchedText();
   Future<void> clearSearchHistory();
   Future<FetchResponse<Product>> searchProducts(SearchRequest request);
+  Future<List<String>> getSearchSuggestions(SearchRequest request);
 }

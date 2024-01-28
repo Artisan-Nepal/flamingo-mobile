@@ -60,6 +60,7 @@ dependencies:
   khalti_flutter: ^3.0.0
   fluttertoast: ^8.2.4
   carousel_slider: ^4.2.1
+  easy_search_bar: ^2.5.0
 
 dev_dependencies:
   flutter_test:

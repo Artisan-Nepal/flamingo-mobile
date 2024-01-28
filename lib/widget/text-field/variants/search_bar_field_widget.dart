@@ -10,6 +10,8 @@ class SearchBarFieldWidget extends StatelessWidget {
     this.onTap,
     this.autofocus = false,
     this.onSubmitted,
+    this.hintText,
+    this.onChanged,
   }) : super(key: key);
 
   final bool readOnly;
@@ -18,6 +20,8 @@ class SearchBarFieldWidget extends StatelessWidget {
   final VoidCallback? onTap;
   final bool autofocus;
   final Function(String?)? onSubmitted;
+  final String? hintText;
+  final void Function(String)? onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +33,7 @@ class SearchBarFieldWidget extends StatelessWidget {
       height: 35,
       width: double.infinity,
       child: TextField(
+        onChanged: onChanged,
         style: TypographyStyles.bodyMedium,
         textInputAction: TextInputAction.search,
         onTap: onTap,
@@ -38,7 +43,7 @@ class SearchBarFieldWidget extends StatelessWidget {
         readOnly: readOnly,
         enabled: enabled,
         decoration: InputDecoration(
-          hintText: "Search for products",
+          hintText: hintText,
           hintStyle: TypographyStyles.bodyMedium,
           contentPadding: const EdgeInsets.only(
             left: 15,

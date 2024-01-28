@@ -30,7 +30,7 @@ void registerSearchFeature(GetIt locator) {
       authRepository: locator<AuthRepository>(),
     ),
   );
-  locator.registerFactory<SearchViewModel>(
+  locator.registerLazySingleton<SearchViewModel>(
     () => SearchViewModel(
       searchRepository: locator<SearchRepository>(),
     ),

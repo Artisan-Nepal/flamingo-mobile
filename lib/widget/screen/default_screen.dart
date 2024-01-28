@@ -1,6 +1,5 @@
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/button/button.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -25,6 +24,7 @@ class DefaultScreen extends StatelessWidget {
     this.bottomNavBarWithButtonOnPressed,
     this.isLoading = false,
     this.floatingActionButton,
+    this.appBarLeadingWidth,
   });
 
   final Widget child;
@@ -44,6 +44,7 @@ class DefaultScreen extends StatelessWidget {
   final VoidCallback? bottomNavBarWithButtonOnPressed;
   final bool isLoading;
   final Widget? floatingActionButton;
+  final double? appBarLeadingWidth;
 
   @override
   Widget build(BuildContext context) {
@@ -62,18 +63,11 @@ class DefaultScreen extends StatelessWidget {
               ? AppBar(
                   title: appBarTitle,
                   actions: appBarActions,
+                  leadingWidth: appBarLeadingWidth,
                   leading: appBarLeading ??
                       (NavigationHelper.canPop(context) &&
                               automaticallyImplyAppBarLeading
-                          ? GestureDetector(
-                              onTap: () {
-                                NavigationHelper.pop(context);
-                              },
-                              child: const Icon(
-                                CupertinoIcons.back,
-                                size: Dimens.iconSizeLarge,
-                              ),
-                            )
+                          ? BackButtonWidget()
                           : null),
                   automaticallyImplyLeading: automaticallyImplyAppBarLeading,
                 )

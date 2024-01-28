@@ -21,8 +21,8 @@ class SearchRemoteImpl implements SearchRemote {
 
   @override
   Future<List<String>> getSearchSuggestions(SearchRequest request) async {
-    final apiResponse =
-        await _apiClient.post(ApiUrls.productSearch, body: request.toJson());
+    final apiResponse = await _apiClient.post(ApiUrls.productSearchSuggestion,
+        body: request.toJson());
     return List<String>.from(apiResponse.data);
   }
 }

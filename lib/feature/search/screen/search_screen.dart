@@ -1,18 +1,22 @@
-import 'package:flamingo/di/di.dart';
-import 'package:flamingo/feature/product/screen/product-listing/snippet_product_listing.dart';
+import 'package:flamingo/feature/search/screen/search_result_screen.dart';
 import 'package:flamingo/feature/search/screen/search_view_model.dart';
-import 'package:flamingo/feature/search/screen/snippet_search_history_item.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/button/variants/text_button_widget.dart';
 import 'package:flamingo/widget/error/default_error_widget.dart';
 import 'package:flamingo/widget/loader/loader.dart';
-import 'package:flamingo/widget/product/product.dart';
 import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class SearchScreen extends StatefulWidget {
-  const SearchScreen({super.key});
+  const SearchScreen({
+    super.key,
+    this.initialText,
+    this.isInitial = false,
+  });
+
+  final String? initialText;
+  final bool isInitial;
 
   @override
   State<SearchScreen> createState() => _SearchScreenState();
@@ -21,160 +25,173 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   final _searchController = TextEditingController();
 
-  final _viewModel = locator<SearchViewModel>();
-
   @override
   void initState() {
-    _viewModel.init();
+    if (widget.isInitial) {
+      Provider.of<SearchViewModel>(context, listen: false).init();
+      Provider.of<SearchViewModel>(context, listen: false).getSearchHistory();
+    }
+    _searchController.text = widget.initialText ?? "";
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => _viewModel,
-      child: DefaultScreen(
-        scrollable: false,
-        automaticallyImplyAppBarLeading: false,
-        appBarTitle: SearchBarFieldWidget(
+    final viewModel = Provider.of<SearchViewModel>(context, listen: false);
+    return DefaultScreen(
+      scrollable: false,
+      automaticallyImplyAppBarLeading: false,
+      appBarTitle: Container(
+        child: SearchBarFieldWidget(
+          hintText: "Search for products",
           controller: _searchController,
           autofocus: true,
+          onChanged: (text) {
+            viewModel.getSuggestions(text);
+          },
           onSubmitted: (text) {
-            if (text != null && text.isNotEmpty) {
-              _viewModel.searchProducts(text);
-            }
+            _navigateToResultScreen(viewModel, text);
           },
         ),
-        appBarActions: [
-          TextButtonWidget(
-            label: 'Cancel',
-            fontSize: 14,
-            fontWeight: FontWeight.bold,
-            padding: EdgeInsets.zero,
-            onPressed: () {
-              NavigationHelper.pop(context);
-            },
-          )
-        ],
-        padding: EdgeInsets.zero,
-        child: Consumer<SearchViewModel>(
-          builder: (context, viewModel, child) {
-            if (viewModel.searchProductsUseCase.hasError) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (viewModel.searchTextHistory.isNotEmpty)
-                    _buildSearchHistory(viewModel),
-                  Expanded(
-                    child: DefaultErrorWidget(
-                      errorMessage:
-                          viewModel.searchProductsUseCase.exception ?? "",
-                    ),
-                  ),
-                ],
-              );
-            }
-            final products = viewModel.searchProductsUseCase.data ?? [];
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (viewModel.searchTextHistory.isNotEmpty)
-                  _buildSearchHistory(viewModel),
-                Expanded(
-                  child: Container(
-                    child: viewModel.searchProductsUseCase.isLoading
-                        ? const DefaultScreenLoaderWidget(
-                            manuallyCenter: true,
-                            manualTop: 0.1,
-                          )
-                        : viewModel.searchProductsUseCase.hasError
-                            ? DefaultErrorWidget(
-                                manuallyCenter: true,
-                                manualTop: 0.1,
-                                errorMessage:
-                                    viewModel.searchProductsUseCase.exception ??
-                                        "",
-                              )
-                            : !viewModel.searchProductsUseCase.hasCompleted
-                                ? const SizedBox()
-                                : products.isEmpty
-                                    ? DefaultErrorWidget(
-                                        manuallyCenter: true,
-                                        manualTop: 0.1,
-                                        errorMessage:
-                                            'Sorry, no products found',
-                                      )
-                                    : Padding(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: Dimens.spacingSizeDefault,
-                                        ),
-                                        child: SnippetProductListing(
-                                          products: products
-                                              .map(
-                                                (product) => GenericProduct(
-                                                  image:
-                                                      extractProductDefaultImage(
-                                                    product.images,
-                                                    product.variants,
-                                                  ),
-                                                  price: product
-                                                      .variants.first.price,
-                                                  productId: product.id,
-                                                  title: product.title,
-                                                  vendor:
-                                                      product.vendor.storeName,
-                                                  product: product,
-                                                ),
-                                              )
-                                              .toList(),
-                                          shrinkWrap: false,
-                                        ),
-                                      ),
-                  ),
-                ),
-              ],
+      ),
+      appBarActions: [
+        TextButtonWidget(
+          label: 'Cancel',
+          fontSize: 14,
+          fontWeight: FontWeight.bold,
+          padding: EdgeInsets.zero,
+          onPressed: () {
+            NavigationHelper.pop(context);
+          },
+        )
+      ],
+      padding: EdgeInsets.zero,
+      child: Consumer<SearchViewModel>(
+        builder: (context, viewModel, child) {
+          if (viewModel.getSuggestionsUseCase.hasError) {
+            return Expanded(
+              child: DefaultErrorWidget(
+                errorMessage: viewModel.searchProductsUseCase.exception ?? "",
+              ),
             );
-          },
-        ),
+          }
+          if (viewModel.getSuggestionsUseCase.isLoading) {
+            return const DefaultScreenLoaderWidget(
+              manuallyCenter: true,
+              manualTop: 0.1,
+            );
+          }
+          if (viewModel.searchTextHistory.isNotEmpty &&
+              !viewModel.getSuggestionsUseCase.hasCompleted) {
+            return _buildSearchHistory(viewModel);
+          }
+          final suggestions = viewModel.getSuggestionsUseCase.data ?? [];
+          return Container(
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: Dimens.spacingSizeDefault,
+              ),
+              child: ListView.builder(
+                itemCount: suggestions.length,
+                itemBuilder: (context, index) {
+                  return _buildListItem(
+                    title: suggestions[index],
+                    onTap: () {
+                      _searchController.text = suggestions[index];
+                      FocusScope.of(context).unfocus();
+                      _navigateToResultScreen(
+                        viewModel,
+                        suggestions[index],
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
+          );
+        },
       ),
     );
   }
 
-  _buildSearchHistory(SearchViewModel viewModel) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // const Padding(
-        //   padding: EdgeInsets.symmetric(
-        //     horizontal: Dimens.spacingSizeDefault,
-        //     vertical: Dimens.spacingSizeSmall,
-        //   ),
-        //   child: Text(
-        //     'Search History :',
-        //     style: TextStyle(
-        //       fontWeight: FontWeight.w600,
-        //     ),
-        //   ),
-        // ),
-        Wrap(
-          children:
-              List<Widget>.generate(viewModel.searchTextHistory.length, (i) {
-            int index = viewModel.searchTextHistory.length - 1 - i;
-            return SnippetSearchHistoryItem(
-              title: viewModel.searchTextHistory[index],
-              onTap: () {
-                _searchController.text = viewModel.searchTextHistory[index];
-                FocusScope.of(context).unfocus();
-                viewModel.searchProducts(viewModel.searchTextHistory[index]);
-              },
-              onCancel: () {
-                viewModel
-                    .removeSearchedText(viewModel.searchTextHistory[index]);
-              },
-            );
-          }),
+  _navigateToResultScreen(SearchViewModel viewModel, String? text) {
+    if (text != null && text.isNotEmpty) {
+      if (!widget.isInitial) NavigationHelper.pop(context);
+      NavigationHelper.pop(context);
+      NavigationHelper.pushWithoutAnimation(
+        context,
+        ChangeNotifierProvider.value(
+          value: viewModel,
+          child: SearchResultScreen(keyword: text),
         ),
-      ],
+      );
+    }
+  }
+
+  _buildSearchHistory(SearchViewModel viewModel) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: Dimens.spacingSizeDefault),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Recent',
+            style: textTheme(context).bodyMedium!.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
+          VerticalSpaceWidget(height: Dimens.spacingSizeDefault),
+          Expanded(
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: viewModel.searchTextHistory.length,
+              itemBuilder: (context, i) {
+                int index = viewModel.searchTextHistory.length - 1 - i;
+                return _buildListItem(
+                  title: viewModel.searchTextHistory[index],
+                  onTap: () {
+                    _searchController.text = viewModel.searchTextHistory[index];
+                    FocusScope.of(context).unfocus();
+                    _navigateToResultScreen(
+                        viewModel, viewModel.searchTextHistory[index]);
+                  },
+                  trailing: GestureDetector(
+                    onTap: () {
+                      viewModel.removeSearchedText(
+                          viewModel.searchTextHistory[index]);
+                    },
+                    child: Icon(
+                      Icons.close,
+                      size: Dimens.iconSize_15,
+                      color: AppColors.primaryMain,
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildListItem(
+      {required String title, Widget? trailing, VoidCallback? onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        color: AppColors.transparent,
+        height: 40,
+        child: Row(
+          children: [
+            Expanded(child: Text(title)),
+            if (trailing != null) ...[
+              HorizontalSpaceWidget(width: Dimens.spacingSizeDefault),
+              trailing
+            ]
+          ],
+        ),
+      ),
     );
   }
 }

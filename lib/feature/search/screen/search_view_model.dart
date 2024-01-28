@@ -11,18 +11,25 @@ class SearchViewModel extends ChangeNotifier {
       : _searchRepository = searchRepository;
 
   Response<List<Product>> _searchProductsUseCase = Response();
+  Response<List<String>> _getSuggestionsUseCase = Response();
   List<Product> _recentlySearchedProducts = [];
   List<String> _searchTextHistory = [];
-  String _title = '';
 
   Response<List<Product>> get searchProductsUseCase => _searchProductsUseCase;
+  Response<List<String>> get getSuggestionsUseCase => _getSuggestionsUseCase;
   List<Product> get recentlySearchedProducts => _recentlySearchedProducts;
   List<String> get searchTextHistory => _searchTextHistory;
-  String get title => _title;
 
-  void setSearchProductsUseCase(Response<List<Product>> response) {
+  void setSearchProductsUseCase(Response<List<Product>> response,
+      {bool notify = true}) {
     _searchProductsUseCase = response;
-    notifyListeners();
+    if (notify) notifyListeners();
+  }
+
+  void setSuggestionsUseCase(Response<List<String>> response,
+      {bool notify = true}) {
+    _getSuggestionsUseCase = response;
+    if (notify) notifyListeners();
   }
 
   void appendSearchProductsUseCase(List<Product> products) {
@@ -36,14 +43,19 @@ class SearchViewModel extends ChangeNotifier {
   }
 
   void init() async {
+    setSearchProductsUseCase(Response(), notify: false);
+    setSuggestionsUseCase(Response(), notify: false);
+  }
+
+  void getSearchHistory() async {
     _searchTextHistory = await _searchRepository.getSearchedText();
     notifyListeners();
   }
 
-  removeSearchedText(String text) {
+  removeSearchedText(String text, {bool notify = true}) {
     _searchTextHistory.removeWhere((element) => element == text);
     _searchRepository.saveSearchedText(_searchTextHistory);
-    notifyListeners();
+    if (notify) notifyListeners();
   }
 
   clearSearchHistory() {
@@ -54,15 +66,14 @@ class SearchViewModel extends ChangeNotifier {
   searchProducts(String text, {bool isNewSearch = true}) async {
     try {
       if (isNewSearch) {
-        _title = 'Search Result :';
         // _offset = 0;
 
         // save search text
         // first remove if already present
-        removeSearchedText(text);
+        removeSearchedText(text, notify: false);
         _searchTextHistory.add(text);
         _searchRepository.saveSearchedText(_searchTextHistory);
-        setSearchProductsUseCase(Response.loading());
+        setSearchProductsUseCase(Response.loading(), notify: false);
       }
 
       final response =
@@ -75,6 +86,20 @@ class SearchViewModel extends ChangeNotifier {
       }
     } catch (exception) {
       setSearchProductsUseCase(Response.error(exception));
+    }
+  }
+
+  getSuggestions(String text) async {
+    if (text.isEmpty) {
+      setSuggestionsUseCase(Response());
+      return;
+    }
+    try {
+      final response = await _searchRepository
+          .getSearchSuggestions(SearchRequest(key: text));
+      setSuggestionsUseCase(Response.complete(response));
+    } catch (exception) {
+      setSuggestionsUseCase(Response.error(exception));
     }
   }
 }

@@ -64,11 +64,14 @@ class _HomeScreenState extends State<HomeScreen>
                     padding: const EdgeInsets.symmetric(
                         horizontal: Dimens.spacingSizeSmall),
                     child: SearchBarFieldWidget(
+                      hintText: "Search for products",
                       readOnly: true,
                       onTap: () {
                         NavigationHelper.pushWithoutAnimation(
                           context,
-                          const SearchScreen(),
+                          const SearchScreen(
+                            isInitial: true,
+                          ),
                         );
                       },
                     ),

@@ -9,11 +9,8 @@ class AdvertisementRemoteImpl implements AdvertisementRemote {
       : _apiClient = apiClient;
 
   @override
-  Future<FetchResponse<Advertisement>> getAdvertisements() async {
+  Future<List<Advertisement>> getAdvertisements() async {
     final apiResponse = await _apiClient.get(ApiUrls.advertisements);
-    return FetchResponse.fromJson(
-      apiResponse.data,
-      Advertisement.fromJsonList,
-    );
+    return Advertisement.fromJsonList(apiResponse.data);
   }
 }

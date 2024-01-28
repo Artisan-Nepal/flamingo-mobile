@@ -28,8 +28,7 @@ class _SnippetHomeAdvertisementState extends State<SnippetHomeAdvertisement> {
   Widget build(BuildContext context) {
     return Consumer<AdvertisementListingViewModel>(
       builder: (context, viewModel, child) {
-        final advertisements =
-            viewModel.getAdvertisementsUseCase.data?.rows ?? [];
+        final advertisements = viewModel.getAdvertisementsUseCase.data ?? [];
 
         if (viewModel.getAdvertisementsUseCase.isLoading) {
           return _buildLoader();

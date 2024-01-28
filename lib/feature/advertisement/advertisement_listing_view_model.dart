@@ -1,4 +1,3 @@
-import 'package:flamingo/data/data.dart';
 import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/advertisement/data/advertisement_repository.dart';
 import 'package:flamingo/feature/advertisement/data/model/advertisement.dart';
@@ -14,14 +13,13 @@ class AdvertisementListingViewModel extends ChangeNotifier {
     required AdvertisementRepository advertisementRepository,
   }) : _advertisementRepository = advertisementRepository;
 
-  Response<FetchResponse<Advertisement>> _getAdvertisementsUseCase =
-      Response<FetchResponse<Advertisement>>();
+  Response<List<Advertisement>> _getAdvertisementsUseCase =
+      Response<List<Advertisement>>();
 
-  Response<FetchResponse<Advertisement>> get getAdvertisementsUseCase =>
+  Response<List<Advertisement>> get getAdvertisementsUseCase =>
       _getAdvertisementsUseCase;
 
-  void setAdvertisementsUseCase(
-      Response<FetchResponse<Advertisement>> response) {
+  void setAdvertisementsUseCase(Response<List<Advertisement>> response) {
     _getAdvertisementsUseCase = response;
     notifyListeners();
   }
@@ -32,7 +30,7 @@ class AdvertisementListingViewModel extends ChangeNotifier {
       final response = await _advertisementRepository.getAdvertisements();
       setAdvertisementsUseCase(Response.complete(response));
 
-      for (Advertisement advertisement in response.rows) {
+      for (Advertisement advertisement in response) {
         await locator<CreateActivityViewModel>().createAdvertisementActivity(
           advertisementId: advertisement.id,
           activityType: AdvertisementActivityType.view,

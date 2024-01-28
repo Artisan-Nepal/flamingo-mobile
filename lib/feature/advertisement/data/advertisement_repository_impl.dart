@@ -1,6 +1,5 @@
 // ignore_for_file: unused_field
 
-import 'package:flamingo/data/data.dart';
 import 'package:flamingo/feature/advertisement/data/advertisement_repository.dart';
 import 'package:flamingo/feature/advertisement/data/local/advertisement_local.dart';
 import 'package:flamingo/feature/advertisement/data/model/advertisement.dart';
@@ -21,7 +20,7 @@ class AdvertisementRepositoryImpl implements AdvertisementRepository {
         _authRepository = authRepository;
 
   @override
-  Future<FetchResponse<Advertisement>> getAdvertisements() async {
+  Future<List<Advertisement>> getAdvertisements() async {
     return await _advertisementRemote.getAdvertisements();
   }
 }

@@ -140,7 +140,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   fontWeight: FontWeight.bold,
                 ),
           ),
-          VerticalSpaceWidget(height: Dimens.spacingSizeDefault),
+          VerticalSpaceWidget(height: Dimens.spacingSizeExtraSmall),
           Expanded(
             child: ListView.builder(
               shrinkWrap: true,

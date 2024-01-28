@@ -51,28 +51,33 @@ class _HomeScreenState extends State<HomeScreen>
       child: Scaffold(
         appBar: _buildAppBar(),
         body: SafeArea(
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const VerticalSpaceWidget(height: Dimens.spacingSizeSmall),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: Dimens.spacingSizeSmall),
-                  child: SearchBarFieldWidget(
-                    readOnly: true,
-                    onTap: () {
-                      NavigationHelper.pushWithoutAnimation(
-                        context,
-                        const SearchScreen(),
-                      );
-                    },
+          child: RefreshIndicator.adaptive(
+            onRefresh: () async {
+              await getData();
+            },
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const VerticalSpaceWidget(height: Dimens.spacingSizeSmall),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: Dimens.spacingSizeSmall),
+                    child: SearchBarFieldWidget(
+                      readOnly: true,
+                      onTap: () {
+                        NavigationHelper.pushWithoutAnimation(
+                          context,
+                          const SearchScreen(),
+                        );
+                      },
+                    ),
                   ),
-                ),
-                const VerticalSpaceWidget(height: Dimens.spacingSizeLarge),
-                SnippetHomeAdvertisement(),
-                SnippetLatestProducts(),
-              ],
+                  const VerticalSpaceWidget(height: Dimens.spacingSizeLarge),
+                  SnippetHomeAdvertisement(),
+                  SnippetLatestProducts(),
+                ],
+              ),
             ),
           ),
         ),

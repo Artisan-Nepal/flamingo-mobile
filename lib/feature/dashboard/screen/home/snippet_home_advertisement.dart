@@ -61,8 +61,10 @@ class _SnippetHomeAdvertisementState extends State<SnippetHomeAdvertisement> {
                     enableInfiniteScroll: true,
                     viewportFraction: 0.99,
                     disableCenter: true,
-                    scrollPhysics: const NeverScrollableScrollPhysics(),
-                    autoPlay: true,
+                    autoPlay: advertisements.length == 1 ? false : true,
+                    scrollPhysics: advertisements.length == 1
+                        ? NeverScrollableScrollPhysics()
+                        : AlwaysScrollableScrollPhysics(),
                     // enlargeCenterPage: true,
                     autoPlayInterval: const Duration(seconds: 8),
                     autoPlayAnimationDuration:

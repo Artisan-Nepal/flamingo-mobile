@@ -30,11 +30,15 @@ class _VideoViewWidgetState extends State<VideoViewWidget>
   bool _isPlaying = true;
 
   _playVideo() {
+    _isPlaying = true;
     videoPlayerController.play();
+    setState(() {});
   }
 
   _pauseVideo() {
+    _isPlaying = false;
     videoPlayerController.pause();
+    setState(() {});
   }
 
   _toggleVideoPlaying() {

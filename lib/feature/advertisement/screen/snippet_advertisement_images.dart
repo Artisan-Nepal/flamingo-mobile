@@ -76,10 +76,14 @@ class _SnippetAdvertisementImagesState
   }
 
   Widget _buildIndicator() {
-    if (widget.images.length < 2) return const SizedBox();
+    final hasVideo = widget.primaryVideo != null;
+
+    final totalItems =
+        hasVideo ? widget.images.length + 1 : widget.images.length;
+    if (totalItems < 2) return const SizedBox();
     return SmoothPageIndicator(
       controller: _pageController,
-      count: widget.images.length,
+      count: totalItems,
       effect: ColorTransitionEffect(
         dotHeight: 5,
         dotWidth: 25,

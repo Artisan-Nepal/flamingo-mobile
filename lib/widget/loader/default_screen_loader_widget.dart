@@ -7,10 +7,12 @@ class DefaultScreenLoaderWidget extends StatelessWidget {
     super.key,
     this.manuallyCenter = false,
     this.manualTop,
+    this.color,
   });
 
   final bool manuallyCenter;
   final double? manualTop;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -20,9 +22,10 @@ class DefaultScreenLoaderWidget extends StatelessWidget {
           top: manuallyCenter
               ? SizeConfig.screenHeight * (manualTop ?? 0.3)
               : 0),
-      child: const Center(
+      child: Center(
         child: CircularProgressIndicatorWidget(
           size: Dimens.iconSizeLarge,
+          color: color,
         ),
       ),
     );

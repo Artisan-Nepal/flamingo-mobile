@@ -96,9 +96,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       SnippetProductDetailImages(
+                                        title: viewModel
+                                            .productUseCase.data!.title,
+                                        stories: viewModel
+                                            .productUseCase.data!.stories,
                                         productId:
                                             viewModel.productUseCase.data!.id,
                                         images: images,
+                                        advertisementId: widget.advertisementId,
+                                        leadSource: widget.leadSource,
                                       ),
                                       Padding(
                                         padding: const EdgeInsets.symmetric(

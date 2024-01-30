@@ -1,5 +1,6 @@
 import 'package:flamingo/feature/product/data/model/product_color.dart';
 import 'package:flamingo/feature/product/data/model/product_size.dart';
+import 'package:flamingo/feature/product/data/model/product_story.dart';
 import 'package:flamingo/feature/upload-file/data/model/upload_file_response.dart';
 import 'package:flamingo/feature/vendor/data/model/vendor.dart';
 
@@ -12,6 +13,7 @@ class Product {
   final List<String> tags;
   final List<ProductVariant> variants;
   final List<String> images;
+  final List<ProductStory> stories;
   final bool isInWishlist;
 
   Product({
@@ -24,6 +26,7 @@ class Product {
     required this.variants,
     required this.isInWishlist,
     required this.images,
+    required this.stories,
   });
 
   factory Product.fromJson(Map<String, dynamic> json) => Product(
@@ -38,6 +41,9 @@ class Product {
         images: json['images'] == null
             ? []
             : List<String>.from(json['images'].map((e) => e['imageUrl'])),
+        stories: json['productStory'] == null
+            ? []
+            : ProductStory.fromJsonList(json['productStory']),
         isInWishlist: json['wishlist'] == null
             ? false
             : List.from(json['wishlist']).isNotEmpty,
@@ -84,9 +90,11 @@ class ProductVariant {
             json['productVariantColor'][0]['productColor']),
         attributes: ProductAttributeResponse.fromJsonList(
             json['productAttributeOption']),
-        image: UploadFileResponse.fromJson(
-          json['productVariantColor'][0]['image'],
-        ),
+        image: json['productVariantColor'][0]['image'] == null
+            ? null
+            : UploadFileResponse.fromJson(
+                json['productVariantColor'][0]['image'],
+              ),
       );
 
   static List<ProductVariant> fromJsonList(dynamic json) =>

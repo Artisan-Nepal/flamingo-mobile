@@ -62,7 +62,7 @@ class TypographyStyles {
   static const labelLarge = TextStyle(
     fontSize: 15,
     fontWeight: FontWeight.w500,
-    letterSpacing: 1.25,
+    letterSpacing: 0.25,
   );
 
   static const bodySmall = TextStyle(

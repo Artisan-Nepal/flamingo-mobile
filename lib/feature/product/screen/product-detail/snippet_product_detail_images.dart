@@ -1,7 +1,10 @@
+import 'package:flamingo/feature/product/data/model/product_story.dart';
 import 'package:flamingo/feature/product/screen/product-detail/product_detail_app_bar_view_model.dart';
 import 'package:flamingo/feature/product/screen/product-detail/product_detail_images_screen.dart';
+import 'package:flamingo/feature/product/screen/product-detail/product_story_screen.dart';
 import 'package:flamingo/shared/enum/lead_source.dart';
 import 'package:flamingo/shared/shared.dart';
+import 'package:flamingo/widget/button/variants/outlined_button_widget.dart';
 import 'package:flamingo/widget/fav-button/fav_product_button_widget.dart';
 import 'package:flamingo/widget/image/cached_network_image_widget.dart';
 import 'package:flamingo/widget/space/space.dart';
@@ -14,14 +17,18 @@ class SnippetProductDetailImages extends StatefulWidget {
     Key? key,
     required this.images,
     required this.productId,
+    required this.stories,
     this.leadSource,
     this.advertisementId,
+    required this.title,
   }) : super(key: key);
 
   final List<String> images;
   final String productId;
   final LeadSource? leadSource;
   final String? advertisementId;
+  final List<ProductStory> stories;
+  final String title;
 
   @override
   State<SnippetProductDetailImages> createState() =>
@@ -70,6 +77,7 @@ class _SnippetProductDetailImagesState
           ),
           _buildIndicator(),
           _buildActions(),
+          _buildStoryButton(),
         ],
       ),
     );
@@ -90,6 +98,28 @@ class _SnippetProductDetailImagesState
           spacing: 5,
           activeDotColor: AppColors.primaryMain,
         ),
+      ),
+    );
+  }
+
+  Widget _buildStoryButton() {
+    if (widget.stories.isEmpty) return const SizedBox();
+    return Positioned(
+      right: 10,
+      bottom: 20,
+      child: OutlinedButtonWidget(
+        label: 'View stories',
+        width: 130,
+        onPressed: () {
+          NavigationHelper.push(
+            context,
+            ProductStoryScreen(
+              stories: widget.stories,
+              image: widget.images.firstOrNull ?? "",
+              title: widget.title,
+            ),
+          );
+        },
       ),
     );
   }

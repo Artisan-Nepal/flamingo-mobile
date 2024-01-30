@@ -106,7 +106,7 @@ class _SnippetProductDetailImagesState
     if (widget.stories.isEmpty) return const SizedBox();
     return Positioned(
       right: 10,
-      bottom: 20,
+      bottom: widget.images.length > 1 ? 20 : 10,
       child: OutlinedButtonWidget(
         label: 'View stories',
         width: 130,

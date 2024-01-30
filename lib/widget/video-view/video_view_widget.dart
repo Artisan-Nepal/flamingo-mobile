@@ -39,6 +39,12 @@ class _VideoViewWidgetState extends State<VideoViewWidget>
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    videoPlayerController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     super.build(context);
     return FutureBuilder(
@@ -65,6 +71,9 @@ class _VideoViewWidgetState extends State<VideoViewWidget>
                       videoPlayerController.pause();
                     },
                     onLongPressUp: () {
+                      videoPlayerController.play();
+                    },
+                    onTapUp: (details) {
                       videoPlayerController.play();
                     },
                     onTap: () {},

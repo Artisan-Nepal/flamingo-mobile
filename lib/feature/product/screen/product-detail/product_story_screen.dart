@@ -24,7 +24,6 @@ class ProductStoryScreen extends StatefulWidget {
 }
 
 class _ProductStoryScreenState extends State<ProductStoryScreen> {
-  int _index = 0;
   final _pageController = PageController();
 
   @override
@@ -39,14 +38,13 @@ class _ProductStoryScreenState extends State<ProductStoryScreen> {
             children: [
               Positioned.fill(
                 child: GestureDetector(
-                  onTapDown: onTapDown,
+                  // onTapUp: onTapUp,
                   child: PageView(
-                    physics: const NeverScrollableScrollPhysics(),
+                    // physics: const NeverScrollableScrollPhysics(),
                     controller: _pageController,
-                    onPageChanged: (page) {
-                      _index = page;
-                      setState(() {});
-                    },
+                    // onPageChanged: (page) {
+                    //   _index = page;
+                    // },
                     children: List.generate(widget.stories.length, (index) {
                       return ProductStoryItem(story: widget.stories[index]);
                     }),
@@ -61,21 +59,21 @@ class _ProductStoryScreenState extends State<ProductStoryScreen> {
     );
   }
 
-  void onTapDown(TapDownDetails details) {
-    bool isLeftTap = details.globalPosition.dx < SizeConfig.screenWidth / 2;
+  // void onTapUp(TapUpDetails details) {
+  //   bool isLeftTap = details.globalPosition.dx < SizeConfig.screenWidth / 2;
 
-    if (isLeftTap) {
-      if (_index > 0) {
-        _index--;
-        _pageController.jumpToPage(_index);
-      }
-    } else {
-      if (_index < widget.stories.length - 1) {
-        _index++;
-        _pageController.jumpToPage(_index);
-      }
-    }
-  }
+  //   if (isLeftTap) {
+  //     if (_index > 0) {
+  //       _index--;
+  //       _pageController.jumpToPage(_index);
+  //     }
+  //   } else {
+  //     if (_index < widget.stories.length - 1) {
+  //       _index++;
+  //       _pageController.jumpToPage(_index);
+  //     }
+  //   }
+  // }
 
   Widget _buildStoryHeader() {
     return Positioned(

@@ -1,18 +1,18 @@
 import 'package:flamingo/shared/enum/enum.dart';
 import 'package:flamingo/shared/util/util.dart';
 import 'package:flamingo/widget/loader/default_screen_loader_widget.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
 class VideoViewWidget extends StatefulWidget {
-  const VideoViewWidget(
-      {super.key,
-      required this.url,
-      this.coverParent = false,
-      this.loaderColor = AppColors.black,
-      this.behaviour = VideoViewBehaviour.holdToPause});
+  const VideoViewWidget({
+    super.key,
+    required this.url,
+    this.coverParent = false,
+    this.loaderColor = AppColors.white,
+    this.behaviour = VideoViewBehaviour.holdToPause,
+  });
 
   final String url;
   final bool coverParent;
@@ -72,11 +72,19 @@ class _VideoViewWidgetState extends State<VideoViewWidget>
           return VisibilityDetector(
             key: ValueKey(widget.url),
             onVisibilityChanged: (VisibilityInfo info) {
-              if (info.visibleFraction == 1.0) {
-                videoPlayerController.seekTo(Duration.zero);
-                _playVideo();
+              if (widget.behaviour.isHoldToPause) {
+                if (info.visibleFraction == 1.0) {
+                  videoPlayerController.seekTo(Duration.zero);
+                  _playVideo();
+                } else {
+                  _pauseVideo();
+                }
               } else {
-                _pauseVideo();
+                if (info.visibleFraction == 0.0) {
+                  _pauseVideo();
+                } else {
+                  _playVideo();
+                }
               }
             },
             child: Stack(

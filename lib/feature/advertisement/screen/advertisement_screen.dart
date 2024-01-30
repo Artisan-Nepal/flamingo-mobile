@@ -80,6 +80,7 @@ class _AdvertisementScreenState extends State<AdvertisementScreen> {
                   SnippetAdvertisementImages(
                     images:
                         widget.advertisement.images.map((e) => e.url).toList(),
+                    primaryVideo: widget.advertisement.primaryVideoUrl,
                   ),
 
                   VerticalSpaceWidget(height: Dimens.spacingSizeDefault),

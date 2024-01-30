@@ -11,6 +11,7 @@ class Advertisement {
   final List<UploadFileResponse> images;
   final VendorCollection collection;
   final String primaryImageUrl;
+  final String? primaryVideoUrl;
 
   Advertisement({
     required this.id,
@@ -21,12 +22,14 @@ class Advertisement {
     required this.images,
     required this.collection,
     required this.primaryImageUrl,
+    this.primaryVideoUrl,
   });
 
   factory Advertisement.fromJson(Map<String, dynamic> json) => Advertisement(
         id: json['id'],
         title: json['title'],
         description: json['description'],
+        primaryVideoUrl: json['primaryVideoUrl'],
         vendorId: json['vendorId'],
         primaryImageUrl: json['primaryImageUrl'],
         vendor: Vendor.fromJson(json['vendor']),

@@ -37,4 +37,6 @@ class ApiUrls {
   static String userActivity = '/user-activity';
   static String advertisementActivity = '/advertisement-activity';
   static String trackOrder = '/orders/:id/track';
+  static String likedVendorStory = '/product-story/liked-vendor';
+  static String viewStory = '/product-story/:id/view';
 }

@@ -1,6 +1,6 @@
 import 'package:flamingo/feature/product/data/model/product_color.dart';
 import 'package:flamingo/feature/product/data/model/product_size.dart';
-import 'package:flamingo/feature/product/data/model/product_story.dart';
+import 'package:flamingo/feature/product-story/data/model/product_story.dart';
 import 'package:flamingo/feature/upload-file/data/model/upload_file_response.dart';
 import 'package:flamingo/feature/vendor/data/model/vendor.dart';
 

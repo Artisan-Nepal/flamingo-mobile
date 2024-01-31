@@ -1,4 +1,4 @@
-import 'package:flamingo/feature/product/data/model/product_story.dart';
+import 'package:flamingo/feature/product-story/data/model/product_story.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/image/cached_network_image_widget.dart';
 import 'package:flamingo/widget/video-view/video_view_widget.dart';

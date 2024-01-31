@@ -10,6 +10,7 @@ import 'package:flamingo/feature/product/data/model/product.dart';
 import 'package:flamingo/feature/product/data/model/product_color.dart';
 import 'package:flamingo/feature/product/data/model/product_size.dart';
 import 'package:flamingo/feature/product/data/product_repository.dart';
+import 'package:flamingo/feature/wishlist/wishlist_view_model.dart';
 import 'package:flamingo/shared/constant/advertisement_activity_type.dart';
 import 'package:flamingo/shared/constant/user_activity_type.dart';
 import 'package:flamingo/shared/enum/lead_source.dart';
@@ -60,6 +61,7 @@ class ProductDetailViewModel extends ChangeNotifier {
       try {
         setProductUseCase(Response.loading());
         final response = await _productRepository.getSingleProduct(productId);
+        locator<WishlistViewModel>().initWishlistStatus([response]);
         setProductUseCase(Response.complete(response));
       } catch (exception) {
         setProductUseCase(Response.error(exception));

@@ -1,0 +1,22 @@
+import 'package:flamingo/data/data.dart';
+import 'package:flamingo/feature/product-story/data/model/product_story.dart';
+import 'package:flamingo/feature/product-story/data/remote/product_story_remote.dart';
+
+class ProductStoryRemoteImpl implements ProductStoryRemote {
+  final ApiClient _apiClient;
+
+  ProductStoryRemoteImpl({required ApiClient apiClient})
+      : _apiClient = apiClient;
+
+  @override
+  Future<List<ProductStory>> getLikedVendorStories() async {
+    final apiResponse = await _apiClient.get(ApiUrls.likedVendorStory);
+    return ProductStory.fromJsonList(apiResponse.data);
+  }
+
+  @override
+  Future viewStory(String storyId) async {
+    final url = ApiUrls.viewStory.replaceFirst(':id', storyId);
+    _apiClient.post(url);
+  }
+}

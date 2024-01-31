@@ -1,7 +1,7 @@
-import 'package:flamingo/feature/product/data/model/product_story.dart';
+import 'package:flamingo/feature/product-story/data/model/product_story.dart';
 import 'package:flamingo/feature/product/screen/product-detail/product_detail_app_bar_view_model.dart';
 import 'package:flamingo/feature/product/screen/product-detail/product_detail_images_screen.dart';
-import 'package:flamingo/feature/product/screen/product-detail/product_story_screen.dart';
+import 'package:flamingo/feature/product-story/screen/product-story/product_story_screen.dart';
 import 'package:flamingo/shared/enum/lead_source.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/button/variants/outlined_button_widget.dart';

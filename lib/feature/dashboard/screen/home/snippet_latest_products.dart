@@ -40,7 +40,7 @@ class SnippetLatestProducts extends StatelessWidget {
           ),
           Container(
             width: SizeConfig.screenWidth,
-            height: SizeConfig.screenHeight * 0.4,
+            height: SizeConfig.screenHeight * 0.47,
             margin:
                 const EdgeInsets.symmetric(vertical: Dimens.spacingSizeSmall),
             child: ListView.builder(
@@ -54,6 +54,7 @@ class SnippetLatestProducts extends StatelessWidget {
                 // height: 280,
                 width: SizeConfig.screenWidth * 0.6,
                 child: ProductWidget(
+                  imageHeight: SizeConfig.screenHeight * 0.35,
                   payload: GenericProduct(
                     product: products[index],
                     image: extractProductDefaultImage(

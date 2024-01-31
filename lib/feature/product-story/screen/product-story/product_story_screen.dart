@@ -1,10 +1,13 @@
+import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/product-story/data/model/product_story.dart';
+import 'package:flamingo/feature/product-story/product_story_view_model.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/image/cached_network_image_widget.dart';
 import 'package:flamingo/widget/video-view/video_view_widget.dart';
 import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class ProductStoryScreen extends StatefulWidget {
@@ -24,12 +27,19 @@ class ProductStoryScreen extends StatefulWidget {
 }
 
 class _ProductStoryScreenState extends State<ProductStoryScreen> {
-  final _pageController = PageController();
-  int _index = 0;
+  late PageController _pageController;
+  late int _index = 0;
 
   setIndex(int value) {
     _index = value;
     setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _index = widget.stories.indexWhere((s) => !s.hasViewed);
+    _pageController = PageController();
   }
 
   @override
@@ -198,7 +208,7 @@ class _ProductStoryScreenState extends State<ProductStoryScreen> {
   }
 }
 
-class ProductStoryItem extends StatelessWidget {
+class ProductStoryItem extends StatefulWidget {
   const ProductStoryItem({
     super.key,
     required this.story,
@@ -206,10 +216,24 @@ class ProductStoryItem extends StatelessWidget {
 
   final ProductStory story;
 
-// TODO:
+  @override
+  State<ProductStoryItem> createState() => _ProductStoryItemState();
+}
+
+class _ProductStoryItemState extends State<ProductStoryItem> {
+  final _viewModel = locator<ProductStoryViewModel>();
+
+  @override
+  void initState() {
+    super.initState();
+    _viewModel.viewStory(widget.story.id);
+  }
 
   @override
   Widget build(BuildContext context) {
-    return VideoViewWidget(url: story.url);
+    return ChangeNotifierProvider(
+      create: (context) => _viewModel,
+      child: VideoViewWidget(url: widget.story.url),
+    );
   }
 }

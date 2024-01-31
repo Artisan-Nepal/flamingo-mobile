@@ -1,5 +1,5 @@
 import 'package:flamingo/data/data.dart';
-import 'package:flamingo/feature/product-story/data/model/product_story.dart';
+import 'package:flamingo/feature/product-story/data/model/grouped_product_story.dart';
 import 'package:flamingo/feature/product-story/data/remote/product_story_remote.dart';
 
 class ProductStoryRemoteImpl implements ProductStoryRemote {
@@ -9,9 +9,9 @@ class ProductStoryRemoteImpl implements ProductStoryRemote {
       : _apiClient = apiClient;
 
   @override
-  Future<List<ProductStory>> getLikedVendorStories() async {
+  Future<List<GroupedProductStory>> getLikedVendorStories() async {
     final apiResponse = await _apiClient.get(ApiUrls.likedVendorStory);
-    return ProductStory.fromJsonList(apiResponse.data);
+    return GroupedProductStory.fromJsonList(apiResponse.data);
   }
 
   @override

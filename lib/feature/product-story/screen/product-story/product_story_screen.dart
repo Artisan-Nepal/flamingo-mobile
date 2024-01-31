@@ -25,6 +25,12 @@ class ProductStoryScreen extends StatefulWidget {
 
 class _ProductStoryScreenState extends State<ProductStoryScreen> {
   final _pageController = PageController();
+  int _index = 0;
+
+  setIndex(int value) {
+    _index = value;
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,11 +46,8 @@ class _ProductStoryScreenState extends State<ProductStoryScreen> {
                 child: GestureDetector(
                   // onTapUp: onTapUp,
                   child: PageView(
-                    // physics: const NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     controller: _pageController,
-                    // onPageChanged: (page) {
-                    //   _index = page;
-                    // },
                     children: List.generate(widget.stories.length, (index) {
                       return ProductStoryItem(story: widget.stories[index]);
                     }),
@@ -52,6 +55,7 @@ class _ProductStoryScreenState extends State<ProductStoryScreen> {
                 ),
               ),
               _buildStoryHeader(),
+              _buildStoryChangeButtons(),
             ],
           ),
         ),
@@ -74,6 +78,50 @@ class _ProductStoryScreenState extends State<ProductStoryScreen> {
   //     }
   //   }
   // }
+
+  Widget _buildStoryChangeButtons() {
+    return Positioned(
+      child: Padding(
+        padding:
+            const EdgeInsets.symmetric(horizontal: Dimens.spacingSizeSmall),
+        child:
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          SizedBox(
+            child: _index > 0
+                ? GestureDetector(
+                    onTap: () {
+                      setIndex(_index - 1);
+                      _pageController.jumpToPage(_index);
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(Dimens.spacing_2),
+                      decoration: BoxDecoration(
+                          color: AppColors.white, shape: BoxShape.circle),
+                      child: Icon(Icons.chevron_left),
+                    ),
+                  )
+                : SizedBox(),
+          ),
+          SizedBox(
+            child: _index < widget.stories.length - 1
+                ? GestureDetector(
+                    onTap: () {
+                      setIndex(_index + 1);
+                      _pageController.jumpToPage(_index);
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(Dimens.spacing_2),
+                      decoration: BoxDecoration(
+                          color: AppColors.white, shape: BoxShape.circle),
+                      child: Icon(Icons.chevron_right),
+                    ),
+                  )
+                : SizedBox(),
+          ),
+        ]),
+      ),
+    );
+  }
 
   Widget _buildStoryHeader() {
     return Positioned(

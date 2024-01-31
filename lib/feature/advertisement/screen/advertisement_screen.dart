@@ -55,7 +55,7 @@ class _AdvertisementScreenState extends State<AdvertisementScreen> {
           padding: const EdgeInsets.only(right: Dimens.spacingSizeDefault),
           child: FavVendorButtonWidget(
             vendorId: widget.advertisement.vendorId,
-            iconSize: Dimens.iconSizeLarge,
+            iconSize: Dimens.iconSizeDefault,
           ),
         ),
       ],

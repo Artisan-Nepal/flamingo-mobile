@@ -41,7 +41,23 @@ class ProductStoryViewModel extends ChangeNotifier {
         productStories.addAll(g.productStories);
       });
       locator<ProductStoryEngagementViewModel>().initViewStatus(productStories);
-      setProductStoryUseCase(Response.complete(response));
+
+      // sort based on view status
+      final List<GroupedProductStory> viewedStories = [];
+      final List<GroupedProductStory> unViewedStories = [];
+      response.forEach((groupStory) {
+        final hasViewed = groupStory.productStories.every(
+          (story) =>
+              locator<ProductStoryEngagementViewModel>().hasViewed(story.id),
+        );
+        if (hasViewed) {
+          viewedStories.add(groupStory);
+        } else {
+          unViewedStories.add(groupStory);
+        }
+      });
+      setProductStoryUseCase(
+          Response.complete([...unViewedStories, ...viewedStories]));
     } catch (exception) {
       setProductStoryUseCase(Response.error(exception));
     }

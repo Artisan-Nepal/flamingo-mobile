@@ -46,6 +46,7 @@ class SnippetHomeScreenStory extends StatelessWidget {
                         context,
                         GroupedProductStoriesScreen(
                           groupedStories: stories,
+                          index: index,
                         ),
                       );
                     },

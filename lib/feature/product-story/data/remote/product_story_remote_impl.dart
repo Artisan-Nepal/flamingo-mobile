@@ -17,6 +17,6 @@ class ProductStoryRemoteImpl implements ProductStoryRemote {
   @override
   Future viewStory(String storyId) async {
     final url = ApiUrls.viewStory.replaceFirst(':id', storyId);
-    _apiClient.post(url);
+    await _apiClient.post(url);
   }
 }

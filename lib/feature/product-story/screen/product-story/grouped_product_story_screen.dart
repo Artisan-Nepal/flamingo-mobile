@@ -1,5 +1,6 @@
 import 'package:flamingo/feature/product-story/data/model/grouped_product_story.dart';
 import 'package:flamingo/feature/product-story/screen/product-story/product_story_screen.dart';
+import 'package:flamingo/shared/util/util.dart';
 import 'package:flutter/material.dart';
 
 class GroupedProductStoriesScreen extends StatefulWidget {
@@ -30,16 +31,17 @@ class _GroupedProductStoriesScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: AppColors.black,
         body: PageView.builder(
-      controller: _pageController,
-      itemCount: widget.groupedStories.length,
-      itemBuilder: (context, index) {
-        return ProductStoryScreen(
-          stories: widget.groupedStories[index].productStories,
-          image: widget.groupedStories[index].productImage,
-          title: widget.groupedStories[index].productTitle,
-        );
-      },
-    ));
+          controller: _pageController,
+          itemCount: widget.groupedStories.length,
+          itemBuilder: (context, index) {
+            return ProductStoryScreen(
+              stories: widget.groupedStories[index].productStories,
+              image: widget.groupedStories[index].productImage,
+              title: widget.groupedStories[index].productTitle,
+            );
+          },
+        ));
   }
 }

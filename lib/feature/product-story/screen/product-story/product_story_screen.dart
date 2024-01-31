@@ -39,7 +39,7 @@ class _ProductStoryScreenState extends State<ProductStoryScreen> {
   void initState() {
     super.initState();
     _index = widget.stories.indexWhere((s) => !s.hasViewed);
-    _pageController = PageController();
+    _pageController = PageController(initialPage: _index);
   }
 
   @override

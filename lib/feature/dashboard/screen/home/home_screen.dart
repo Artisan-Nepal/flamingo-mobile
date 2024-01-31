@@ -96,8 +96,8 @@ class _HomeScreenState extends State<HomeScreen>
               color: isLightMode(context)
                   ? themedPrimaryColor(context)
                   : AppColors.white,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 0.05,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 0.8,
             ),
       ),
       actions: [

@@ -47,7 +47,7 @@ class _AdvertisementScreenState extends State<AdvertisementScreen> {
       appBarTitle: Text(
         widget.advertisement.vendor.storeName,
         style: textTheme(context).titleLarge!.copyWith(
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w600,
             ),
       ),
       appBarActions: [

@@ -1,7 +1,9 @@
 import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/advertisement/advertisement_listing_view_model.dart';
 import 'package:flamingo/feature/dashboard/screen/home/snippet_home_advertisement.dart';
+import 'package:flamingo/feature/dashboard/screen/home/snippet_home_screen_story.dart';
 import 'package:flamingo/feature/dashboard/screen/home/snippet_latest_products.dart';
+import 'package:flamingo/feature/product-story/product_story_view_model.dart';
 import 'package:flamingo/feature/product/screen/product-listing/product_listing_view_model.dart';
 import 'package:flamingo/feature/search/screen/search_screen.dart';
 import 'package:flamingo/shared/shared.dart';
@@ -24,6 +26,7 @@ class _HomeScreenState extends State<HomeScreen>
   final _advertisementListingViewModel =
       locator<AdvertisementListingViewModel>();
   final _latestProductListingViewModel = locator<ProductListingViewModel>();
+  final _storyViewModel = locator<ProductStoryViewModel>();
 
   @override
   void initState() {
@@ -34,6 +37,7 @@ class _HomeScreenState extends State<HomeScreen>
   getData() async {
     _latestProductListingViewModel.getLatestProducts();
     _advertisementListingViewModel.getAdvertisements();
+    _storyViewModel.getLikedVendorStories();
   }
 
   @override
@@ -46,6 +50,9 @@ class _HomeScreenState extends State<HomeScreen>
         ),
         ChangeNotifierProvider(
           create: (context) => _latestProductListingViewModel,
+        ),
+        ChangeNotifierProvider(
+          create: (context) => _storyViewModel,
         ),
       ],
       child: Scaffold(
@@ -76,6 +83,8 @@ class _HomeScreenState extends State<HomeScreen>
                       },
                     ),
                   ),
+                  const VerticalSpaceWidget(height: Dimens.spacingSizeLarge),
+                  SnippetHomeScreenStory(),
                   const VerticalSpaceWidget(height: Dimens.spacingSizeLarge),
                   SnippetHomeAdvertisement(),
                   SnippetLatestProducts(),

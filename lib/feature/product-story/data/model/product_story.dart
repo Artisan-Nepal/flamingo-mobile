@@ -9,13 +9,15 @@ class ProductStory {
     required this.hasViewed,
   });
 
-  factory ProductStory.fromJson(Map<String, dynamic> json) => ProductStory(
-        id: json['id'],
-        url: json['url'],
-        hasViewed: json['engagements'] == null
-            ? false
-            : List.from(json['engagements']).isNotEmpty,
-      );
+  factory ProductStory.fromJson(Map<String, dynamic> json) {
+    return ProductStory(
+      id: json['id'],
+      url: json['url'],
+      hasViewed: json['engagements'] == null
+          ? false
+          : List.from(json['engagements']).isNotEmpty,
+    );
+  }
 
   static List<ProductStory> fromJsonList(dynamic json) =>
       List<ProductStory>.from(

@@ -24,7 +24,7 @@ class GroupedProductStory {
   static List<GroupedProductStory> fromJsonList(dynamic json) =>
       List<GroupedProductStory>.from(
         json.map(
-          (data) => ProductStory.fromJson(data),
+          (data) => GroupedProductStory.fromJson(data),
         ),
       );
 }

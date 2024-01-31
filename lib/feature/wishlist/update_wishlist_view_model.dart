@@ -10,10 +10,10 @@ import 'package:flamingo/shared/shared.dart';
 import 'package:flutter/material.dart';
 
 class UpdateWishlistViewModel extends ChangeNotifier {
-  final VendorRepository _wishlistRepository;
+  final WishlistRepository _wishlistRepository;
 
   UpdateWishlistViewModel({
-    required VendorRepository wishlistRepository,
+    required WishlistRepository wishlistRepository,
   }) : _wishlistRepository = wishlistRepository;
 
   Response _updateWishlistUseCase = Response();

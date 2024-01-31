@@ -25,7 +25,7 @@ void registerWishlistFeature(GetIt locator) {
       apiClient: locator<ApiClient>(),
     ),
   );
-  locator.registerLazySingleton<VendorRepository>(
+  locator.registerLazySingleton<WishlistRepository>(
     () => WishlistRepositoryImpl(
       wishlistLocal: locator<WishlistLocal>(),
       wishlistRemote: locator<WishlistRemote>(),
@@ -37,12 +37,12 @@ void registerWishlistFeature(GetIt locator) {
   );
   locator.registerFactory<UpdateWishlistViewModel>(
     () => UpdateWishlistViewModel(
-      wishlistRepository: locator<VendorRepository>(),
+      wishlistRepository: locator<WishlistRepository>(),
     ),
   );
   locator.registerFactory<WishlistListingViewModel>(
     () => WishlistListingViewModel(
-      wishlistRepository: locator<VendorRepository>(),
+      wishlistRepository: locator<WishlistRepository>(),
     ),
   );
 }

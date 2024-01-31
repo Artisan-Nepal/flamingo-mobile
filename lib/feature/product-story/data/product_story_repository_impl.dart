@@ -6,12 +6,12 @@ import 'package:flamingo/feature/product-story/data/model/grouped_product_story.
 import 'package:flamingo/feature/product-story/data/product_story_repository.dart';
 import 'package:flamingo/feature/product-story/data/remote/product_story_remote.dart';
 
-class ProducStoryRepositoryImpl implements ProductStoryRepository {
+class ProductStoryRepositoryImpl implements ProductStoryRepository {
   final ProductStoryLocal _productStoryLocal;
   final ProductStoryRemote _productStoryRemote;
   final AuthRepository _authRepository;
 
-  ProducStoryRepositoryImpl({
+  ProductStoryRepositoryImpl({
     required ProductStoryLocal productStoryLocal,
     required ProductStoryRemote productStoryRemote,
     required AuthRepository authRepository,

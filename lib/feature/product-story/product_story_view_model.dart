@@ -1,5 +1,6 @@
 import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/product-story/data/model/grouped_product_story.dart';
+import 'package:flamingo/feature/product-story/data/model/product_story.dart';
 import 'package:flamingo/feature/product-story/data/product_story_repository.dart';
 import 'package:flamingo/feature/product-story/product_story_engagement_view_model.dart';
 import 'package:flamingo/shared/shared.dart';
@@ -35,6 +36,11 @@ class ProductStoryViewModel extends ChangeNotifier {
     try {
       setProductStoryUseCase(Response.loading());
       final response = await _productStoryRepository.getLikedVendorStories();
+      final List<ProductStory> productStories = [];
+      response.forEach((g) {
+        productStories.addAll(g.productStories);
+      });
+      locator<ProductStoryEngagementViewModel>().initViewStatus(productStories);
       setProductStoryUseCase(Response.complete(response));
     } catch (exception) {
       setProductStoryUseCase(Response.error(exception));

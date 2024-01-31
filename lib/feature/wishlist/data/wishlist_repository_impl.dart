@@ -8,7 +8,7 @@ import 'package:flamingo/feature/wishlist/data/model/wishlist_item.dart';
 import 'package:flamingo/feature/wishlist/data/remote/wishilst_remote.dart';
 import 'package:flamingo/feature/wishlist/data/wishlist_repository.dart';
 
-class WishlistRepositoryImpl implements VendorRepository {
+class WishlistRepositoryImpl implements WishlistRepository {
   final WishlistLocal _wishlistLocal;
   final WishlistRemote _wishlistRemote;
   final AuthRepository _authRepository;

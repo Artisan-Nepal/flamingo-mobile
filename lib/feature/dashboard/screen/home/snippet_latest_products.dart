@@ -131,7 +131,7 @@ class SnippetHomeScreenTitle extends StatelessWidget {
               Text(
                 title,
                 style: textTheme(context).bodyLarge!.copyWith(
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w600,
                     ),
               ),
             ],

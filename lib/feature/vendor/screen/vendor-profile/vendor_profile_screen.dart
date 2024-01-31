@@ -156,7 +156,10 @@ class _VendorProfileScreenState extends State<VendorProfileScreen> {
       products: products
           .map(
             (p) => GenericProduct(
-              image: p.images.firstOrNull ?? "",
+              image: extractProductDefaultImage(
+                p.images,
+                p.variants,
+              ),
               price: p.variants.first.price,
               productId: p.id,
               title: p.title,

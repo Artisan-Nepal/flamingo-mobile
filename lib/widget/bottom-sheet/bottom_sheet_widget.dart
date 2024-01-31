@@ -27,7 +27,7 @@ class BottomSheetWidget extends StatelessWidget {
         ),
         child: Material(
           child: Padding(
-            padding: const EdgeInsets.all(Dimens.spacingSizeOverLarge),
+            padding: const EdgeInsets.all(Dimens.spacingSizeLarge),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

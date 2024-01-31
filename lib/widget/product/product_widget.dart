@@ -77,7 +77,7 @@ class ProductWidget extends StatelessWidget {
                     ),
                 ],
               ),
-              const SizedBox(height: 5),
+              const SizedBox(height: 10),
               Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: Dimens.spacingSizeSmall,

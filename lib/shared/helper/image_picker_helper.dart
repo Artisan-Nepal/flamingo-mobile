@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'package:flamingo/shared/shared.dart';
+import 'package:flamingo/widget/bottom-sheet/bottom_sheet_widget.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -67,32 +69,40 @@ class ImagePickerHelper {
   static Future<dynamic> _showImageSourcePicker(BuildContext context) async {
     return showModalBottomSheet(
       context: context,
-      builder: (context) => Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          ListTile(
-            leading: const Icon(
-              Icons.image,
-              color: AppColors.primaryMain,
+      builder: (context) {
+        return SizedBox(
+          height: 200,
+          child: BottomSheetWidget(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: const Icon(
+                    CupertinoIcons.photo_on_rectangle,
+                    color: AppColors.primaryMain,
+                  ),
+                  title: Text('Gallery'),
+                  onTap: () {
+                    Navigator.pop(context, ImageSource.gallery);
+                  },
+                ),
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: const Icon(
+                    CupertinoIcons.photo_camera_solid,
+                    color: AppColors.primaryMain,
+                  ),
+                  title: Text('Camera'),
+                  onTap: () {
+                    Navigator.pop(context, ImageSource.camera);
+                  },
+                ),
+              ],
             ),
-            title: const Text('Gallery'),
-            onTap: () {
-              Navigator.pop(context, ImageSource.gallery);
-            },
           ),
-          const Divider(),
-          ListTile(
-            leading: const Icon(
-              Icons.camera_alt,
-              color: AppColors.primaryMain,
-            ),
-            title: const Text('Camera'),
-            onTap: () {
-              Navigator.pop(context, ImageSource.camera);
-            },
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

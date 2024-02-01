@@ -60,6 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     //   validator: validatePhoneNumber,
                     // ),
                     TextFieldWidget(
+                      hintText: 'Email',
                       controller: _emailController,
                       enabled: !viewModel.sendOtpUseCase.isLoading,
                       textInputAction: TextInputAction.done,

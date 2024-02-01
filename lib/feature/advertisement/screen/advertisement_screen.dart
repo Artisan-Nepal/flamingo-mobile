@@ -127,8 +127,11 @@ class _AdvertisementScreenState extends State<AdvertisementScreen> {
               products: widget.advertisement.collection.products
                   .map(
                     (p) => GenericProduct(
-                      image: p.images.firstOrNull ?? "",
-                      price: p.price,
+                      image: extractProductDefaultImage(
+                        p.images,
+                        p.variants,
+                      ),
+                      price: p.variants.first.price,
                       productId: p.id,
                       title: p.title,
                       vendor: widget.advertisement.vendor.storeName,

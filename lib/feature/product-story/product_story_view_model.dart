@@ -38,7 +38,7 @@ class ProductStoryViewModel extends ChangeNotifier {
       final response = await _productStoryRepository.getLikedVendorStories();
       final List<ProductStory> productStories = [];
       response.forEach((g) {
-        productStories.addAll(g.productStories);
+        productStories.addAll(g.items.map((e) => e.story));
       });
       locator<ProductStoryEngagementViewModel>().initViewStatus(productStories);
 
@@ -46,9 +46,9 @@ class ProductStoryViewModel extends ChangeNotifier {
       final List<GroupedProductStory> viewedStories = [];
       final List<GroupedProductStory> unViewedStories = [];
       response.forEach((groupStory) {
-        final hasViewed = groupStory.productStories.every(
-          (story) =>
-              locator<ProductStoryEngagementViewModel>().hasViewed(story.id),
+        final hasViewed = groupStory.items.every(
+          (item) => locator<ProductStoryEngagementViewModel>()
+              .hasViewed(item.story.id),
         );
         if (hasViewed) {
           viewedStories.add(groupStory);

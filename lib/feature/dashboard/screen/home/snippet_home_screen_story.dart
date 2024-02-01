@@ -17,7 +17,7 @@ class SnippetHomeScreenStory extends StatelessWidget {
         final stories = viewModel.productStoryUseCase.data ?? [];
         if (viewModel.productStoryUseCase.isLoading)
           return Container(
-            height: 100,
+            height: 120,
             decoration: BoxDecoration(
               border: Border(
                 bottom: BorderSide(
@@ -53,7 +53,7 @@ class SnippetHomeScreenStory extends StatelessWidget {
         return Consumer<ProductStoryEngagementViewModel>(
           builder: (context, engagementViewModel, child) {
             return Container(
-              height: 100,
+              height: 120,
               width: double.infinity,
               alignment: Alignment.center,
               padding: EdgeInsets.only(bottom: Dimens.spacingSizeSmall),
@@ -68,42 +68,62 @@ class SnippetHomeScreenStory extends StatelessWidget {
                 scrollDirection: Axis.horizontal,
                 itemCount: stories.length,
                 itemBuilder: (context, index) {
-                  final hasViewed = stories[index].productStories.every(
-                        (story) => engagementViewModel.hasViewed(story.id),
+                  final hasViewed = stories[index].items.every(
+                        (item) => engagementViewModel.hasViewed(item.story.id),
                       );
-                  return GestureDetector(
-                    onTap: () {
-                      NavigationHelper.push(
-                        context,
-                        GroupedProductStoriesScreen(
-                          groupedStories: stories,
-                          index: index,
+                  return Container(
+                    width: 90,
+                    margin: EdgeInsets.only(
+                      left: index == 0 ? Dimens.spacingSizeSmall : 0,
+                      right: Dimens.spacingSizeSmall,
+                    ),
+                    padding: EdgeInsets.zero,
+                    child: Column(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            NavigationHelper.push(
+                              context,
+                              GroupedProductStoriesScreen(
+                                groupedStories: stories,
+                                index: index,
+                              ),
+                            );
+                          },
+                          child: Container(
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: hasViewed
+                                    ? AppColors.grayLight
+                                    : AppColors.black,
+                                width: hasViewed ? 1.5 : 2.5,
+                              ),
+                            ),
+                            padding: EdgeInsets.all(2),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(100),
+                              child: CachedNetworkImageWidget(
+                                image:
+                                    stories[index].vendor.displayImage?.url ??
+                                        '',
+                                height: 70,
+                                width: 70,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
                         ),
-                      );
-                    },
-                    child: Container(
-                      margin: EdgeInsets.only(
-                        left: index == 0 ? Dimens.spacingSizeSmall : 0,
-                        right: Dimens.spacingSizeSmall,
-                      ),
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color:
-                              hasViewed ? AppColors.grayLight : AppColors.black,
-                          width: hasViewed ? 1.5 : 2.5,
-                        ),
-                      ),
-                      padding: EdgeInsets.all(2),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(100),
-                        child: CachedNetworkImageWidget(
-                          image: stories[index].productImage,
-                          height: 70,
-                          width: 70,
-                        ),
-                      ),
+                        VerticalSpaceWidget(height: Dimens.spacing_2),
+                        Text(
+                          stories[index].vendor.storeName,
+                          style: textTheme(context).bodySmall,
+                          textAlign: TextAlign.center,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        )
+                      ],
                     ),
                   );
                 },

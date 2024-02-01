@@ -31,17 +31,17 @@ class _GroupedProductStoriesScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: AppColors.black,
-        body: PageView.builder(
-          controller: _pageController,
-          itemCount: widget.groupedStories.length,
-          itemBuilder: (context, index) {
-            return ProductStoryScreen(
-              stories: widget.groupedStories[index].productStories,
-              image: widget.groupedStories[index].productImage,
-              title: widget.groupedStories[index].productTitle,
-            );
-          },
-        ));
+      backgroundColor: AppColors.black,
+      body: PageView.builder(
+        controller: _pageController,
+        itemCount: widget.groupedStories.length,
+        itemBuilder: (context, index) {
+          return ProductStoryScreen(
+            groupedStory: widget.groupedStories[index],
+            needVisitProductButton: true,
+          );
+        },
+      ),
+    );
   }
 }

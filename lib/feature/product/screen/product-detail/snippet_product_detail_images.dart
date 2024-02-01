@@ -1,7 +1,9 @@
+import 'package:flamingo/feature/product-story/data/model/grouped_product_story.dart';
 import 'package:flamingo/feature/product-story/data/model/product_story.dart';
 import 'package:flamingo/feature/product/screen/product-detail/product_detail_app_bar_view_model.dart';
 import 'package:flamingo/feature/product/screen/product-detail/product_detail_images_screen.dart';
 import 'package:flamingo/feature/product-story/screen/product-story/product_story_screen.dart';
+import 'package:flamingo/feature/vendor/data/model/vendor.dart';
 import 'package:flamingo/shared/enum/lead_source.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/button/variants/outlined_button_widget.dart';
@@ -21,6 +23,7 @@ class SnippetProductDetailImages extends StatefulWidget {
     this.leadSource,
     this.advertisementId,
     required this.title,
+    required this.vendor,
   }) : super(key: key);
 
   final List<String> images;
@@ -29,6 +32,7 @@ class SnippetProductDetailImages extends StatefulWidget {
   final String? advertisementId;
   final List<ProductStory> stories;
   final String title;
+  final Vendor vendor;
 
   @override
   State<SnippetProductDetailImages> createState() =>
@@ -114,9 +118,16 @@ class _SnippetProductDetailImagesState
           NavigationHelper.push(
             context,
             ProductStoryScreen(
-              stories: widget.stories,
-              image: widget.images.firstOrNull ?? "",
-              title: widget.title,
+              groupedStory: GroupedProductStory(
+                vendor: widget.vendor,
+                items: widget.stories
+                    .map((s) => GroupedProductStoryItem(
+                        productId: widget.productId,
+                        productImage: widget.images.first,
+                        productName: widget.title,
+                        story: s))
+                    .toList(),
+              ),
             ),
           );
         },

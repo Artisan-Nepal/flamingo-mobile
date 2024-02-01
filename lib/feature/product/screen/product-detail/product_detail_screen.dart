@@ -96,6 +96,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       SnippetProductDetailImages(
+                                        vendor: viewModel
+                                            .productUseCase.data!.vendor,
                                         title: viewModel
                                             .productUseCase.data!.title,
                                         stories: viewModel

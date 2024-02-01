@@ -1,6 +1,7 @@
 import 'package:flamingo/data/data.dart';
 import 'package:flamingo/feature/vendor/data/model/update_favourite_vendor_request.dart';
 import 'package:flamingo/feature/vendor/data/model/vendor.dart';
+import 'package:flamingo/feature/vendor/data/model/vendor_like_response.dart';
 import 'package:flamingo/feature/vendor/data/remote/vendor_remote.dart';
 
 class VendorRemoteImpl implements VendorRemote {
@@ -30,5 +31,12 @@ class VendorRemoteImpl implements VendorRemote {
       apiResponse.data,
       Vendor.fromFavouriteJsonList,
     );
+  }
+
+  @override
+  Future<VendorLikeResponse> getVendorLikes(String vendorId) async {
+    final url = ApiUrls.vendorLikes.replaceFirst(':id', vendorId);
+    final apiResponse = await _apiClient.get(url);
+    return VendorLikeResponse.fromJson(apiResponse.data);
   }
 }

@@ -29,6 +29,7 @@ class ApiUrls {
   static String paymentMethods = '/payment-methods';
   static String orders = '/orders';
   static String vendors = '/vendors';
+  static String vendorLikes = '/vendors/:id/likes';
   static String customersCountInfo = '/customers/count-info';
   static String advertisements = '/advertisements/active';
   static String updateFavouriteVendor = '/customer-favourite-vendors/update';

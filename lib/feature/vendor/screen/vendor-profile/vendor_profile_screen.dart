@@ -3,6 +3,7 @@ import 'package:flamingo/feature/customer-activity/create_activity_view_model.da
 import 'package:flamingo/feature/product/screen/product-listing/product_listing_view_model.dart';
 import 'package:flamingo/feature/product/screen/product-listing/snippet_product_listing.dart';
 import 'package:flamingo/feature/vendor/data/model/vendor.dart';
+import 'package:flamingo/feature/vendor/screen/vendor-profile/vendor_profile_view_model.dart';
 import 'package:flamingo/shared/constant/user_activity_type.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/error/default_error_widget.dart';
@@ -27,6 +28,7 @@ class VendorProfileScreen extends StatefulWidget {
 
 class _VendorProfileScreenState extends State<VendorProfileScreen> {
   final _productListingViewModel = locator<ProductListingViewModel>();
+  final _viewModel = locator<VendorProfileViewModel>();
 
   void initState() {
     super.initState();
@@ -41,6 +43,7 @@ class _VendorProfileScreenState extends State<VendorProfileScreen> {
   }
 
   getData() async {
+    _viewModel.getVendorLikes(widget.vendor.id);
     await _productListingViewModel.getVendorProducts(widget.vendor.id);
 
     if (_productListingViewModel.getProductsUseCase.hasCompleted) {
@@ -50,8 +53,15 @@ class _VendorProfileScreenState extends State<VendorProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => _productListingViewModel,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => _productListingViewModel,
+        ),
+        ChangeNotifierProvider(
+          create: (context) => _viewModel,
+        )
+      ],
       child: DefaultScreen(
         padding: EdgeInsets.zero,
         // needAppBar: false,
@@ -95,7 +105,20 @@ class _VendorProfileScreenState extends State<VendorProfileScreen> {
                           iconSize: Dimens.iconSizeLarge,
                         ),
                         VerticalSpaceWidget(height: Dimens.spacingSizeDefault),
-                        Text('Liked by 829'),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text('Liked by '),
+                            Consumer<VendorProfileViewModel>(
+                              builder: (context, viewModel, child) {
+                                final likes =
+                                    viewModel.vendorLikeUseCase.data?.count ??
+                                        0;
+                                return Text(likes.toString());
+                              },
+                            ),
+                          ],
+                        ),
                         // VerticalSpaceWidget(height: Dimens.spacingSizeLarge),
                         // Padding(
                         //   padding: const EdgeInsets.symmetric(

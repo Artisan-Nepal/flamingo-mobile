@@ -13,13 +13,13 @@ class BackButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: AppColors.transparent,
-      child: GestureDetector(
-        onTap: onPressed ??
-            () {
-              NavigationHelper.pop(context);
-            },
+    return GestureDetector(
+      onTap: onPressed ??
+          () {
+            NavigationHelper.pop(context);
+          },
+      child: Container(
+        color: AppColors.transparent,
         child: Icon(
           CupertinoIcons.back,
           size: size ?? Dimens.iconSizeLarge,

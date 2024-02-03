@@ -14,6 +14,7 @@ import 'package:flamingo/widget/not-logged-in/not_logged_in_widget.dart';
 import 'package:flamingo/widget/screen/screen.dart';
 import 'package:flamingo/widget/space/space.dart';
 import 'package:flamingo/widget/text/text.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -32,11 +33,18 @@ class _AccountScreenState extends State<AccountScreen> {
       automaticallyImplyAppBarLeading: false,
       title: 'Account',
       appbarActions: const [CartButtonWidget()],
+      padding: EdgeInsets.zero,
       child: Column(
         children: [
-          authViewModel.isLoggedIn
-              ? _buildLoggedInComponents()
-              : _buildNotLoggedInComponents(),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: Dimens.spacingSizeDefault,
+            ),
+            child: authViewModel.isLoggedIn
+                ? _buildLoggedInComponents()
+                : _buildNotLoggedInComponents(),
+          ),
+          VerticalSpaceWidget(height: Dimens.spacingSizeOverLarge),
           _buildContactUs(),
         ],
       ),
@@ -44,7 +52,87 @@ class _AccountScreenState extends State<AccountScreen> {
   }
 
   Widget _buildContactUs() {
-    return Column();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: Dimens.spacingSizeDefault,
+          ),
+          child: Text(
+            'CONTACT US',
+            style: TextStyle(
+              color: AppColors.primaryMain,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+        VerticalSpaceWidget(height: Dimens.spacingSizeDefault),
+        Container(
+          height: 80,
+          decoration: BoxDecoration(
+            border: Border(
+              top: BorderSide(
+                color: AppColors.grayLighter,
+              ),
+              bottom: BorderSide(
+                color: AppColors.grayLighter,
+              ),
+            ),
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: _buildContactItem(
+                  icon: CupertinoIcons.phone,
+                  name: 'Phone',
+                  onPressed: () async {
+                    final url = 'tel:${CommonConstants.contactNumber}';
+                    UrlLauncherHelper.launch(url);
+                  },
+                ),
+              ),
+              Container(
+                width: 1,
+                color: AppColors.grayLighter,
+              ),
+              Expanded(
+                child: _buildContactItem(
+                  icon: CupertinoIcons.mail,
+                  name: 'Email Us',
+                  onPressed: () {
+                    final url = 'mailto:${CommonConstants.contactEmail}';
+                    UrlLauncherHelper.launch(url);
+                  },
+                ),
+              ),
+            ],
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget _buildContactItem({
+    required IconData icon,
+    required String name,
+    required VoidCallback onPressed,
+  }) {
+    return GestureDetector(
+      onTap: onPressed,
+      child: Container(
+        alignment: Alignment.center,
+        color: AppColors.transparent,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon),
+            VerticalSpaceWidget(height: Dimens.spacingSizeExtraSmall),
+            Text(name),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _buildNotLoggedInComponents() {

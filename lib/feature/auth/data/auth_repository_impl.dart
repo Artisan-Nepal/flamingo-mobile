@@ -36,6 +36,7 @@ class AuthRepositoryImpl implements AuthRepository {
 
     await _authLocal.setAccessToken(apiResponse.accessToken);
     await _authLocal.setUser(apiResponse.user);
+    await _authLocal.removeGuestId();
 
     return apiResponse;
   }

@@ -22,7 +22,7 @@ class TextFieldWidget extends StatelessWidget {
     this.validator,
     this.autoFocus = false,
     this.autovalidateMode = AutovalidateMode.disabled,
-    this.maxLines,
+    this.maxLines = 1,
     this.maxLength,
     this.obscureText = false,
     this.textCapitalization = TextCapitalization.none,

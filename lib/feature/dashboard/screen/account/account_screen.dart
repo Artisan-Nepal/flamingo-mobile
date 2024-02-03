@@ -13,7 +13,6 @@ import 'package:flamingo/widget/list-tile/list_tile.dart';
 import 'package:flamingo/widget/not-logged-in/not_logged_in_widget.dart';
 import 'package:flamingo/widget/screen/screen.dart';
 import 'package:flamingo/widget/space/space.dart';
-import 'package:flamingo/widget/text/text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -31,7 +30,7 @@ class _AccountScreenState extends State<AccountScreen> {
     final authViewModel = Provider.of<AuthViewModel>(context);
     return TitledScreen(
       automaticallyImplyAppBarLeading: false,
-      title: 'Account',
+      title: (authViewModel.user?.firstName ?? "PROFILE").toUpperCase(),
       appbarActions: const [CartButtonWidget()],
       padding: EdgeInsets.zero,
       child: Column(
@@ -148,26 +147,26 @@ class _AccountScreenState extends State<AccountScreen> {
         Provider.of<CustomerActivityViewModel>(context);
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        VerticalSpaceWidget(
+          height: Dimens.spacingSizeLarge,
+        ),
         Center(
           child: SnippetDisplayPicture(),
         ),
-        if (authViewModel.hasName) ...[
-          VerticalSpaceWidget(
-            height: Dimens.spacingSizeDefault,
-          ),
-          TextWidget(
-            getFullName(
-              firstName: authViewModel.user?.firstName,
-              lastName: authViewModel.user?.lastName,
-            ),
-            style: textTheme(context).bodyMedium!.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-          ),
-        ],
         VerticalSpaceWidget(
           height: Dimens.spacingSizeLarge,
+        ),
+        Text(
+          'MY ACCOUNT',
+          style: TextStyle(
+            color: AppColors.primaryMain,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        VerticalSpaceWidget(
+          height: Dimens.spacingSizeDefault,
         ),
         ListTileV2Wdiget(
           title: 'Account Setting',

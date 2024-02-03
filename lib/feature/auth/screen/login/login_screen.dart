@@ -1,5 +1,4 @@
 import 'package:flamingo/di/di.dart';
-import 'package:flamingo/feature/auth/screen/login/login_view_model.dart';
 import 'package:flamingo/feature/auth/screen/login/verify_otp_screen.dart';
 import 'package:flamingo/feature/feature.dart';
 import 'package:flamingo/shared/shared.dart';
@@ -10,7 +9,7 @@ import 'package:provider/provider.dart';
 class LoginScreen extends StatefulWidget {
   const LoginScreen({
     super.key,
-    this.needContinueAsGuest = false,
+    this.needContinueAsGuest = true,
   });
 
   final bool needContinueAsGuest;

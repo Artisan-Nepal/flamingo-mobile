@@ -226,6 +226,7 @@ class _AccountScreenState extends State<AccountScreen> {
       builder: (context) {
         return AlertDialogWidget(
           title: 'Logout?',
+          description: 'Are you sure you want to log out?',
           needSecondButton: true,
           firstButtonLabel: 'Continue',
           secondButtonLabel: 'Cancel',

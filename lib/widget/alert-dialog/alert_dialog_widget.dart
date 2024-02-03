@@ -1,88 +1,93 @@
-import 'package:flamingo/shared/shared.dart';
-import 'package:flamingo/widget/button/button.dart';
+import 'package:flamingo/shared/enum/alert_dialog_type.dart';
+import 'package:flamingo/shared/util/util.dart';
+import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/material.dart';
 
 class AlertDialogWidget extends StatelessWidget {
   const AlertDialogWidget({
     Key? key,
-    this.message,
+    required this.title,
+    this.description = '',
     this.firstButtonOnPressed,
     this.firstButtonLabel = 'Ok',
     this.secondButtonLabel = 'Cancel',
-    this.needSecondButton = false,
+    this.needSecondButton = true,
+    this.firstButtonIsLoading = false,
     this.secondButtonOnPressed,
     this.dialogType = AlertDialogType.alert,
-    required this.title,
   }) : super(key: key);
 
   final String title;
-  final String? message;
-  final VoidCallback? firstButtonOnPressed;
+  final String description;
+  final dynamic firstButtonOnPressed;
   final VoidCallback? secondButtonOnPressed;
   final String firstButtonLabel;
   final String secondButtonLabel;
   final bool needSecondButton;
+  final bool firstButtonIsLoading;
   final AlertDialogType dialogType;
 
   @override
   Widget build(BuildContext context) {
+    defaultAction() {
+      Navigator.pop(context);
+    }
+
     return AlertDialog(
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(
-          Radius.circular(8.0),
-        ),
+      content: Text(
+        description,
+        style: Theme.of(context).textTheme.bodyMedium,
       ),
-      title: Center(
-          child: Text(
-        title,
-        textAlign: TextAlign.center,
-      )),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (message != null) ...[
-            Text(
-              message!,
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: Dimens.spacingSizeLarge),
-          ],
-          ButtonWidget(
-            height: 40,
-            label: firstButtonLabel,
-            onPressed: firstButtonOnPressed ??
-                () {
-                  Navigator.pop(context);
-                },
-          ),
-          if (needSecondButton) ...[
-            const SizedBox(height: Dimens.spacingSizeDefault),
-            OutlinedButtonWidget(
-              label: secondButtonLabel,
-              height: 40,
-              onPressed: secondButtonOnPressed ??
-                  () {
-                    Navigator.pop(context);
-                  },
-            ),
-          ],
-        ],
-      ),
-      titlePadding: const EdgeInsets.only(
-        top: Dimens.spacingSizeLarge,
+      contentPadding: EdgeInsets.only(
         left: Dimens.spacingSizeLarge,
         right: Dimens.spacingSizeLarge,
+        bottom: description.isEmpty ? 0 : Dimens.spacingSizeLarge,
+        top: description.isEmpty ? 0 : Dimens.spacingSizeDefault,
       ),
-      insetPadding:
-          EdgeInsets.symmetric(horizontal: SizeConfig.screenWidth * 0.15),
-      // actionsPadding: const EdgeInsets.only(
-      //     left: Dimens.paddingSizeDefault,
-      //     right: Dimens.paddingSizeDefault,
-      //     bottom: Dimens.paddingSizeSmall),
-      // actionsAlignment: needSecondButton
-      //     ? MainAxisAlignment.spaceAround
-      //     : MainAxisAlignment.center,
-      // actions:
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(Dimens.radiusSmall),
+        ),
+      ),
+      title: Text(
+        title,
+        style: Theme.of(context).textTheme.titleLarge,
+      ),
+      actionsPadding: const EdgeInsets.only(
+        left: Dimens.spacingSizeLarge,
+        right: Dimens.spacingSizeLarge,
+        bottom: Dimens.spacingSizeLarge,
+      ),
+      actionsAlignment: needSecondButton
+          ? MainAxisAlignment.spaceAround
+          : MainAxisAlignment.center,
+      actions: [
+        SizedBox(
+          width: SizeConfig.screenWidth,
+          child: Row(
+            children: [
+              Expanded(
+                flex: 1,
+                child: OutlinedButtonWidget(
+                  height: 40,
+                  label: secondButtonLabel,
+                  onPressed: secondButtonOnPressed ?? defaultAction,
+                ),
+              ),
+              const HorizontalSpaceWidget(width: Dimens.spacing_8),
+              Expanded(
+                flex: 1,
+                child: ButtonWidget(
+                  height: 40,
+                  isLoading: firstButtonIsLoading,
+                  label: firstButtonLabel,
+                  onPressed: firstButtonOnPressed ?? defaultAction,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

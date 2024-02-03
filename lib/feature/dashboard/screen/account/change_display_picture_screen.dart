@@ -154,7 +154,8 @@ class _ChangeDisplayPictureScreenState
     showDialog(
       context: context,
       builder: (context) => AlertDialogWidget(
-        title: 'Are you sure you want to remove selection?',
+        title: 'Remove selection?',
+        description: 'Are you sure you want to remove selection?',
         needSecondButton: true,
         firstButtonOnPressed: () {
           viewModel.clearSelectedImage();

@@ -192,7 +192,7 @@ class _AddressListingScreenState extends State<AddressListingScreen> {
       context: context,
       builder: (dialogContext) => AlertDialogWidget(
         title: 'Remove  address?',
-        message: 'Are you sure you want to remove the address?',
+        description: 'Are you sure you want to remove the address?',
         needSecondButton: true,
         firstButtonLabel: 'Remove',
         firstButtonOnPressed: () {

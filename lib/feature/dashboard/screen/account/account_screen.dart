@@ -125,9 +125,17 @@ class _AccountScreenState extends State<AccountScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon),
+            Icon(
+              icon,
+              size: 20,
+            ),
             VerticalSpaceWidget(height: Dimens.spacingSizeExtraSmall),
-            Text(name),
+            Text(
+              name,
+              style: TextStyle(
+                fontSize: Dimens.fontSizeDefault,
+              ),
+            ),
           ],
         ),
       ),

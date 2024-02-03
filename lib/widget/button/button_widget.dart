@@ -65,7 +65,7 @@ class ButtonWidget extends StatelessWidget {
           backgroundColor: themedBackgroundColor,
           shape: RoundedRectangleBorder(
             side: needBorder ? BorderSide(color: borderColor) : BorderSide.none,
-            borderRadius: borderRaidus ?? BorderRadius.circular(5),
+            borderRadius: borderRaidus ?? BorderRadius.circular(8),
           ),
         ),
         onPressed: isLoading || !enabled ? null : onPressed,

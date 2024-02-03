@@ -8,4 +8,7 @@ abstract class AuthLocal {
   Future<void> setUser(Customer user);
   Future removeUser();
   Future<Customer?> getUser();
+  Future<void> setGuestId(String value);
+  Future removeGuestId();
+  Future<String?> getGuestId();
 }

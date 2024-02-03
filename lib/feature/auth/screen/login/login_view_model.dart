@@ -80,4 +80,8 @@ class LoginViewModel extends ChangeNotifier {
       setVerifyOtpUseCase(Response.error(exception));
     }
   }
+
+  Future<void> continueAsGuest() async {
+    _authRepository.setGuestId('guest');
+  }
 }

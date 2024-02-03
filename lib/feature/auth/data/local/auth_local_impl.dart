@@ -44,4 +44,19 @@ class AuthLocalImpl implements AuthLocal {
   Future removeUser() async {
     return await _sharedPrefManager.remove(LocalStorageKeys.user);
   }
+
+  @override
+  Future<String?> getGuestId() async {
+    return await _sharedPrefManager.getString(LocalStorageKeys.guestId);
+  }
+
+  @override
+  Future removeGuestId() async {
+    return await _sharedPrefManager.remove(LocalStorageKeys.guestId);
+  }
+
+  @override
+  Future<void> setGuestId(String value) async {
+    return await _sharedPrefManager.setString(LocalStorageKeys.guestId, value);
+  }
 }

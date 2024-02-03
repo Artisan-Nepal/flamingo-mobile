@@ -1,3 +1,4 @@
+import 'package:flamingo/feature/auth/auth_view_model.dart';
 import 'package:flamingo/feature/product/data/model/product.dart';
 import 'package:flamingo/feature/product/screen/product-detail/product_detail_screen.dart';
 import 'package:flamingo/shared/enum/lead_source.dart';
@@ -6,6 +7,7 @@ import 'package:flamingo/widget/fav-button/fav_product_button_widget.dart';
 import 'package:flamingo/widget/image/image.dart';
 import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ProductWidget extends StatelessWidget {
   const ProductWidget({
@@ -27,6 +29,8 @@ class ProductWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authViewModel = Provider.of<AuthViewModel>(context);
+
     return GestureDetector(
       onTap: () {
         NavigationHelper.push(
@@ -65,7 +69,7 @@ class ProductWidget extends StatelessWidget {
                       placeHolder: ImageConstants.imagePlaceholder,
                     ),
                   ),
-                  if (needFavIcon)
+                  if (authViewModel.isLoggedIn)
                     Positioned(
                       top: 10,
                       right: 10,

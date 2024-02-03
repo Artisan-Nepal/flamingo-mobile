@@ -60,4 +60,19 @@ class AuthRepositoryImpl implements AuthRepository {
     await _authLocal.removeAccessToken();
     await _authLocal.removeUser();
   }
+
+  @override
+  Future<String?> getGuestId() async {
+    return _authLocal.getGuestId();
+  }
+
+  @override
+  Future removeGuestId() async {
+    return _authLocal.removeGuestId();
+  }
+
+  @override
+  Future<void> setGuestId(String value) async {
+    return _authLocal.setGuestId(value);
+  }
 }

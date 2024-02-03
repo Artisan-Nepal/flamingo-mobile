@@ -12,10 +12,11 @@ class NavigationService {
   Future<void> getInitialRoute() async {
     final isLoggedIn = await _getIsLoggedIn();
     final isFirstTime = await _getIsFirstTime();
+    final continuedAsGuest = await _getContinuedAsGuest();
 
     if (isFirstTime) {
       initialRoute = NavigationRouteNames.onBoarding;
-    } else if (isLoggedIn) {
+    } else if (isLoggedIn || continuedAsGuest) {
       initialRoute = NavigationRouteNames.dashboard;
     } else {
       initialRoute = NavigationRouteNames.login;
@@ -29,5 +30,9 @@ class NavigationService {
   Future<bool> _getIsFirstTime() async {
     return await _sharedPrefManager.getBool(LocalStorageKeys.isFirstTime) ??
         true;
+  }
+
+  Future<bool> _getContinuedAsGuest() async {
+    return (await _sharedPrefManager.containsKey(LocalStorageKeys.guestId));
   }
 }

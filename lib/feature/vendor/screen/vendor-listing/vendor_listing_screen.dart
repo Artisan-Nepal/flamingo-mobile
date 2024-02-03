@@ -1,4 +1,5 @@
 import 'package:flamingo/di/di.dart';
+import 'package:flamingo/feature/auth/auth_view_model.dart';
 import 'package:flamingo/feature/vendor/screen/vendor-profile/vendor_profile_screen.dart';
 import 'package:flamingo/feature/vendor/vendor_listing_view_model.dart';
 import 'package:flamingo/shared/shared.dart';
@@ -27,6 +28,7 @@ class _VendorListingScreenState extends State<VendorListingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final authViewModel = Provider.of<AuthViewModel>(context);
     return ChangeNotifierProvider(
       create: (context) => _viewModel,
       child: TitledScreen(
@@ -70,7 +72,8 @@ class _VendorListingScreenState extends State<VendorListingScreen> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        FavVendorButtonWidget(vendorId: vendors[index].id)
+                        if (authViewModel.isLoggedIn)
+                          FavVendorButtonWidget(vendorId: vendors[index].id)
                       ],
                     ),
                   ),

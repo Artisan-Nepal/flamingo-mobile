@@ -8,7 +8,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  const LoginScreen({
+    super.key,
+    this.needContinueAsGuest = false,
+  });
+
+  final bool needContinueAsGuest;
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -76,7 +81,28 @@ class _LoginScreenState extends State<LoginScreen> {
                         _onLogin(viewModel);
                       },
                       isLoading: viewModel.sendOtpUseCase.isLoading,
-                    )
+                    ),
+
+                    if (widget.needContinueAsGuest) ...[
+                      const VerticalSpaceWidget(
+                        height: Dimens.spacingSizeSmall,
+                      ),
+                      Align(
+                        alignment: Alignment.center,
+                        child: Text('Or'),
+                      ),
+                      const VerticalSpaceWidget(
+                        height: Dimens.spacingSizeSmall,
+                      ),
+                      OutlinedButtonWidget(
+                        width: double.infinity,
+                        label: 'Continue as guest',
+                        onPressed: () {
+                          _onContinueAsGuest(viewModel);
+                        },
+                        isLoading: viewModel.sendOtpUseCase.isLoading,
+                      ),
+                    ]
                   ],
                 );
               },
@@ -84,6 +110,15 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         );
       },
+    );
+  }
+
+  void _onContinueAsGuest(LoginViewModel viewModel) async {
+    await viewModel.continueAsGuest();
+
+    NavigationHelper.pushAndReplaceAll(
+      context,
+      const DashboardScreen(),
     );
   }
 

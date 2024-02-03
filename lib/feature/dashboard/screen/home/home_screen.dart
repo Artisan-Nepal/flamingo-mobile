@@ -1,5 +1,6 @@
 import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/advertisement/advertisement_listing_view_model.dart';
+import 'package:flamingo/feature/auth/auth_view_model.dart';
 import 'package:flamingo/feature/dashboard/screen/home/snippet_home_advertisement.dart';
 import 'package:flamingo/feature/dashboard/screen/home/snippet_home_screen_story.dart';
 import 'package:flamingo/feature/dashboard/screen/home/snippet_latest_products.dart';
@@ -7,6 +8,7 @@ import 'package:flamingo/feature/product-story/product_story_view_model.dart';
 import 'package:flamingo/feature/product/screen/product-listing/product_listing_view_model.dart';
 import 'package:flamingo/feature/search/screen/search_screen.dart';
 import 'package:flamingo/shared/shared.dart';
+import 'package:flamingo/widget/not-logged-in/not_logged_in_widget.dart';
 import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -43,6 +45,8 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   Widget build(BuildContext context) {
     super.build(context);
+    final authViewModel = Provider.of<AuthViewModel>(context);
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
@@ -83,8 +87,20 @@ class _HomeScreenState extends State<HomeScreen>
                       },
                     ),
                   ),
-                  const VerticalSpaceWidget(height: Dimens.spacingSizeLarge),
-                  SnippetHomeScreenStory(),
+                  if (!authViewModel.isLoggedIn)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: Dimens.spacingSizeSmall,
+                      ),
+                      child: NotLoggedInWidget(
+                          title: 'LET\'S GET PERSONAL',
+                          message:
+                              'Sign in for a tailored shopping experience'),
+                    ),
+                  if (authViewModel.isLoggedIn) ...[
+                    const VerticalSpaceWidget(height: Dimens.spacingSizeLarge),
+                    SnippetHomeScreenStory(),
+                  ],
                   const VerticalSpaceWidget(height: Dimens.spacingSizeLarge),
                   SnippetHomeAdvertisement(),
                   SnippetLatestProducts(),

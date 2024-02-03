@@ -10,6 +10,7 @@ import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/alert-dialog/alert_dialog_widget.dart';
 import 'package:flamingo/widget/button/button.dart';
 import 'package:flamingo/widget/list-tile/list_tile.dart';
+import 'package:flamingo/widget/not-logged-in/not_logged_in_widget.dart';
 import 'package:flamingo/widget/screen/screen.dart';
 import 'package:flamingo/widget/space/space.dart';
 import 'package:flamingo/widget/text/text.dart';
@@ -27,76 +28,100 @@ class _AccountScreenState extends State<AccountScreen> {
   @override
   Widget build(BuildContext context) {
     final authViewModel = Provider.of<AuthViewModel>(context);
-    final customerActivityViewModel =
-        Provider.of<CustomerActivityViewModel>(context);
     return TitledScreen(
       automaticallyImplyAppBarLeading: false,
       title: 'Account',
       appbarActions: const [CartButtonWidget()],
       child: Column(
         children: [
-          Center(
-            child: SnippetDisplayPicture(),
-          ),
-          if (authViewModel.hasName) ...[
-            VerticalSpaceWidget(
-              height: Dimens.spacingSizeDefault,
-            ),
-            TextWidget(
-              getFullName(
-                firstName: authViewModel.user?.firstName,
-                lastName: authViewModel.user?.lastName,
-              ),
-              style: textTheme(context).bodyMedium!.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-          ],
-          VerticalSpaceWidget(
-            height: Dimens.spacingSizeLarge,
-          ),
-          ListTileV2Wdiget(
-            title: 'Account Setting',
-            onPressed: () {
-              // NavigationHelper.push(context, const AddProfileScreen());
-            },
-          ),
-          ListTileV2Wdiget(
-            title: 'Orders (${customerActivityViewModel.orderCount})',
-            onPressed: () {
-              NavigationHelper.push(context, const OrderListingScreen());
-            },
-          ),
-          ListTileV2Wdiget(
-            title: 'Cart (${customerActivityViewModel.cartCount})',
-            onPressed: () {
-              NavigationHelper.push(context, const CartListingScreen());
-            },
-          ),
-          ListTileV2Wdiget(
-            title: 'Wishlist (${customerActivityViewModel.wishlistCount})',
-            onPressed: () {
-              NavigationHelper.push(context, const WishlistListingScreen());
-            },
-          ),
-          ListTileV2Wdiget(
-            title: 'Address',
-            onPressed: () {
-              NavigationHelper.push(
-                context,
-                const AddressListingScreen(
-                    showSelectionIndication: false, title: "Addresses"),
-              );
-            },
-          ),
-          ListTileV2Wdiget(
-            title: 'Log out',
-            onPressed: () {
-              _onLogout(authViewModel);
-            },
-          ),
+          authViewModel.isLoggedIn
+              ? _buildLoggedInComponents()
+              : _buildNotLoggedInComponents(),
+          _buildContactUs(),
         ],
       ),
+    );
+  }
+
+  Widget _buildContactUs() {
+    return Column();
+  }
+
+  Widget _buildNotLoggedInComponents() {
+    return NotLoggedInWidget(
+      title: 'LET\'S GET PERSONAL',
+      message: 'Access you Bag & Wishlist on any of your devices',
+    );
+  }
+
+  Widget _buildLoggedInComponents() {
+    final authViewModel = Provider.of<AuthViewModel>(context);
+    final customerActivityViewModel =
+        Provider.of<CustomerActivityViewModel>(context);
+
+    return Column(
+      children: [
+        Center(
+          child: SnippetDisplayPicture(),
+        ),
+        if (authViewModel.hasName) ...[
+          VerticalSpaceWidget(
+            height: Dimens.spacingSizeDefault,
+          ),
+          TextWidget(
+            getFullName(
+              firstName: authViewModel.user?.firstName,
+              lastName: authViewModel.user?.lastName,
+            ),
+            style: textTheme(context).bodyMedium!.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
+        ],
+        VerticalSpaceWidget(
+          height: Dimens.spacingSizeLarge,
+        ),
+        ListTileV2Wdiget(
+          title: 'Account Setting',
+          onPressed: () {
+            // NavigationHelper.push(context, const AddProfileScreen());
+          },
+        ),
+        ListTileV2Wdiget(
+          title: 'Orders (${customerActivityViewModel.orderCount})',
+          onPressed: () {
+            NavigationHelper.push(context, const OrderListingScreen());
+          },
+        ),
+        ListTileV2Wdiget(
+          title: 'Cart (${customerActivityViewModel.cartCount})',
+          onPressed: () {
+            NavigationHelper.push(context, const CartListingScreen());
+          },
+        ),
+        ListTileV2Wdiget(
+          title: 'Wishlist (${customerActivityViewModel.wishlistCount})',
+          onPressed: () {
+            NavigationHelper.push(context, const WishlistListingScreen());
+          },
+        ),
+        ListTileV2Wdiget(
+          title: 'Address',
+          onPressed: () {
+            NavigationHelper.push(
+              context,
+              const AddressListingScreen(
+                  showSelectionIndication: false, title: "Addresses"),
+            );
+          },
+        ),
+        ListTileV2Wdiget(
+          title: 'Log out',
+          onPressed: () {
+            _onLogout(authViewModel);
+          },
+        ),
+      ],
     );
   }
 

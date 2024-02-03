@@ -1,4 +1,6 @@
 import 'package:flamingo/di/di.dart';
+import 'package:flamingo/feature/auth/auth_view_model.dart';
+import 'package:flamingo/feature/auth/screen/login/login_screen.dart';
 import 'package:flamingo/feature/product/data/model/product.dart';
 import 'package:flamingo/feature/product/screen/product-detail/product_detail_app_bar_view_model.dart';
 import 'package:flamingo/feature/product/screen/product-detail/product_detail_view_model.dart';
@@ -237,6 +239,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   }
 
   Widget _buildAddToBagButton(ProductDetailViewModel viewModel) {
+    final authViewModel = Provider.of<AuthViewModel>(context);
+
     return Positioned(
       bottom: 0,
       right: Dimens.spacingSizeDefault,
@@ -245,6 +249,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         label: 'Add to Bag',
         width: SizeConfig.screenWidth - 2 * Dimens.spacingSizeDefault,
         onPressed: () async {
+          if (!authViewModel.isLoggedIn) {
+            NavigationHelper.push(
+              context,
+              LoginScreen(
+                needContinueAsGuest: false,
+              ),
+            );
+            return;
+          }
           showFullScreenLoader(context);
           await viewModel.addToCart(
             leadSource: widget.leadSource,

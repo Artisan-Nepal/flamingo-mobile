@@ -17,9 +17,11 @@ class AuthViewModel extends ChangeNotifier {
   }
 
   late bool _isLoggedIn;
+  late bool _isGuestUser;
   Customer? _user;
 
   bool get isLoggedIn => _isLoggedIn;
+  bool get isGuestUser => _isGuestUser;
   Customer? get user => _user;
 
   Response _logoutUseCase = Response();
@@ -37,6 +39,7 @@ class AuthViewModel extends ChangeNotifier {
 
   Future<void> syncLocally() async {
     _isLoggedIn = await _authRepository.getIsLoggedIn();
+    _isGuestUser = (await _authRepository.getGuestId()) != null;
     _user = await _authRepository.getUserLocal();
     notifyListeners();
   }

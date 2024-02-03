@@ -39,7 +39,9 @@ void registerVendorFeature(GetIt locator) {
     ),
   );
   locator.registerLazySingleton<FavouriteVendorViewModel>(
-    () => FavouriteVendorViewModel(),
+    () => FavouriteVendorViewModel(
+      vendorRepository: locator<VendorRepository>(),
+    ),
   );
   locator.registerFactory<UpdateFavouriteVendorViewModel>(
     () => UpdateFavouriteVendorViewModel(

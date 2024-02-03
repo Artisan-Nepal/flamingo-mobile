@@ -3,6 +3,7 @@ import 'package:flamingo/feature/customer-activity/create_activity_view_model.da
 import 'package:flamingo/feature/product/screen/product-listing/product_listing_view_model.dart';
 import 'package:flamingo/feature/product/screen/product-listing/snippet_product_listing.dart';
 import 'package:flamingo/feature/vendor/data/model/vendor.dart';
+import 'package:flamingo/feature/vendor/favourite_vendor_view_model.dart';
 import 'package:flamingo/feature/vendor/screen/vendor-profile/vendor_profile_view_model.dart';
 import 'package:flamingo/shared/constant/user_activity_type.dart';
 import 'package:flamingo/shared/shared.dart';
@@ -43,7 +44,7 @@ class _VendorProfileScreenState extends State<VendorProfileScreen> {
   }
 
   getData() async {
-    _viewModel.getVendorLikes(widget.vendor.id);
+    locator<FavouriteVendorViewModel>().getVendorLikes(widget.vendor.id);
     await _productListingViewModel.getVendorProducts(widget.vendor.id);
 
     if (_productListingViewModel.getProductsUseCase.hasCompleted) {
@@ -109,11 +110,11 @@ class _VendorProfileScreenState extends State<VendorProfileScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text('Liked by '),
-                            Consumer<VendorProfileViewModel>(
+                            Consumer<FavouriteVendorViewModel>(
                               builder: (context, viewModel, child) {
-                                final likes =
-                                    viewModel.vendorLikeUseCase.data?.count ??
-                                        0;
+                                final likes = viewModel.getVendorLikeCount(
+                                  widget.vendor.id,
+                                );
                                 return Text(likes.toString());
                               },
                             ),

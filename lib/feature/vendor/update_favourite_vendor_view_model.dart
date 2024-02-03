@@ -31,6 +31,7 @@ class UpdateFavouriteVendorViewModel extends ChangeNotifier {
           vendorId: vendorId,
         ),
       );
+      locator<FavouriteVendorViewModel>().getVendorLikes(vendorId);
       setUpdateFavouriteVendorUseCase(Response.complete(response));
     } catch (exception) {
       locator<FavouriteVendorViewModel>()

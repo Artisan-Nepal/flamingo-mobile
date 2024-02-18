@@ -159,8 +159,7 @@ class _CategorySearchScreenState extends State<CategorySearchScreen>
                                 context,
                                 ProductListingScreen(
                                   title: subCategories[index].name,
-                                  productListingType:
-                                      ProductListingType.category,
+                                  productType: ProductType.CATEGORY,
                                   categoryId: subCategories[index].id,
                                 ),
                               );

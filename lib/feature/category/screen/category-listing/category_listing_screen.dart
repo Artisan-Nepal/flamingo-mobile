@@ -31,7 +31,7 @@ class CategoryListingScreen extends StatelessWidget {
                 ProductListingScreen(
                   title: categories[index].name,
                   categoryId: categories[index].id,
-                  productListingType: ProductListingType.category,
+                  productType: ProductType.CATEGORY,
                 ),
               );
             },

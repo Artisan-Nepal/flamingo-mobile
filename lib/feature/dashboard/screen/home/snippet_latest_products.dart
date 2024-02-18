@@ -33,8 +33,7 @@ class SnippetLatestProducts extends StatelessWidget {
               NavigationHelper.push(
                 context,
                 ProductListingScreen(
-                    title: 'Latest',
-                    productListingType: ProductListingType.latest),
+                    title: 'Latest', productType: ProductType.LATEST),
               );
             },
           ),

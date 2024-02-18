@@ -1,4 +1,5 @@
 import 'package:flamingo/data/data.dart';
+import 'package:flamingo/feature/product/data/model/get_product_request.dart';
 import 'package:flamingo/feature/product/data/model/product.dart';
 import 'package:flamingo/feature/product/data/remote/product_remote.dart';
 
@@ -28,9 +29,10 @@ class ProductRemoteImpl implements ProductRemote {
   }
 
   @override
-  Future<FetchResponse<Product>> getProducts() async {
+  Future<FetchResponse<Product>> getProducts(GetProductRequest request) async {
     final url = ApiUrls.products;
-    final apiResponse = await _apiClient.get(url);
+    final apiResponse =
+        await _apiClient.get(url, queryParams: request.toJson());
     return FetchResponse.fromJson(
       apiResponse.data,
       Product.fromJsonList,

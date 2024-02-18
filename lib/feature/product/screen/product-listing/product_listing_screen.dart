@@ -16,13 +16,13 @@ class ProductListingScreen extends StatefulWidget {
   const ProductListingScreen({
     super.key,
     required this.title,
-    required this.productListingType,
+    required this.productType,
     this.categoryId,
     this.vendor,
   });
 
   final String title;
-  final ProductListingType productListingType;
+  final ProductType productType;
   final Vendor? vendor;
   final String? categoryId;
 
@@ -40,16 +40,17 @@ class _ProductListingScreenState extends State<ProductListingScreen> {
   }
 
   getData({bool isRefresh = false}) async {
-    if (widget.productListingType.isCategory && widget.categoryId != null) {
+    if (widget.productType.isCategory && widget.categoryId != null) {
       await _viewModel.getCategoryProducts(widget.categoryId!,
           isRefresh: isRefresh);
-    } else if (widget.productListingType.isVendor && widget.vendor != null) {
+    } else if (widget.productType.isVendor && widget.vendor != null) {
       await _viewModel.getVendorProducts(widget.vendor!.id,
           isRefresh: isRefresh);
-    } else if (widget.productListingType.isLatest) {
-      await _viewModel.getLatestProducts(isRefresh: isRefresh);
     } else {
-      await _viewModel.getProducts(isRefresh: isRefresh);
+      await _viewModel.getProducts(
+        isRefresh: isRefresh,
+        productType: widget.productType,
+      );
     }
   }
 

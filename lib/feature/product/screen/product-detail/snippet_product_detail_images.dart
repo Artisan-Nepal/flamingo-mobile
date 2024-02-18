@@ -13,6 +13,7 @@ import 'package:flamingo/widget/space/space.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:share_plus/share_plus.dart';
 
 class SnippetProductDetailImages extends StatefulWidget {
   const SnippetProductDetailImages({
@@ -161,7 +162,9 @@ class _SnippetProductDetailImagesState
               Opacity(
                 opacity: shareIconOpacity,
                 child: GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    Share.share(widget.title);
+                  },
                   child: const Icon(
                     CupertinoIcons.share,
                     size: Dimens.iconSize_22,

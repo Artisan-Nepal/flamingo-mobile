@@ -1,5 +1,6 @@
 import 'package:flamingo/data/data.dart';
 import 'package:flamingo/di/di.dart';
+import 'package:flamingo/feature/product/data/model/get_product_request.dart';
 import 'package:flamingo/feature/product/data/model/product.dart';
 import 'package:flamingo/feature/product/data/product_repository.dart';
 import 'package:flamingo/feature/wishlist/wishlist_view_model.dart';
@@ -70,21 +71,14 @@ class ProductListingViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> getProducts({bool isRefresh = false}) async {
+  Future<void> getProducts({
+    ProductType? productType,
+    bool isRefresh = false,
+  }) async {
     try {
       if (!isRefresh) setProductsUseCase(Response.loading());
-      final response = await _productRepository.getProducts();
-      locator<WishlistViewModel>().initWishlistStatus(response.rows);
-      setProductsUseCase(Response.complete(response));
-    } catch (exception) {
-      if (!isRefresh) setProductsUseCase(Response.error(exception));
-    }
-  }
-
-  Future<void> getLatestProducts({bool isRefresh = false}) async {
-    try {
-      if (!isRefresh) setProductsUseCase(Response.loading());
-      final response = await _productRepository.getLatestProducts();
+      final response = await _productRepository
+          .getProducts(GetProductRequest(productType: productType));
       locator<WishlistViewModel>().initWishlistStatus(response.rows);
       setProductsUseCase(Response.complete(response));
     } catch (exception) {

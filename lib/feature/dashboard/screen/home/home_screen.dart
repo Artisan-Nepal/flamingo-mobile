@@ -37,7 +37,7 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   getData() async {
-    _latestProductListingViewModel.getLatestProducts();
+    _latestProductListingViewModel.getProducts(productType: ProductType.LATEST);
     _advertisementListingViewModel.getAdvertisements();
     _storyViewModel.getLikedVendorStories();
   }

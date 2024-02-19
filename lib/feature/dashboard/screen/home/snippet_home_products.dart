@@ -1,77 +1,82 @@
+import 'package:flamingo/feature/product/data/model/product.dart';
 import 'package:flamingo/feature/product/screen/product-listing/product_listing_screen.dart';
-import 'package:flamingo/feature/product/screen/product-listing/product_listing_view_model.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/product/product.dart';
 import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-class SnippetLatestProducts extends StatelessWidget {
-  const SnippetLatestProducts({Key? key}) : super(key: key);
+class SnippetHomeProducts extends StatelessWidget {
+  const SnippetHomeProducts({
+    Key? key,
+    required this.products,
+    this.isLoading = false,
+    required this.productType,
+    required this.title,
+  }) : super(key: key);
+
+  final List<Product> products;
+  final bool isLoading;
+  final ProductType productType;
+  final String title;
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ProductListingViewModel>(
-        builder: (context, viewModel, child) {
-      final products = viewModel.getProductsUseCase.data?.rows ?? [];
+    if (isLoading) {
+      return _buildLoader();
+    }
 
-      if (viewModel.getProductsUseCase.isLoading) {
-        return _buildLoader();
-      }
+    if (products.isEmpty) {
+      return const SizedBox();
+    }
 
-      if (!viewModel.getProductsUseCase.hasCompleted) {
-        return const SizedBox();
-      }
-
-      return Column(
-        children: [
-          // if (provider.latestProductsList.isNotEmpty ||
-          //     provider.gettingLatestProductList)
-          SnippetHomeScreenTitle(
-            title: 'LATEST',
-            onTap: () {
-              NavigationHelper.push(
-                context,
-                ProductListingScreen(
-                    title: 'Latest', productType: ProductType.LATEST),
-              );
-            },
-          ),
-          Container(
-            width: SizeConfig.screenWidth,
-            height: SizeConfig.screenHeight * 0.47,
-            margin:
-                const EdgeInsets.symmetric(vertical: Dimens.spacingSizeSmall),
-            child: ListView.builder(
-              shrinkWrap: true,
-              scrollDirection: Axis.horizontal,
-              itemCount: products.length > 6 ? 6 : products.length,
-              itemBuilder: (context, index) => Container(
-                margin: EdgeInsets.only(
-                    right: Dimens.spacingSizeDefault,
-                    left: index == 0 ? 10 : 0),
-                // height: 280,
-                width: SizeConfig.screenWidth * 0.6,
-                child: ProductWidget(
-                  imageHeight: SizeConfig.screenHeight * 0.35,
-                  payload: GenericProduct(
-                    product: products[index],
-                    image: extractProductDefaultImage(
-                      products[index].images,
-                      products[index].variants,
-                    ),
-                    price: products[index].variants.first.price,
-                    productId: products[index].id,
-                    title: products[index].title,
-                    vendor: products[index].vendor.storeName,
+    return Column(
+      children: [
+        // if (provider.latestProductsList.isNotEmpty ||
+        //     provider.gettingLatestProductList)
+        SnippetHomeScreenTitle(
+          title: title.toUpperCase(),
+          onTap: () {
+            NavigationHelper.push(
+              context,
+              ProductListingScreen(
+                title: title,
+                productType: productType,
+              ),
+            );
+          },
+        ),
+        Container(
+          width: SizeConfig.screenWidth,
+          height: SizeConfig.screenHeight * 0.47,
+          margin: const EdgeInsets.symmetric(vertical: Dimens.spacingSizeSmall),
+          child: ListView.builder(
+            shrinkWrap: true,
+            scrollDirection: Axis.horizontal,
+            itemCount: products.length > 6 ? 6 : products.length,
+            itemBuilder: (context, index) => Container(
+              margin: EdgeInsets.only(
+                  right: Dimens.spacingSizeDefault, left: index == 0 ? 10 : 0),
+              // height: 280,
+              width: SizeConfig.screenWidth * 0.6,
+              child: ProductWidget(
+                imageHeight: SizeConfig.screenHeight * 0.35,
+                payload: GenericProduct(
+                  product: products[index],
+                  image: extractProductDefaultImage(
+                    products[index].images,
+                    products[index].variants,
                   ),
+                  price: products[index].variants.first.price,
+                  productId: products[index].id,
+                  title: products[index].title,
+                  vendor: products[index].vendor.storeName,
                 ),
               ),
             ),
           ),
-        ],
-      );
-    });
+        ),
+      ],
+    );
   }
 
   Widget _buildLoader() {

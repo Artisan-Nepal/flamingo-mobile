@@ -1,5 +1,5 @@
 // ignore_for_file: constant_identifier_names
-enum ProductType { CATEGORY, VENDOR, ALL, LATEST, FAVORITE_BRAND, WISHLIST }
+enum ProductType { CATEGORY, VENDOR, ALL, LATEST, FAVORITE_VENDOR, WISHLIST }
 
 extension ProductTypeGetters on ProductType {
   bool get isCategory => this == ProductType.CATEGORY;

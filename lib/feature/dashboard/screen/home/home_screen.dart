@@ -3,12 +3,14 @@ import 'package:flamingo/feature/advertisement/advertisement_listing_view_model.
 import 'package:flamingo/feature/auth/auth_view_model.dart';
 import 'package:flamingo/feature/dashboard/screen/home/snippet_home_advertisement.dart';
 import 'package:flamingo/feature/dashboard/screen/home/snippet_home_screen_story.dart';
-import 'package:flamingo/feature/dashboard/screen/home/snippet_latest_products.dart';
+import 'package:flamingo/feature/dashboard/screen/home/snippet_home_products.dart';
 import 'package:flamingo/feature/product-story/product_story_view_model.dart';
 import 'package:flamingo/feature/product/screen/product-listing/product_listing_view_model.dart';
+import 'package:flamingo/feature/product/screen/product-listing/snippet_product_listing.dart';
 import 'package:flamingo/feature/search/screen/search_screen.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/not-logged-in/not_logged_in_widget.dart';
+import 'package:flamingo/widget/product/product.dart';
 import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -28,6 +30,8 @@ class _HomeScreenState extends State<HomeScreen>
   final _advertisementListingViewModel =
       locator<AdvertisementListingViewModel>();
   final _latestProductListingViewModel = locator<ProductListingViewModel>();
+  final _favVendorProductListingViewModel = locator<ProductListingViewModel>();
+  final _allProductListingViewModel = locator<ProductListingViewModel>();
   final _storyViewModel = locator<ProductStoryViewModel>();
 
   @override
@@ -38,8 +42,15 @@ class _HomeScreenState extends State<HomeScreen>
 
   getData() async {
     _latestProductListingViewModel.getProducts(productType: ProductType.LATEST);
+
+    _allProductListingViewModel.getProducts();
     _advertisementListingViewModel.getAdvertisements();
     _storyViewModel.getLikedVendorStories();
+
+    if (Provider.of<AuthViewModel>(context, listen: false).isLoggedIn) {
+      _favVendorProductListingViewModel.getProducts(
+          productType: ProductType.FAVORITE_VENDOR);
+    }
   }
 
   @override
@@ -53,10 +64,10 @@ class _HomeScreenState extends State<HomeScreen>
           create: (context) => _advertisementListingViewModel,
         ),
         ChangeNotifierProvider(
-          create: (context) => _latestProductListingViewModel,
+          create: (context) => _storyViewModel,
         ),
         ChangeNotifierProvider(
-          create: (context) => _storyViewModel,
+          create: (context) => _allProductListingViewModel,
         ),
       ],
       child: Scaffold(
@@ -66,46 +77,143 @@ class _HomeScreenState extends State<HomeScreen>
             onRefresh: () async {
               await getData();
             },
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const VerticalSpaceWidget(height: Dimens.spacingSizeSmall),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: Dimens.spacingSizeSmall),
-                    child: SearchBarFieldWidget(
-                      hintText: "Search for products",
-                      readOnly: true,
-                      onTap: () {
-                        NavigationHelper.pushWithoutAnimation(
-                          context,
-                          const SearchScreen(
-                            isInitial: true,
+            child: Builder(
+              builder: (context) {
+                return CustomScrollView(
+                  slivers: [
+                    SliverToBoxAdapter(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const VerticalSpaceWidget(
+                              height: Dimens.spacingSizeSmall),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: Dimens.spacingSizeSmall),
+                            child: SearchBarFieldWidget(
+                              hintText: "Search for products",
+                              readOnly: true,
+                              onTap: () {
+                                NavigationHelper.pushWithoutAnimation(
+                                  context,
+                                  const SearchScreen(
+                                    isInitial: true,
+                                  ),
+                                );
+                              },
+                            ),
                           ),
-                        );
-                      },
-                    ),
-                  ),
-                  if (!authViewModel.isLoggedIn)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: Dimens.spacingSizeSmall,
+                          if (!authViewModel.isLoggedIn)
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: Dimens.spacingSizeSmall,
+                              ),
+                              child: NotLoggedInWidget(
+                                  title: 'LET\'S GET PERSONAL',
+                                  message:
+                                      'Sign in for a tailored shopping experience'),
+                            ),
+                          if (authViewModel.isLoggedIn) ...[
+                            const VerticalSpaceWidget(
+                                height: Dimens.spacingSizeLarge),
+                            SnippetHomeScreenStory(),
+                          ],
+                          const VerticalSpaceWidget(
+                              height: Dimens.spacingSizeLarge),
+                          SnippetHomeAdvertisement(),
+
+                          // Latest products
+                          ChangeNotifierProvider(
+                            create: (context) => _latestProductListingViewModel,
+                            child: Consumer<ProductListingViewModel>(
+                              builder: (context, viewModel, child) {
+                                return SnippetHomeProducts(
+                                  isLoading:
+                                      viewModel.getProductsUseCase.isLoading,
+                                  title: 'Latest',
+                                  productType: ProductType.LATEST,
+                                  products:
+                                      viewModel.getProductsUseCase.data?.rows ??
+                                          [],
+                                );
+                              },
+                            ),
+                          ),
+                          const VerticalSpaceWidget(
+                              height: Dimens.spacingSizeLarge),
+
+                          // Favorite vendor products
+                          if (authViewModel.isLoggedIn) ...[
+                            ChangeNotifierProvider(
+                              create: (context) =>
+                                  _favVendorProductListingViewModel,
+                              child: Consumer<ProductListingViewModel>(
+                                builder: (context, viewModel, child) {
+                                  return SnippetHomeProducts(
+                                    isLoading:
+                                        viewModel.getProductsUseCase.isLoading,
+                                    title: 'Favorite brands',
+                                    productType: ProductType.FAVORITE_VENDOR,
+                                    products: viewModel
+                                            .getProductsUseCase.data?.rows ??
+                                        [],
+                                  );
+                                },
+                              ),
+                            ),
+                            const VerticalSpaceWidget(
+                                height: Dimens.spacingSizeLarge),
+                          ]
+                        ],
                       ),
-                      child: NotLoggedInWidget(
-                          title: 'LET\'S GET PERSONAL',
-                          message:
-                              'Sign in for a tailored shopping experience'),
                     ),
-                  if (authViewModel.isLoggedIn) ...[
-                    const VerticalSpaceWidget(height: Dimens.spacingSizeLarge),
-                    SnippetHomeScreenStory(),
+
+                    // All Products
+                    SliverToBoxAdapter(
+                      child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                              bottom: Dimens.spacingSizeDefault),
+                          child: Text(
+                            'FOR YOU',
+                            style: textTheme(context).bodyLarge!.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SnippetProductListing(
+                      useSliver: true,
+                      padding: 0,
+                      products: (Provider.of<ProductListingViewModel>(context)
+                                  .getProductsUseCase
+                                  .data
+                                  ?.rows ??
+                              [])
+                          .map(
+                            (product) => GenericProduct(
+                              image: extractProductDefaultImage(
+                                product.images,
+                                product.variants,
+                              ),
+                              price: product.variants.first.price,
+                              productId: product.id,
+                              title: product.title,
+                              vendor: product.vendor.storeName,
+                              product: product,
+                            ),
+                          )
+                          .toList(),
+                    ),
+                    SliverToBoxAdapter(
+                      child: VerticalSpaceWidget(
+                        height: Dimens.spacingSizeDefault,
+                      ),
+                    )
                   ],
-                  const VerticalSpaceWidget(height: Dimens.spacingSizeLarge),
-                  SnippetHomeAdvertisement(),
-                  SnippetLatestProducts(),
-                ],
-              ),
+                );
+              },
             ),
           ),
         ),

@@ -34,7 +34,7 @@ class _SnippetAdvertisementImagesState
   Widget build(BuildContext context) {
     final hasVideo = widget.primaryVideo != null;
     return Container(
-      height: SizeConfig.screenHeight * 0.7,
+      height: SizeConfig.screenHeight * 0.75,
       // height: 200,
       width: double.infinity,
       child: Stack(

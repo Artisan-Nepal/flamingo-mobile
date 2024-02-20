@@ -10,11 +10,12 @@ class FavVendorButtonWidget extends StatefulWidget {
     super.key,
     required this.vendorId,
     this.iconSize = Dimens.iconSize_22,
+    this.color = AppColors.black,
   });
 
   final String vendorId;
   final double iconSize;
-
+  final Color color;
   @override
   State<FavVendorButtonWidget> createState() => _FavVendorButtonWidgetState();
 }
@@ -40,7 +41,7 @@ class _FavVendorButtonWidgetState extends State<FavVendorButtonWidget> {
                   child: Icon(
                     isFavourited ? Icons.favorite : Icons.favorite_outline,
                     size: widget.iconSize,
-                    color: AppColors.black,
+                    color: widget.color,
                   ),
                 );
               },

@@ -7,6 +7,7 @@ import 'package:flamingo/feature/advertisement/data/local/advertisement_local.da
 import 'package:flamingo/feature/advertisement/data/local/advertisement_local_impl.dart';
 import 'package:flamingo/feature/advertisement/data/remote/advertisement_remote.dart';
 import 'package:flamingo/feature/advertisement/data/remote/advertisement_remote_impl.dart';
+import 'package:flamingo/feature/advertisement/screen/advertisement_app_bar_view_model.dart';
 import 'package:flamingo/feature/feature.dart';
 import 'package:get_it/get_it.dart';
 
@@ -35,5 +36,8 @@ void registerAdvertisementFeature(GetIt locator) {
     () => AdvertisementListingViewModel(
       advertisementRepository: locator<AdvertisementRepository>(),
     ),
+  );
+  locator.registerFactory<AdvertisementAppBarViewModel>(
+    () => AdvertisementAppBarViewModel(),
   );
 }

@@ -51,7 +51,10 @@ class _ProductStoryScreenState extends State<ProductStoryScreen> {
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion(
-      value: SystemUiOverlayStyle(statusBarIconBrightness: Brightness.light),
+      value: SystemUiOverlayStyle(
+        statusBarColor: Colors.black,
+        statusBarIconBrightness: Brightness.light,
+      ),
       child: Scaffold(
         backgroundColor: AppColors.black,
         body: SafeArea(

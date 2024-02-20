@@ -2,6 +2,7 @@ import 'package:flamingo/feature/product-story/data/model/grouped_product_story.
 import 'package:flamingo/feature/product-story/screen/product-story/product_story_screen.dart';
 import 'package:flamingo/shared/util/util.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class GroupedProductStoriesScreen extends StatefulWidget {
   const GroupedProductStoriesScreen({
@@ -30,17 +31,23 @@ class _GroupedProductStoriesScreenState
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.black,
-      body: PageView.builder(
-        controller: _pageController,
-        itemCount: widget.groupedStories.length,
-        itemBuilder: (context, index) {
-          return ProductStoryScreen(
-            groupedStory: widget.groupedStories[index],
-            needVisitProductButton: true,
-          );
-        },
+    return AnnotatedRegion(
+      value: SystemUiOverlayStyle(
+        statusBarColor: Colors.black,
+        statusBarIconBrightness: Brightness.light,
+      ),
+      child: Scaffold(
+        backgroundColor: AppColors.black,
+        body: PageView.builder(
+          controller: _pageController,
+          itemCount: widget.groupedStories.length,
+          itemBuilder: (context, index) {
+            return ProductStoryScreen(
+              groupedStory: widget.groupedStories[index],
+              needVisitProductButton: true,
+            );
+          },
+        ),
       ),
     );
   }

@@ -223,7 +223,7 @@ class _HomeScreenState extends State<HomeScreen>
   _buildAppBar() {
     return AppBar(
       title: Text(
-        'Zipper',
+        'Flamingo',
         style: textTheme(context).headlineSmall!.copyWith(
               color: isLightMode(context)
                   ? themedPrimaryColor(context)

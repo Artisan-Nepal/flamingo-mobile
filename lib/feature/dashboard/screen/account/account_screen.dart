@@ -3,7 +3,6 @@ import 'package:flamingo/feature/auth/auth.dart';
 import 'package:flamingo/feature/auth/auth_view_model.dart';
 import 'package:flamingo/feature/cart/screen/cart-listing/cart_listing_screen.dart';
 import 'package:flamingo/feature/customer-activity/customer_activity_view_model.dart';
-import 'package:flamingo/feature/dashboard/screen/account/snippet_display_picture.dart';
 import 'package:flamingo/feature/order/screen/order-listing/order_listing_screen.dart';
 import 'package:flamingo/feature/wishlist/screen/wishlist-listing/wishlist_listing_screen.dart';
 import 'package:flamingo/shared/shared.dart';
@@ -30,7 +29,9 @@ class _AccountScreenState extends State<AccountScreen> {
     final authViewModel = Provider.of<AuthViewModel>(context);
     return TitledScreen(
       automaticallyImplyAppBarLeading: false,
-      title: (authViewModel.user?.firstName ?? "PROFILE").toUpperCase(),
+      title: (authViewModel.user?.firstName != null
+          ? 'Hi, ${authViewModel.user?.firstName}'
+          : "PROFILE"),
       appbarActions: const [CartButtonWidget()],
       padding: EdgeInsets.zero,
       child: Column(
@@ -158,11 +159,11 @@ class _AccountScreenState extends State<AccountScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         VerticalSpaceWidget(
-          height: Dimens.spacingSizeLarge,
+          height: Dimens.spacingSizeDefault,
         ),
-        Center(
-          child: SnippetDisplayPicture(),
-        ),
+        // Center(
+        //   child: SnippetDisplayPicture(),
+        // ),
         VerticalSpaceWidget(
           height: Dimens.spacingSizeLarge,
         ),

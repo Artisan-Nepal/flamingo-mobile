@@ -188,3 +188,17 @@ String extractProductVariantImage(
     List<String> defaultImages, ProductVariant variantImage) {
   return variantImage.image?.url ?? defaultImages.firstOrNull ?? "";
 }
+
+List<String> getDetailImages(Product product) {
+  final List<String> images = [...product.images];
+
+  Map<String, String> imageByColor = {};
+
+  product.variants.forEach((variant) {
+    imageByColor[variant.color.id] = variant.image?.url ?? "";
+  });
+
+  images.addAll(imageByColor.values);
+
+  return images;
+}

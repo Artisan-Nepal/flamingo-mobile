@@ -69,12 +69,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       ],
       child: Consumer<ProductDetailViewModel>(
         builder: (context, viewModel, child) {
-          final List<String> images = [
-            ...viewModel.productUseCase.data?.images ?? []
-          ];
-          images.addAll(List<String>.from(
-              (viewModel.productUseCase.data?.variants ?? [])
-                  .map((e) => e.image?.url)));
           return DefaultScreen(
             scrollable: false,
             padding: EdgeInsets.zero,
@@ -106,7 +100,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                             .productUseCase.data!.stories,
                                         productId:
                                             viewModel.productUseCase.data!.id,
-                                        images: images,
+                                        images: getDetailImages(
+                                            viewModel.productUseCase.data!),
                                         advertisementId: widget.advertisementId,
                                         leadSource: widget.leadSource,
                                       ),

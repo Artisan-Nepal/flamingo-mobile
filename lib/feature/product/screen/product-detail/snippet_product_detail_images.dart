@@ -147,7 +147,7 @@ class _SnippetProductDetailImagesState
         shareIconOpacity = shareIconOpacity.clamp(0, 1);
         return Positioned(
           right: Dimens.spacingSizeDefault,
-          top: 56 + Dimens.spacingSizeSmall,
+          top: SizeConfig.appBarHeight - 20 + Dimens.spacingSizeSmall,
           child: Column(
             children: [
               Opacity(

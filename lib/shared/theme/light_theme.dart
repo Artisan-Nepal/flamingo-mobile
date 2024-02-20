@@ -24,6 +24,7 @@ final ThemeData lightTheme = ThemeData(
     ),
   ),
   appBarTheme: AppBarTheme(
+    toolbarHeight: 40,
     backgroundColor: AppColors.white,
     titleTextStyle: TypographyStyles.titleMedium.copyWith(
       color: AppColors.black,

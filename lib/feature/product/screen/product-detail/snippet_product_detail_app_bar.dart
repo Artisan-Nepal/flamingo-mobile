@@ -22,7 +22,7 @@ class SnippetProductDetailAppBar extends StatelessWidget {
     return PreferredSize(
       preferredSize: Size(SizeConfig.screenWidth, 100),
       child: SizedBox(
-        height: SizeConfig.appBarHeight,
+        height: SizeConfig.appBarHeight - 20,
         child: Consumer<ProductDetailViewModel>(
           builder: (context, productDetailViewModel, child) =>
               Consumer<ProductDetailAppBarViewModel>(

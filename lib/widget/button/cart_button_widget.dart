@@ -17,10 +17,11 @@ class CartButtonWidget extends StatelessWidget {
       onTap: () {
         NavigationHelper.push(context, const CartListingScreen());
       },
-      child: SizedBox(
+      child: Container(
         height: 30,
         // width: 30,
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
           children: [
             if (cartCount > 0) ...[
               Text(

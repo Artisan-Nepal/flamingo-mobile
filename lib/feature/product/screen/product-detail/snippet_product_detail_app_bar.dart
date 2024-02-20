@@ -46,7 +46,7 @@ class SnippetProductDetailAppBar extends StatelessWidget {
                       Colors.transparent,
                       isLightMode(context) ? Colors.black : Colors.white,
                       (appBarViewModel.productDetailsOffset /
-                              (SizeConfig.screenHeight / 5))
+                              (SizeConfig.screenHeight / 15))
                           .clamp(0, 1)
                           .toDouble(),
                     ),
@@ -54,7 +54,7 @@ class SnippetProductDetailAppBar extends StatelessWidget {
                 ),
                 backgroundColor: backgroundColor.withOpacity(
                     (appBarViewModel.productDetailsOffset /
-                            (SizeConfig.screenHeight / 5))
+                            (SizeConfig.screenHeight / 15))
                         .clamp(0, 1)
                         .toDouble()),
                 elevation: 0,

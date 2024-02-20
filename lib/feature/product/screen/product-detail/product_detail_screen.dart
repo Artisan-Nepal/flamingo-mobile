@@ -242,7 +242,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           ),
           children: <Widget>[
             Text(
-              'Brand Details',
+              product.vendor.description!,
               style: textTheme(context).bodyMedium,
             ),
           ],

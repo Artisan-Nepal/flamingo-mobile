@@ -170,16 +170,15 @@ class _HomeScreenState extends State<HomeScreen>
 
                     // All Products
                     SliverToBoxAdapter(
-                      child: Center(
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                              bottom: Dimens.spacingSizeDefault),
-                          child: Text(
-                            'FOR YOU',
-                            style: textTheme(context).bodyLarge!.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                ),
-                          ),
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                            left: Dimens.spacingSizeSmall,
+                            bottom: Dimens.spacingSizeDefault),
+                        child: Text(
+                          'FOR YOU',
+                          style: textTheme(context).bodyLarge!.copyWith(
+                                fontWeight: FontWeight.w600,
+                              ),
                         ),
                       ),
                     ),
@@ -224,7 +223,7 @@ class _HomeScreenState extends State<HomeScreen>
   _buildAppBar() {
     return AppBar(
       title: Text(
-        'Flamingo',
+        'Zipper',
         style: textTheme(context).headlineSmall!.copyWith(
               color: isLightMode(context)
                   ? themedPrimaryColor(context)

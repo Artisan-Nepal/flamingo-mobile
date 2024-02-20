@@ -107,7 +107,7 @@ class SnippetHomeScreenStory extends StatelessWidget {
                               child: CachedNetworkImageWidget(
                                 image:
                                     stories[index].vendor.displayImage?.url ??
-                                        '',
+                                        stories[0].items[0].productImage,
                                 height: 70,
                                 width: 70,
                                 fit: BoxFit.cover,

@@ -34,7 +34,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return AnnotatedRegion(
       value: SystemUiOverlayStyle(
         statusBarColor: AppColors.backgroundColor,
-        statusBarIconBrightness: Brightness.light,
+        statusBarIconBrightness: Brightness.dark,
       ),
       child: ChangeNotifierProvider(
         create: (context) => _viewModel,

@@ -134,6 +134,7 @@ class _CartListingScreenState extends State<CartListingScreen> {
           const VerticalSpaceWidget(height: Dimens.spacingSizeSmall),
           const Divider(
             height: 1,
+            color: AppColors.grayMain,
           )
         ],
       ),

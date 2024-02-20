@@ -71,6 +71,7 @@ class _HomeScreenState extends State<HomeScreen>
         ),
       ],
       child: Scaffold(
+        backgroundColor: Color(0xFFFDFDFD),
         appBar: _buildAppBar(),
         body: SafeArea(
           child: RefreshIndicator.adaptive(

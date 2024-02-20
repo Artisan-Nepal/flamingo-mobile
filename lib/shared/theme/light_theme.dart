@@ -28,7 +28,7 @@ final ThemeData lightTheme = ThemeData(
     backgroundColor: AppColors.white,
     titleTextStyle: TypographyStyles.titleMedium.copyWith(
       color: AppColors.black,
-      fontWeight: FontWeight.w600,
+      fontWeight: FontWeight.w400,
     ),
     scrolledUnderElevation: 0,
     centerTitle: true,

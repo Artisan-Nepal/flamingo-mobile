@@ -1,8 +1,8 @@
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/image/cached_network_image_widget.dart';
 import 'package:flamingo/widget/video-view/video_view_widget.dart';
-import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class SnippetAdvertisementImages extends StatefulWidget {
@@ -34,13 +34,13 @@ class _SnippetAdvertisementImagesState
   Widget build(BuildContext context) {
     final hasVideo = widget.primaryVideo != null;
     return Container(
-      height: SizeConfig.screenHeight * 0.65,
+      height: SizeConfig.screenHeight * 0.7,
       // height: 200,
       width: double.infinity,
-      child: Column(
-        // alignment: Alignment.center,
+      child: Stack(
+        fit: StackFit.expand,
         children: [
-          Expanded(
+          Positioned.fill(
             child: PageView.builder(
               controller: _pageController,
               itemCount:
@@ -68,7 +68,6 @@ class _SnippetAdvertisementImagesState
               },
             ),
           ),
-          VerticalSpaceWidget(height: Dimens.spacingSizeDefault),
           _buildIndicator(),
         ],
       ),
@@ -81,14 +80,22 @@ class _SnippetAdvertisementImagesState
     final totalItems =
         hasVideo ? widget.images.length + 1 : widget.images.length;
     if (totalItems < 2) return const SizedBox();
-    return SmoothPageIndicator(
-      controller: _pageController,
-      count: totalItems,
-      effect: ColorTransitionEffect(
-        dotHeight: 5,
-        dotWidth: 25,
-        spacing: 5,
-        activeDotColor: AppColors.primaryMain,
+    return Positioned(
+      bottom: 10,
+      right: 0,
+      left: 0,
+      child: Container(
+        alignment: Alignment.center,
+        child: SmoothPageIndicator(
+          controller: _pageController,
+          count: totalItems,
+          effect: ColorTransitionEffect(
+            dotHeight: 5,
+            dotWidth: 25,
+            spacing: 5,
+            activeDotColor: AppColors.primaryMain,
+          ),
+        ),
       ),
     );
   }

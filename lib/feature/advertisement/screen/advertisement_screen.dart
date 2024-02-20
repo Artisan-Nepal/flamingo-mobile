@@ -46,9 +46,6 @@ class _AdvertisementScreenState extends State<AdvertisementScreen> {
       // needAppBar: false,
       appBarTitle: Text(
         widget.advertisement.vendor.storeName,
-        style: textTheme(context).titleLarge!.copyWith(
-              fontWeight: FontWeight.w600,
-            ),
       ),
       appBarActions: [
         Padding(

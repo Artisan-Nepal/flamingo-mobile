@@ -29,7 +29,7 @@ final ThemeData darkTheme = ThemeData(
     backgroundColor: AppColors.black,
     titleTextStyle: TypographyStyles.titleMedium.copyWith(
       color: AppColors.grayLighter,
-      fontWeight: FontWeight.w600,
+      fontWeight: FontWeight.w400,
     ),
     scrolledUnderElevation: 0,
     centerTitle: true,

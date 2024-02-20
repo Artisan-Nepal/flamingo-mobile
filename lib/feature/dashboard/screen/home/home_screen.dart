@@ -177,7 +177,7 @@ class _HomeScreenState extends State<HomeScreen>
                         child: Text(
                           'FOR YOU',
                           style: textTheme(context).bodyLarge!.copyWith(
-                                fontWeight: FontWeight.w600,
+                                fontWeight: FontWeight.w500,
                               ),
                         ),
                       ),
@@ -223,12 +223,12 @@ class _HomeScreenState extends State<HomeScreen>
   _buildAppBar() {
     return AppBar(
       title: Text(
-        'Flamingo',
+        'FLAMINGO',
         style: textTheme(context).headlineSmall!.copyWith(
               color: isLightMode(context)
                   ? themedPrimaryColor(context)
                   : AppColors.white,
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w500,
               letterSpacing: 0.8,
             ),
       ),

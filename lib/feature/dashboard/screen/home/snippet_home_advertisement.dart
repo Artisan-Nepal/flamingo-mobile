@@ -48,7 +48,7 @@ class _SnippetHomeAdvertisementState extends State<SnippetHomeAdvertisement> {
                 child: TextWidget(
                   'EXPLORE',
                   style: textTheme(context).bodyLarge!.copyWith(
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w500,
                       ),
                 ),
               ),

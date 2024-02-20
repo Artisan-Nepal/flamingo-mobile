@@ -12,10 +12,12 @@ import 'package:flamingo/feature/product/screen/product-detail/snippet_size_sele
 import 'package:flamingo/shared/enum/lead_source.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/error/default_error_widget.dart';
+import 'package:flamingo/widget/list-tile/list_tile.dart';
 import 'package:flamingo/widget/loader/default_screen_loader_widget.dart';
 import 'package:flamingo/widget/loader/full_screen_loader.dart';
 import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:provider/provider.dart';
 
@@ -116,18 +118,25 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                             const VerticalSpaceWidget(
                                                 height:
                                                     Dimens.spacingSizeDefault),
+
+                                            // Product information
                                             ..._buildProductInformation(
                                                 viewModel),
                                             const VerticalSpaceWidget(
                                                 height:
                                                     Dimens.spacingSizeDefault),
-                                            Html(
-                                              data: viewModel
-                                                  .productUseCase.data!.body,
-                                            ),
+
+                                            // Description
+                                            Text(
+                                                viewModel
+                                                    .productUseCase.data!.body,
+                                                style: textTheme(context)
+                                                    .bodyMedium!),
                                             const VerticalSpaceWidget(
                                                 height:
                                                     Dimens.spacingSizeDefault),
+
+                                            // Color
                                             _buildAttributeSelection(
                                               name: 'Color',
                                               value:
@@ -151,6 +160,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                             const SizedBox(
                                                 height:
                                                     Dimens.spacingSizeDefault),
+
+                                            // Size
                                             _buildAttributeSelection(
                                               name: 'Size',
                                               value: viewModel
@@ -171,6 +182,17 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                                 );
                                               },
                                             ),
+                                            const SizedBox(
+                                                height:
+                                                    Dimens.spacingSizeDefault),
+
+                                            ..._buildExpansionTiles(viewModel),
+                                            VerticalSpaceWidget(
+                                                height:
+                                                    Dimens.spacingSizeDefault),
+                                            _buildContactUs(),
+                                            const SizedBox(
+                                                height: Dimens.spacing_100),
                                           ],
                                         ),
                                       ),
@@ -189,6 +211,84 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           );
         },
       ),
+    );
+  }
+
+  List<Widget> _buildExpansionTiles(ProductDetailViewModel viewModel) {
+    final product = viewModel.productUseCase.data!;
+    return [
+      if (product.details != null && product.details!.isNotEmpty) ...[
+        ExpansionTileWidget(
+          title: Text(
+            'THE DETAILS',
+            style: textTheme(context).bodyMedium,
+          ),
+          children: <Widget>[
+            Html(
+              data: product.details,
+            ),
+          ],
+        ),
+        Divider(
+          color: AppColors.grayLight,
+        )
+      ],
+      if (product.vendor.description != null &&
+          product.vendor.description!.isNotEmpty) ...[
+        ExpansionTileWidget(
+          title: Text(
+            'ABOUT THE BRAND',
+            style: textTheme(context).bodyMedium,
+          ),
+          children: <Widget>[
+            Text(
+              'Brand Details',
+              style: textTheme(context).bodyMedium,
+            ),
+          ],
+        ),
+        Divider(
+          color: AppColors.grayLight,
+        ),
+      ]
+    ];
+  }
+
+  Widget _buildContactUs() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'CONTACT US',
+          style: textTheme(context).bodyMedium,
+        ),
+        VerticalSpaceWidget(height: Dimens.spacingSizeDefault),
+        Text('Available Sunday to Friday 9am - 5pm'),
+        VerticalSpaceWidget(height: Dimens.spacingSizeDefault),
+        Row(
+          children: [
+            Expanded(
+              child: OutlinedButtonWidget(
+                label: 'Phone',
+                onPressed: () async {
+                  final url = 'tel:${CommonConstants.contactNumber}';
+                  UrlLauncherHelper.launch(url);
+                },
+              ),
+            ),
+            HorizontalSpaceWidget(width: Dimens.spacingSizeDefault),
+            Expanded(
+              child: OutlinedButtonWidget(
+                label: 'Email Us',
+                onPressed: () {
+                  final url = 'mailto:${CommonConstants.contactEmail}';
+                  UrlLauncherHelper.launch(url);
+                },
+              ),
+            ),
+          ],
+        )
+      ],
     );
   }
 

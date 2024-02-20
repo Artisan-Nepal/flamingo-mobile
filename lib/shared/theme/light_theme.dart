@@ -29,6 +29,7 @@ final ThemeData lightTheme = ThemeData(
       color: AppColors.black,
       fontWeight: FontWeight.w600,
     ),
+    scrolledUnderElevation: 0,
     centerTitle: true,
     elevation: 0,
     iconTheme: const IconThemeData(color: AppColors.black),

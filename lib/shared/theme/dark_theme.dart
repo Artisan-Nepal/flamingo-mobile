@@ -30,6 +30,7 @@ final ThemeData darkTheme = ThemeData(
       color: AppColors.grayLighter,
       fontWeight: FontWeight.w600,
     ),
+    scrolledUnderElevation: 0,
     centerTitle: true,
     iconTheme: const IconThemeData(color: AppColors.grayLighter),
     systemOverlayStyle: const SystemUiOverlayStyle(

@@ -15,6 +15,7 @@ class Product {
   final List<String> images;
   final List<ProductStory> stories;
   final bool isInWishlist;
+  final String? details;
 
   Product({
     required this.id,
@@ -27,6 +28,7 @@ class Product {
     required this.isInWishlist,
     required this.images,
     required this.stories,
+    this.details,
   });
 
   factory Product.fromJson(Map<String, dynamic> json) => Product(
@@ -34,6 +36,7 @@ class Product {
         title: json['title'],
         body: json['body'],
         status: json['status'],
+        details: json['details'],
         vendor: Vendor.fromJson(json['vendor']),
         tags: List<String>.from(
             json['productToTag'].map((e) => e['productTag']['name'])),

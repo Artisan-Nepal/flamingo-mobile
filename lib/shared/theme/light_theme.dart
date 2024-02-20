@@ -25,7 +25,7 @@ final ThemeData lightTheme = ThemeData(
   ),
   appBarTheme: AppBarTheme(
     toolbarHeight: 40,
-    backgroundColor: AppColors.white,
+    backgroundColor: AppColors.backgroundColor,
     titleTextStyle: TypographyStyles.titleMedium.copyWith(
       color: AppColors.black,
       fontWeight: FontWeight.w400,
@@ -41,7 +41,7 @@ final ThemeData lightTheme = ThemeData(
       systemNavigationBarIconBrightness: Brightness.dark,
     ),
   ),
-  scaffoldBackgroundColor: AppColors.white,
+  scaffoldBackgroundColor: AppColors.backgroundColor,
   textSelectionTheme: const TextSelectionThemeData(
     cursorColor: AppColors.black,
   ),

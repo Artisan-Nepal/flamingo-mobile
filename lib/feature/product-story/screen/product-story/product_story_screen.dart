@@ -52,34 +52,32 @@ class _ProductStoryScreenState extends State<ProductStoryScreen> {
   Widget build(BuildContext context) {
     return AnnotatedRegion(
       value: SystemUiOverlayStyle(
-        statusBarColor: Colors.black,
+        statusBarColor: Colors.transparent,
         statusBarIconBrightness: Brightness.light,
       ),
       child: Scaffold(
         backgroundColor: AppColors.black,
-        body: SafeArea(
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              Positioned.fill(
-                child: GestureDetector(
-                  // onTapUp: onTapUp,
-                  child: PageView(
-                    physics: const NeverScrollableScrollPhysics(),
-                    controller: _pageController,
-                    children: List.generate(widget.groupedStory.items.length,
-                        (index) {
-                      return ProductStoryItem(
-                          story: widget.groupedStory.items[index].story);
-                    }),
-                  ),
+        body: Stack(
+          fit: StackFit.expand,
+          children: [
+            Positioned.fill(
+              child: GestureDetector(
+                // onTapUp: onTapUp,
+                child: PageView(
+                  physics: const NeverScrollableScrollPhysics(),
+                  controller: _pageController,
+                  children:
+                      List.generate(widget.groupedStory.items.length, (index) {
+                    return ProductStoryItem(
+                        story: widget.groupedStory.items[index].story);
+                  }),
                 ),
               ),
-              _buildStoryHeader(),
-              _buildStoryChangeButtons(),
-              if (widget.needVisitProductButton) _buildVisitProductButton(),
-            ],
-          ),
+            ),
+            _buildStoryHeader(),
+            _buildStoryChangeButtons(),
+            if (widget.needVisitProductButton) _buildVisitProductButton(),
+          ],
         ),
       ),
     );
@@ -186,7 +184,7 @@ class _ProductStoryScreenState extends State<ProductStoryScreen> {
 
   Widget _buildStoryHeader() {
     return Positioned(
-      top: Dimens.spacingSizeSmall,
+      top: Dimens.spacingSizeSmall + SizeConfig.statusBarHeight,
       right: Dimens.spacingSizeSmall,
       left: Dimens.spacingSizeSmall,
       child: Column(
@@ -313,7 +311,10 @@ class _ProductStoryItemState extends State<ProductStoryItem> {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => _viewModel,
-      child: VideoViewWidget(url: widget.story.url),
+      child: VideoViewWidget(
+        url: widget.story.url,
+        coverParent: true,
+      ),
     );
   }
 }

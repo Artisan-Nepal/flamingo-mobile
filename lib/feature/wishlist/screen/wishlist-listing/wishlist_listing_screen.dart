@@ -9,6 +9,7 @@ import 'package:flamingo/widget/loader/default_screen_loader_widget.dart';
 import 'package:flamingo/widget/not-logged-in/not_logged_in_widget.dart';
 import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class WishlistListingScreen extends StatefulWidget {
@@ -49,35 +50,57 @@ class _WishlistListingScreenState extends State<WishlistListingScreen> {
                     if (viewModel.wishlistUseCase.isLoading) {
                       return const DefaultScreenLoaderWidget();
                     }
-                    if (viewModel.wishlistUseCase.hasError) {
-                      return DefaultErrorWidget(
-                        errorMessage: viewModel.wishlistUseCase.exception!,
-                        onActionButtonPressed: () async {
-                          await _viewModel.getWishlist();
-                        },
-                      );
-                    }
+                    // if (viewModel.wishlistUseCase.hasError) {
+                    //   return DefaultErrorWidget(
+                    //     errorMessage: viewModel.wishlistUseCase.exception!,
+                    //     onActionButtonPressed: () async {
+                    //       await _viewModel.getWishlist();
+                    //     },
+                    //   );
+                    // }
                     final items = viewModel.wishlistUseCase.data?.rows ?? [];
-                    if (items.isEmpty) {
-                      return const DefaultErrorWidget(
-                        errorMessage:
-                            'You do not have any products in your wishlist.',
-                      );
-                    }
-                    return GridView.builder(
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        mainAxisExtent: 350,
-                        mainAxisSpacing: Dimens.spacingSizeSmall,
-                        crossAxisSpacing: Dimens.spacingSizeSmall,
-                      ),
-                      itemCount: items.length,
-                      itemBuilder: (context, index) {
-                        return SnippetWishListItem(
-                          item: items[index],
-                        );
+                    // if (items.isEmpty) {
+                    //   return const DefaultErrorWidget(
+                    //     errorMessage:
+                    //         'You do not have any products in your wishlist.',
+                    //   );
+                    // }
+                    return RefreshIndicator.adaptive(
+                      onRefresh: () async {
+                        await _viewModel.getWishlist(isRefresh: true);
                       },
+                      child: viewModel.wishlistUseCase.hasError
+                          ? DefaultErrorWidget(
+                              useListView: true,
+                              manuallyCenter: true,
+                              errorMessage:
+                                  viewModel.wishlistUseCase.exception!,
+                              onActionButtonPressed: () async {
+                                await _viewModel.getWishlist();
+                              },
+                            )
+                          : items.isEmpty
+                              ? DefaultErrorWidget(
+                                  useListView: true,
+                                  manuallyCenter: true,
+                                  errorMessage:
+                                      'You do not have any products in your wishlist.',
+                                )
+                              : GridView.builder(
+                                  gridDelegate:
+                                      const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    mainAxisExtent: 350,
+                                    mainAxisSpacing: Dimens.spacingSizeSmall,
+                                    crossAxisSpacing: Dimens.spacingSizeSmall,
+                                  ),
+                                  itemCount: items.length,
+                                  itemBuilder: (context, index) {
+                                    return SnippetWishListItem(
+                                      item: items[index],
+                                    );
+                                  },
+                                ),
                     );
                   },
                 ),

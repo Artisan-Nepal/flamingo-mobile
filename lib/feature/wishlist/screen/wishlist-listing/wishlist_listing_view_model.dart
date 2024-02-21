@@ -19,11 +19,11 @@ class WishlistListingViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getWishlist() async {
+  Future<void> getWishlist({bool isRefresh = false}) async {
     try {
-      setWishlistUseCase(Response.loading());
+      if (!isRefresh) setWishlistUseCase(Response.loading());
       final response = await _wishlistRepository.getUserWishlist();
-      setWishlistUseCase(Response.complete(response));
+      if (!isRefresh) setWishlistUseCase(Response.complete(response));
     } catch (exception) {
       setWishlistUseCase(Response.error(exception));
     }

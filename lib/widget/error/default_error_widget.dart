@@ -12,6 +12,7 @@ class DefaultErrorWidget extends StatelessWidget {
     this.actionButtonLabel = 'Try again',
     this.manuallyCenter = false,
     this.manualTop,
+    this.useListView = false,
   }) : super(key: key);
 
   final String errorMessage;
@@ -21,9 +22,22 @@ class DefaultErrorWidget extends StatelessWidget {
   final double fontSize;
   final bool manuallyCenter;
   final double? manualTop;
+  final bool useListView;
 
   @override
   Widget build(BuildContext context) {
+    if (useListView) {
+      return ListView(
+        children: [
+          _buildChildren(),
+        ],
+      );
+    }
+
+    return _buildChildren();
+  }
+
+  Widget _buildChildren() {
     return Padding(
       padding: EdgeInsets.only(
           bottom: Dimens.spacing_64,

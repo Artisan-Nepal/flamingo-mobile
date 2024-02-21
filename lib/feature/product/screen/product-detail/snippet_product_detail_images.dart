@@ -6,11 +6,12 @@ import 'package:flamingo/feature/product-story/screen/product-story/product_stor
 import 'package:flamingo/feature/vendor/data/model/vendor.dart';
 import 'package:flamingo/shared/enum/lead_source.dart';
 import 'package:flamingo/shared/shared.dart';
-import 'package:flamingo/widget/button/variants/outlined_button_widget.dart';
+import 'package:flamingo/widget/button/button.dart';
 import 'package:flamingo/widget/fav-button/fav_product_button_widget.dart';
 import 'package:flamingo/widget/image/cached_network_image_widget.dart';
 import 'package:flamingo/widget/space/space.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:share_plus/share_plus.dart';
@@ -112,8 +113,28 @@ class _SnippetProductDetailImagesState
     return Positioned(
       right: 10,
       bottom: widget.images.length > 1 ? 20 : 10,
-      child: OutlinedButtonWidget(
+      child: ButtonWidget(
+        backgroundColor: AppColors.white,
+        height: 40,
+        textColor: AppColors.black,
+        padding: EdgeInsets.symmetric(
+          horizontal: Dimens.spacingSizeSmall,
+          vertical: Dimens.spacingSizeExtraSmall,
+        ),
         label: 'View stories',
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'View Stories',
+              style: TypographyStyles.bodySmall,
+            ),
+            Icon(
+              Icons.chevron_right,
+              size: Dimens.iconSizeSmall,
+            ),
+          ],
+        ),
         width: 130,
         onPressed: () {
           NavigationHelper.push(

@@ -21,15 +21,15 @@ class VendorListingViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getVendors() async {
+  Future<void> getVendors({bool isRefresh = false}) async {
     try {
-      setVendorUseCase(Response.loading());
+      if (!isRefresh) setVendorUseCase(Response.loading());
       final response = await _vendorRepository.getVendors();
       locator<FavouriteVendorViewModel>()
           .initFavouriteVendorStatus(response.rows);
       setVendorUseCase(Response.complete(response));
     } catch (exception) {
-      setVendorUseCase(Response.error(exception));
+      if (!isRefresh) setVendorUseCase(Response.error(exception));
     }
   }
 }

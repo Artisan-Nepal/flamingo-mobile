@@ -7,7 +7,7 @@ import 'package:flamingo/widget/button/button.dart';
 import 'package:flamingo/widget/fav-button/fav_vendor_button_widget.dart';
 import 'package:flamingo/widget/loader/loader.dart';
 import 'package:flamingo/widget/screen/screen.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class VendorListingScreen extends StatefulWidget {
@@ -42,43 +42,48 @@ class _VendorListingScreenState extends State<VendorListingScreen> {
               return const DefaultScreenLoaderWidget();
             }
             final vendors = viewModel.vendorUseCase.data?.rows ?? [];
-            return ListView.builder(
-              itemCount: vendors.length,
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () {
-                    NavigationHelper.push(
-                      context,
-                      VendorProfileScreen(
-                        vendor: vendors[index],
-                      ),
-                    );
-                  },
-                  child: Container(
-                    height: 70,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: Dimens.spacingSizeDefault,
-                    ),
-                    margin: const EdgeInsets.only(
-                        bottom: Dimens.spacingSizeDefault),
-                    color: AppColors.grayLighter,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          vendors[index].storeName,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        if (authViewModel.isLoggedIn)
-                          FavVendorButtonWidget(vendorId: vendors[index].id)
-                      ],
-                    ),
-                  ),
-                );
+            return RefreshIndicator.adaptive(
+              onRefresh: () async {
+                await _viewModel.getVendors(isRefresh: true);
               },
+              child: ListView.builder(
+                itemCount: vendors.length,
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    onTap: () {
+                      NavigationHelper.push(
+                        context,
+                        VendorProfileScreen(
+                          vendor: vendors[index],
+                        ),
+                      );
+                    },
+                    child: Container(
+                      height: 70,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: Dimens.spacingSizeDefault,
+                      ),
+                      margin: const EdgeInsets.only(
+                          bottom: Dimens.spacingSizeDefault),
+                      color: AppColors.grayLighter,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            vendors[index].storeName,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          if (authViewModel.isLoggedIn)
+                            FavVendorButtonWidget(vendorId: vendors[index].id)
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
             );
           },
         ),

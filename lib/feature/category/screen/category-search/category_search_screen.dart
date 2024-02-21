@@ -53,24 +53,23 @@ class _CategorySearchScreenState extends State<CategorySearchScreen>
                 );
               }
               final categories = viewModel.categoriesUseCase.data ?? [];
-              return RefreshIndicator.adaptive(
-                onRefresh: () async {
-                  await _viewModel.getCategories(isRefresh: true);
-                },
-                child: SizedBox(
-                  height: SizeConfig.screenHeight,
-                  child: DefaultTabController(
-                    animationDuration: Duration.zero,
-                    length: categories.length,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildTabBar(),
-                        _buildTabBarView(),
-                      ],
+              return ListView(
+                children: [
+                  SizedBox(
+                    height: SizeConfig.screenHeight,
+                    child: DefaultTabController(
+                      animationDuration: Duration.zero,
+                      length: categories.length,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildTabBar(),
+                          _buildTabBarView(),
+                        ],
+                      ),
                     ),
-                  ),
-                ),
+                  )
+                ],
               );
             },
           ),
@@ -138,35 +137,40 @@ class _CategorySearchScreenState extends State<CategorySearchScreen>
                 categories.map(
                   (category) {
                     final subCategories = category.children ?? [];
-                    return ListView.builder(
-                      itemCount: subCategories.length,
-                      itemBuilder: (context, index) {
-                        return ListTileV2Wdiget(
-                          title: subCategories[index].name,
-                          onPressed: () {
-                            if (subCategories[index].children != null &&
-                                subCategories[index].children!.isNotEmpty) {
-                              NavigationHelper.push(
-                                context,
-                                CategoryListingScreen(
-                                  categories:
-                                      subCategories[index].children ?? [],
-                                  title: subCategories[index].name,
-                                ),
-                              );
-                            } else {
-                              NavigationHelper.push(
-                                context,
-                                ProductListingScreen(
-                                  title: subCategories[index].name,
-                                  productType: ProductType.CATEGORY,
-                                  categoryId: subCategories[index].id,
-                                ),
-                              );
-                            }
-                          },
-                        );
+                    return RefreshIndicator.adaptive(
+                      onRefresh: () async {
+                        await _viewModel.getCategories(isRefresh: true);
                       },
+                      child: ListView.builder(
+                        itemCount: subCategories.length,
+                        itemBuilder: (context, index) {
+                          return ListTileV2Wdiget(
+                            title: subCategories[index].name,
+                            onPressed: () {
+                              if (subCategories[index].children != null &&
+                                  subCategories[index].children!.isNotEmpty) {
+                                NavigationHelper.push(
+                                  context,
+                                  CategoryListingScreen(
+                                    categories:
+                                        subCategories[index].children ?? [],
+                                    title: subCategories[index].name,
+                                  ),
+                                );
+                              } else {
+                                NavigationHelper.push(
+                                  context,
+                                  ProductListingScreen(
+                                    title: subCategories[index].name,
+                                    productType: ProductType.CATEGORY,
+                                    categoryId: subCategories[index].id,
+                                  ),
+                                );
+                              }
+                            },
+                          );
+                        },
+                      ),
                     );
                   },
                 ),

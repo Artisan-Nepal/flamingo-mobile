@@ -43,7 +43,10 @@ class ListTileV1Wdiget extends StatelessWidget {
                   TextWidget(
                     value ?? "Enter ${title.toLowerCase()}",
                     style: textTheme(context).titleSmall!.copyWith(
-                          fontWeight: FontWeight.w600,
+                          fontWeight: value == null ? null : FontWeight.w600,
+                          fontSize:
+                              value == null ? Dimens.fontSizeDefault : null,
+                          color: value == null ? AppColors.grayDarker : null,
                         ),
                   ),
                 ],

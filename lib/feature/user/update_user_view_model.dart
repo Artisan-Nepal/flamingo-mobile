@@ -12,24 +12,24 @@ class UpdateUserViewModel extends ChangeNotifier {
     required UserRepository userRepository,
   }) : _userRepository = userRepository;
 
-  Response _updateVendorHandlerUseCase = Response();
+  Response _updateUserHandlerUseCase = Response();
 
-  Response get updateVendorHandlerUseCase => _updateVendorHandlerUseCase;
+  Response get updateUserHandlerUseCase => _updateUserHandlerUseCase;
 
-  void setupdateVendorUseCase(Response response) {
-    _updateVendorHandlerUseCase = response;
+  void setUpdateUserUseCase(Response response) {
+    _updateUserHandlerUseCase = response;
     notifyListeners();
   }
 
-  Future<void> updateVendor(UpdateUserRequest request) async {
+  Future<void> updateUser(UpdateUserRequest request) async {
     try {
-      setupdateVendorUseCase(Response.loading());
+      setUpdateUserUseCase(Response.loading());
       await _userRepository.updateCustomer(
           request); // customer returned here doesn't have all the required params
       locator<AuthViewModel>().syncRemotely();
-      setupdateVendorUseCase(Response.complete(null));
+      setUpdateUserUseCase(Response.complete(null));
     } catch (exception) {
-      setupdateVendorUseCase(Response.error(exception));
+      setUpdateUserUseCase(Response.error(exception));
     }
   }
 }

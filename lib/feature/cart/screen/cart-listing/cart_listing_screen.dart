@@ -62,48 +62,54 @@ class _CartListingScreenState extends State<CartListingScreen> {
                             Expanded(
                               child: viewModel.cartUseCase.isLoading
                                   ? const DefaultScreenLoaderWidget()
-                                  : viewModel.cartUseCase.hasError
-                                      ? DefaultErrorWidget(
-                                          errorMessage:
-                                              viewModel.cartUseCase.exception!,
-                                          onActionButtonPressed: () async {
-                                            await _viewModel.getCart();
-                                          },
-                                        )
-                                      : cartItems.isEmpty
-                                          ? const DefaultErrorWidget(
-                                              errorMessage:
-                                                  'You do not have any products in your cart.',
-                                            )
-                                          : RefreshIndicator.adaptive(
-                                              onRefresh: () async {
-                                                await _viewModel.getCart(
-                                                    isRefresh: true);
+                                  : RefreshIndicator.adaptive(
+                                      onRefresh: () async {
+                                        await _viewModel.getCart(
+                                            isRefresh: true);
+                                      },
+                                      child: viewModel.cartUseCase.hasError
+                                          ? DefaultErrorWidget(
+                                              useListView: true,
+                                              manuallyCenter: true,
+                                              errorMessage: viewModel
+                                                  .cartUseCase.exception!,
+                                              onActionButtonPressed: () async {
+                                                await _viewModel.getCart();
                                               },
-                                              child: ListView.builder(
-                                                itemBuilder: (context, index) {
-                                                  return Padding(
-                                                    padding: EdgeInsets.only(
-                                                      top: index == 0
-                                                          ? Dimens
-                                                              .spacingSizeSmall
-                                                          : 0,
-                                                      bottom: index ==
-                                                              cartItems.length -
-                                                                  1
-                                                          ? 80
-                                                          : 0,
-                                                    ),
-                                                    child:
-                                                        SnippetCartListingItem(
-                                                      cartItem:
-                                                          cartItems[index],
-                                                    ),
-                                                  );
-                                                },
-                                                itemCount: cartItems.length,
-                                              ),
-                                            ),
+                                            )
+                                          : cartItems.isEmpty
+                                              ? const DefaultErrorWidget(
+                                                  useListView: true,
+                                                  manuallyCenter: true,
+                                                  errorMessage:
+                                                      'You do not have any products in your cart.',
+                                                )
+                                              : ListView.builder(
+                                                  itemBuilder:
+                                                      (context, index) {
+                                                    return Padding(
+                                                      padding: EdgeInsets.only(
+                                                        top: index == 0
+                                                            ? Dimens
+                                                                .spacingSizeSmall
+                                                            : 0,
+                                                        bottom: index ==
+                                                                cartItems
+                                                                        .length -
+                                                                    1
+                                                            ? 80
+                                                            : 0,
+                                                      ),
+                                                      child:
+                                                          SnippetCartListingItem(
+                                                        cartItem:
+                                                            cartItems[index],
+                                                      ),
+                                                    );
+                                                  },
+                                                  itemCount: cartItems.length,
+                                                ),
+                                    ),
                             )
                           ],
                         ),

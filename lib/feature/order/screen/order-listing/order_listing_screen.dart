@@ -116,32 +116,38 @@ class _OrderListingScreenState extends State<OrderListingScreen> {
           children: [
             // All
             SnippetOrderListingTab(
-              orders: orders,
-              tabName: 'All',
-              showStatus: true,
-              emptyMessage: 'You have not placed any orders',
-            ),
+                orders: orders,
+                tabName: 'All',
+                showStatus: true,
+                emptyMessage: 'You have not placed any orders',
+                onRefresh: () async {
+                  await _viewModel.getUserOrders(isRefresh: true);
+                }),
 
             // To Receive
             SnippetOrderListingTab(
-              tabName: 'To Receive',
-              showStatus: true,
-              orders: List<Order>.from(
-                orders.where(
-                  (order) => ['PENDING', 'PROCESSING', 'OUT_FOR_DELIVERY']
-                      .contains(order.orderStatus.code),
+                tabName: 'To Receive',
+                showStatus: true,
+                orders: List<Order>.from(
+                  orders.where(
+                    (order) => ['PENDING', 'PROCESSING', 'OUT_FOR_DELIVERY']
+                        .contains(order.orderStatus.code),
+                  ),
                 ),
-              ),
-            ),
+                onRefresh: () async {
+                  await _viewModel.getUserOrders(isRefresh: true);
+                }),
             // Received
             SnippetOrderListingTab(
-              tabName: 'Received',
-              orders: List<Order>.from(
-                orders.where(
-                  (order) => order.orderStatus.code == 'DELIVERED',
+                tabName: 'Received',
+                orders: List<Order>.from(
+                  orders.where(
+                    (order) => order.orderStatus.code == 'DELIVERED',
+                  ),
                 ),
-              ),
-            ),
+                onRefresh: () async {
+                  await _viewModel.getUserOrders(isRefresh: true);
+                }),
             // Cancelled
             SnippetOrderListingTab(
               tabName: 'Cancelled',
@@ -150,6 +156,9 @@ class _OrderListingScreenState extends State<OrderListingScreen> {
                   (order) => order.orderStatus.code == 'CANCELLED',
                 ),
               ),
+              onRefresh: () async {
+                await _viewModel.getUserOrders(isRefresh: true);
+              },
             ),
           ],
         ),

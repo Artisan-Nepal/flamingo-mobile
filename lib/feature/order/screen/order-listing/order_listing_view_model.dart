@@ -19,11 +19,11 @@ class OrderListingViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getUserOrders() async {
+  Future<void> getUserOrders({bool isRefresh = false}) async {
     try {
-      setOrderUseCase(Response.loading());
+      if (!isRefresh) setOrderUseCase(Response.loading());
       final response = await _orderRepository.getUserOrders();
-      setOrderUseCase(Response.complete(response));
+      if (!isRefresh) setOrderUseCase(Response.complete(response));
     } catch (exception) {
       setOrderUseCase(Response.error(exception));
     }

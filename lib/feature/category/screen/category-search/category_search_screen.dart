@@ -53,23 +53,19 @@ class _CategorySearchScreenState extends State<CategorySearchScreen>
                 );
               }
               final categories = viewModel.categoriesUseCase.data ?? [];
-              return ListView(
-                children: [
-                  SizedBox(
-                    height: SizeConfig.screenHeight,
-                    child: DefaultTabController(
-                      animationDuration: Duration.zero,
-                      length: categories.length,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _buildTabBar(),
-                          _buildTabBarView(),
-                        ],
-                      ),
-                    ),
-                  )
-                ],
+              return SizedBox(
+                height: SizeConfig.screenHeight,
+                child: DefaultTabController(
+                  animationDuration: Duration.zero,
+                  length: categories.length,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildTabBar(),
+                      _buildTabBarView(),
+                    ],
+                  ),
+                ),
               );
             },
           ),

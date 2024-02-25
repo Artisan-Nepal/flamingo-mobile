@@ -1,4 +1,4 @@
-import 'package:flamingo/feature/product/data/model/product.dart';
+import 'package:flamingo/feature/product/data/model/product_detail.dart';
 
 class CartItem {
   final String id;

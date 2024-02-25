@@ -2,7 +2,7 @@ import 'package:flamingo/feature/address/data/model/address.dart';
 import 'package:flamingo/feature/order/data/model/order_status.dart';
 import 'package:flamingo/feature/order/data/model/payment_method.dart';
 import 'package:flamingo/feature/order/data/model/shipping_method.dart';
-import 'package:flamingo/feature/product/data/model/product.dart';
+import 'package:flamingo/feature/product/data/model/product_detail.dart';
 import 'package:flamingo/feature/vendor/data/model/vendor.dart';
 
 class Order {

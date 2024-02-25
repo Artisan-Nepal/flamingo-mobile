@@ -28,6 +28,7 @@ class Dimens {
 
   // Icon Size
   static const double iconSize_22 = 22.0;
+  static const double iconSize_20 = 20.0;
   static const double iconSize_15 = 15.0;
   static const double iconSizeExtraSmall = 12.0;
   static const double iconSizeSmall = 18.0;

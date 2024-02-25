@@ -1,11 +1,11 @@
+import 'package:flamingo/feature/product/data/model/product.dart';
 import 'package:flamingo/feature/product/screen/product-listing/snippet_product_listing.dart';
-import 'package:flamingo/feature/search/screen/search_screen.dart';
-import 'package:flamingo/feature/search/screen/search_view_model.dart';
-import 'package:flamingo/feature/search/screen/snippet_search_history_item.dart';
+import 'package:flamingo/feature/search/screen/text-search/search_screen.dart';
+import 'package:flamingo/feature/search/screen/text-search/search_view_model.dart';
+import 'package:flamingo/feature/search/screen/text-search/snippet_search_history_item.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/error/default_error_widget.dart';
 import 'package:flamingo/widget/loader/loader.dart';
-import 'package:flamingo/widget/product/product.dart';
 import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -106,7 +106,9 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                                       child: SnippetProductListing(
                                         products: products
                                             .map(
-                                              (product) => GenericProduct(
+                                              (product) => Product(
+                                                quantity: product.variants.first
+                                                    .quantityInStock,
                                                 image:
                                                     extractProductDefaultImage(
                                                   product.images,

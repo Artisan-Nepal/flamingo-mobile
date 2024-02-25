@@ -1,4 +1,6 @@
 import 'package:flamingo/data/data.dart';
+import 'package:flamingo/feature/search/data/model/image_search_request.dart';
+import 'package:flamingo/feature/product/data/model/product.dart';
 import 'package:flamingo/feature/product/data/model/product_detail.dart';
 import 'package:flamingo/feature/search/data/model/search_request.dart';
 import 'package:flamingo/feature/search/data/remote/search_remote.dart';
@@ -25,5 +27,14 @@ class SearchRemoteImpl implements SearchRemote {
     final apiResponse = await _apiClient.post(ApiUrls.productSearchSuggestion,
         body: request.toJson());
     return List<String>.from(apiResponse.data);
+  }
+
+  @override
+  Future<List<Product>> imageSearch(ImageSearchRequest request) async {
+    final apiResponse = await _apiClient.multipartRequest(
+      ApiUrls.imageSearch,
+      data: await request.toJson(),
+    );
+    return Product.fromJsonList(apiResponse.data);
   }
 }

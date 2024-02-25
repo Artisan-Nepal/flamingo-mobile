@@ -1,3 +1,4 @@
+import 'package:flamingo/feature/product/data/model/product.dart';
 import 'package:flamingo/feature/product/data/model/product_detail.dart';
 import 'package:flamingo/feature/product/screen/product-listing/product_listing_screen.dart';
 import 'package:flamingo/shared/shared.dart';
@@ -60,7 +61,8 @@ class SnippetHomeProducts extends StatelessWidget {
               width: SizeConfig.screenWidth * 0.6,
               child: ProductWidget(
                 imageHeight: SizeConfig.screenHeight * 0.35,
-                payload: GenericProduct(
+                payload: Product(
+                  quantity: products[index].variants.first.quantityInStock,
                   product: products[index],
                   image: extractProductDefaultImage(
                     products[index].images,

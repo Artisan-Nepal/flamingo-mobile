@@ -5,12 +5,12 @@ import 'package:flamingo/feature/dashboard/screen/home/snippet_home_advertisemen
 import 'package:flamingo/feature/dashboard/screen/home/snippet_home_screen_story.dart';
 import 'package:flamingo/feature/dashboard/screen/home/snippet_home_products.dart';
 import 'package:flamingo/feature/product-story/product_story_view_model.dart';
+import 'package:flamingo/feature/product/data/model/product.dart';
 import 'package:flamingo/feature/product/screen/product-listing/product_listing_view_model.dart';
 import 'package:flamingo/feature/product/screen/product-listing/snippet_product_listing.dart';
-import 'package:flamingo/feature/search/screen/search_screen.dart';
+import 'package:flamingo/feature/search/screen/text-search/search_screen.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/not-logged-in/not_logged_in_widget.dart';
-import 'package:flamingo/widget/product/product.dart';
 import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -191,7 +191,8 @@ class _HomeScreenState extends State<HomeScreen>
                                   ?.rows ??
                               [])
                           .map(
-                            (product) => GenericProduct(
+                            (product) => Product(
+                              quantity: product.variants.first.quantityInStock,
                               image: extractProductDefaultImage(
                                 product.images,
                                 product.variants,

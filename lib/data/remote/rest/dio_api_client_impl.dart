@@ -148,7 +148,7 @@ class DioApiClientImpl implements ApiClient {
         options: Options(headers: headers),
       );
 
-      return response.data;
+      return _returnResponse(response);
     } catch (e) {
       debugPrint(
           'API Error | Method: Multipart Request | Path: $path | Error: ${e.toString()}');

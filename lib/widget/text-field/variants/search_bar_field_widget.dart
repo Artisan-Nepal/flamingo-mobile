@@ -1,4 +1,7 @@
+import 'package:flamingo/feature/search/screen/image-search/image_search_screen.dart';
+import 'package:flamingo/shared/helper/image_picker_helper.dart';
 import 'package:flamingo/shared/shared.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class SearchBarFieldWidget extends StatelessWidget {
@@ -54,6 +57,18 @@ class SearchBarFieldWidget extends StatelessWidget {
             Icons.search_outlined,
             color: enabled ? Colors.grey.shade600 : Colors.grey.shade300,
           ),
+          suffixIcon: GestureDetector(
+            onTap: enabled
+                ? () {
+                    _onCameraSearch(context);
+                  }
+                : null,
+            child: Icon(
+              CupertinoIcons.camera,
+              size: Dimens.iconSize_20,
+              color: enabled ? Colors.grey.shade600 : Colors.grey.shade300,
+            ),
+          ),
           border: InputBorder.none,
           focusedBorder: InputBorder.none,
           focusedErrorBorder: InputBorder.none,
@@ -63,5 +78,17 @@ class SearchBarFieldWidget extends StatelessWidget {
         onSubmitted: onSubmitted,
       ),
     );
+  }
+
+  _onCameraSearch(BuildContext context) async {
+    final image = await ImagePickerHelper.pickImage(
+      context,
+      crop: true,
+      cropperTitle: 'Crop image to search',
+      cropperDoneButtonTitle: 'Search',
+    );
+    if (image == null) return;
+
+    NavigationHelper.push(context, ImageSearchScreen(image: image));
   }
 }

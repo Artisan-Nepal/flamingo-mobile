@@ -67,7 +67,9 @@ class DefaultScreen extends StatelessWidget {
                   leading: appBarLeading ??
                       (NavigationHelper.canPop(context) &&
                               automaticallyImplyAppBarLeading
-                          ? BackButtonWidget()
+                          ? BackButtonWidget(
+                              size: Dimens.iconSizeDefault,
+                            )
                           : null),
                   automaticallyImplyLeading: automaticallyImplyAppBarLeading,
                 )

@@ -1,5 +1,5 @@
-import 'package:flamingo/feature/search/screen/search_result_screen.dart';
-import 'package:flamingo/feature/search/screen/search_view_model.dart';
+import 'package:flamingo/feature/search/screen/text-search/search_result_screen.dart';
+import 'package:flamingo/feature/search/screen/text-search/search_view_model.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/button/variants/text_button_widget.dart';
 import 'package:flamingo/widget/error/default_error_widget.dart';

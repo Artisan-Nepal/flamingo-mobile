@@ -1,7 +1,7 @@
 import 'package:flamingo/feature/auth/auth_view_model.dart';
 import 'package:flamingo/feature/customer-activity/customer_activity_view_model.dart';
 import 'package:flamingo/feature/product-story/product_story_engagement_view_model.dart';
-import 'package:flamingo/feature/search/screen/search_view_model.dart';
+import 'package:flamingo/feature/search/screen/text-search/search_view_model.dart';
 import 'package:flamingo/feature/vendor/favourite_vendor_view_model.dart';
 import 'package:flamingo/feature/wishlist/wishlist_view_model.dart';
 import 'package:flutter/material.dart';

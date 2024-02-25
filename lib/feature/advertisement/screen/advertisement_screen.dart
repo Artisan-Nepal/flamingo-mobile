@@ -4,12 +4,12 @@ import 'package:flamingo/feature/advertisement/screen/advertisement_app_bar_view
 import 'package:flamingo/feature/advertisement/screen/snippet_advertisement_app_bar.dart';
 import 'package:flamingo/feature/advertisement/screen/snippet_advertisement_images.dart';
 import 'package:flamingo/feature/customer-activity/create_activity_view_model.dart';
+import 'package:flamingo/feature/product/data/model/product.dart';
 import 'package:flamingo/feature/product/screen/product-listing/snippet_product_listing.dart';
 import 'package:flamingo/shared/constant/advertisement_activity_type.dart';
 import 'package:flamingo/shared/enum/lead_source.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/shared/util/util.dart';
-import 'package:flamingo/widget/product/product_widget.dart';
 import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -114,7 +114,8 @@ class _AdvertisementScreenState extends State<AdvertisementScreen> {
                   leadSource: LeadSource.advertisement,
                   products: widget.advertisement.collection.products
                       .map(
-                        (p) => GenericProduct(
+                        (p) => Product(
+                          quantity: p.variants.first.quantityInStock,
                           image: extractProductDefaultImage(
                             p.images,
                             p.variants,

@@ -1,3 +1,4 @@
+import 'package:flamingo/feature/product/data/model/product.dart';
 import 'package:flamingo/shared/enum/lead_source.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/product/product.dart';
@@ -15,7 +16,7 @@ class SnippetProductListing extends StatelessWidget {
     this.advertisementId,
   });
 
-  final List<GenericProduct> products;
+  final List<Product> products;
   final bool shrinkWrap;
   final bool useSliver;
   final double padding;

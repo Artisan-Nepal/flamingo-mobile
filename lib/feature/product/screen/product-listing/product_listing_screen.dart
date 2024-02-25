@@ -1,11 +1,11 @@
 import 'package:flamingo/di/di.dart';
+import 'package:flamingo/feature/product/data/model/product.dart';
 import 'package:flamingo/feature/product/screen/product-listing/product_listing_view_model.dart';
 import 'package:flamingo/feature/product/screen/product-listing/snippet_filter_products_bottomsheet.dart';
 import 'package:flamingo/feature/product/screen/product-listing/snippet_product_listing.dart';
 import 'package:flamingo/feature/vendor/data/model/vendor.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/error/default_error_widget.dart';
-import 'package:flamingo/widget/product/product.dart';
 import 'package:flamingo/widget/screen/default_screen.dart';
 import 'package:flamingo/widget/shimmer/shimmer.dart';
 import 'package:flutter/cupertino.dart';
@@ -91,7 +91,8 @@ class _ProductListingScreenState extends State<ProductListingScreen> {
                 child: SnippetProductListing(
                   products: products
                       .map(
-                        (product) => GenericProduct(
+                        (product) => Product(
+                          quantity: product.variants.first.quantityInStock,
                           image: extractProductDefaultImage(
                             product.images,
                             product.variants,

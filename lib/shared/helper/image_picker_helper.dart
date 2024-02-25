@@ -3,6 +3,7 @@ import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/bottom-sheet/bottom_sheet_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ImagePickerHelper {
@@ -53,7 +54,14 @@ class ImagePickerHelper {
     return null;
   }
 
-  static Future<File?> pickImage(BuildContext context) async {
+  static Future<File?> pickImage(
+    BuildContext context, {
+    bool crop = false,
+    CropAspectRatio? cropperAspectRatio,
+    String? cropperTitle,
+    String? cropperDoneButtonTitle,
+    String? cropperCancelButtonTitle,
+  }) async {
     var imageSource = await _showImageSourcePicker(context);
     var temp = await ImagePicker().pickImage(
       source: imageSource,
@@ -61,8 +69,44 @@ class ImagePickerHelper {
       imageQuality: 50,
     );
     if (temp != null) {
-      return File(temp.path);
+      return await cropImage(
+        temp,
+        aspectRatio: cropperAspectRatio,
+        title: cropperTitle,
+        doneButtonTitle: cropperDoneButtonTitle,
+        cancelButtonTitle: cropperCancelButtonTitle,
+      );
     }
+    return null;
+  }
+
+  static Future<File?> cropImage(
+    XFile image, {
+    CropAspectRatio? aspectRatio,
+    String? title = "Crop Image",
+    String? doneButtonTitle = 'Done',
+    String? cancelButtonTitle = 'Cancel',
+    CropStyle cropStyle = CropStyle.rectangle,
+  }) async {
+    final cropped = await ImageCropper().cropImage(
+        sourcePath: image.path,
+        aspectRatio: aspectRatio ?? CropAspectRatio(ratioX: 1, ratioY: 1),
+        cropStyle: cropStyle,
+        uiSettings: [
+          AndroidUiSettings(
+            toolbarTitle: title,
+            toolbarColor: AppColors.black,
+            toolbarWidgetColor: Colors.white,
+            initAspectRatio: CropAspectRatioPreset.original,
+            lockAspectRatio: false,
+          ),
+          IOSUiSettings(
+            title: title,
+            doneButtonTitle: doneButtonTitle,
+            cancelButtonTitle: cancelButtonTitle,
+          ),
+        ]);
+    if (cropped != null) return File(cropped.path);
     return null;
   }
 

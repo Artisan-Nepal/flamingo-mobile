@@ -4,7 +4,7 @@ import 'package:flamingo/feature/product-story/data/model/product_story.dart';
 import 'package:flamingo/feature/upload-file/data/model/upload_file_response.dart';
 import 'package:flamingo/feature/vendor/data/model/vendor.dart';
 
-class Product {
+class ProductDetail {
   final String id;
   final String title;
   final String body;
@@ -17,7 +17,7 @@ class Product {
   final bool isInWishlist;
   final String? details;
 
-  Product({
+  ProductDetail({
     required this.id,
     required this.title,
     required this.body,
@@ -31,7 +31,7 @@ class Product {
     this.details,
   });
 
-  factory Product.fromJson(Map<String, dynamic> json) => Product(
+  factory ProductDetail.fromJson(Map<String, dynamic> json) => ProductDetail(
         id: json['id'],
         title: json['title'],
         body: json['body'],
@@ -52,9 +52,10 @@ class Product {
             : List.from(json['wishlist']).isNotEmpty,
       );
 
-  static List<Product> fromJsonList(dynamic json) => List<Product>.from(
+  static List<ProductDetail> fromJsonList(dynamic json) =>
+      List<ProductDetail>.from(
         json.map(
-          (data) => Product.fromJson(data),
+          (data) => ProductDetail.fromJson(data),
         ),
       );
 }

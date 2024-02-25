@@ -1,6 +1,6 @@
 import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/cart/screen/cart-listing/cart_listing_screen.dart';
-import 'package:flamingo/feature/product/data/model/product.dart';
+import 'package:flamingo/feature/product/data/model/product_detail.dart';
 import 'package:flamingo/feature/product/screen/product-detail/product_detail_view_model.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/bottom-sheet/bottom_sheet_widget.dart';
@@ -17,7 +17,7 @@ class SnippetAddToCartBottomSheet extends StatefulWidget {
     required this.product,
   }) : super(key: key);
 
-  final Product product;
+  final ProductDetail product;
 
   @override
   State<SnippetAddToCartBottomSheet> createState() =>

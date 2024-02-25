@@ -1,4 +1,4 @@
-import 'package:flamingo/feature/product/data/model/product.dart';
+import 'package:flamingo/feature/product/data/model/product_detail.dart';
 import 'package:flutter/material.dart';
 
 class WishlistViewModel extends ChangeNotifier {
@@ -6,7 +6,7 @@ class WishlistViewModel extends ChangeNotifier {
 
   Map<String, bool> get wishlistStatus => _wishlistStatus;
 
-  initWishlistStatus(List<Product> products) {
+  initWishlistStatus(List<ProductDetail> products) {
     final productsWishlistStatus =
         products.map((product) => MapEntry(product.id, product.isInWishlist));
     _wishlistStatus.addEntries(productsWishlistStatus);

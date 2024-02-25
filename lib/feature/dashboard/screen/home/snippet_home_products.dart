@@ -1,4 +1,4 @@
-import 'package:flamingo/feature/product/data/model/product.dart';
+import 'package:flamingo/feature/product/data/model/product_detail.dart';
 import 'package:flamingo/feature/product/screen/product-listing/product_listing_screen.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/product/product.dart';
@@ -14,7 +14,7 @@ class SnippetHomeProducts extends StatelessWidget {
     required this.title,
   }) : super(key: key);
 
-  final List<Product> products;
+  final List<ProductDetail> products;
   final bool isLoading;
   final ProductType productType;
   final String title;

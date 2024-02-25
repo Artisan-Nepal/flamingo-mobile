@@ -1,5 +1,5 @@
 import 'package:flamingo/data/data.dart';
-import 'package:flamingo/feature/product/data/model/product.dart';
+import 'package:flamingo/feature/product/data/model/product_detail.dart';
 import 'package:flamingo/feature/search/data/model/search_request.dart';
 import 'package:flamingo/feature/search/data/remote/search_remote.dart';
 
@@ -10,12 +10,13 @@ class SearchRemoteImpl implements SearchRemote {
   SearchRemoteImpl({required ApiClient apiClient}) : _apiClient = apiClient;
 
   @override
-  Future<FetchResponse<Product>> searchProducts(SearchRequest request) async {
+  Future<FetchResponse<ProductDetail>> searchProducts(
+      SearchRequest request) async {
     final apiResponse =
         await _apiClient.post(ApiUrls.productSearch, body: request.toJson());
     return FetchResponse.fromJson(
       apiResponse.data,
-      Product.fromJsonList,
+      ProductDetail.fromJsonList,
     );
   }
 

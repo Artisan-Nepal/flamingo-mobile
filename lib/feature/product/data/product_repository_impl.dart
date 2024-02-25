@@ -4,7 +4,7 @@ import 'package:flamingo/data/data.dart';
 import 'package:flamingo/feature/feature.dart';
 import 'package:flamingo/feature/product/data/local/product_local.dart';
 import 'package:flamingo/feature/product/data/model/get_product_request.dart';
-import 'package:flamingo/feature/product/data/model/product.dart';
+import 'package:flamingo/feature/product/data/model/product_detail.dart';
 import 'package:flamingo/feature/product/data/product_repository.dart';
 import 'package:flamingo/feature/product/data/remote/product_remote.dart';
 
@@ -22,27 +22,30 @@ class ProductRepositoryImpl implements ProductRepository {
         _authRepository = authRepository;
 
   @override
-  Future<FetchResponse<Product>> getVendorProducts(String vendorId) async {
+  Future<FetchResponse<ProductDetail>> getVendorProducts(
+      String vendorId) async {
     return await _productRemote.getVendorProducts(vendorId);
   }
 
   @override
-  Future<FetchResponse<Product>> getCategoryProducts(String categoryId) async {
+  Future<FetchResponse<ProductDetail>> getCategoryProducts(
+      String categoryId) async {
     return await _productRemote.getCategoryProducts(categoryId);
   }
 
   @override
-  Future<FetchResponse<Product>> getProducts(GetProductRequest request) async {
+  Future<FetchResponse<ProductDetail>> getProducts(
+      GetProductRequest request) async {
     return await _productRemote.getProducts(request);
   }
 
   @override
-  Future<Product> getSingleProduct(String productId) async {
+  Future<ProductDetail> getSingleProduct(String productId) async {
     return await _productRemote.getSingleProduct(productId);
   }
 
   @override
-  Future<FetchResponse<Product>> getLatestProducts() async {
+  Future<FetchResponse<ProductDetail>> getLatestProducts() async {
     return await _productRemote.getLatestProducts();
   }
 }

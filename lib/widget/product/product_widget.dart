@@ -1,5 +1,5 @@
 import 'package:flamingo/feature/auth/auth_view_model.dart';
-import 'package:flamingo/feature/product/data/model/product.dart';
+import 'package:flamingo/feature/product/data/model/product_detail.dart';
 import 'package:flamingo/feature/product/screen/product-detail/product_detail_screen.dart';
 import 'package:flamingo/shared/enum/lead_source.dart';
 import 'package:flamingo/shared/shared.dart';
@@ -126,7 +126,7 @@ class GenericProduct {
   final String image;
   final String vendor;
   final int price;
-  final Product? product;
+  final ProductDetail? product;
 
   GenericProduct({
     required this.image,

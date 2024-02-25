@@ -1,7 +1,7 @@
 // ignore_for_file: unused_field
 import 'package:flamingo/data/model/fetch_response.dart';
 import 'package:flamingo/feature/auth/auth.dart';
-import 'package:flamingo/feature/product/data/model/product.dart';
+import 'package:flamingo/feature/product/data/model/product_detail.dart';
 import 'package:flamingo/feature/search/data/local/search_local.dart';
 import 'package:flamingo/feature/search/data/model/search_request.dart';
 import 'package:flamingo/feature/search/data/remote/search_remote.dart';
@@ -34,7 +34,8 @@ class SearchRepositoryImpl implements SearchRepository {
   }
 
   @override
-  Future<FetchResponse<Product>> searchProducts(SearchRequest request) async {
+  Future<FetchResponse<ProductDetail>> searchProducts(
+      SearchRequest request) async {
     return await _searchRemote.searchProducts(request);
   }
 

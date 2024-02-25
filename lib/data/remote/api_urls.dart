@@ -40,4 +40,6 @@ class ApiUrls {
   static String trackOrder = '/orders/:id/track';
   static String likedVendorStory = '/product-story/liked-vendor';
   static String viewStory = '/product-story/:id/view';
+  static String getProductRecommendations = '/recommender/get_recommendations';
+  static String imageSearch = '/recommender/image_search';
 }

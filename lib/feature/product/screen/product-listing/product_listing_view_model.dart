@@ -1,7 +1,7 @@
 import 'package:flamingo/data/data.dart';
 import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/product/data/model/get_product_request.dart';
-import 'package:flamingo/feature/product/data/model/product.dart';
+import 'package:flamingo/feature/product/data/model/product_detail.dart';
 import 'package:flamingo/feature/product/data/product_repository.dart';
 import 'package:flamingo/feature/wishlist/wishlist_view_model.dart';
 import 'package:flamingo/shared/shared.dart';
@@ -14,14 +14,14 @@ class ProductListingViewModel extends ChangeNotifier {
     required ProductRepository productRepository,
   }) : _productRepository = productRepository;
 
-  Response<FetchResponse<Product>> _getProductsUseCase =
-      Response<FetchResponse<Product>>();
-  List<Product> _sortedProducts = [];
+  Response<FetchResponse<ProductDetail>> _getProductsUseCase =
+      Response<FetchResponse<ProductDetail>>();
+  List<ProductDetail> _sortedProducts = [];
   ProductFilterType? _selectedFilterType;
 
-  Response<FetchResponse<Product>> get getProductsUseCase =>
+  Response<FetchResponse<ProductDetail>> get getProductsUseCase =>
       _getProductsUseCase;
-  List<Product> get sortedProducts => _sortedProducts;
+  List<ProductDetail> get sortedProducts => _sortedProducts;
   ProductFilterType? get selectedFilterType => _selectedFilterType;
 
   void setSelectedFilterType(ProductFilterType filterType) {
@@ -29,7 +29,7 @@ class ProductListingViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setProductsUseCase(Response<FetchResponse<Product>> response) {
+  void setProductsUseCase(Response<FetchResponse<ProductDetail>> response) {
     _getProductsUseCase = response;
     if (response.data != null) {
       _sortedProducts = response.data!.rows;

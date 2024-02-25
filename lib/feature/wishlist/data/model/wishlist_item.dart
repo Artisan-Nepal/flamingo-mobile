@@ -1,8 +1,8 @@
-import 'package:flamingo/feature/product/data/model/product.dart';
+import 'package:flamingo/feature/product/data/model/product_detail.dart';
 
 class WishlistItem {
   final String id;
-  final Product product;
+  final ProductDetail product;
 
   WishlistItem({
     required this.id,
@@ -12,7 +12,7 @@ class WishlistItem {
   factory WishlistItem.fromJson(Map<String, dynamic> json) {
     return WishlistItem(
       id: json['id'],
-      product: Product.fromJson(json['product']),
+      product: ProductDetail.fromJson(json['product']),
     );
   }
 

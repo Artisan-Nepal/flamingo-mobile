@@ -6,7 +6,7 @@ import 'package:flamingo/feature/cart/data/model/add_to_cart_request.dart';
 import 'package:flamingo/feature/cart/data/model/cart.dart';
 import 'package:flamingo/feature/customer-activity/create_activity_view_model.dart';
 import 'package:flamingo/feature/customer-activity/customer_activity_view_model.dart';
-import 'package:flamingo/feature/product/data/model/product.dart';
+import 'package:flamingo/feature/product/data/model/product_detail.dart';
 import 'package:flamingo/feature/product/data/model/product_color.dart';
 import 'package:flamingo/feature/product/data/model/product_size.dart';
 import 'package:flamingo/feature/product/data/product_repository.dart';
@@ -27,11 +27,11 @@ class ProductDetailViewModel extends ChangeNotifier {
   })  : _productRepository = productRepository,
         _cartRepository = cartRepository;
 
-  Response<Product> _productUseCase = Response<Product>();
+  Response<ProductDetail> _productUseCase = Response<ProductDetail>();
   late ProductColor _selectedColor;
   late ProductSizeOption _selectedSizeOption;
 
-  Response<Product> get productUseCase => _productUseCase;
+  Response<ProductDetail> get productUseCase => _productUseCase;
   ProductColor get selectedColor => _selectedColor;
   ProductSizeOption get selectedSizeOption => _selectedSizeOption;
 
@@ -44,14 +44,14 @@ class ProductDetailViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setProductUseCase(Response<Product> response) {
+  void setProductUseCase(Response<ProductDetail> response) {
     _productUseCase = response;
     notifyListeners();
   }
 
   setProduct(
     String productId,
-    Product? product, {
+    ProductDetail? product, {
     LeadSource? leadSource,
     String? advertisementId,
   }) async {

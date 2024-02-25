@@ -1,10 +1,10 @@
-import 'package:flamingo/feature/product/data/model/product.dart';
+import 'package:flamingo/feature/product/data/model/product_detail.dart';
 
 class VendorCollection {
   final String id;
   final String name;
   final String vendorId;
-  final List<Product> products;
+  final List<ProductDetail> products;
   final DateTime createdAt;
 
   VendorCollection({
@@ -21,8 +21,8 @@ class VendorCollection {
         name: json['name'],
         vendorId: json['vendorId'],
         createdAt: DateTime.parse(json["createdAt"]),
-        products:
-            Product.fromJsonList(json['products'].map((e) => e['product'])),
+        products: ProductDetail.fromJsonList(
+            json['products'].map((e) => e['product'])),
       );
 
   static List<VendorCollection> fromJsonList(dynamic json) =>

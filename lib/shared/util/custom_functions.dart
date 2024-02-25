@@ -1,5 +1,5 @@
 import 'package:flamingo/feature/feature.dart';
-import 'package:flamingo/feature/product/data/model/product.dart';
+import 'package:flamingo/feature/product/data/model/product_detail.dart';
 import 'package:flamingo/shared/constant/payment_method.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flutter/material.dart';
@@ -53,15 +53,15 @@ double getScaledValueForSmallerDevice(
       : value;
 }
 
-List<Product> sortProductsHelper({
+List<ProductDetail> sortProductsHelper({
   double startingPrice = 0,
   double endingPrice = 0,
-  required List<Product> products,
+  required List<ProductDetail> products,
   ProductFilterType? filterType,
 }) {
   final startingPriceInPaisa = startingPrice * 100;
   final endingPriceInPaisa = endingPrice * 100;
-  List<Product> list = [];
+  List<ProductDetail> list = [];
   if (startingPrice > 0 && endingPrice > startingPrice) {
     list.addAll(products
         .where((product) =>
@@ -78,7 +78,7 @@ List<Product> sortProductsHelper({
     list.sort((a, b) => a.variants[0].price.compareTo(b.variants[0].price));
   } else if (filterType.isPriceDesc) {
     list.sort((a, b) => a.variants[0].price.compareTo(b.variants[0].price));
-    Iterable<Product> iterable = list.reversed;
+    Iterable<ProductDetail> iterable = list.reversed;
     list = iterable.toList();
   }
   return list;
@@ -189,7 +189,7 @@ String extractProductVariantImage(
   return variantImage.image?.url ?? defaultImages.firstOrNull ?? "";
 }
 
-List<String> getDetailImages(Product product) {
+List<String> getDetailImages(ProductDetail product) {
   final List<String> images = [...product.images];
 
   Map<String, String> imageByColor = {};

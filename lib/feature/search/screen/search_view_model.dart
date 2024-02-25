@@ -1,4 +1,4 @@
-import 'package:flamingo/feature/product/data/model/product.dart';
+import 'package:flamingo/feature/product/data/model/product_detail.dart';
 import 'package:flamingo/feature/search/data/model/search_request.dart';
 import 'package:flamingo/feature/search/data/search_repository.dart';
 import 'package:flamingo/shared/shared.dart';
@@ -10,17 +10,18 @@ class SearchViewModel extends ChangeNotifier {
   SearchViewModel({required SearchRepository searchRepository})
       : _searchRepository = searchRepository;
 
-  Response<List<Product>> _searchProductsUseCase = Response();
+  Response<List<ProductDetail>> _searchProductsUseCase = Response();
   Response<List<String>> _getSuggestionsUseCase = Response();
-  List<Product> _recentlySearchedProducts = [];
+  List<ProductDetail> _recentlySearchedProducts = [];
   List<String> _searchTextHistory = [];
 
-  Response<List<Product>> get searchProductsUseCase => _searchProductsUseCase;
+  Response<List<ProductDetail>> get searchProductsUseCase =>
+      _searchProductsUseCase;
   Response<List<String>> get getSuggestionsUseCase => _getSuggestionsUseCase;
-  List<Product> get recentlySearchedProducts => _recentlySearchedProducts;
+  List<ProductDetail> get recentlySearchedProducts => _recentlySearchedProducts;
   List<String> get searchTextHistory => _searchTextHistory;
 
-  void setSearchProductsUseCase(Response<List<Product>> response,
+  void setSearchProductsUseCase(Response<List<ProductDetail>> response,
       {bool notify = true}) {
     _searchProductsUseCase = response;
     if (notify) notifyListeners();
@@ -32,7 +33,7 @@ class SearchViewModel extends ChangeNotifier {
     if (notify) notifyListeners();
   }
 
-  void appendSearchProductsUseCase(List<Product> products) {
+  void appendSearchProductsUseCase(List<ProductDetail> products) {
     if (_searchProductsUseCase.data != null) {
       _searchProductsUseCase.data!.addAll(products);
     } else {

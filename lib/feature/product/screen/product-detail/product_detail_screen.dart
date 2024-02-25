@@ -1,7 +1,7 @@
 import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/auth/auth_view_model.dart';
 import 'package:flamingo/feature/auth/screen/login/login_screen.dart';
-import 'package:flamingo/feature/product/data/model/product.dart';
+import 'package:flamingo/feature/product/data/model/product_detail.dart';
 import 'package:flamingo/feature/product/screen/product-detail/product_detail_app_bar_view_model.dart';
 import 'package:flamingo/feature/product/screen/product-detail/product_detail_view_model.dart';
 import 'package:flamingo/feature/product/screen/product-detail/snippet_add_to_cart_summary_bottom_sheet.dart';
@@ -31,7 +31,7 @@ class ProductDetailScreen extends StatefulWidget {
     this.advertisementId,
   });
 
-  final Product? product;
+  final ProductDetail? product;
   final String productId;
   final String title;
   final LeadSource? leadSource;

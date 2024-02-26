@@ -82,12 +82,12 @@ class SearchViewModel extends ChangeNotifier {
 
       final response =
           await _searchRepository.searchProducts(SearchRequest(key: text));
-      _logSearchActivity(response.rows);
       if (isNewSearch) {
         setSearchProductsUseCase(Response.complete(response.rows));
       } else {
         appendSearchProductsUseCase(response.rows);
       }
+      _logSearchActivity(response.rows);
     } catch (exception) {
       setSearchProductsUseCase(Response.error(exception));
     }

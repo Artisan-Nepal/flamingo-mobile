@@ -1,11 +1,13 @@
 import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/address/data/model/address.dart';
 import 'package:flamingo/feature/cart/data/model/cart_item.dart';
+import 'package:flamingo/feature/customer-activity/create_activity_view_model.dart';
 import 'package:flamingo/feature/customer-activity/customer_activity_view_model.dart';
 import 'package:flamingo/feature/order/data/model/create_order_request.dart';
 import 'package:flamingo/feature/order/data/model/payment_method.dart';
 import 'package:flamingo/feature/order/data/model/shipping_method.dart';
 import 'package:flamingo/feature/order/data/order_repository.dart';
+import 'package:flamingo/shared/constant/user_activity_type.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -96,9 +98,19 @@ class PlaceOrderViewModel extends ChangeNotifier {
         ),
       );
       locator<CustomerActivityViewModel>().getCustomerCountInfo();
+      _logOrderActvity();
       setPlaceOrderUseCase(Response.complete(null));
     } catch (exception) {
       setPlaceOrderUseCase(Response.error(exception));
+    }
+  }
+
+  _logOrderActvity() async {
+    for (CartItem item in _items) {
+      await locator<CreateActivityViewModel>().createUserActivity(
+        productId: item.product.id,
+        activityType: UserActivityType.orderProduct,
+      );
     }
   }
 

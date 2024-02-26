@@ -47,7 +47,7 @@ class ProductWidgetShimmer extends StatelessWidget {
       width: double.infinity,
       decoration: BoxDecoration(
         color:
-            isLightMode(context) ? AppColors.grayLight : AppColors.grayDarker,
+            isLightMode(context) ? Colors.grey.shade300 : AppColors.grayDarker,
         borderRadius: BorderRadius.circular(6),
       ),
       child: ClipRRect(

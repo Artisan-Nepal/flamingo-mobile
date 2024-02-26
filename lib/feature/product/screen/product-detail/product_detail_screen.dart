@@ -9,12 +9,15 @@ import 'package:flamingo/feature/product/screen/product-detail/snippet_color_sel
 import 'package:flamingo/feature/product/screen/product-detail/snippet_product_detail_app_bar.dart';
 import 'package:flamingo/feature/product/screen/product-detail/snippet_product_detail_images.dart';
 import 'package:flamingo/feature/product/screen/product-detail/snippet_size_selection_bottom_sheet.dart';
+import 'package:flamingo/feature/product/screen/product-listing/min_product_listing_view_model.dart';
+import 'package:flamingo/feature/product/screen/product-listing/snippet_product_listing.dart';
 import 'package:flamingo/shared/enum/lead_source.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/error/default_error_widget.dart';
 import 'package:flamingo/widget/list-tile/list_tile.dart';
 import 'package:flamingo/widget/loader/default_screen_loader_widget.dart';
 import 'package:flamingo/widget/loader/full_screen_loader.dart';
+import 'package:flamingo/widget/shimmer/shimmer.dart';
 import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -46,6 +49,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   final _viewModel = locator<ProductDetailViewModel>();
   final _appBarViewModel = locator<ProductDetailAppBarViewModel>();
+  final _relatedProductsViewModel = locator<MinProductListingViewModel>();
 
   @override
   void initState() {
@@ -56,6 +60,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     _scrollController.addListener(() {
       _appBarViewModel.setScrollOffset(_scrollController.offset);
     });
+
+    _relatedProductsViewModel.getRelatedProducts(widget.productId);
   }
 
   @override
@@ -68,146 +74,205 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         ChangeNotifierProvider(
           create: (context) => _viewModel,
         ),
+        ChangeNotifierProvider(
+          create: (context) => _relatedProductsViewModel,
+        ),
       ],
       child: Consumer<ProductDetailViewModel>(
         builder: (context, viewModel, child) {
-          return DefaultScreen(
-            scrollable: false,
-            padding: EdgeInsets.zero,
-            needAppBar: false,
-            statusBarIconBrightness: Brightness.dark,
-            child: viewModel.productUseCase.isLoading
-                ? const DefaultScreenLoaderWidget()
-                : viewModel.productUseCase.hasError
-                    ? DefaultErrorWidget(
-                        errorMessage: viewModel.productUseCase.exception!,
-                      )
-                    : Stack(
-                        children: [
-                          CustomScrollView(
-                            controller: _scrollController,
-                            slivers: [
-                              SliverToBoxAdapter(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    SnippetProductDetailImages(
-                                      vendor:
-                                          viewModel.productUseCase.data!.vendor,
-                                      title:
-                                          viewModel.productUseCase.data!.title,
-                                      stories: viewModel
-                                          .productUseCase.data!.stories,
-                                      productId:
-                                          viewModel.productUseCase.data!.id,
-                                      images: getDetailImages(
-                                          viewModel.productUseCase.data!),
-                                      advertisementId: widget.advertisementId,
-                                      leadSource: widget.leadSource,
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal:
-                                              Dimens.spacingSizeDefault),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          const VerticalSpaceWidget(
-                                              height:
-                                                  Dimens.spacingSizeDefault),
-
-                                          // Product information
-                                          ..._buildProductInformation(
-                                              viewModel),
-                                          const VerticalSpaceWidget(
-                                              height:
-                                                  Dimens.spacingSizeDefault),
-
-                                          // Description
-                                          Text(
-                                              viewModel
-                                                  .productUseCase.data!.body,
-                                              style: textTheme(context)
-                                                  .bodyMedium!),
-                                          const VerticalSpaceWidget(
-                                              height:
-                                                  Dimens.spacingSizeDefault),
-
-                                          // Color
-                                          _buildAttributeSelection(
-                                            name: 'Color',
-                                            value: viewModel.selectedColor.name,
-                                            onPressed: () {
-                                              showCupertinoModalPopup(
-                                                context: context,
-                                                builder: (context) => Wrap(
-                                                  children: [
-                                                    ChangeNotifierProvider
-                                                        .value(
-                                                      value: _viewModel,
-                                                      child:
-                                                          const SnippetColorSelectionBottomSheet(),
-                                                    )
-                                                  ],
-                                                ),
-                                              );
-                                            },
-                                          ),
-                                          const SizedBox(
-                                              height:
-                                                  Dimens.spacingSizeDefault),
-
-                                          // Size
-                                          _buildAttributeSelection(
-                                            name: 'Size',
-                                            value: viewModel
-                                                .selectedSizeOption.value,
-                                            onPressed: () {
-                                              showCupertinoModalPopup(
-                                                context: context,
-                                                builder: (context) => Wrap(
-                                                  children: [
-                                                    ChangeNotifierProvider
-                                                        .value(
-                                                      value: _viewModel,
-                                                      child:
-                                                          const SnippetSizeSelectionBottomSheet(),
-                                                    )
-                                                  ],
-                                                ),
-                                              );
-                                            },
-                                          ),
-                                          const SizedBox(
-                                              height:
-                                                  Dimens.spacingSizeDefault),
-
-                                          ..._buildExpansionTiles(viewModel),
-                                          VerticalSpaceWidget(
-                                              height:
-                                                  Dimens.spacingSizeDefault),
-                                          _buildContactUs(),
-                                          const SizedBox(
-                                              height: Dimens.spacing_100),
-                                        ],
+          return Builder(builder: (context) {
+            return DefaultScreen(
+              scrollable: false,
+              padding: EdgeInsets.zero,
+              needAppBar: false,
+              statusBarIconBrightness: Brightness.dark,
+              child: viewModel.productUseCase.isLoading
+                  ? const DefaultScreenLoaderWidget()
+                  : viewModel.productUseCase.hasError
+                      ? DefaultErrorWidget(
+                          errorMessage: viewModel.productUseCase.exception!,
+                        )
+                      : Stack(
+                          children: [
+                            CustomScrollView(
+                              controller: _scrollController,
+                              slivers: [
+                                SliverToBoxAdapter(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      SnippetProductDetailImages(
+                                        vendor: viewModel
+                                            .productUseCase.data!.vendor,
+                                        title: viewModel
+                                            .productUseCase.data!.title,
+                                        stories: viewModel
+                                            .productUseCase.data!.stories,
+                                        productId:
+                                            viewModel.productUseCase.data!.id,
+                                        images: getDetailImages(
+                                            viewModel.productUseCase.data!),
+                                        advertisementId: widget.advertisementId,
+                                        leadSource: widget.leadSource,
                                       ),
-                                    ),
-                                  ],
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal:
+                                                Dimens.spacingSizeDefault),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            const VerticalSpaceWidget(
+                                                height:
+                                                    Dimens.spacingSizeDefault),
+
+                                            // Product information
+                                            ..._buildProductInformation(
+                                                viewModel),
+                                            const VerticalSpaceWidget(
+                                                height:
+                                                    Dimens.spacingSizeDefault),
+
+                                            // Description
+                                            Text(
+                                                viewModel
+                                                    .productUseCase.data!.body,
+                                                style: textTheme(context)
+                                                    .bodyMedium!),
+                                            const VerticalSpaceWidget(
+                                                height:
+                                                    Dimens.spacingSizeDefault),
+
+                                            // Color
+                                            _buildAttributeSelection(
+                                              name: 'Color',
+                                              value:
+                                                  viewModel.selectedColor.name,
+                                              onPressed: () {
+                                                showCupertinoModalPopup(
+                                                  context: context,
+                                                  builder: (context) => Wrap(
+                                                    children: [
+                                                      ChangeNotifierProvider
+                                                          .value(
+                                                        value: _viewModel,
+                                                        child:
+                                                            const SnippetColorSelectionBottomSheet(),
+                                                      )
+                                                    ],
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                            const SizedBox(
+                                                height:
+                                                    Dimens.spacingSizeDefault),
+
+                                            // Size
+                                            _buildAttributeSelection(
+                                              name: 'Size',
+                                              value: viewModel
+                                                  .selectedSizeOption.value,
+                                              onPressed: () {
+                                                showCupertinoModalPopup(
+                                                  context: context,
+                                                  builder: (context) => Wrap(
+                                                    children: [
+                                                      ChangeNotifierProvider
+                                                          .value(
+                                                        value: _viewModel,
+                                                        child:
+                                                            const SnippetSizeSelectionBottomSheet(),
+                                                      )
+                                                    ],
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                            const SizedBox(
+                                                height:
+                                                    Dimens.spacingSizeDefault),
+
+                                            ..._buildExpansionTiles(viewModel),
+                                            VerticalSpaceWidget(
+                                                height:
+                                                    Dimens.spacingSizeDefault),
+                                            _buildContactUs(),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          SnippetProductDetailAppBar(
-                            title: widget.title,
-                          ),
-                          _buildAddToBagButton(viewModel),
-                        ],
-                      ),
-          );
+                                SliverToBoxAdapter(
+                                  child:
+                                      const SizedBox(height: Dimens.spacing_30),
+                                ),
+                                _buildRelatedProductsHeader(context),
+                                _buildRelatedProducts(context),
+                                SliverToBoxAdapter(
+                                  child: const SizedBox(
+                                    height: Dimens.spacing_64,
+                                  ),
+                                )
+                              ],
+                            ),
+                            SnippetProductDetailAppBar(
+                              title: widget.title,
+                            ),
+                            _buildAddToBagButton(viewModel),
+                          ],
+                        ),
+            );
+          });
         },
       ),
     );
+  }
+
+  Widget _buildRelatedProductsHeader(BuildContext context) {
+    final viewModel = Provider.of<MinProductListingViewModel>(context);
+    final products = viewModel.getProductsUseCase.data ?? [];
+    if (viewModel.getProductsUseCase.hasCompleted && products.isNotEmpty)
+      return SliverToBoxAdapter(
+          child: Padding(
+        padding: const EdgeInsets.only(
+          left: Dimens.spacingSizeDefault,
+          bottom: Dimens.spacingSizeLarge,
+        ),
+        child: Text(
+          'Recommended for you',
+          style: textTheme(context).bodyLarge,
+        ),
+      ));
+    return SliverToBoxAdapter(child: const SizedBox());
+  }
+
+  Widget _buildRelatedProducts(BuildContext context) {
+    final viewModel = Provider.of<MinProductListingViewModel>(context);
+    if (viewModel.getProductsUseCase.isLoading)
+      return SliverToBoxAdapter(
+        child: Padding(
+          padding:
+              const EdgeInsets.symmetric(horizontal: Dimens.spacingSizeDefault),
+          child: const ProductViewShimmerWidget(
+            physics: const NeverScrollableScrollPhysics(),
+          ),
+        ),
+      );
+    final products = viewModel.getProductsUseCase.data ?? [];
+    if (viewModel.getProductsUseCase.hasCompleted && products.isNotEmpty) {
+      return SnippetProductListing(
+        useSliver: true,
+        padding: 0,
+        needFavIcon: false,
+        products: products,
+        shrinkWrap: false,
+      );
+    }
+    return SliverToBoxAdapter(child: const SizedBox());
   }
 
   List<Widget> _buildExpansionTiles(ProductDetailViewModel viewModel) {

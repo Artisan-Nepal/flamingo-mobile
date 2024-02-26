@@ -18,6 +18,7 @@ class ProductWidget extends StatelessWidget {
     this.imageHeight,
     this.leadSource,
     this.advertisementId,
+    this.onTap,
   }) : super(key: key);
 
   final int nameMaxLines;
@@ -26,6 +27,7 @@ class ProductWidget extends StatelessWidget {
   final double? imageHeight;
   final LeadSource? leadSource;
   final String? advertisementId;
+  final void Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +35,7 @@ class ProductWidget extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
+        if (onTap != null) onTap!();
         NavigationHelper.push(
           context,
           ProductDetailScreen(
@@ -69,7 +72,7 @@ class ProductWidget extends StatelessWidget {
                       placeHolder: ImageConstants.imagePlaceholder,
                     ),
                   ),
-                  if (authViewModel.isLoggedIn)
+                  if (authViewModel.isLoggedIn && needFavIcon)
                     Positioned(
                       top: 10,
                       right: 10,

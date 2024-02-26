@@ -15,6 +15,7 @@ class SnippetProductListing extends StatelessWidget {
     this.padding = Dimens.spacingSizeDefault,
     this.leadSource,
     this.advertisementId,
+    this.onProductTap,
   });
 
   final List<Product> products;
@@ -24,6 +25,7 @@ class SnippetProductListing extends StatelessWidget {
   final LeadSource? leadSource;
   final String? advertisementId;
   final bool needFavIcon;
+  final void Function(Product product)? onProductTap;
 
   @override
   Widget build(BuildContext context) {
@@ -36,11 +38,7 @@ class SnippetProductListing extends StatelessWidget {
                 left: index % 2 == 0 ? padding : 0,
                 right: index % 2 != 0 ? padding : 0,
               ),
-              child: ProductWidget(
-                payload: products[index],
-                advertisementId: advertisementId,
-                leadSource: leadSource,
-              ),
+              child: _buildProductWidget(products[index]),
             );
           },
           childCount: products.length,
@@ -61,11 +59,21 @@ class SnippetProductListing extends StatelessWidget {
         crossAxisCount: 2,
       ),
       itemBuilder: (context, index) {
-        return ProductWidget(
-          payload: products[index],
-          advertisementId: advertisementId,
-          leadSource: leadSource,
-        );
+        return _buildProductWidget(products[index]);
+      },
+    );
+  }
+
+  Widget _buildProductWidget(Product product) {
+    return ProductWidget(
+      payload: product,
+      advertisementId: advertisementId,
+      leadSource: leadSource,
+      needFavIcon: needFavIcon,
+      onTap: () {
+        if (onProductTap != null) {
+          onProductTap!(product);
+        }
       },
     );
   }

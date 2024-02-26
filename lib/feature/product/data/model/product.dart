@@ -7,6 +7,7 @@ class Product {
   final int quantity;
   final int price;
   final String vendor;
+  final String? vendorId;
   final ProductDetail? product;
 
   Product({
@@ -16,6 +17,7 @@ class Product {
     required this.price,
     required this.image,
     required this.vendor,
+    this.vendorId,
     this.product,
   });
 
@@ -27,6 +29,7 @@ class Product {
       quantity: json['quantity'],
       price: json['price'],
       vendor: json['vendorStoreName'],
+      vendorId: json['vendorId'],
     );
   }
 

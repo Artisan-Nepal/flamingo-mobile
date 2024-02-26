@@ -101,6 +101,7 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                                     )
                                   : Padding(
                                       padding: EdgeInsets.symmetric(
+                                        vertical: Dimens.spacingSizeSmall,
                                         horizontal: Dimens.spacingSizeDefault,
                                       ),
                                       child: SnippetProductListing(

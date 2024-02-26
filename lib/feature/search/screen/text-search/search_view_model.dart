@@ -1,6 +1,9 @@
+import 'package:flamingo/di/di.dart';
+import 'package:flamingo/feature/customer-activity/create_activity_view_model.dart';
 import 'package:flamingo/feature/product/data/model/product_detail.dart';
 import 'package:flamingo/feature/search/data/model/search_request.dart';
 import 'package:flamingo/feature/search/data/search_repository.dart';
+import 'package:flamingo/shared/constant/user_activity_type.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flutter/material.dart';
 
@@ -79,7 +82,7 @@ class SearchViewModel extends ChangeNotifier {
 
       final response =
           await _searchRepository.searchProducts(SearchRequest(key: text));
-
+      _logSearchActivity(response.rows);
       if (isNewSearch) {
         setSearchProductsUseCase(Response.complete(response.rows));
       } else {
@@ -87,6 +90,24 @@ class SearchViewModel extends ChangeNotifier {
       }
     } catch (exception) {
       setSearchProductsUseCase(Response.error(exception));
+    }
+  }
+
+  _logSearchActivity(List<ProductDetail> productList) async {
+    List<ProductDetail> productsToLog = [];
+
+    if (productList.length < 3) {
+      productsToLog.addAll([...productList]);
+    } else {
+      productsToLog.addAll(productList.sublist(0, 3));
+    }
+
+    for (ProductDetail product in productsToLog) {
+      await locator<CreateActivityViewModel>().createUserActivity(
+        vendorId: product.vendor.id,
+        productId: product.id,
+        activityType: UserActivityType.searchProduct,
+      );
     }
   }
 

@@ -4,6 +4,7 @@ import 'package:flamingo/data/data.dart';
 import 'package:flamingo/feature/feature.dart';
 import 'package:flamingo/feature/product/data/local/product_local.dart';
 import 'package:flamingo/feature/product/data/model/get_product_request.dart';
+import 'package:flamingo/feature/product/data/model/product.dart';
 import 'package:flamingo/feature/product/data/model/product_detail.dart';
 import 'package:flamingo/feature/product/data/product_repository.dart';
 import 'package:flamingo/feature/product/data/remote/product_remote.dart';
@@ -47,5 +48,16 @@ class ProductRepositoryImpl implements ProductRepository {
   @override
   Future<FetchResponse<ProductDetail>> getLatestProducts() async {
     return await _productRemote.getLatestProducts();
+  }
+
+  @override
+  Future<List<Product>> getRelatedProducts(String productId) async {
+    return await _productRemote.getRelatedProducts(productId);
+  }
+
+  @override
+  Future<List<Product>> getUserRecommendations() async {
+    final userId = (await _authRepository.getUserLocal())!.userId;
+    return await _productRemote.getUserRecommendations(userId);
   }
 }

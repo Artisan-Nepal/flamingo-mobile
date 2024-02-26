@@ -1,6 +1,6 @@
 class ApiUrls {
-  // static String baseUrl = 'https://api.flamingo.padmashreemedisales.com.np/api';
-  static String baseUrl = 'http://10.0.2.2:8848/api';
+  static String baseUrl = 'https://api.flamingo.padmashreemedisales.com.np/api';
+  // static String baseUrl = 'http://10.0.2.2:8848/api';
 
   // AUTH
   static String sendLoginOtp = '/auth/send-otp';
@@ -40,6 +40,9 @@ class ApiUrls {
   static String trackOrder = '/orders/:id/track';
   static String likedVendorStory = '/product-story/liked-vendor';
   static String viewStory = '/product-story/:id/view';
-  static String getProductRecommendations = '/recommender/get_recommendations';
+  static String getRelatedProducts =
+      '/recommender/products/:productId/related_products';
   static String imageSearch = '/recommender/image_search';
+  static String getUserRecommendations =
+      '/recommender/users/:userId/recommend_products';
 }

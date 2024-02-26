@@ -5,7 +5,7 @@ import 'package:flamingo/feature/dashboard/screen/home/snippet_home_advertisemen
 import 'package:flamingo/feature/dashboard/screen/home/snippet_home_screen_story.dart';
 import 'package:flamingo/feature/dashboard/screen/home/snippet_home_products.dart';
 import 'package:flamingo/feature/product-story/product_story_view_model.dart';
-import 'package:flamingo/feature/product/data/model/product.dart';
+import 'package:flamingo/feature/product/screen/product-listing/min_product_listing_view_model.dart';
 import 'package:flamingo/feature/product/screen/product-listing/product_listing_view_model.dart';
 import 'package:flamingo/feature/product/screen/product-listing/snippet_product_listing.dart';
 import 'package:flamingo/feature/search/screen/text-search/search_screen.dart';
@@ -31,7 +31,8 @@ class _HomeScreenState extends State<HomeScreen>
       locator<AdvertisementListingViewModel>();
   final _latestProductListingViewModel = locator<ProductListingViewModel>();
   final _favVendorProductListingViewModel = locator<ProductListingViewModel>();
-  final _allProductListingViewModel = locator<ProductListingViewModel>();
+  final _recommendedProductListingViewModel =
+      locator<MinProductListingViewModel>();
   final _storyViewModel = locator<ProductStoryViewModel>();
 
   @override
@@ -43,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen>
   getData() async {
     _latestProductListingViewModel.getProducts(productType: ProductType.LATEST);
 
-    _allProductListingViewModel.getProducts();
+    _recommendedProductListingViewModel.getUserRecommendation();
     _advertisementListingViewModel.getAdvertisements();
     _storyViewModel.getLikedVendorStories();
 
@@ -67,7 +68,7 @@ class _HomeScreenState extends State<HomeScreen>
           create: (context) => _storyViewModel,
         ),
         ChangeNotifierProvider(
-          create: (context) => _allProductListingViewModel,
+          create: (context) => _recommendedProductListingViewModel,
         ),
       ],
       child: Scaffold(
@@ -170,42 +171,36 @@ class _HomeScreenState extends State<HomeScreen>
 
                     // All Products
                     SliverToBoxAdapter(
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                            left: Dimens.spacingSizeSmall,
-                            bottom: Dimens.spacingSizeDefault),
-                        child: Text(
-                          'FOR YOU',
-                          style: textTheme(context).bodyLarge!.copyWith(
-                                fontWeight: FontWeight.w500,
-                              ),
-                        ),
-                      ),
+                      child: Builder(builder: (context) {
+                        final _viewModel =
+                            Provider.of<MinProductListingViewModel>(context);
+                        if (_viewModel.getProductsUseCase.hasCompleted &&
+                            (_viewModel.getProductsUseCase.data ?? [])
+                                .isNotEmpty) {
+                          return Padding(
+                            padding: const EdgeInsets.only(
+                                left: Dimens.spacingSizeSmall,
+                                bottom: Dimens.spacingSizeDefault),
+                            child: Text(
+                              'FOR YOU',
+                              style: textTheme(context).bodyLarge!.copyWith(
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                            ),
+                          );
+                        }
+
+                        return SizedBox();
+                      }),
                     ),
                     SnippetProductListing(
-                      useSliver: true,
-                      padding: 0,
-                      products: (Provider.of<ProductListingViewModel>(context)
-                                  .getProductsUseCase
-                                  .data
-                                  ?.rows ??
-                              [])
-                          .map(
-                            (product) => Product(
-                              quantity: product.variants.first.quantityInStock,
-                              image: extractProductDefaultImage(
-                                product.images,
-                                product.variants,
-                              ),
-                              price: product.variants.first.price,
-                              productId: product.id,
-                              title: product.title,
-                              vendor: product.vendor.storeName,
-                              product: product,
-                            ),
-                          )
-                          .toList(),
-                    ),
+                        useSliver: true,
+                        padding: 0,
+                        products:
+                            (Provider.of<MinProductListingViewModel>(context)
+                                    .getProductsUseCase
+                                    .data ??
+                                [])),
                     SliverToBoxAdapter(
                       child: VerticalSpaceWidget(
                         height: Dimens.spacingSizeDefault,

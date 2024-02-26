@@ -9,7 +9,6 @@ import 'package:flamingo/widget/error/default_error_widget.dart';
 import 'package:flamingo/widget/loader/loader.dart';
 import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class ImageSearchScreen extends StatefulWidget {
@@ -95,6 +94,7 @@ class _ImageSearchScreenState extends State<ImageSearchScreen> {
                           SnippetProductListing(
                             products: products,
                             useSliver: true,
+                            needFavIcon: false,
                             padding: Dimens.spacingSizeSmall,
                           ),
                         ],

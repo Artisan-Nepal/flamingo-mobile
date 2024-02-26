@@ -9,6 +9,7 @@ class SnippetProductListing extends StatelessWidget {
   const SnippetProductListing({
     super.key,
     required this.products,
+    this.needFavIcon = true,
     this.shrinkWrap = true,
     this.useSliver = false,
     this.padding = Dimens.spacingSizeDefault,
@@ -22,6 +23,7 @@ class SnippetProductListing extends StatelessWidget {
   final double padding;
   final LeadSource? leadSource;
   final String? advertisementId;
+  final bool needFavIcon;
 
   @override
   Widget build(BuildContext context) {

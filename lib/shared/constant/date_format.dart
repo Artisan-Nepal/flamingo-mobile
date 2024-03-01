@@ -5,4 +5,5 @@ class DateFormatConstant {
   static const String hma = 'hh:mm a';
   static const String mmddyy = 'MM/dd/yyyy';
   static const String yyyymmdd = 'yyyy-MM-dd';
+  static const String dateTimeDefault = 'MMM dd, yyyy, hh:mm a';
 }

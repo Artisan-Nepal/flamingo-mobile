@@ -84,7 +84,8 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
                                   ? ""
                                   : formatDate(
                                       statusLog.timestamp,
-                                      format: DateFormatConstant.fullDate,
+                                      format:
+                                          DateFormatConstant.dateTimeDefault,
                                     ),
                               color: themedPrimaryColor(context),
                               isLastItem: isLastItem,

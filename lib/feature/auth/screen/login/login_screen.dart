@@ -99,7 +99,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         onPressed: () {
                           _onContinueAsGuest(viewModel);
                         },
-                        isLoading: viewModel.sendOtpUseCase.isLoading,
+                        enabled: !viewModel.sendOtpUseCase.isLoading,
                       ),
                     ]
                   ],

@@ -272,41 +272,39 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   List<Widget> _buildExpansionTiles(ProductDetailViewModel viewModel) {
     final product = viewModel.productUseCase.data!;
     return [
-      if (product.details != null && product.details!.isNotEmpty) ...[
-        ExpansionTileWidget(
-          initiallyExpanded: true,
-          title: Text(
-            'THE DETAILS',
-            style: textTheme(context).bodyMedium,
+      ExpansionTileWidget(
+        initiallyExpanded: true,
+        title: Text(
+          'THE DETAILS',
+          style: textTheme(context).bodyMedium,
+        ),
+        children: <Widget>[
+          Text(
+            'Description',
+            style: TextStyle(
+              color: AppColors.grayMain,
+            ),
           ),
-          children: <Widget>[
+          VerticalSpaceWidget(height: Dimens.spacingSizeSmall),
+          Text(viewModel.productUseCase.data!.body,
+              style: textTheme(context).bodyMedium!),
+          if (viewModel.productUseCase.data!.details != null) ...[
+            VerticalSpaceWidget(height: Dimens.spacingSizeLarge),
             Text(
-              'Description',
+              'Highlights',
               style: TextStyle(
                 color: AppColors.grayMain,
               ),
             ),
-            VerticalSpaceWidget(height: Dimens.spacingSizeSmall),
-            Text(viewModel.productUseCase.data!.body,
-                style: textTheme(context).bodyMedium!),
-            if (viewModel.productUseCase.data!.details != null) ...[
-              VerticalSpaceWidget(height: Dimens.spacingSizeLarge),
-              Text(
-                'Highlights',
-                style: TextStyle(
-                  color: AppColors.grayMain,
-                ),
-              ),
-              Html(
-                data: product.details,
-              ),
-            ]
-          ],
-        ),
-        Divider(
-          color: AppColors.grayLight,
-        )
-      ],
+            Html(
+              data: product.details,
+            ),
+          ]
+        ],
+      ),
+      Divider(
+        color: AppColors.grayLight,
+      ),
       if (product.vendor.description != null &&
           product.vendor.description!.isNotEmpty) ...[
         ExpansionTileWidget(

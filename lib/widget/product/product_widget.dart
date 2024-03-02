@@ -96,7 +96,7 @@ class ProductWidget extends StatelessWidget {
                       payload.vendor,
                       textOverflow: TextOverflow.ellipsis,
                       style: textTheme(context).bodyMedium!.copyWith(
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w800,
                           ),
                     ),
                     // const SizedBox(height: Dimens.spacingSizeExtraSmall),
@@ -106,7 +106,6 @@ class ProductWidget extends StatelessWidget {
                       textOverflow: TextOverflow.ellipsis,
                       style: textTheme(context).bodyMedium!,
                     ),
-                    const SizedBox(height: Dimens.spacingSizeExtraSmall),
                     TextWidget(
                       'Rs. ${formatNepaliCurrency(payload.price)}',
                       style: textTheme(context).labelLarge!,

@@ -32,4 +32,23 @@ class VendorListingViewModel extends ChangeNotifier {
       if (!isRefresh) setVendorUseCase(Response.error(exception));
     }
   }
+
+  List<Vendor> get favoriteBrands {
+    final allVendors = _vendorUseCase.data?.rows ?? [];
+
+    return allVendors
+        .where((element) =>
+            locator<FavouriteVendorViewModel>().isFavourited(element.id))
+        .toList()
+        .sublist(0, 3);
+  }
+
+  List<Vendor> get nonFavoriteBrands {
+    final allVendors = _vendorUseCase.data?.rows ?? [];
+
+    return allVendors
+        .where(
+            (element) => !favoriteBrands.map((e) => e.id).contains(element.id))
+        .toList();
+  }
 }

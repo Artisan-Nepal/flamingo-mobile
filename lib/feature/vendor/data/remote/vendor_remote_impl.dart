@@ -11,7 +11,8 @@ class VendorRemoteImpl implements VendorRemote {
 
   @override
   Future<FetchResponse<Vendor>> getVendors() async {
-    final apiResponse = await _apiClient.get(ApiUrls.vendors);
+    final apiResponse =
+        await _apiClient.get(ApiUrls.vendors, queryParams: {'limit': 1000});
     return FetchResponse.fromJson(
       apiResponse.data,
       Vendor.fromJsonList,

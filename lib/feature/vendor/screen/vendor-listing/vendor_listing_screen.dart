@@ -1,5 +1,6 @@
 import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/auth/auth_view_model.dart';
+import 'package:flamingo/feature/vendor/data/model/vendor.dart';
 import 'package:flamingo/feature/vendor/screen/vendor-profile/vendor_profile_screen.dart';
 import 'package:flamingo/feature/vendor/vendor_listing_view_model.dart';
 import 'package:flamingo/shared/shared.dart';
@@ -28,7 +29,6 @@ class _VendorListingScreenState extends State<VendorListingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final authViewModel = Provider.of<AuthViewModel>(context);
     return ChangeNotifierProvider(
       create: (context) => _viewModel,
       child: TitledScreen(
@@ -41,53 +41,96 @@ class _VendorListingScreenState extends State<VendorListingScreen> {
             if (!viewModel.vendorUseCase.hasCompleted) {
               return const DefaultScreenLoaderWidget();
             }
-            final vendors = viewModel.vendorUseCase.data?.rows ?? [];
             return RefreshIndicator.adaptive(
               onRefresh: () async {
                 await _viewModel.getVendors(isRefresh: true);
               },
-              child: ListView.builder(
-                itemCount: vendors.length,
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      NavigationHelper.push(
-                        context,
-                        VendorProfileScreen(
-                          vendor: vendors[index],
-                        ),
-                      );
-                    },
-                    child: Container(
-                      height: 70,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: Dimens.spacingSizeDefault,
-                      ),
-                      margin: const EdgeInsets.only(
-                          bottom: Dimens.spacingSizeDefault),
-                      color: AppColors.grayLighter,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            vendors[index].storeName,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          if (authViewModel.isLoggedIn)
-                            FavVendorButtonWidget(vendorId: vendors[index].id)
-                        ],
-                      ),
+              child: CustomScrollView(
+                slivers: [
+                  SliverToBoxAdapter(
+                      child: Padding(
+                    padding: const EdgeInsets.only(
+                        bottom: Dimens.spacingSizeDefault),
+                    child: Text(
+                      'Your Favorite Brands',
+                      style: textTheme(context).bodyLarge,
                     ),
-                  );
-                },
+                  )),
+                  SnippetVendorListing(
+                    vendors: _viewModel.favoriteBrands,
+                  ),
+                  SliverToBoxAdapter(
+                      child: Padding(
+                    padding: const EdgeInsets.only(
+                        top: Dimens.spacingSizeDefault,
+                        bottom: Dimens.spacingSizeDefault),
+                    child: Text(
+                      'Discover Brands',
+                      style: textTheme(context).bodyLarge,
+                    ),
+                  )),
+                  SnippetVendorListing(
+                    vendors: _viewModel.nonFavoriteBrands,
+                  ),
+                ],
               ),
             );
           },
         ),
       ),
+    );
+  }
+}
+
+class SnippetVendorListing extends StatelessWidget {
+  const SnippetVendorListing({
+    super.key,
+    required this.vendors,
+  });
+
+  final List<Vendor> vendors;
+
+  @override
+  Widget build(BuildContext context) {
+    final authViewModel = Provider.of<AuthViewModel>(context);
+    return SliverList.builder(
+      itemCount: vendors.length,
+      itemBuilder: (context, index) {
+        return GestureDetector(
+          onTap: () {
+            NavigationHelper.push(
+              context,
+              VendorProfileScreen(
+                vendor: vendors[index],
+              ),
+            );
+          },
+          child: Container(
+            height: 70,
+            padding: const EdgeInsets.symmetric(
+              horizontal: Dimens.spacingSizeDefault,
+            ),
+            margin: const EdgeInsets.only(bottom: Dimens.spacingSizeDefault),
+            color: AppColors.grayLighter,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  vendors[index].storeName,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                if (authViewModel.isLoggedIn)
+                  FavVendorButtonWidget(
+                    vendorId: vendors[index].id,
+                  )
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

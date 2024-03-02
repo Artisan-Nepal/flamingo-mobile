@@ -10,6 +10,7 @@ import 'package:flamingo/shared/constant/user_activity_type.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/error/default_error_widget.dart';
 import 'package:flamingo/widget/fav-button/fav_vendor_button_widget.dart';
+import 'package:flamingo/widget/image/cached_network_image_widget.dart';
 import 'package:flamingo/widget/shimmer/shimmer.dart';
 import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/cupertino.dart';
@@ -90,16 +91,20 @@ class _VendorProfileScreenState extends State<VendorProfileScreen> {
                   SliverToBoxAdapter(
                     child: Column(
                       children: [
-                        // ClipOval(
-                        //   child: CachedNetworkImageWidget(
-                        //     placeHolder:
-                        //         ImageConstants.displayPicturePlaceHolder,
-                        //     image: widget.vendor.displayImage?.url ?? "",
-                        //     fit: BoxFit.cover,
-                        //     height: SizeConfig.screenHeight * 0.1,
-                        //     width: SizeConfig.screenHeight * 0.1,
-                        //   ),
-                        // ),
+                        if (widget.vendor.displayImage != null) ...[
+                          VerticalSpaceWidget(
+                              height: Dimens.spacingSizeDefault),
+                          ClipOval(
+                            child: CachedNetworkImageWidget(
+                              placeHolder:
+                                  ImageConstants.displayPicturePlaceHolder,
+                              image: widget.vendor.displayImage?.url ?? "",
+                              fit: BoxFit.cover,
+                              height: SizeConfig.screenHeight * 0.1,
+                              width: SizeConfig.screenHeight * 0.1,
+                            ),
+                          ),
+                        ],
                         VerticalSpaceWidget(height: Dimens.spacingSizeDefault),
                         FavVendorButtonWidget(
                           vendorId: widget.vendor.id,

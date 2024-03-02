@@ -85,8 +85,9 @@ List<ProductDetail> sortProductsHelper({
 }
 
 String formatNepaliCurrency(int amount) {
-  final formatCurrency = NumberFormat.currency(locale: 'en_NP', symbol: '');
-  final amountInRupees = amount / 100;
+  final formatCurrency =
+      NumberFormat.currency(locale: 'en_NP', symbol: '', decimalDigits: 0);
+  final amountInRupees = amount ~/ 100;
   return formatCurrency.format(amountInRupees);
 }
 

@@ -152,6 +152,7 @@
 
 import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/auth/auth.dart';
+import 'package:flamingo/feature/dashboard/dashboard.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/material.dart';
@@ -167,6 +168,7 @@ class OnBoardingScreen extends StatefulWidget {
 
 class _OnBoardingScreenState extends State<OnBoardingScreen> {
   OnboardingViewModel _viewModel = locator<OnboardingViewModel>();
+  LoginViewModel _loginViewModel = locator<LoginViewModel>();
 
   @override
   Widget build(BuildContext context) {
@@ -175,8 +177,15 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
         statusBarColor: AppColors.transparent,
         statusBarIconBrightness: Brightness.dark,
       ),
-      child: ChangeNotifierProvider(
-        create: (context) => _viewModel,
+      child: MultiProvider(
+        providers: [
+          ChangeNotifierProvider(
+            create: (context) => _viewModel,
+          ),
+          ChangeNotifierProvider(
+            create: (context) => _loginViewModel,
+          ),
+        ],
         child:
             Consumer<OnboardingViewModel>(builder: (context, viewModel, child) {
           return Scaffold(
@@ -206,15 +215,38 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                           'Experience the quickest way to shop, and immerse yourself into the current fashion trends.',
                         ),
                         VerticalSpaceWidget(height: Dimens.spacingSizeDefault),
-                        OutlinedButtonWidget(
-                          label: 'Get started',
-                          onPressed: () {
-                            viewModel.onboard();
-                            NavigationHelper.pushAndReplaceAll(
-                              context,
-                              LoginScreen(),
-                            );
-                          },
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Consumer<LoginViewModel>(
+                                  builder: (context, loginViewModel, child) {
+                                return OutlinedButtonWidget(
+                                  label: 'Continue as guest',
+                                  onPressed: () {
+                                    viewModel.onboard();
+                                    _onContinueAsGuest(loginViewModel);
+                                  },
+                                );
+                              }),
+                            ),
+                            HorizontalSpaceWidget(
+                                width: Dimens.spacingSizeDefault),
+                            Expanded(
+                              child: SizedBox(
+                                height: 40,
+                                child: FilledButtonWidget(
+                                  label: 'Login',
+                                  onPressed: () {
+                                    viewModel.onboard();
+                                    NavigationHelper.pushAndReplaceAll(
+                                      context,
+                                      LoginScreen(),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                          ],
                         )
                       ],
                     ),
@@ -225,6 +257,15 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
           );
         }),
       ),
+    );
+  }
+
+  void _onContinueAsGuest(LoginViewModel viewModel) async {
+    await viewModel.continueAsGuest();
+
+    NavigationHelper.pushAndReplaceAll(
+      context,
+      const DashboardScreen(),
     );
   }
 }

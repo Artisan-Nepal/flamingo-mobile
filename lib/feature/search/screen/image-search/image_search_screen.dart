@@ -40,7 +40,7 @@ class _ImageSearchScreenState extends State<ImageSearchScreen> {
         builder: (context, viewModel, child) {
           final products = viewModel.imageSearchUseCase.data ?? [];
           return DefaultScreen(
-            appBarTitle: Text('Search Result'),
+            appBarTitle: Text('Similar Products'),
             appBarActions: [
               GestureDetector(
                 onTap: viewModel.imageSearchUseCase.isLoading

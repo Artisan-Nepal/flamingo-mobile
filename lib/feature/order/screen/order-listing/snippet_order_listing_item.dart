@@ -101,13 +101,14 @@ class SnippetOrderListingItem extends StatelessWidget {
                   ),
                   const SizedBox(height: Dimens.spacingSizeExtraSmall),
                   TextWidget(
-                    '${order.product.title} (${order.quantity})',
+                    order.product.title,
                     maxLines: 1,
                     textOverflow: TextOverflow.ellipsis,
                     style: textTheme(context).bodyMedium!.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
                   ),
+                  _buildInfoWrapper(context, 'Quantity: ${order.quantity}'),
                   const VerticalSpaceWidget(
                       height: Dimens.spacingSizeExtraSmall),
 

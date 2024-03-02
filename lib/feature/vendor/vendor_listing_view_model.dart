@@ -36,11 +36,13 @@ class VendorListingViewModel extends ChangeNotifier {
   List<Vendor> get favoriteBrands {
     final allVendors = _vendorUseCase.data?.rows ?? [];
 
-    return allVendors
+    final favBrands = allVendors
         .where((element) =>
             locator<FavouriteVendorViewModel>().isFavourited(element.id))
-        .toList()
-        .sublist(0, 3);
+        .toList();
+    if (favBrands.length <= 0) return favBrands;
+
+    return favBrands.sublist(0, 3);
   }
 
   List<Vendor> get nonFavoriteBrands {

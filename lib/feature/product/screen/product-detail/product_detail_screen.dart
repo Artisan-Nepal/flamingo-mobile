@@ -289,16 +289,18 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             VerticalSpaceWidget(height: Dimens.spacingSizeSmall),
             Text(viewModel.productUseCase.data!.body,
                 style: textTheme(context).bodyMedium!),
-            VerticalSpaceWidget(height: Dimens.spacingSizeLarge),
-            Text(
-              'Highlights',
-              style: TextStyle(
-                color: AppColors.grayMain,
+            if (viewModel.productUseCase.data!.details != null) ...[
+              VerticalSpaceWidget(height: Dimens.spacingSizeLarge),
+              Text(
+                'Highlights',
+                style: TextStyle(
+                  color: AppColors.grayMain,
+                ),
               ),
-            ),
-            Html(
-              data: product.details,
-            ),
+              Html(
+                data: product.details,
+              ),
+            ]
           ],
         ),
         Divider(

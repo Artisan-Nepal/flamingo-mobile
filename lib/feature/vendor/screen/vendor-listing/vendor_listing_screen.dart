@@ -47,18 +47,20 @@ class _VendorListingScreenState extends State<VendorListingScreen> {
               },
               child: CustomScrollView(
                 slivers: [
-                  SliverToBoxAdapter(
-                      child: Padding(
-                    padding: const EdgeInsets.only(
-                        bottom: Dimens.spacingSizeDefault),
-                    child: Text(
-                      'Your Favorite Brands',
-                      style: textTheme(context).bodyLarge,
+                  if (viewModel.favoriteBrands.isNotEmpty)
+                    SliverToBoxAdapter(
+                        child: Padding(
+                      padding: const EdgeInsets.only(
+                          bottom: Dimens.spacingSizeDefault),
+                      child: Text(
+                        'Your Favorite Brands',
+                        style: textTheme(context).bodyLarge,
+                      ),
+                    )),
+                  if (viewModel.favoriteBrands.isNotEmpty)
+                    SnippetVendorListing(
+                      vendors: _viewModel.favoriteBrands,
                     ),
-                  )),
-                  SnippetVendorListing(
-                    vendors: _viewModel.favoriteBrands,
-                  ),
                   SliverToBoxAdapter(
                       child: Padding(
                     padding: const EdgeInsets.only(

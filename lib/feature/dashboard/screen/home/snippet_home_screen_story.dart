@@ -17,7 +17,7 @@ class SnippetHomeScreenStory extends StatelessWidget {
         final stories = viewModel.productStoryUseCase.data ?? [];
         if (viewModel.productStoryUseCase.isLoading)
           return Container(
-            height: 120,
+            height: 105,
             decoration: BoxDecoration(
               border: Border(
                 bottom: BorderSide(
@@ -37,8 +37,8 @@ class SnippetHomeScreenStory extends StatelessWidget {
                           color: AppColors.grayLighter,
                           shape: BoxShape.circle,
                         ),
-                        height: 70,
-                        width: 70,
+                        height: 60,
+                        width: 60,
                       ),
                     ],
                   );
@@ -53,7 +53,7 @@ class SnippetHomeScreenStory extends StatelessWidget {
         return Consumer<ProductStoryEngagementViewModel>(
           builder: (context, engagementViewModel, child) {
             return Container(
-              height: 120,
+              height: 105,
               width: double.infinity,
               alignment: Alignment.center,
               padding: EdgeInsets.only(bottom: Dimens.spacingSizeSmall),
@@ -108,8 +108,8 @@ class SnippetHomeScreenStory extends StatelessWidget {
                                 image:
                                     stories[index].vendor.displayImage?.url ??
                                         stories[index].items[0].productImage,
-                                height: 70,
-                                width: 70,
+                                height: 60,
+                                width: 60,
                                 fit: BoxFit.cover,
                               ),
                             ),

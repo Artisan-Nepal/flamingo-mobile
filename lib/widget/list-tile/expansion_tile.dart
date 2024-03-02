@@ -6,12 +6,14 @@ class ExpansionTileWidget extends StatelessWidget {
     super.key,
     required this.title,
     this.subtitle,
+    this.initiallyExpanded = false,
     required this.children,
   });
 
   final Widget title;
   final Widget? subtitle;
   final List<Widget> children;
+  final bool initiallyExpanded;
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +24,7 @@ class ExpansionTileWidget extends StatelessWidget {
         dividerColor: AppColors.transparent,
       ),
       child: ExpansionTile(
+        initiallyExpanded: initiallyExpanded,
         title: title,
         subtitle: subtitle,
         tilePadding: EdgeInsets.all(0),

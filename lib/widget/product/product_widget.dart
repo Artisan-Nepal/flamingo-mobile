@@ -41,7 +41,7 @@ class ProductWidget extends StatelessWidget {
           ProductDetailScreen(
             productId: payload.productId,
             product: payload.product,
-            title: payload.title,
+            title: payload.vendor,
             advertisementId: advertisementId,
             leadSource: leadSource,
           ),

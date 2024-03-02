@@ -135,15 +135,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                                 height:
                                                     Dimens.spacingSizeDefault),
 
-                                            // Description
-                                            Text(
-                                                viewModel
-                                                    .productUseCase.data!.body,
-                                                style: textTheme(context)
-                                                    .bodyMedium!),
                                             const VerticalSpaceWidget(
                                                 height:
-                                                    Dimens.spacingSizeDefault),
+                                                    Dimens.spacingSizeSmall),
 
                                             // Color
                                             _buildAttributeSelection(
@@ -280,11 +274,28 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     return [
       if (product.details != null && product.details!.isNotEmpty) ...[
         ExpansionTileWidget(
+          initiallyExpanded: true,
           title: Text(
             'THE DETAILS',
             style: textTheme(context).bodyMedium,
           ),
           children: <Widget>[
+            Text(
+              'Description',
+              style: TextStyle(
+                color: AppColors.grayMain,
+              ),
+            ),
+            VerticalSpaceWidget(height: Dimens.spacingSizeSmall),
+            Text(viewModel.productUseCase.data!.body,
+                style: textTheme(context).bodyMedium!),
+            VerticalSpaceWidget(height: Dimens.spacingSizeLarge),
+            Text(
+              'Highlights',
+              style: TextStyle(
+                color: AppColors.grayMain,
+              ),
+            ),
             Html(
               data: product.details,
             ),
@@ -455,7 +466,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         viewModel.productUseCase.data!.vendor.storeName,
         textOverflow: TextOverflow.ellipsis,
         style: textTheme(context).bodyMedium!.copyWith(
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w800,
             ),
       ),
       TextWidget(
@@ -463,7 +474,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         textOverflow: TextOverflow.ellipsis,
         style: textTheme(context).bodyMedium!,
       ),
-      const SizedBox(height: Dimens.spacingSizeExtraSmall),
       TextWidget(
         'Rs. ${formatNepaliCurrency(viewModel.selectedVariant.price)}',
         style: textTheme(context).labelLarge!,

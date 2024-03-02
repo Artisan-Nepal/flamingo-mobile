@@ -11,7 +11,7 @@ class OutlinedButtonWidget extends StatelessWidget {
     this.enabled = true,
     this.child,
     this.loadingMsg,
-    this.height,
+    this.height = 50,
     this.fontSize = 14,
     this.width = double.infinity,
   });

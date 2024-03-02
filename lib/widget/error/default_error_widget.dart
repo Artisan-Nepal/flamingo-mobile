@@ -79,6 +79,7 @@ class DefaultErrorWidget extends StatelessWidget {
             SizedBox(height: SizeConfig.screenHeight * 0.05),
             if (onActionButtonPressed != null) ...[
               OutlinedButtonWidget(
+                height: 40,
                 width: 200,
                 label: actionButtonLabel,
                 onPressed: onActionButtonPressed,

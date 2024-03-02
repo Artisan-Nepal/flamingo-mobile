@@ -341,6 +341,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           children: [
             Expanded(
               child: OutlinedButtonWidget(
+                height: 40,
                 label: 'Phone',
                 onPressed: () async {
                   final url = 'tel:${CommonConstants.contactNumber}';
@@ -351,6 +352,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             HorizontalSpaceWidget(width: Dimens.spacingSizeDefault),
             Expanded(
               child: OutlinedButtonWidget(
+                height: 40,
                 label: 'Email Us',
                 onPressed: () {
                   final url = 'mailto:${CommonConstants.contactEmail}';

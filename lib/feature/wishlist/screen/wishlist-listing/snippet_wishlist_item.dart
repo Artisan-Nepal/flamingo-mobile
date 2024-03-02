@@ -95,7 +95,6 @@ class _SnippetWishListItemState extends State<SnippetWishListItem> {
                 widget.item.product.title,
                 style: textTheme(context).bodyMedium!,
               ),
-              const SizedBox(height: Dimens.spacingSizeExtraSmall),
               TextWidget(
                 'Rs. ${formatNepaliCurrency(widget.item.product.variants.first.price)}',
                 style: textTheme(context).labelLarge!,
@@ -103,6 +102,7 @@ class _SnippetWishListItemState extends State<SnippetWishListItem> {
               const SizedBox(height: Dimens.spacingSizeExtraSmall),
               OutlinedButtonWidget(
                 label: 'Add to bag',
+                height: 40,
                 fontSize: Dimens.fontSizeDefault,
                 onPressed: () {
                   _navigateToProductDetail(context);

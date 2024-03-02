@@ -45,6 +45,7 @@ class NotLoggedInWidget extends StatelessWidget {
         // Login Button
         OutlinedButtonWidget(
           width: double.infinity,
+          height: 40,
           label: 'Log in',
           onPressed: () {
             Navigator.push(

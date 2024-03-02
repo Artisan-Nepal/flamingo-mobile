@@ -221,6 +221,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                               child: Consumer<LoginViewModel>(
                                   builder: (context, loginViewModel, child) {
                                 return OutlinedButtonWidget(
+                                  height: 40,
                                   label: 'Continue as guest',
                                   onPressed: () {
                                     viewModel.onboard();

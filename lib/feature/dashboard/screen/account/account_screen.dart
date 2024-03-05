@@ -46,6 +46,18 @@ class _AccountScreenState extends State<AccountScreen> {
                 : _buildNotLoggedInComponents(),
           ),
           VerticalSpaceWidget(height: Dimens.spacingSizeOverLarge),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: Dimens.spacingSizeDefault,
+            ),
+            child: OutlinedButtonWidget(
+              label: 'Log out',
+              onPressed: () {
+                _onLogout(authViewModel);
+              },
+            ),
+          ),
+          VerticalSpaceWidget(height: Dimens.spacingSizeOverLarge),
           _buildContactUs(),
         ],
       ),
@@ -152,7 +164,6 @@ class _AccountScreenState extends State<AccountScreen> {
   }
 
   Widget _buildLoggedInComponents() {
-    final authViewModel = Provider.of<AuthViewModel>(context);
     final customerActivityViewModel =
         Provider.of<CustomerActivityViewModel>(context);
 
@@ -210,12 +221,6 @@ class _AccountScreenState extends State<AccountScreen> {
               const AddressListingScreen(
                   showSelectionIndication: false, title: "Addresses"),
             );
-          },
-        ),
-        ListTileV2Wdiget(
-          title: 'Log out',
-          onPressed: () {
-            _onLogout(authViewModel);
           },
         ),
       ],

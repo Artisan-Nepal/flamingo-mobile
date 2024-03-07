@@ -31,17 +31,6 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final orderStatuses = widget.order.orderStatus.code == "CANCELLED"
-        ? orderStatusLookup
-            .where((status) => status.code == "CANCELLED")
-            .toList()
-        : orderStatusLookup
-            .getRange(
-                0,
-                widget.order.orderStatus.code == "DELIVERED"
-                    ? widget.order.orderStatus.sequenceNumber + 1
-                    : widget.order.orderStatus.sequenceNumber + 2)
-            .toList();
     return ChangeNotifierProvider(
       create: (context) => viewModel,
       child: Consumer<OrderStatusViewModel>(
@@ -73,14 +62,18 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
                               (viewModel.trackOrderStatusUseCase.data ?? [])
                                   .length,
                           itemBuilder: (context, index) {
+                            final orderStatuses =
+                                viewModel.trackOrderStatusUseCase.data ?? [];
                             final isLastItem =
                                 index == orderStatuses.length - 1;
-                            final statusLog =
-                                (viewModel.trackOrderStatusUseCase.data ??
-                                    [])[index];
+                            final statusLog = orderStatuses[index];
                             return SnippetOrderStatusStepper(
-                              title: orderStatuses[index].description,
-                              subTitle: isLastItem
+                              title: statusLog.status.name,
+                              subTitle: isLastItem &&
+                                      widget.order.orderStatus.code !=
+                                          "DELIVERED" &&
+                                      widget.order.orderStatus.code !=
+                                          "CANCELLED"
                                   ? ""
                                   : formatDate(
                                       statusLog.timestamp,
@@ -91,8 +84,9 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
                               isLastItem: isLastItem,
                               isSecondLastItem:
                                   index == orderStatuses.length - 2,
-                              greyOutLast:
-                                  widget.order.orderStatus.code != "DELIVERED",
+                              greyOutLast: widget.order.orderStatus.code !=
+                                      "DELIVERED" &&
+                                  widget.order.orderStatus.code != "CANCELLED",
                             );
                           },
                         ),

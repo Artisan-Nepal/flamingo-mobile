@@ -24,8 +24,8 @@ class OrderStatusViewModel extends ChangeNotifier {
     try {
       setTrackOrderStatusUseCase(Response.loading());
       final response = await _orderRepository.trackOrder(orderId);
-      final lastStatus = response.last.status.name;
-      if (lastStatus != 'DELIVERED' || lastStatus != 'CANCELLED') {
+      final lastStatus = response.last.status.code;
+      if (lastStatus != 'DELIVERED' && lastStatus != 'CANCELLED') {
         response.add(
           OrderStatusLog(
             id: '',

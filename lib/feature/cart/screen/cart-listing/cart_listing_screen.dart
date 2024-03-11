@@ -82,7 +82,7 @@ class _CartListingScreenState extends State<CartListingScreen> {
                                                   useListView: true,
                                                   manuallyCenter: true,
                                                   errorMessage:
-                                                      'You do not have any products in your cart.',
+                                                      'Your shopping bag is empty.',
                                                 )
                                               : ListView.builder(
                                                   itemBuilder:

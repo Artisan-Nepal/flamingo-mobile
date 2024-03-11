@@ -1,6 +1,7 @@
 import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/auth/auth_view_model.dart';
 import 'package:flamingo/feature/auth/data/model/send_otp_response.dart';
+import 'package:flamingo/feature/customer-activity/customer_activity_view_model.dart';
 import 'package:flamingo/feature/feature.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flutter/material.dart';
@@ -78,6 +79,7 @@ class LoginViewModel extends ChangeNotifier {
       setVerifyOtpUseCase(Response.loading());
       final response = await _authRepository.verifyLoginOtp(_otpToken, otpCode);
       locator<AuthViewModel>().syncLocally();
+      locator<CustomerActivityViewModel>().getCustomerCountInfo();
       setVerifyOtpUseCase(Response.complete(response));
     } catch (exception) {
       setVerifyOtpUseCase(Response.error(exception));

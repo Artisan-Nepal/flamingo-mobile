@@ -1,6 +1,7 @@
 import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/advertisement/advertisement_listing_view_model.dart';
 import 'package:flamingo/feature/auth/auth_view_model.dart';
+import 'package:flamingo/feature/customer-activity/customer_activity_view_model.dart';
 import 'package:flamingo/feature/dashboard/screen/home/snippet_home_advertisement.dart';
 import 'package:flamingo/feature/dashboard/screen/home/snippet_home_screen_story.dart';
 import 'package:flamingo/feature/dashboard/screen/home/snippet_home_products.dart';
@@ -51,6 +52,7 @@ class _HomeScreenState extends State<HomeScreen>
     if (Provider.of<AuthViewModel>(context, listen: false).isLoggedIn) {
       _favVendorProductListingViewModel.getProducts(
           productType: ProductType.FAVORITE_VENDOR);
+      locator<CustomerActivityViewModel>().getCustomerCountInfo();
     }
   }
 

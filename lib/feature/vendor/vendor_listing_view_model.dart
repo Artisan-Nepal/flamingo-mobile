@@ -40,7 +40,7 @@ class VendorListingViewModel extends ChangeNotifier {
         .where((element) =>
             locator<FavouriteVendorViewModel>().isFavourited(element.id))
         .toList();
-    if (favBrands.length <= 0) return favBrands;
+    if (favBrands.length <= 3) return favBrands;
 
     return favBrands.sublist(0, 3);
   }

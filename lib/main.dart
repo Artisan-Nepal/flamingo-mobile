@@ -1,4 +1,3 @@
-import 'package:flamingo/feature/customer-activity/customer_activity_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flamingo/app.dart';
 import 'package:flamingo/feature/theme/theme_service.dart';
@@ -17,6 +16,5 @@ Future<void> initApp() async {
   await Future.wait([
     di.locator<NavigationService>().getInitialRoute(),
     di.locator<ThemeService>().initializeTheme(),
-    di.locator<CustomerActivityViewModel>().getCustomerCountInfo(),
   ]);
 }

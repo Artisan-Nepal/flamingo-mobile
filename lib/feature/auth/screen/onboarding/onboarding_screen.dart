@@ -221,7 +221,6 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                               child: Consumer<LoginViewModel>(
                                   builder: (context, loginViewModel, child) {
                                 return OutlinedButtonWidget(
-                                  height: 40,
                                   label: 'As guest',
                                   onPressed: () {
                                     viewModel.onboard();
@@ -233,18 +232,15 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                             HorizontalSpaceWidget(
                                 width: Dimens.spacingSizeDefault),
                             Expanded(
-                              child: SizedBox(
-                                height: 40,
-                                child: FilledButtonWidget(
-                                  label: 'Login',
-                                  onPressed: () {
-                                    viewModel.onboard();
-                                    NavigationHelper.pushAndReplaceAll(
-                                      context,
-                                      LoginScreen(),
-                                    );
-                                  },
-                                ),
+                              child: FilledButtonWidget(
+                                label: 'Login',
+                                onPressed: () {
+                                  viewModel.onboard();
+                                  NavigationHelper.pushAndReplaceAll(
+                                    context,
+                                    LoginScreen(),
+                                  );
+                                },
                               ),
                             ),
                           ],

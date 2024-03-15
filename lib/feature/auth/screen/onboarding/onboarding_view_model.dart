@@ -42,10 +42,6 @@ class OnboardingViewModel extends ChangeNotifier {
   }
 
   Future<void> onboard() async {
-    try {
-      await _authRepository.onBoard();
-    } on Exception {
-      await _authRepository.onBoard();
-    }
+    await _authRepository.onBoard();
   }
 }

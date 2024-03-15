@@ -6,10 +6,10 @@ Future<void> registerDataModule(GetIt locator) async {
   var sharedPref = await SharedPrefManager.getInstance();
 
   // Local Storage Clients
-  locator.registerLazySingleton<LocalStorageClient>(
-    () => SecureStorageManager(),
-    instanceName: ServiceNames.secureStorageManager,
-  );
+  // locator.registerLazySingleton<LocalStorageClient>(
+  //   () => SecureStorageManager(),
+  //   instanceName: ServiceNames.secureStorageManager,
+  // );
   locator.registerLazySingleton<LocalStorageClient>(
     () => SharedPrefManager(
       sharedPref: sharedPref,

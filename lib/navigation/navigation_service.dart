@@ -21,7 +21,6 @@ class NavigationService {
     } else {
       initialRoute = NavigationRouteNames.login;
     }
-    print('initital route set to ' + initialRoute);
   }
 
   Future<bool> _getIsLoggedIn() async {

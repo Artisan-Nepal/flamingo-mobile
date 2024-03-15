@@ -172,8 +172,6 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print('Inside build of onbaording: ');
-
     return AnnotatedRegion(
       value: SystemUiOverlayStyle(
         statusBarColor: AppColors.transparent,

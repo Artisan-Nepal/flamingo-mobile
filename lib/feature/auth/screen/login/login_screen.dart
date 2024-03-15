@@ -26,6 +26,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print('inside login');
     return ChangeNotifierProvider(
       create: (context) => _viewModel,
       builder: (context, child) {

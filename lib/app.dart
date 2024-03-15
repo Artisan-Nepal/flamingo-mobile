@@ -4,6 +4,7 @@ import 'package:flamingo/feature/product-story/product_story_engagement_view_mod
 import 'package:flamingo/feature/search/screen/text-search/search_view_model.dart';
 import 'package:flamingo/feature/vendor/favourite_vendor_view_model.dart';
 import 'package:flamingo/feature/wishlist/wishlist_view_model.dart';
+import 'package:flamingo/navigation/navigation_route_names.dart';
 import 'package:flutter/material.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/di/di.dart';
@@ -44,8 +45,7 @@ class App extends StatelessWidget {
             title: Strings.appName,
             theme: lightTheme,
             themeMode: ThemeMode.light,
-            initialRoute: navigationService.initialRoute,
-            routes: navigationRoutes,
+            home: getInititalScreen(navigationService.initialRoute),
             supportedLocales: const [
               Locale('en', 'US'),
               Locale('ne', 'NP'),
@@ -57,5 +57,14 @@ class App extends StatelessWidget {
         );
       },
     );
+  }
+
+  Widget getInititalScreen(String initialRoute) {
+    if (initialRoute == NavigationRouteNames.onBoarding)
+      return OnBoardingScreen();
+    if (initialRoute == NavigationRouteNames.login) return LoginScreen();
+    if (initialRoute == NavigationRouteNames.dashboard)
+      return DashboardScreen();
+    return SizedBox();
   }
 }

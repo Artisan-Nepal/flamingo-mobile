@@ -11,6 +11,7 @@ class CachedNetworkImageWidget extends StatelessWidget {
     this.fit,
     this.needPlaceHolder = true,
     this.placeHolder = ImageConstants.imagePlaceholder,
+    this.fadeDuration = const Duration(milliseconds: 10),
   }) : super(key: key);
   final String image;
   final double? height;
@@ -18,12 +19,13 @@ class CachedNetworkImageWidget extends StatelessWidget {
   final BoxFit? fit;
   final bool needPlaceHolder;
   final String placeHolder;
+  final Duration fadeDuration;
 
   @override
   Widget build(BuildContext context) {
     return CachedNetworkImage(
-      fadeInDuration: const Duration(milliseconds: 10),
-      fadeOutDuration: const Duration(milliseconds: 10),
+      fadeInDuration: fadeDuration,
+      fadeOutDuration: fadeDuration,
       placeholder: (context, _) {
         return needPlaceHolder
             ? Image.asset(

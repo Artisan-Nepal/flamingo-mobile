@@ -69,7 +69,8 @@ class ProductWidget extends StatelessWidget {
                     child: CachedNetworkImageWidget(
                       image: payload.image,
                       fit: BoxFit.cover,
-                      placeHolder: ImageConstants.imagePlaceholder,
+                      needPlaceHolder: false,
+                      fadeDuration: const Duration(milliseconds: 200),
                     ),
                   ),
                   if (authViewModel.isLoggedIn && needFavIcon)

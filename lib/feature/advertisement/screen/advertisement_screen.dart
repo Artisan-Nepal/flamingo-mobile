@@ -110,6 +110,7 @@ class _AdvertisementScreenState extends State<AdvertisementScreen> {
                 ),
                 SnippetProductListing(
                   useSliver: true,
+                  padding: 0,
                   advertisementId: widget.advertisement.id,
                   leadSource: LeadSource.advertisement,
                   products: widget.advertisement.collection.products

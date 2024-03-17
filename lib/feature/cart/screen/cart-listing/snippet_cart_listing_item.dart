@@ -50,6 +50,7 @@ class _SnippetCartListingItemState extends State<SnippetCartListingItem> {
                             widget.cartItem.product.images,
                             widget.cartItem.productVariant,
                           ),
+                          needPlaceHolder: false,
                           fit: BoxFit.cover,
                           height: 150,
                         ),
@@ -112,7 +113,7 @@ class _SnippetCartListingItemState extends State<SnippetCartListingItem> {
                     ],
                   ),
                 ),
-                _buildLoader(viewModel),
+                // _buildLoader(viewModel),
               ],
             );
           },
@@ -188,6 +189,8 @@ class _SnippetCartListingItemState extends State<SnippetCartListingItem> {
           height: 20,
           width: 20,
           enabled: widget.cartItem.quantity > 1,
+          // enabled: widget.cartItem.quantity > 1 &&
+          //     !viewModel.updateCartUseCase.isLoading,
           icon: Icons.remove,
           onPressed: () {
             _onDecrement(viewModel);
@@ -218,8 +221,7 @@ class _SnippetCartListingItemState extends State<SnippetCartListingItem> {
         SmallButtonWidget(
           height: 20,
           width: 20,
-
-          // enabled: widget.product.inStock == 1,
+          // enabled: !viewModel.updateCartUseCase.isLoading,
           icon: Icons.add,
           onPressed: () {
             _onIncrement(viewModel);

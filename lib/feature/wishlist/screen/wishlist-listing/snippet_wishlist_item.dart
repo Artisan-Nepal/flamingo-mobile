@@ -48,6 +48,7 @@ class _SnippetWishListItemState extends State<SnippetWishListItem> {
                           widget.item.product.images,
                           widget.item.product.variants,
                         ),
+                        needPlaceHolder: false,
                         fit: BoxFit.cover,
                       ),
                     ),

@@ -11,7 +11,7 @@ class CachedNetworkImageWidget extends StatelessWidget {
     this.fit,
     this.needPlaceHolder = true,
     this.placeHolder = ImageConstants.imagePlaceholder,
-    this.fadeDuration = const Duration(milliseconds: 10),
+    this.fadeDuration = const Duration(milliseconds: 100),
   }) : super(key: key);
   final String image;
   final double? height;

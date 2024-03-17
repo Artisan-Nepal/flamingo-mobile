@@ -20,6 +20,7 @@ class BackButtonWidget extends StatelessWidget {
           },
       child: Container(
         color: AppColors.transparent,
+        padding: EdgeInsets.symmetric(horizontal: Dimens.spacingSizeExtraSmall),
         child: Icon(
           CupertinoIcons.back,
           size: size ?? Dimens.iconSizeLarge,

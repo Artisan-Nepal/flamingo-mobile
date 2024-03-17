@@ -37,7 +37,7 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
   Widget build(BuildContext context) {
     return DefaultScreen(
       scrollable: false,
-      appBarLeadingWidth: 25,
+      appBarLeadingWidth: 45,
       appBarTitle: Container(
         child: SearchBarFieldWidget(
           controller: _searchController,
@@ -54,7 +54,7 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
       ),
       appBarLeading: Padding(
         padding: const EdgeInsets.only(left: Dimens.spacingSizeDefault),
-        child: BackButtonWidget(size: Dimens.iconSizeSmall),
+        child: BackButtonWidget(size: Dimens.iconSize_20),
       ),
       padding: EdgeInsets.zero,
       child: Consumer<SearchViewModel>(

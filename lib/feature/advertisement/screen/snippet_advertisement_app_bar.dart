@@ -59,43 +59,38 @@ class SnippetAdvertisementAppBar extends StatelessWidget {
               elevation: 0,
               leadingWidth: 38,
               // back Button
-              leading: Padding(
-                padding: const EdgeInsets.only(left: 10.0),
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.all(1),
-                    alignment: Alignment.center,
-                    child: Icon(
-                      CupertinoIcons.back,
-                      size: 26,
-                      color: iconColor,
-                    ),
+              leading: GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Container(
+                  color: AppColors.transparent,
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  alignment: Alignment.center,
+                  child: Icon(
+                    CupertinoIcons.back,
+                    size: 26,
+                    color: iconColor,
                   ),
                 ),
               ),
               actions: [
-                // Shopping bag
-                Padding(
+                FavVendorButtonWidget(
                   padding: EdgeInsets.symmetric(
-                    horizontal: Dimens.spacingSizeDefault,
+                    horizontal: Dimens.spacingSizeSmall,
                     vertical: Dimens.spacing_8,
                   ),
-                  child: FavVendorButtonWidget(
-                    // color: Color.lerp(
-                    //       Colors.transparent,
-                    //       isLightMode(context) ? Colors.black : Colors.white,
-                    //       (appBarViewModel.productDetailsOffset /
-                    //               (SizeConfig.screenHeight / 15))
-                    //           .clamp(0, 1)
-                    //           .toDouble(),
-                    //     ) ??
-                    //     Colors.black,
-                    vendorId: vendorId,
-                    iconSize: Dimens.iconSizeDefault,
-                  ),
+                  // color: Color.lerp(
+                  //       Colors.transparent,
+                  //       isLightMode(context) ? Colors.black : Colors.white,
+                  //       (appBarViewModel.productDetailsOffset /
+                  //               (SizeConfig.screenHeight / 15))
+                  //           .clamp(0, 1)
+                  //           .toDouble(),
+                  //     ) ??
+                  //     Colors.black,
+                  vendorId: vendorId,
+                  iconSize: Dimens.iconSizeDefault,
                 )
               ],
             );

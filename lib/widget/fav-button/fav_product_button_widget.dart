@@ -13,12 +13,14 @@ class FavProductButtonWidget extends StatefulWidget {
     this.iconSize = Dimens.iconSize_22,
     this.leadSource,
     this.advertisementId,
+    this.padding,
   });
 
   final String productId;
   final double iconSize;
   final LeadSource? leadSource;
   final String? advertisementId;
+  final EdgeInsets? padding;
 
   @override
   State<FavProductButtonWidget> createState() => _FavProductButtonWidgetState();
@@ -42,10 +44,14 @@ class _FavProductButtonWidgetState extends State<FavProductButtonWidget> {
                   onTap: () {
                     _onUpdateWishlist(updateWishlistViewModel);
                   },
-                  child: Icon(
-                    isInWishlist ? Icons.favorite : Icons.favorite_outline,
-                    size: widget.iconSize,
-                    color: AppColors.black,
+                  child: Container(
+                    padding: widget.padding,
+                    color: AppColors.transparent,
+                    child: Icon(
+                      isInWishlist ? Icons.favorite : Icons.favorite_outline,
+                      size: widget.iconSize,
+                      color: AppColors.black,
+                    ),
                   ),
                 );
               },

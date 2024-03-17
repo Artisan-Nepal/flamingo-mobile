@@ -48,6 +48,7 @@ class SnippetOrderItem extends StatelessWidget {
                     child: CachedNetworkImageWidget(
                       fit: BoxFit.cover,
                       image: image,
+                      needPlaceHolder: false,
                     ),
                   ),
                 ),

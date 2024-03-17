@@ -90,7 +90,14 @@ class TitledScreen extends StatelessWidget {
       onTap: () {
         NavigationHelper.pop(context);
       },
-      child: const Icon(CupertinoIcons.back),
+      child: Container(
+        color: AppColors.transparent,
+        padding: EdgeInsets.only(
+          top: Dimens.spacing_2,
+          right: Dimens.spacingSizeExtraSmall,
+        ),
+        child: const Icon(CupertinoIcons.back),
+      ),
     );
   }
 }

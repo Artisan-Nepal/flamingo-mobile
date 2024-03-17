@@ -9,7 +9,6 @@ import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/button/button.dart';
 import 'package:flamingo/widget/fav-button/fav_product_button_widget.dart';
 import 'package:flamingo/widget/image/cached_network_image_widget.dart';
-import 'package:flamingo/widget/space/space.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -163,15 +162,11 @@ class _SnippetProductDetailImagesState
         double favIconOpacity = 1 - (appbarViewModel.productDetailsOffset / 20);
         double shareIconOpacity =
             1 - (appbarViewModel.productDetailsOffset / 70);
-
         favIconOpacity = favIconOpacity.clamp(0, 1);
         shareIconOpacity = shareIconOpacity.clamp(0, 1);
         return Positioned(
-          right: Dimens.spacingSizeDefault,
-          top: SizeConfig.appBarHeight +
-              SizeConfig.statusBarHeight -
-              20 +
-              Dimens.spacingSizeSmall,
+          right: 0,
+          top: SizeConfig.appBarHeight + SizeConfig.statusBarHeight - 20,
           child: Column(
             children: [
               Opacity(
@@ -180,19 +175,29 @@ class _SnippetProductDetailImagesState
                   productId: widget.productId,
                   advertisementId: widget.advertisementId,
                   leadSource: widget.leadSource,
+                  padding: EdgeInsets.only(
+                      top: Dimens.spacingSizeSmall,
+                      bottom: Dimens.spacingSizeLarge / 2,
+                      right: Dimens.spacingSizeDefault),
                 ),
               ),
-              const VerticalSpaceWidget(height: Dimens.spacingSizeLarge),
               Opacity(
                 opacity: shareIconOpacity,
                 child: GestureDetector(
                   onTap: () {
                     Share.share(widget.title);
                   },
-                  child: const Icon(
-                    CupertinoIcons.share,
-                    size: Dimens.iconSize_22,
-                    // color: iconColor,
+                  child: Container(
+                    color: AppColors.transparent,
+                    padding: EdgeInsets.only(
+                        top: Dimens.spacingSizeLarge / 2,
+                        bottom: Dimens.spacingSizeExtraSmall,
+                        right: Dimens.spacingSizeDefault),
+                    child: const Icon(
+                      CupertinoIcons.share,
+                      size: Dimens.iconSize_22,
+                      // color: iconColor,
+                    ),
                   ),
                 ),
               ),

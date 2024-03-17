@@ -18,6 +18,7 @@ class CartButtonWidget extends StatelessWidget {
         NavigationHelper.push(context, const CartListingScreen());
       },
       child: Container(
+        color: AppColors.transparent,
         height: 30,
         // width: 30,
         child: Row(

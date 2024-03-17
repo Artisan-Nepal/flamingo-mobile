@@ -40,7 +40,7 @@ class _ImageSearchScreenState extends State<ImageSearchScreen> {
         builder: (context, viewModel, child) {
           final products = viewModel.imageSearchUseCase.data ?? [];
           return DefaultScreen(
-            appBarTitle: Text('Similar Products'),
+            appBarTitle: Text('Search Result'),
             appBarActions: [
               GestureDetector(
                 onTap: viewModel.imageSearchUseCase.isLoading
@@ -84,7 +84,7 @@ class _ImageSearchScreenState extends State<ImageSearchScreen> {
                                 vertical: Dimens.spacingSizeLarge,
                               ),
                               child: Text(
-                                'Products in this photo',
+                                'Similar Products',
                                 style: textTheme(context).bodyMedium!.copyWith(
                                       fontWeight: FontWeight.bold,
                                     ),

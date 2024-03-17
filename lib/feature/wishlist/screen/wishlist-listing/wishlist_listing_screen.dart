@@ -37,6 +37,7 @@ class _WishlistListingScreenState extends State<WishlistListingScreen> {
       create: (context) => _viewModel,
       builder: (context, child) {
         return TitledScreen(
+          automaticallyImplyAppBarLeading: false,
           appbarActions: const [CartButtonWidget()],
           title: 'WISHLIST ($wishlistCount)',
           scrollable: false,

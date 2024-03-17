@@ -3,9 +3,9 @@ import 'package:flamingo/feature/auth/auth.dart';
 import 'package:flamingo/feature/auth/auth_view_model.dart';
 import 'package:flamingo/feature/cart/screen/cart-listing/cart_listing_screen.dart';
 import 'package:flamingo/feature/customer-activity/customer_activity_view_model.dart';
+import 'package:flamingo/feature/dashboard/screen/dashboard/dashboard_view_model.dart';
 import 'package:flamingo/feature/order/screen/order-listing/order_listing_screen.dart';
 import 'package:flamingo/feature/user/screen/account-setting/account_setting_screen.dart';
-import 'package:flamingo/feature/wishlist/screen/wishlist-listing/wishlist_listing_screen.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/alert-dialog/alert_dialog_widget.dart';
 import 'package:flamingo/widget/button/button.dart';
@@ -210,7 +210,8 @@ class _AccountScreenState extends State<AccountScreen> {
         ListTileV2Wdiget(
           title: 'Wishlist (${customerActivityViewModel.wishlistCount})',
           onPressed: () {
-            NavigationHelper.push(context, const WishlistListingScreen());
+            Provider.of<DashboardViewModel>(context, listen: false)
+                .setPageIndex(3);
           },
         ),
         ListTileV2Wdiget(

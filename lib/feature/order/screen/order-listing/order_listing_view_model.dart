@@ -23,9 +23,9 @@ class OrderListingViewModel extends ChangeNotifier {
     try {
       if (!isRefresh) setOrderUseCase(Response.loading());
       final response = await _orderRepository.getUserOrders();
-      if (!isRefresh) setOrderUseCase(Response.complete(response));
+      setOrderUseCase(Response.complete(response));
     } catch (exception) {
-      setOrderUseCase(Response.error(exception));
+      if (!isRefresh) setOrderUseCase(Response.error(exception));
     }
   }
 }

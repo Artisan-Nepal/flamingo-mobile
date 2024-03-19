@@ -40,12 +40,15 @@ class ManageAddressViewModel extends ChangeNotifier {
 
   void setSelectedProvince(SubAddress province) {
     _selectedProvince = province;
+    _selectedCity = null;
+    _selectedArea = null;
     getCities();
     notifyListeners();
   }
 
   void setSelectedCity(City city) {
     _selectedCity = city;
+    _selectedArea = null;
     getAreas();
     notifyListeners();
   }

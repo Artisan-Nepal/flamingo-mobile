@@ -114,7 +114,7 @@ class PlaceOrderViewModel extends ChangeNotifier {
     }
   }
 
-  int get subTotal {
+  int get orderTotal {
     int price = 0;
     for (CartItem cart in items) {
       price = price + (cart.productVariant.price * cart.quantity);
@@ -126,8 +126,8 @@ class PlaceOrderViewModel extends ChangeNotifier {
     return (_selectedShippingMethod?.cost ?? 0) * items.length;
   }
 
-  int get orderTotal {
-    return subTotal + shippingCost;
+  int get netTotal {
+    return orderTotal + shippingCost;
   }
 
   String get orderItemIds {

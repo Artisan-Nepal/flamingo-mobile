@@ -255,7 +255,7 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
             ),
             const SizedBox(height: 5),
             _buildOrderDetailItem(
-                title: 'Order Cost', amount: viewModel.subTotal),
+                title: 'Order Cost', amount: viewModel.orderTotal),
             _buildOrderDetailItem(
                 title: 'Shipping Fee', amount: viewModel.shippingCost),
             _buildOrderDetailItem(
@@ -269,7 +269,7 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
             const SizedBox(height: 5),
             _buildOrderDetailItem(
               title: 'Total ',
-              amount: viewModel.orderTotal,
+              amount: viewModel.netTotal,
               boldText: true,
             ),
           ],
@@ -331,8 +331,9 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
             // pop confimation dialog
             Navigator.pop(ctx);
 
-            if (viewModel.selectedPaymentMethod!.code == PaymentMethod.KHALTI) {
-              await _checkoutWithKhalti(viewModel);
+            if (PaymentMethod.online
+                .contains(viewModel.selectedPaymentMethod!.code)) {
+              await _checkoutWithOnlinePayment(viewModel);
             } else {
               await viewModel.placeOrder();
             }
@@ -345,10 +346,10 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
     }
   }
 
-  Future<void> _checkoutWithKhalti(PlaceOrderViewModel viewModel) async {
+  Future<void> _checkoutWithOnlinePayment(PlaceOrderViewModel viewModel) async {
     final response = await KhaltiHelper.pay(
       context,
-      amount: viewModel.orderTotal,
+      amount: viewModel.netTotal,
       productId: viewModel.orderItemIds,
       productName: viewModel.orderItemNames,
       mobileNumber:

@@ -3,6 +3,8 @@ import 'package:flamingo/data/model/fetch_response.dart';
 import 'package:flamingo/feature/auth/auth.dart';
 import 'package:flamingo/feature/order/data/local/order_local.dart';
 import 'package:flamingo/feature/order/data/model/create_order_request.dart';
+import 'package:flamingo/feature/order/data/model/initiate_online_checkout_request%20copy.dart';
+import 'package:flamingo/feature/order/data/model/initiate_online_checkout_response.dart';
 import 'package:flamingo/feature/order/data/model/order.dart';
 import 'package:flamingo/feature/order/data/model/order_status_log.dart';
 import 'package:flamingo/feature/order/data/model/payment_method.dart';
@@ -47,5 +49,11 @@ class OrderRepositoryImpl implements OrderRepository {
   @override
   Future<List<OrderStatusLog>> trackOrder(String orderId) async {
     return await _orderRemote.trackOrder(orderId);
+  }
+
+  @override
+  Future<InitiateOnlineCheckoutResponse> initateOnlineCheckout(
+      InitiateOnlineCheckoutRequest request) async {
+    return await _orderRemote.initateOnlineCheckout(request);
   }
 }

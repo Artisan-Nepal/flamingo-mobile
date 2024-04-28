@@ -1,5 +1,7 @@
 import 'package:flamingo/data/data.dart';
 import 'package:flamingo/feature/order/data/model/create_order_request.dart';
+import 'package:flamingo/feature/order/data/model/initiate_online_checkout_request%20copy.dart';
+import 'package:flamingo/feature/order/data/model/initiate_online_checkout_response.dart';
 import 'package:flamingo/feature/order/data/model/order.dart';
 import 'package:flamingo/feature/order/data/model/order_status_log.dart';
 import 'package:flamingo/feature/order/data/model/payment_method.dart';
@@ -49,5 +51,13 @@ class OrderRemoteImpl implements OrderRemote {
     final url = ApiUrls.trackOrder.replaceFirst(":id", orderId);
     final apiReponse = await _apiClient.get(url);
     return OrderStatusLog.fromJsonList(apiReponse.data);
+  }
+
+  @override
+  Future<InitiateOnlineCheckoutResponse> initateOnlineCheckout(
+      InitiateOnlineCheckoutRequest request) async {
+    final apiResponse = await _apiClient.post(ApiUrls.initiateOnlineCheckout,
+        body: request.toJson());
+    return InitiateOnlineCheckoutResponse.fromJson(apiResponse.data);
   }
 }

@@ -1,6 +1,5 @@
 import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/address/screen/address-listing/address_listing_screen.dart';
-import 'package:flamingo/feature/auth/auth_view_model.dart';
 import 'package:flamingo/feature/cart/data/model/cart_item.dart';
 import 'package:flamingo/feature/order/screen/order-listing/order_listing_screen.dart';
 import 'package:flamingo/feature/order/screen/place-order/payment_method_selection_screen.dart';
@@ -10,6 +9,7 @@ import 'package:flamingo/feature/order/screen/place-order/snippet_checkout_input
 import 'package:flamingo/feature/order/screen/place-order/snippet_order_item.dart';
 import 'package:flamingo/shared/constant/payment_method.dart';
 import 'package:flamingo/shared/shared.dart';
+import 'package:flamingo/shared/util/payment_helper_factory.dart';
 import 'package:flamingo/widget/alert-dialog/alert_dialog_widget.dart';
 import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/material.dart';
@@ -333,31 +333,45 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
 
             if (PaymentMethod.online
                 .contains(viewModel.selectedPaymentMethod!.code)) {
-              await _checkoutWithOnlinePayment(viewModel);
+              await _handleOnlineCheckout(viewModel);
             } else {
               await viewModel.placeOrder();
+              if (!context.mounted) return;
+              _observeCheckoutResponse(viewModel);
             }
-
-            if (!context.mounted) return;
-            _observeCheckoutResponse(viewModel);
           },
         ),
       );
     }
   }
 
-  Future<void> _checkoutWithOnlinePayment(PlaceOrderViewModel viewModel) async {
-    final response = await KhaltiHelper.pay(
+  Future<void> _handleOnlineCheckout(PlaceOrderViewModel viewModel) async {
+    // initate online payment
+    await viewModel.initateOnlinePayment();
+    if (!viewModel.initiateOnlineCheckoutUseCase.hasCompleted) {
+      showToast(
+        context,
+        message: viewModel.initiateOnlineCheckoutUseCase.exception,
+        isSuccess: false,
+      );
+      return;
+    }
+
+    // perform payment
+    viewModel.setPlaceOrderUseCase(Response.loading());
+    final paymentCode = viewModel.selectedPaymentMethod!.code;
+    final paymentHelper = PaymentHelperFactory.create(paymentCode);
+    await paymentHelper.pay(
       context,
       amount: viewModel.netTotal,
-      productId: viewModel.orderItemIds,
-      productName: viewModel.orderItemNames,
-      mobileNumber:
-          Provider.of<AuthViewModel>(context, listen: false).user!.mobileNumber,
+      checkoutId: viewModel.orderItemIds,
+      checkoutName: viewModel.orderItemNames,
+      onSuccess: (successResponse) async {
+        await viewModel.placeOrder(onlinePaymentToken: successResponse.token);
+        _observeCheckoutResponse(viewModel);
+      },
+      onFailure: (failureResponse) {},
     );
-    if (response.success) {
-      await viewModel.placeOrder(paymentToken: response.token);
-    }
   }
 
   _observeCheckoutResponse(PlaceOrderViewModel viewModel) {
@@ -372,4 +386,6 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
       );
     }
   }
+
+  Future<void> _initateOnlineCheckout(PlaceOrderViewModel viewModel) async {}
 }

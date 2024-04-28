@@ -4,6 +4,8 @@ import 'package:flamingo/feature/cart/data/model/cart_item.dart';
 import 'package:flamingo/feature/customer-activity/create_activity_view_model.dart';
 import 'package:flamingo/feature/customer-activity/customer_activity_view_model.dart';
 import 'package:flamingo/feature/order/data/model/create_order_request.dart';
+import 'package:flamingo/feature/order/data/model/initiate_online_checkout_request%20copy.dart';
+import 'package:flamingo/feature/order/data/model/initiate_online_checkout_response.dart';
 import 'package:flamingo/feature/order/data/model/payment_method.dart';
 import 'package:flamingo/feature/order/data/model/shipping_method.dart';
 import 'package:flamingo/feature/order/data/order_repository.dart';
@@ -23,6 +25,8 @@ class PlaceOrderViewModel extends ChangeNotifier {
   Address? _selectedShippingAddress;
   Address? _selectedBillingAddress;
   Response _placeOrderUseCase = Response();
+  Response<InitiateOnlineCheckoutResponse> _initiateOnlineCheckoutUseCase =
+      Response();
   List<CartItem> _items = [];
 
   int get orderIndex => _orderIndex;
@@ -31,6 +35,8 @@ class PlaceOrderViewModel extends ChangeNotifier {
   Address? get selectedShippingAddress => _selectedShippingAddress;
   Address? get selectedBillingAddress => _selectedBillingAddress;
   Response get placeOrderUseCase => _placeOrderUseCase;
+  Response<InitiateOnlineCheckoutResponse> get initiateOnlineCheckoutUseCase =>
+      _initiateOnlineCheckoutUseCase;
   List<CartItem> get items => _items;
 
   void setCartItems(List<CartItem> items) {
@@ -39,6 +45,12 @@ class PlaceOrderViewModel extends ChangeNotifier {
 
   void setPlaceOrderUseCase(Response response) {
     _placeOrderUseCase = response;
+    notifyListeners();
+  }
+
+  void setInitiateOnlineCheckoutUseCase(
+      Response<InitiateOnlineCheckoutResponse> response) {
+    _initiateOnlineCheckoutUseCase = response;
     notifyListeners();
   }
 
@@ -85,7 +97,22 @@ class PlaceOrderViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> placeOrder({String? paymentToken}) async {
+  Future<void> initateOnlinePayment() async {
+    try {
+      setInitiateOnlineCheckoutUseCase(Response.loading());
+      final response = await _orderRepository.initateOnlineCheckout(
+        InitiateOnlineCheckoutRequest(
+          paymentMethodCode: _selectedPaymentMethod!.code,
+          shippingMethodId: _selectedShippingMethod!.id,
+        ),
+      );
+      setInitiateOnlineCheckoutUseCase(Response.complete(response));
+    } catch (exception) {
+      setInitiateOnlineCheckoutUseCase(Response.error(exception));
+    }
+  }
+
+  Future<void> placeOrder({String? onlinePaymentToken}) async {
     try {
       setPlaceOrderUseCase(Response.loading());
       await _orderRepository.placeOrder(
@@ -94,7 +121,8 @@ class PlaceOrderViewModel extends ChangeNotifier {
           shippingAddressId: _selectedShippingAddress!.id,
           paymentMethodCode: _selectedPaymentMethod!.code,
           shippingMethodId: _selectedShippingMethod!.id,
-          paymentToken: paymentToken,
+          onlinePaymentToken: onlinePaymentToken,
+          checkoutId: _initiateOnlineCheckoutUseCase.data?.checkoutId,
         ),
       );
       locator<CustomerActivityViewModel>().getCustomerCountInfo();

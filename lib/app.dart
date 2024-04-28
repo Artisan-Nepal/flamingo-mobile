@@ -11,7 +11,6 @@ import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/feature.dart';
 import 'package:flamingo/navigation/navigation.dart';
 import 'package:provider/provider.dart';
-import 'package:khalti_flutter/khalti_flutter.dart';
 
 class App extends StatelessWidget {
   const App({
@@ -37,23 +36,16 @@ class App extends StatelessWidget {
       builder: (ctx, child) {
         final navigationService = locator<NavigationService>();
 
-        return KhaltiScope(
-          publicKey: CommonConstants.khaltiPublicKey,
-          builder: (context, navigatorKey) => MaterialApp(
-            navigatorKey: navigatorKey,
-            debugShowCheckedModeBanner: false,
-            title: Strings.appName,
-            theme: lightTheme,
-            themeMode: ThemeMode.light,
-            home: getInititalScreen(navigationService.initialRoute),
-            supportedLocales: const [
-              Locale('en', 'US'),
-              Locale('ne', 'NP'),
-            ],
-            localizationsDelegates: const [
-              KhaltiLocalizations.delegate,
-            ],
-          ),
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: Strings.appName,
+          theme: lightTheme,
+          themeMode: ThemeMode.light,
+          home: getInititalScreen(navigationService.initialRoute),
+          supportedLocales: const [
+            Locale('en', 'US'),
+            Locale('ne', 'NP'),
+          ],
         );
       },
     );

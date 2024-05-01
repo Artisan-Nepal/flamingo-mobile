@@ -21,7 +21,8 @@ class Order {
   final OrderStatus orderStatus;
   final DateTime createdAt;
   final DateTime estimatedDelivery;
-  final int orderId;
+  final int orderCode;
+  final String checkoutId;
 
   Order({
     required this.id,
@@ -32,9 +33,10 @@ class Order {
     required this.shippingMethod,
     required this.orderTotal,
     required this.createdAt,
-    required this.orderId,
+    required this.orderCode,
     required this.estimatedDelivery,
     required this.quantity,
+    required this.checkoutId,
     required this.product,
     required this.productVariant,
     required this.price,
@@ -53,7 +55,8 @@ class Order {
         shippingMethod: ShippingMethod.fromJson(json['shippingMethod']),
         createdAt: DateTime.parse(json['createdAt']),
         estimatedDelivery: DateTime.parse(json['estimatedDelivery']),
-        orderId: json['orderId'],
+        orderCode: json['orderCode'],
+        checkoutId: json['checkoutId'],
         quantity: json['quantity'],
         price: json['price'],
         product: OrderItemProduct.fromJson(json['productVariant']['product']),

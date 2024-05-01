@@ -361,16 +361,23 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
     viewModel.setPlaceOrderUseCase(Response.loading());
     final paymentCode = viewModel.selectedPaymentMethod!.code;
     final paymentHelper = PaymentHelperFactory.create(paymentCode);
+
     await paymentHelper.pay(
       context,
       amount: viewModel.netTotal,
       checkoutId: viewModel.orderItemIds,
       checkoutName: viewModel.orderItemNames,
+      onlinePaymentToken:
+          viewModel.initiateOnlineCheckoutUseCase.data!.onlinePaymentToken,
       onSuccess: (successResponse) async {
         await viewModel.placeOrder(onlinePaymentToken: successResponse.token);
         _observeCheckoutResponse(viewModel);
       },
-      onFailure: (failureResponse) {},
+      onFailure: (failureResponse) {
+        viewModel.setPlaceOrderUseCase(
+            Response.error(AppException(failureResponse.message)));
+        _observeCheckoutResponse(viewModel);
+      },
     );
   }
 
@@ -386,6 +393,4 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
       );
     }
   }
-
-  Future<void> _initateOnlineCheckout(PlaceOrderViewModel viewModel) async {}
 }

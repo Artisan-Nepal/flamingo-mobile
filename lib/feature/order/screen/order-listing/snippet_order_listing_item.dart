@@ -83,7 +83,7 @@ class SnippetOrderListingItem extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        order.orderId.toString(),
+                        order.orderCode.toString(),
                         style: TextStyle(
                           fontSize: Dimens.fontSizeDefault,
                           fontWeight: FontWeight.w600,

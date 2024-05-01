@@ -37,7 +37,7 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
         builder: (context, viewModel, child) {
           return DefaultScreen(
             scrollable: false,
-            appBarTitle: Text('Code: ${widget.order.orderId}'),
+            appBarTitle: Text('Code: ${widget.order.orderCode}'),
             child: Column(
               children: [
                 const Align(

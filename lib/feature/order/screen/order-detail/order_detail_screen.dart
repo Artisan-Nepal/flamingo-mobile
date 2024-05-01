@@ -22,7 +22,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return DefaultScreen(
-      appBarTitle: Text('Order ID: ${widget.order.orderId.toString()}'),
+      appBarTitle: Text('Order ID: ${widget.order.orderCode.toString()}'),
       bottomNavigationBar: _buildBottomBar(),
       child: Column(
         children: [

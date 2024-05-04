@@ -56,7 +56,7 @@ class DefaultErrorWidget extends StatelessWidget {
                   Image.asset(
                     ImageConstants.errorPlaceholder,
                     height: 100,
-                    color: AppColors.grayMain,
+                    color: AppColors.grayLight,
                   ),
                   const SizedBox(
                     height: 10,

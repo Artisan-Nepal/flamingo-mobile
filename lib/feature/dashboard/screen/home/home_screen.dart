@@ -221,16 +221,20 @@ class _HomeScreenState extends State<HomeScreen>
 
   _buildAppBar() {
     return AppBar(
-      title: Text(
-        'Flamingo',
-        style: textTheme(context).headlineSmall!.copyWith(
-              color: isLightMode(context)
-                  ? themedPrimaryColor(context)
-                  : AppColors.white,
-              fontWeight: FontWeight.w600,
-              letterSpacing: 0.8,
-            ),
+      title: Image.asset(
+        ImageConstants.appIconWithName,
+        height: SizeConfig.appBarHeight - 20,
       ),
+      // title: Text(
+      //   'Flamingo',
+      //   style: textTheme(context).headlineSmall!.copyWith(
+      //         color: isLightMode(context)
+      //             ? themedPrimaryColor(context)
+      //             : AppColors.white,
+      //         fontWeight: FontWeight.w600,
+      //         letterSpacing: 0.8,
+      //       ),
+      // ),
       actions: [
         Padding(
           padding: const EdgeInsets.only(

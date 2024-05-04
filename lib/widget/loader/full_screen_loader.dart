@@ -77,7 +77,7 @@ class _CustomLoaderState extends State<CustomLoader>
                   color: AppColors.grayLighter,
                 ),
                 child: Image.asset(
-                  ImageConstants.appLogo,
+                  ImageConstants.appIcon,
                   height: 23,
                 ),
               ),

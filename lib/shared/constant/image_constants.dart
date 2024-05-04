@@ -1,7 +1,8 @@
 class ImageConstants {
-  static const String appLogo = "assets/drawable/app_logo.png";
-  static const String errorPlaceholder =
-      "assets/drawable/error_placeholder.png";
+  static const String appIcon = "assets/drawable/app_icon.png";
+  static const String appIconWithName =
+      "assets/drawable/app_icon_with_name.png";
+  static const String errorPlaceholder = "assets/drawable/app_icon.png";
   static const String onboarding = "assets/drawable/onboarding.jpg";
   static const String onboarding1 = "assets/drawable/onboarding1.svg";
   static const String onboarding2 = "assets/drawable/onboarding2.svg";

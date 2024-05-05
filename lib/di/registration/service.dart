@@ -1,3 +1,4 @@
+import 'package:flamingo/%20notification/notification.dart';
 import 'package:flamingo/data/local/local.dart';
 import 'package:flamingo/di/service_names.dart';
 import 'package:flamingo/feature/feature.dart';
@@ -31,5 +32,9 @@ void registerServices(GetIt locator) {
         instanceName: ServiceNames.sharedPrefManager,
       ),
     ),
+  );
+
+  locator.registerLazySingleton(
+    () => NotificationService(),
   );
 }

@@ -3,7 +3,7 @@ import 'package:flamingo/feature/customer-activity/data/model/customer_count_inf
 abstract class CustomerActivityRepository {
   Future<CustomerCountInfoResponse> getCustomerCountInfo();
   Future<void> createUserActivity({
-    String? vendorId,
+    String? sellerId,
     String? productId,
     required String activityType,
   });

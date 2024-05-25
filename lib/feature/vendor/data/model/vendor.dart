@@ -25,6 +25,7 @@ class Vendor {
   final Address? warehouseAddress;
   final Address? returnAddress;
   final bool isFavourited;
+  final String sellerId;
 
   Vendor({
     required this.id,
@@ -49,6 +50,7 @@ class Vendor {
     this.returnAddress,
     this.warehouseAddress,
     required this.isFavourited,
+    required this.sellerId,
   });
 
   factory Vendor.fromJson(Map<String, dynamic> json) => Vendor(
@@ -59,6 +61,7 @@ class Vendor {
         name: json['name'],
         description: json['description'],
         websiteUrl: json['websiteUrl'],
+        sellerId: json['sellerId'],
         displayImage: json['displayImage'] == null
             ? null
             : UploadFileResponse.fromJson(json['displayImage']),

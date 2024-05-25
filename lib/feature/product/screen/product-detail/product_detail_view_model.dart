@@ -72,7 +72,7 @@ class ProductDetailViewModel extends ChangeNotifier {
       _selectedSizeOption = _productUseCase.data!.variants.first.size;
 
       await locator<CreateActivityViewModel>().createUserActivity(
-        vendorId: _productUseCase.data!.seller.vendor!.id,
+        sellerId: _productUseCase.data!.seller.id,
         productId: productId,
         activityType: UserActivityType.viewProduct,
       );

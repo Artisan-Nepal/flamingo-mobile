@@ -39,7 +39,7 @@ class _VendorProfileScreenState extends State<VendorProfileScreen> {
 
   logActivity() async {
     await locator<CreateActivityViewModel>().createUserActivity(
-      vendorId: widget.vendor.id,
+      sellerId: widget.vendor.sellerId,
       activityType: UserActivityType.viewVendor,
     );
   }

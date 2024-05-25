@@ -26,14 +26,14 @@ class CreateActivityViewModel extends ChangeNotifier {
   }
 
   Future<void> createUserActivity({
-    String? vendorId,
+    String? sellerId,
     String? productId,
     required String activityType,
   }) async {
     try {
       setUserActivityUseCase(Response.loading());
       await _customerActivityRepository.createUserActivity(
-        vendorId: vendorId,
+        sellerId: sellerId,
         productId: productId,
         activityType: activityType,
       );

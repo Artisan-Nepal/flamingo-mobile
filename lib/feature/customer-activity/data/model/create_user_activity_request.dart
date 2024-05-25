@@ -1,12 +1,12 @@
 class CreateUserActivityRequest {
   final String userId;
-  final String? vendorId;
+  final String? sellerId;
   final String? productId;
   final String activityType;
 
   CreateUserActivityRequest({
     required this.userId,
-    required this.vendorId,
+    required this.sellerId,
     required this.productId,
     required this.activityType,
   });
@@ -17,8 +17,8 @@ class CreateUserActivityRequest {
       "activityType": activityType,
     };
 
-    if (vendorId != null) {
-      json['vendorId'] = vendorId!;
+    if (sellerId != null) {
+      json['sellerId'] = sellerId!;
     }
     if (productId != null) {
       json['productId'] = productId!;

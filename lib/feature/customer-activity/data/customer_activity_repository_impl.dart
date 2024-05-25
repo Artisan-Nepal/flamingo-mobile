@@ -44,14 +44,14 @@ class CustomerActivityRepositoryImpl implements CustomerActivityRepository {
 
   @override
   Future<void> createUserActivity(
-      {String? vendorId,
+      {String? sellerId,
       String? productId,
       required String activityType}) async {
     final userId = (await _authRepository.getUserLocal())!.userId;
     return _customerActivityRemote.createUserActivity(
       CreateUserActivityRequest(
         userId: userId,
-        vendorId: vendorId,
+        sellerId: sellerId,
         productId: productId,
         activityType: activityType,
       ),

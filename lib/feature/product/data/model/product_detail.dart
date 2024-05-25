@@ -2,6 +2,7 @@ import 'package:flamingo/feature/product/data/model/product_color.dart';
 import 'package:flamingo/feature/product/data/model/product_size.dart';
 import 'package:flamingo/feature/product-story/data/model/product_story.dart';
 import 'package:flamingo/feature/upload-file/data/model/upload_file_response.dart';
+import 'package:flamingo/feature/vendor/data/model/seller.dart';
 import 'package:flamingo/feature/vendor/data/model/vendor.dart';
 
 class ProductDetail {
@@ -16,6 +17,7 @@ class ProductDetail {
   final List<ProductStory> stories;
   final bool isInWishlist;
   final String? details;
+  final Seller seller;
 
   ProductDetail({
     required this.id,
@@ -28,6 +30,7 @@ class ProductDetail {
     required this.isInWishlist,
     required this.images,
     required this.stories,
+    required this.seller,
     this.details,
   });
 
@@ -38,6 +41,7 @@ class ProductDetail {
         status: json['status'],
         details: json['details'],
         vendor: Vendor.fromJson(json['vendor']),
+        seller: Seller.fromJson(json['seller']),
         tags: List<String>.from(
             json['productToTag'].map((e) => e['productTag']['name'])),
         variants: ProductVariant.fromJsonList(json['variants']),

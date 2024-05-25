@@ -10,18 +10,19 @@ class Customer extends JsonSerializable {
   final String? lastName;
   final String? email;
   final String? displayImageUrl;
+  final String? sellerId;
 
-  Customer({
-    required this.roles,
-    required this.id,
-    required this.mobileNumber,
-    required this.userId,
-    required this.createdAt,
-    this.displayImageUrl,
-    this.firstName,
-    this.lastName,
-    this.email,
-  });
+  Customer(
+      {required this.roles,
+      required this.id,
+      required this.mobileNumber,
+      required this.userId,
+      required this.createdAt,
+      this.displayImageUrl,
+      this.firstName,
+      this.lastName,
+      this.email,
+      this.sellerId});
 
   factory Customer.fromJson(Map<String, dynamic> json) => Customer(
         roles: List<UserRole>.from(
@@ -34,6 +35,7 @@ class Customer extends JsonSerializable {
         displayImageUrl: json['displayImageUrl'],
         lastName: json['lastName'],
         email: json['email'],
+        sellerId: json['sellerId'],
       );
 
   @override
@@ -47,5 +49,6 @@ class Customer extends JsonSerializable {
         "lastName": lastName,
         "email": email,
         "displayImageUrl": displayImageUrl,
+        "sellerId": sellerId,
       };
 }

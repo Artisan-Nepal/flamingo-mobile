@@ -50,7 +50,7 @@ class _SnippetCartListingItemState extends State<SnippetCartListingItem> {
                             widget.cartItem.product.images,
                             widget.cartItem.productVariant,
                           ),
-                          needPlaceHolder: false,
+                          needPlaceHolder: true,
                           fit: BoxFit.cover,
                           height: 150,
                         ),

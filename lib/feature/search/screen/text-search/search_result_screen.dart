@@ -115,13 +115,14 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                                                   product.images,
                                                   product.variants,
                                                 ),
-                                                vendorId: product.vendor.id,
+                                                vendorId:
+                                                    product.seller.vendor!.id,
                                                 price: product
                                                     .variants.first.price,
                                                 productId: product.id,
                                                 title: product.title,
-                                                vendor:
-                                                    product.vendor.storeName,
+                                                vendor: product
+                                                    .seller.vendor!.storeName,
                                                 product: product,
                                               ),
                                             )

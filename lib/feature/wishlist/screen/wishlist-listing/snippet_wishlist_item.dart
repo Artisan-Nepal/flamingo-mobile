@@ -87,7 +87,7 @@ class _SnippetWishListItemState extends State<SnippetWishListItem> {
               const VerticalSpaceWidget(height: Dimens.spacingSizeExtraSmall),
 
               TextWidget(
-                widget.item.product.vendor.storeName,
+                widget.item.product.seller.vendor!.storeName,
                 style: textTheme(context).bodyMedium!.copyWith(
                       fontWeight: FontWeight.bold,
                     ),

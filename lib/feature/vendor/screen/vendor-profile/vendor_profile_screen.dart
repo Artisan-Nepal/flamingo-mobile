@@ -193,7 +193,7 @@ class _VendorProfileScreenState extends State<VendorProfileScreen> {
               price: p.variants.first.price,
               productId: p.id,
               title: p.title,
-              vendor: p.vendor.storeName,
+              vendor: p.seller.vendor!.storeName,
             ),
           )
           .toList(),

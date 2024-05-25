@@ -100,7 +100,7 @@ class _ProductListingScreenState extends State<ProductListingScreen> {
                           price: product.variants.first.price,
                           productId: product.id,
                           title: product.title,
-                          vendor: product.vendor.storeName,
+                          vendor: product.seller.vendor!.storeName,
                           product: product,
                         ),
                       )

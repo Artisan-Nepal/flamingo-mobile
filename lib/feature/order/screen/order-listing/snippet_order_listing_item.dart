@@ -95,7 +95,7 @@ class SnippetOrderListingItem extends StatelessWidget {
                   const VerticalSpaceWidget(
                       height: Dimens.spacingSizeExtraSmall),
                   TextWidget(
-                    order.product.vendor.storeName,
+                    order.product.seller.vendor!.storeName,
                     textOverflow: TextOverflow.ellipsis,
                     style: textTheme(context).bodyMedium!,
                   ),

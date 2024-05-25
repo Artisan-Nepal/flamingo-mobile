@@ -15,6 +15,14 @@ class Seller {
     this.vendor,
   });
 
+  bool get isVendor {
+    return type.isVendor;
+  }
+
+  bool get isCustomer {
+    return type.isCustomer;
+  }
+
   factory Seller.fromJson(Map<String, dynamic> json) => Seller(
       id: json["id"],
       type: sellerTypeFromString(json['type']),

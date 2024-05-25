@@ -3,14 +3,12 @@ import 'package:flamingo/feature/product/data/model/product_size.dart';
 import 'package:flamingo/feature/product-story/data/model/product_story.dart';
 import 'package:flamingo/feature/upload-file/data/model/upload_file_response.dart';
 import 'package:flamingo/feature/vendor/data/model/seller.dart';
-import 'package:flamingo/feature/vendor/data/model/vendor.dart';
 
 class ProductDetail {
   final String id;
   final String title;
   final String body;
   final String status;
-  final Vendor vendor;
   final List<String> tags;
   final List<ProductVariant> variants;
   final List<String> images;
@@ -24,7 +22,6 @@ class ProductDetail {
     required this.title,
     required this.body,
     required this.status,
-    required this.vendor,
     required this.tags,
     required this.variants,
     required this.isInWishlist,
@@ -40,7 +37,6 @@ class ProductDetail {
         body: json['body'],
         status: json['status'],
         details: json['details'],
-        vendor: Vendor.fromJson(json['vendor']),
         seller: Seller.fromJson(json['seller']),
         tags: List<String>.from(
             json['productToTag'].map((e) => e['productTag']['name'])),

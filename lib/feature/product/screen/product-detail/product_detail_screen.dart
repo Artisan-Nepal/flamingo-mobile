@@ -103,8 +103,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       SnippetProductDetailImages(
-                                        vendor: viewModel
-                                            .productUseCase.data!.vendor,
+                                        vendor: viewModel.productUseCase.data!
+                                            .seller.vendor!,
                                         title: viewModel
                                             .productUseCase.data!.title,
                                         stories: viewModel
@@ -305,8 +305,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       Divider(
         color: AppColors.grayLight,
       ),
-      if (product.vendor.description != null &&
-          product.vendor.description!.isNotEmpty) ...[
+      if (product.seller.vendor!.description != null &&
+          product.seller.vendor!.description!.isNotEmpty) ...[
         ExpansionTileWidget(
           title: Text(
             'ABOUT THE BRAND',
@@ -314,7 +314,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           ),
           children: <Widget>[
             Text(
-              product.vendor.description!,
+              product.seller.vendor!.description!,
               style: textTheme(context).bodyMedium,
             ),
           ],
@@ -465,7 +465,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   List<Widget> _buildProductInformation(ProductDetailViewModel viewModel) {
     return [
       TextWidget(
-        viewModel.productUseCase.data!.vendor.storeName,
+        viewModel.productUseCase.data!.seller.vendor!.storeName,
         textOverflow: TextOverflow.ellipsis,
         style: textTheme(context).bodyMedium!.copyWith(
               fontWeight: FontWeight.w800,

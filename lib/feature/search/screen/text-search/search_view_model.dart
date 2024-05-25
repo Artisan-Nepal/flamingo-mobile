@@ -104,7 +104,7 @@ class SearchViewModel extends ChangeNotifier {
 
     for (ProductDetail product in productsToLog) {
       await locator<CreateActivityViewModel>().createUserActivity(
-        vendorId: product.vendor.id,
+        vendorId: product.seller.vendor!.id,
         productId: product.id,
         activityType: UserActivityType.searchProduct,
       );

@@ -3,7 +3,7 @@ import 'package:flamingo/feature/order/data/model/order_status.dart';
 import 'package:flamingo/feature/order/data/model/payment_method.dart';
 import 'package:flamingo/feature/order/data/model/shipping_method.dart';
 import 'package:flamingo/feature/product/data/model/product_detail.dart';
-import 'package:flamingo/feature/vendor/data/model/vendor.dart';
+import 'package:flamingo/feature/vendor/data/model/seller.dart';
 
 class Order {
   final String id;
@@ -72,21 +72,21 @@ class OrderItemProduct {
   final String id;
   final String title;
   final String body;
-  final Vendor vendor;
+  final Seller seller;
   final List<String> images;
 
   OrderItemProduct({
     required this.id,
     required this.title,
     required this.body,
-    required this.vendor,
+    required this.seller,
     required this.images,
   });
 
   factory OrderItemProduct.fromJson(Map<String, dynamic> json) =>
       OrderItemProduct(
         id: json['id'],
-        vendor: Vendor.fromJson(json['vendor']),
+        seller: Seller.fromJson(json['seller']),
         title: json['title'],
         body: json['body'],
         images: json['images'] == null

@@ -12,12 +12,14 @@ class FavVendorButtonWidget extends StatefulWidget {
     this.iconSize = Dimens.iconSize_22,
     this.color = AppColors.black,
     this.padding,
+    this.enabled = true,
   });
 
   final String vendorId;
   final double iconSize;
   final Color color;
   final EdgeInsets? padding;
+  final bool enabled;
   @override
   State<FavVendorButtonWidget> createState() => _FavVendorButtonWidgetState();
 }
@@ -38,15 +40,20 @@ class _FavVendorButtonWidgetState extends State<FavVendorButtonWidget> {
                 final isFavourited = viewModel.isFavourited(widget.vendorId);
                 return GestureDetector(
                   onTap: () {
-                    _onUpdateFavouriteBrand(updateFavouriteVendorViewModel);
+                    if (widget.enabled) {
+                      _onUpdateFavouriteBrand(updateFavouriteVendorViewModel);
+                    }
                   },
                   child: Container(
                     color: AppColors.transparent,
                     padding: widget.padding,
                     child: Icon(
-                      isFavourited ? Icons.favorite : Icons.favorite_outline,
+                      isFavourited || !widget.enabled
+                          ? Icons.favorite
+                          : Icons.favorite_outline,
                       size: widget.iconSize,
-                      color: widget.color,
+                      color:
+                          widget.enabled ? widget.color : AppColors.grayLight,
                     ),
                   ),
                 );

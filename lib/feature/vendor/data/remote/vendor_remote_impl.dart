@@ -40,4 +40,11 @@ class VendorRemoteImpl implements VendorRemote {
     final apiResponse = await _apiClient.get(url);
     return VendorLikeResponse.fromJson(apiResponse.data);
   }
+
+  @override
+  Future<Vendor> getVendorBySellerId(String sellerId) async {
+    final url = ApiUrls.vendorBySellerId.replaceFirst(':id', sellerId);
+    final apiResponse = await _apiClient.get(url);
+    return Vendor.fromJson(apiResponse.data);
+  }
 }

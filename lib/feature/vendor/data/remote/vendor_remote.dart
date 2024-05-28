@@ -8,4 +8,5 @@ abstract class VendorRemote {
   Future<VendorLikeResponse> getVendorLikes(String vendorId);
   Future<FetchResponse<Vendor>> getFavouriteVendors();
   Future updateFavouriteVendor(UpdateFavouriteVendorRequest request);
+  Future<Vendor> getVendorBySellerId(String sellerId);
 }

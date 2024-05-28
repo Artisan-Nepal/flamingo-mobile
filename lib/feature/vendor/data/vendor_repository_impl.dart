@@ -41,4 +41,9 @@ class VendorRepositoryImpl implements VendorRepository {
   Future<VendorLikeResponse> getVendorLikes(String vendorId) async {
     return _vendorRemote.getVendorLikes(vendorId);
   }
+
+  @override
+  Future<Vendor> getVendorBySellerId(String sellerId) async {
+    return _vendorRemote.getVendorBySellerId(sellerId);
+  }
 }

@@ -47,4 +47,5 @@ class ApiUrls {
   static String imageSearch = '/recommender/image_search';
   static String getUserRecommendations =
       '/recommender/users/:userId/recommend_products';
+  static String vendorBySellerId = '/vendors/seller/:id';
 }

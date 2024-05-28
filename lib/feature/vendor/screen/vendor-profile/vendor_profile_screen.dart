@@ -45,7 +45,12 @@ class _VendorProfileScreenState extends State<VendorProfileScreen> {
   }
 
   getData() async {
-    locator<FavouriteVendorViewModel>().getVendorLikes(widget.seller.id);
+    await _viewModel.getVendorBySellerId(widget.seller.id);
+    if (_viewModel.vendorUseCase.hasCompleted) {
+      final vendor = _viewModel.vendorUseCase.data!;
+      locator<FavouriteVendorViewModel>().getVendorLikes(vendor.id);
+    }
+
     await _productListingViewModel.getSellerProducts(widget.seller.id);
 
     if (_productListingViewModel.getProductsUseCase.hasCompleted) {
@@ -85,66 +90,75 @@ class _VendorProfileScreenState extends State<VendorProfileScreen> {
         scrollable: false,
         child: SafeArea(
           child: Consumer<ProductListingViewModel>(
-            builder: (context, viewModel, child) {
+            builder: (context, productListingViewModel, child) {
               return CustomScrollView(
                 slivers: [
-                  SliverToBoxAdapter(
-                    child: Column(
-                      children: [
-                        if (widget.seller.displayImageUrl != null) ...[
-                          VerticalSpaceWidget(
-                              height: Dimens.spacingSizeDefault),
-                          ClipOval(
-                            child: CachedNetworkImageWidget(
-                              placeHolder:
-                                  ImageConstants.displayPicturePlaceHolder,
-                              image: widget.seller.displayImageUrl ?? "",
-                              fit: BoxFit.cover,
-                              height: SizeConfig.screenHeight * 0.1,
-                              width: SizeConfig.screenHeight * 0.1,
-                            ),
-                          ),
-                        ],
-                        VerticalSpaceWidget(height: Dimens.spacingSizeDefault),
-                        FavVendorButtonWidget(
-                          vendorId: widget.seller.id,
-                          iconSize: Dimens.iconSizeLarge,
-                        ),
-                        VerticalSpaceWidget(height: Dimens.spacingSizeDefault),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text('Liked by '),
-                            Consumer<FavouriteVendorViewModel>(
-                              builder: (context, viewModel, child) {
-                                final likes = viewModel.getVendorLikeCount(
-                                  widget.seller.id,
-                                );
-                                return Text(likes.toString());
-                              },
+                  Consumer<VendorProfileViewModel>(
+                      builder: (context, viewModel, child) {
+                    return SliverToBoxAdapter(
+                      child: Column(
+                        children: [
+                          if (widget.seller.displayImageUrl != null) ...[
+                            VerticalSpaceWidget(
+                                height: Dimens.spacingSizeDefault),
+                            ClipOval(
+                              child: CachedNetworkImageWidget(
+                                placeHolder:
+                                    ImageConstants.displayPicturePlaceHolder,
+                                image: widget.seller.displayImageUrl ?? "",
+                                fit: BoxFit.cover,
+                                height: SizeConfig.screenHeight * 0.1,
+                                width: SizeConfig.screenHeight * 0.1,
+                              ),
                             ),
                           ],
-                        ),
-                        // VerticalSpaceWidget(height: Dimens.spacingSizeLarge),
-                        // Padding(
-                        //   padding: const EdgeInsets.symmetric(
-                        //     horizontal: Dimens.spacingSizeDefault,
-                        //   ),
-                        //   child: Align(
-                        //     alignment: Alignment.centerLeft,
-                        //     child: Text(
-                        //       'Products',
-                        //       style: textTheme(context).titleSmall!.copyWith(
-                        //             fontWeight: FontWeight.bold,
-                        //           ),
-                        //     ),
-                        //   ),
-                        // ),
-                        VerticalSpaceWidget(height: Dimens.spacingSizeDefault),
-                      ],
-                    ),
-                  ),
-                  _buildProductListing(viewModel)
+                          VerticalSpaceWidget(
+                              height: Dimens.spacingSizeDefault),
+                          FavVendorButtonWidget(
+                            vendorId: viewModel.vendorUseCase.data?.id ?? '',
+                            iconSize: Dimens.iconSizeLarge,
+                            enabled: viewModel.vendorUseCase.hasCompleted,
+                          ),
+                          VerticalSpaceWidget(
+                              height: Dimens.spacingSizeDefault),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text('Liked by '),
+                              Consumer<FavouriteVendorViewModel>(
+                                builder:
+                                    (context, favouriteVendorViewModel, child) {
+                                  final likes = favouriteVendorViewModel
+                                      .getVendorLikeCount(
+                                    viewModel.vendorUseCase.data?.id ?? '',
+                                  );
+                                  return Text(likes.toString());
+                                },
+                              ),
+                            ],
+                          ),
+                          // VerticalSpaceWidget(height: Dimens.spacingSizeLarge),
+                          // Padding(
+                          //   padding: const EdgeInsets.symmetric(
+                          //     horizontal: Dimens.spacingSizeDefault,
+                          //   ),
+                          //   child: Align(
+                          //     alignment: Alignment.centerLeft,
+                          //     child: Text(
+                          //       'Products',
+                          //       style: textTheme(context).titleSmall!.copyWith(
+                          //             fontWeight: FontWeight.bold,
+                          //           ),
+                          //     ),
+                          //   ),
+                          // ),
+                          VerticalSpaceWidget(
+                              height: Dimens.spacingSizeDefault),
+                        ],
+                      ),
+                    );
+                  }),
+                  _buildProductListing(productListingViewModel)
                 ],
               );
             },

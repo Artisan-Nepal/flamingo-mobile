@@ -1,18 +1,18 @@
 import 'package:flamingo/feature/product-story/data/model/product_story.dart';
-import 'package:flamingo/feature/vendor/data/model/vendor.dart';
+import 'package:flamingo/feature/vendor/data/model/seller.dart';
 
 class GroupedProductStory {
-  final Vendor vendor;
+  final Seller seller;
   final List<GroupedProductStoryItem> items;
 
   GroupedProductStory({
-    required this.vendor,
+    required this.seller,
     required this.items,
   });
 
   factory GroupedProductStory.fromJson(Map<String, dynamic> json) =>
       GroupedProductStory(
-        vendor: Vendor.fromJson(json['vendor']),
+        seller: Seller.fromJson(json['seller']),
         items: GroupedProductStoryItem.fromJsonList(json['items']),
       );
 

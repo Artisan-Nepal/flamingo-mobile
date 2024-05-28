@@ -3,7 +3,7 @@ import 'package:flamingo/feature/product-story/data/model/product_story.dart';
 import 'package:flamingo/feature/product/screen/product-detail/product_detail_app_bar_view_model.dart';
 import 'package:flamingo/feature/product/screen/product-detail/product_detail_images_screen.dart';
 import 'package:flamingo/feature/product-story/screen/product-story/product_story_screen.dart';
-import 'package:flamingo/feature/vendor/data/model/vendor.dart';
+import 'package:flamingo/feature/vendor/data/model/seller.dart';
 import 'package:flamingo/shared/enum/lead_source.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/button/button.dart';
@@ -24,7 +24,7 @@ class SnippetProductDetailImages extends StatefulWidget {
     this.leadSource,
     this.advertisementId,
     required this.title,
-    required this.vendor,
+    required this.seller,
   }) : super(key: key);
 
   final List<String> images;
@@ -33,7 +33,7 @@ class SnippetProductDetailImages extends StatefulWidget {
   final String? advertisementId;
   final List<ProductStory> stories;
   final String title;
-  final Vendor vendor;
+  final Seller seller;
 
   @override
   State<SnippetProductDetailImages> createState() =>
@@ -140,7 +140,7 @@ class _SnippetProductDetailImagesState
             context,
             ProductStoryScreen(
               groupedStory: GroupedProductStory(
-                vendor: widget.vendor,
+                seller: widget.seller,
                 items: widget.stories
                     .map((s) => GroupedProductStoryItem(
                         productId: widget.productId,

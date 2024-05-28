@@ -223,8 +223,9 @@ class _HomeScreenState extends State<HomeScreen>
     return AppBar(
       title: Image.asset(
         ImageConstants.appIconWithName,
-        height: SizeConfig.appBarHeight - 20,
+        height: SizeConfig.appBarHeight - 25,
       ),
+      centerTitle: false,
       // title: Text(
       //   'Flamingo',
       //   style: textTheme(context).headlineSmall!.copyWith(

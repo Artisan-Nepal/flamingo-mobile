@@ -124,7 +124,8 @@ class _AdvertisementScreenState extends State<AdvertisementScreen> {
                           price: p.variants.first.price,
                           productId: p.id,
                           title: p.title,
-                          vendor: widget.advertisement.vendor.storeName,
+                          sellerStoreName:
+                              widget.advertisement.vendor.seller.storeName,
                         ),
                       )
                       .toList(),
@@ -132,7 +133,7 @@ class _AdvertisementScreenState extends State<AdvertisementScreen> {
               ],
             ),
             SnippetAdvertisementAppBar(
-              title: widget.advertisement.vendor.storeName,
+              title: widget.advertisement.vendor.seller.storeName,
               vendorId: widget.advertisement.vendorId,
             ),
           ],

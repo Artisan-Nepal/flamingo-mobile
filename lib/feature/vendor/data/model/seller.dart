@@ -1,18 +1,30 @@
-import 'package:flamingo/feature/user/data/model/seller_customer.dart';
-import 'package:flamingo/feature/vendor/data/model/vendor.dart';
 import 'package:flamingo/shared/enum/seller_type.dart';
 
 class Seller {
   final String id;
+  final String storeName;
+  final String? displayImageUrl;
+  final String? storeDescription;
+  final String? bankName;
+  final String? bankAccName;
+  final String? bankAccNumber;
+  final String? bankBranchName;
+  final String? bankCheckPhoto;
+  final String? pan;
   final SellerType type;
-  final SellerCustomer? customer;
-  final Vendor? vendor;
 
   Seller({
     required this.id,
     required this.type,
-    this.customer,
-    this.vendor,
+    required this.storeName,
+    this.displayImageUrl,
+    this.storeDescription,
+    this.bankName,
+    this.bankAccName,
+    this.bankAccNumber,
+    this.bankBranchName,
+    this.bankCheckPhoto,
+    this.pan,
   });
 
   bool get isVendor {
@@ -24,21 +36,22 @@ class Seller {
   }
 
   factory Seller.fromJson(Map<String, dynamic> json) => Seller(
-      id: json["id"],
-      type: sellerTypeFromString(json['type']),
-      customer: json['customer'] == null
-          ? null
-          : SellerCustomer.fromJson(json['customer']),
-      vendor: json['vendor'] == null ? null : Vendor.fromJson(json['vendor']));
+        id: json["id"],
+        type: sellerTypeFromString(json['type']),
+        storeName: json['storeName'],
+        bankAccName: json['bankAccName'],
+        bankAccNumber: json['storeName'],
+        bankBranchName: json['bankBranchName'],
+        bankCheckPhoto: json['bankCheckPhoto'],
+        bankName: json['bankName'],
+        pan: json['pan'],
+        displayImageUrl: json['displayImageUrl'],
+        storeDescription: json['storeDescription'],
+      );
 
   static List<Seller> fromJsonList(dynamic json) => List<Seller>.from(
         json.map(
           (data) => Seller.fromJson(data),
-        ),
-      );
-  static List<Seller> fromFavouriteJsonList(dynamic json) => List<Seller>.from(
-        json.map(
-          (data) => Seller.fromJson(data['vendor']),
         ),
       );
 }

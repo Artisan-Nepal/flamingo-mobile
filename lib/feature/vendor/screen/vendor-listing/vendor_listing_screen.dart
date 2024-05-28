@@ -103,7 +103,7 @@ class SnippetVendorListing extends StatelessWidget {
             NavigationHelper.push(
               context,
               VendorProfileScreen(
-                vendor: vendors[index],
+                seller: vendors[index].seller,
               ),
             );
           },
@@ -118,7 +118,7 @@ class SnippetVendorListing extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  vendors[index].storeName,
+                  vendors[index].seller.storeName,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,

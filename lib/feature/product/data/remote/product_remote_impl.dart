@@ -21,6 +21,17 @@ class ProductRemoteImpl implements ProductRemote {
   }
 
   @override
+  Future<FetchResponse<ProductDetail>> getSellerProducts(
+      String sellerId) async {
+    final url = ApiUrls.productsBySellerId.replaceFirst(':id', sellerId);
+    final apiResponse = await _apiClient.get(url);
+    return FetchResponse.fromJson(
+      apiResponse.data,
+      ProductDetail.fromJsonList,
+    );
+  }
+
+  @override
   Future<FetchResponse<ProductDetail>> getCategoryProducts(
       String categoryId) async {
     final url = ApiUrls.productsByCategoryId.replaceFirst(':id', categoryId);

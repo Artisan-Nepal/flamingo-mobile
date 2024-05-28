@@ -224,11 +224,11 @@ class _ProductStoryScreenState extends State<ProductStoryScreen> {
                               onTap: () => NavigationHelper.push(
                                 context,
                                 VendorProfileScreen(
-                                  vendor: widget.groupedStory.vendor,
+                                  seller: widget.groupedStory.seller,
                                 ),
                               ),
                               child: Text(
-                                widget.groupedStory.vendor.storeName,
+                                widget.groupedStory.seller.storeName,
                                 style: TypographyStyles.bodyMedium.copyWith(
                                   color: AppColors.white,
                                   fontWeight: FontWeight.w600,
@@ -272,11 +272,11 @@ class _ProductStoryScreenState extends State<ProductStoryScreen> {
   Widget _buildVendorAvatar() {
     return GestureDetector(
       onTap: () => NavigationHelper.push(
-          context, VendorProfileScreen(vendor: widget.groupedStory.vendor)),
+          context, VendorProfileScreen(seller: widget.groupedStory.seller)),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(100),
         child: CachedNetworkImageWidget(
-          image: widget.groupedStory.vendor.displayImage?.url ?? "",
+          image: widget.groupedStory.seller.displayImageUrl ?? "",
           height: 40,
           width: 40,
           fit: BoxFit.cover,

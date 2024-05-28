@@ -3,6 +3,7 @@ import 'package:flamingo/feature/product/data/model/product.dart';
 import 'package:flamingo/feature/product/screen/product-listing/product_listing_view_model.dart';
 import 'package:flamingo/feature/product/screen/product-listing/snippet_filter_products_bottomsheet.dart';
 import 'package:flamingo/feature/product/screen/product-listing/snippet_product_listing.dart';
+import 'package:flamingo/feature/vendor/data/model/seller.dart';
 import 'package:flamingo/feature/vendor/data/model/vendor.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/error/default_error_widget.dart';
@@ -18,12 +19,12 @@ class ProductListingScreen extends StatefulWidget {
     required this.title,
     required this.productType,
     this.categoryId,
-    this.vendor,
+    this.seller,
   });
 
   final String title;
   final ProductType productType;
-  final Vendor? vendor;
+  final Seller? seller;
   final String? categoryId;
 
   @override
@@ -43,8 +44,8 @@ class _ProductListingScreenState extends State<ProductListingScreen> {
     if (widget.productType.isCategory && widget.categoryId != null) {
       await _viewModel.getCategoryProducts(widget.categoryId!,
           isRefresh: isRefresh);
-    } else if (widget.productType.isVendor && widget.vendor != null) {
-      await _viewModel.getVendorProducts(widget.vendor!.id,
+    } else if (widget.productType.isSeller && widget.seller != null) {
+      await _viewModel.getVendorProducts(widget.seller!.id,
           isRefresh: isRefresh);
     } else {
       await _viewModel.getProducts(
@@ -100,7 +101,7 @@ class _ProductListingScreenState extends State<ProductListingScreen> {
                           price: product.variants.first.price,
                           productId: product.id,
                           title: product.title,
-                          vendor: product.seller.vendor!.storeName,
+                          sellerStoreName: product.seller.storeName,
                           product: product,
                         ),
                       )

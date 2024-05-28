@@ -105,9 +105,8 @@ class SnippetHomeScreenStory extends StatelessWidget {
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(100),
                               child: CachedNetworkImageWidget(
-                                image:
-                                    stories[index].vendor.displayImage?.url ??
-                                        stories[index].items[0].productImage,
+                                image: stories[index].seller.displayImageUrl ??
+                                    stories[index].items[0].productImage,
                                 height: 60,
                                 width: 60,
                                 fit: BoxFit.cover,
@@ -117,7 +116,7 @@ class SnippetHomeScreenStory extends StatelessWidget {
                         ),
                         VerticalSpaceWidget(height: Dimens.spacing_2),
                         Text(
-                          stories[index].vendor.storeName,
+                          stories[index].seller.storeName,
                           style: textTheme(context).bodySmall,
                           textAlign: TextAlign.center,
                           maxLines: 1,

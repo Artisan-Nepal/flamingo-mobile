@@ -19,6 +19,7 @@ class ApiUrls {
   static String productSearch = '/products/search';
   static String productSearchSuggestion = '/products/search/suggestions';
   static String productsByVendorId = '/products/vendor/:id';
+  static String productsBySellerId = '/products/seller/:id';
   static String productsByCategoryId = '/products/category/:id';
   static String carts = '/carts';
   static String wishlists = '/wishlists';

@@ -41,7 +41,7 @@ class ProductWidget extends StatelessWidget {
           ProductDetailScreen(
             productId: payload.productId,
             product: payload.product,
-            title: payload.vendor,
+            title: payload.sellerStoreName,
             advertisementId: advertisementId,
             leadSource: leadSource,
           ),
@@ -94,7 +94,7 @@ class ProductWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     TextWidget(
-                      payload.vendor,
+                      payload.sellerStoreName,
                       textOverflow: TextOverflow.ellipsis,
                       style: textTheme(context).bodyMedium!.copyWith(
                             fontWeight: FontWeight.w800,

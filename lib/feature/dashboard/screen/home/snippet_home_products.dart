@@ -71,7 +71,7 @@ class SnippetHomeProducts extends StatelessWidget {
                   price: products[index].variants.first.price,
                   productId: products[index].id,
                   title: products[index].title,
-                  vendor: products[index].seller.vendor!.storeName,
+                  sellerStoreName: products[index].seller.storeName,
                 ),
               ),
             ),

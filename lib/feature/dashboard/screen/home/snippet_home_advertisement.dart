@@ -84,7 +84,7 @@ class _SnippetHomeAdvertisementState extends State<SnippetHomeAdvertisement> {
                       },
                       image: advertisements[index].primaryImageUrl,
                       title: advertisements[index].title,
-                      body: advertisements[index].vendor.storeName,
+                      body: advertisements[index].vendor.seller.storeName,
                     );
                   },
                 ),

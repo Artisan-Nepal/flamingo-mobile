@@ -3,7 +3,7 @@ import 'package:flamingo/feature/customer-activity/create_activity_view_model.da
 import 'package:flamingo/feature/product/data/model/product.dart';
 import 'package:flamingo/feature/product/screen/product-listing/product_listing_view_model.dart';
 import 'package:flamingo/feature/product/screen/product-listing/snippet_product_listing.dart';
-import 'package:flamingo/feature/vendor/data/model/vendor.dart';
+import 'package:flamingo/feature/vendor/data/model/seller.dart';
 import 'package:flamingo/feature/vendor/favourite_vendor_view_model.dart';
 import 'package:flamingo/feature/vendor/screen/vendor-profile/vendor_profile_view_model.dart';
 import 'package:flamingo/shared/constant/user_activity_type.dart';
@@ -19,10 +19,10 @@ import 'package:provider/provider.dart';
 class VendorProfileScreen extends StatefulWidget {
   const VendorProfileScreen({
     super.key,
-    required this.vendor,
+    required this.seller,
   });
 
-  final Vendor vendor;
+  final Seller seller;
 
   @override
   State<VendorProfileScreen> createState() => _VendorProfileScreenState();
@@ -39,14 +39,14 @@ class _VendorProfileScreenState extends State<VendorProfileScreen> {
 
   logActivity() async {
     await locator<CreateActivityViewModel>().createUserActivity(
-      sellerId: widget.vendor.sellerId,
+      sellerId: widget.seller.id,
       activityType: UserActivityType.viewVendor,
     );
   }
 
   getData() async {
-    locator<FavouriteVendorViewModel>().getVendorLikes(widget.vendor.id);
-    await _productListingViewModel.getVendorProducts(widget.vendor.id);
+    locator<FavouriteVendorViewModel>().getVendorLikes(widget.seller.id);
+    await _productListingViewModel.getSellerProducts(widget.seller.id);
 
     if (_productListingViewModel.getProductsUseCase.hasCompleted) {
       await logActivity();
@@ -68,7 +68,7 @@ class _VendorProfileScreenState extends State<VendorProfileScreen> {
         padding: EdgeInsets.zero,
         // needAppBar: false,
         appBarTitle: Text(
-          widget.vendor.storeName,
+          widget.seller.storeName,
           style: textTheme(context).titleLarge!.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -91,14 +91,14 @@ class _VendorProfileScreenState extends State<VendorProfileScreen> {
                   SliverToBoxAdapter(
                     child: Column(
                       children: [
-                        if (widget.vendor.displayImage != null) ...[
+                        if (widget.seller.displayImageUrl != null) ...[
                           VerticalSpaceWidget(
                               height: Dimens.spacingSizeDefault),
                           ClipOval(
                             child: CachedNetworkImageWidget(
                               placeHolder:
                                   ImageConstants.displayPicturePlaceHolder,
-                              image: widget.vendor.displayImage?.url ?? "",
+                              image: widget.seller.displayImageUrl ?? "",
                               fit: BoxFit.cover,
                               height: SizeConfig.screenHeight * 0.1,
                               width: SizeConfig.screenHeight * 0.1,
@@ -107,7 +107,7 @@ class _VendorProfileScreenState extends State<VendorProfileScreen> {
                         ],
                         VerticalSpaceWidget(height: Dimens.spacingSizeDefault),
                         FavVendorButtonWidget(
-                          vendorId: widget.vendor.id,
+                          vendorId: widget.seller.id,
                           iconSize: Dimens.iconSizeLarge,
                         ),
                         VerticalSpaceWidget(height: Dimens.spacingSizeDefault),
@@ -118,7 +118,7 @@ class _VendorProfileScreenState extends State<VendorProfileScreen> {
                             Consumer<FavouriteVendorViewModel>(
                               builder: (context, viewModel, child) {
                                 final likes = viewModel.getVendorLikeCount(
-                                  widget.vendor.id,
+                                  widget.seller.id,
                                 );
                                 return Text(likes.toString());
                               },
@@ -193,7 +193,7 @@ class _VendorProfileScreenState extends State<VendorProfileScreen> {
               price: p.variants.first.price,
               productId: p.id,
               title: p.title,
-              vendor: p.seller.vendor!.storeName,
+              sellerStoreName: p.seller.storeName,
             ),
           )
           .toList(),

@@ -71,6 +71,18 @@ class ProductListingViewModel extends ChangeNotifier {
     }
   }
 
+  Future<void> getSellerProducts(String sellerId,
+      {bool isRefresh = false}) async {
+    try {
+      if (!isRefresh) setProductsUseCase(Response.loading());
+      final response = await _productRepository.getSellerProducts(sellerId);
+      locator<WishlistViewModel>().initWishlistStatus(response.rows);
+      setProductsUseCase(Response.complete(response));
+    } catch (exception) {
+      if (!isRefresh) setProductsUseCase(Response.error(exception));
+    }
+  }
+
   Future<void> getProducts({
     ProductType? productType,
     bool isRefresh = false,

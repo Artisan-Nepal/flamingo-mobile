@@ -6,8 +6,8 @@ class Product {
   final String image;
   final int quantity;
   final int price;
-  final String vendor;
-  final String? vendorId;
+  final String sellerStoreName;
+  final String? sellerId;
   final ProductDetail? product;
 
   Product({
@@ -16,8 +16,8 @@ class Product {
     required this.quantity,
     required this.price,
     required this.image,
-    required this.vendor,
-    this.vendorId,
+    required this.sellerStoreName,
+    this.sellerId,
     this.product,
   });
 
@@ -28,8 +28,8 @@ class Product {
       image: json['imageUrl'],
       quantity: json['quantity'],
       price: json['price'],
-      vendor: json['vendorStoreName'],
-      vendorId: json['vendorId'],
+      sellerStoreName: json['sellerStoreName'],
+      sellerId: json['sellerId'],
     );
   }
 

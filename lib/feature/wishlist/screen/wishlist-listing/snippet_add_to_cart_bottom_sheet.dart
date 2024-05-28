@@ -71,7 +71,7 @@ class _SnippetAddToCartBottomSheetState
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             TextWidget(
-                              product.seller.vendor!.storeName,
+                              product.seller.storeName,
                               textOverflow: TextOverflow.ellipsis,
                               style: textTheme(context).bodyMedium!.copyWith(
                                     fontWeight: FontWeight.bold,

@@ -18,9 +18,9 @@ class VendorProfileViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getVendorBySellerId(String selerId) async {
+  Future<void> getVendorBySellerId(String sellerId) async {
     try {
-      final response = await _vendorRepository.getVendorBySellerId(selerId);
+      final response = await _vendorRepository.getVendorBySellerId(sellerId);
       setVendorUseCase(Response.complete(response));
     } catch (exception) {
       setVendorUseCase(Response.error(exception));

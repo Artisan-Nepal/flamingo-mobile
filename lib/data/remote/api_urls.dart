@@ -31,6 +31,7 @@ class ApiUrls {
   static String paymentMethods = '/payment-methods';
   static String orders = '/orders';
   static String vendors = '/vendors';
+  static String sellers = '/sellers';
   static String vendorLikes = '/vendors/:id/likes';
   static String customersCountInfo = '/customers/count-info';
   static String advertisements = '/advertisements/active';
@@ -48,4 +49,5 @@ class ApiUrls {
   static String getUserRecommendations =
       '/recommender/users/:userId/recommend_products';
   static String vendorBySellerId = '/vendors/seller/:id';
+  static String registerSeller = '/customers/:id/seller';
 }

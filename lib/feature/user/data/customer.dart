@@ -1,3 +1,4 @@
+import 'package:flamingo/feature/vendor/data/model/seller.dart';
 import 'package:flamingo/shared/shared.dart';
 
 class Customer extends JsonSerializable {
@@ -11,32 +12,37 @@ class Customer extends JsonSerializable {
   final String? email;
   final String? displayImageUrl;
   final String? sellerId;
+  final Seller seller;
 
-  Customer(
-      {required this.roles,
-      required this.id,
-      required this.mobileNumber,
-      required this.userId,
-      required this.createdAt,
-      this.displayImageUrl,
-      this.firstName,
-      this.lastName,
-      this.email,
-      this.sellerId});
+  Customer({
+    required this.roles,
+    required this.id,
+    required this.mobileNumber,
+    required this.userId,
+    required this.createdAt,
+    required this.seller,
+    this.displayImageUrl,
+    this.firstName,
+    this.lastName,
+    this.email,
+    this.sellerId,
+  });
 
   factory Customer.fromJson(Map<String, dynamic> json) => Customer(
-        roles: List<UserRole>.from(
-            json['roles'].map((r) => userRoleFromString(r))),
-        id: json["id"],
-        mobileNumber: json["mobileNumber"],
-        userId: json["userId"],
-        createdAt: DateTime.parse(json["createdAt"]),
-        firstName: json['firstName'],
-        displayImageUrl: json['displayImageUrl'],
-        lastName: json['lastName'],
-        email: json['email'],
-        sellerId: json['sellerId'],
-      );
+      roles:
+          List<UserRole>.from(json['roles'].map((r) => userRoleFromString(r))),
+      id: json["id"],
+      mobileNumber: json["mobileNumber"],
+      userId: json["userId"],
+      createdAt: DateTime.parse(json["createdAt"]),
+      firstName: json['firstName'],
+      displayImageUrl: json['displayImageUrl'],
+      lastName: json['lastName'],
+      email: json['email'],
+      sellerId: json['sellerId'],
+      seller: Seller.fromJson(
+        json['seller'],
+      ));
 
   @override
   Map<String, dynamic> toJson() => {
@@ -50,5 +56,6 @@ class Customer extends JsonSerializable {
         "email": email,
         "displayImageUrl": displayImageUrl,
         "sellerId": sellerId,
+        "seller": seller.toJson(),
       };
 }

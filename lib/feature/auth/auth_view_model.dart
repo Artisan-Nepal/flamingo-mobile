@@ -28,6 +28,10 @@ class AuthViewModel extends ChangeNotifier {
 
   Response get logoutUseCase => _logoutUseCase;
 
+  bool get isSeller {
+    return _user?.sellerId != null;
+  }
+
   void _setLogoutUseCase(Response response) {
     _logoutUseCase = response;
     notifyListeners();

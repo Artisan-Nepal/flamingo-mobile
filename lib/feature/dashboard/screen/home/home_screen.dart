@@ -5,11 +5,11 @@ import 'package:flamingo/feature/customer-activity/customer_activity_view_model.
 import 'package:flamingo/feature/dashboard/screen/home/snippet_home_advertisement.dart';
 import 'package:flamingo/feature/dashboard/screen/home/snippet_home_screen_story.dart';
 import 'package:flamingo/feature/dashboard/screen/home/snippet_home_products.dart';
+import 'package:flamingo/feature/dashboard/screen/home/snippet_home_search.dart';
 import 'package:flamingo/feature/product-story/product_story_view_model.dart';
 import 'package:flamingo/feature/product/screen/product-listing/min_product_listing_view_model.dart';
 import 'package:flamingo/feature/product/screen/product-listing/product_listing_view_model.dart';
 import 'package:flamingo/feature/product/screen/product-listing/snippet_product_listing.dart';
-import 'package:flamingo/feature/search/screen/text-search/search_screen.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/not-logged-in/not_logged_in_widget.dart';
 import 'package:flamingo/widget/widget.dart';
@@ -93,18 +93,7 @@ class _HomeScreenState extends State<HomeScreen>
                           Padding(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: Dimens.spacingSizeSmall),
-                            child: SearchBarFieldWidget(
-                              hintText: "Search for products",
-                              readOnly: true,
-                              onTap: () {
-                                NavigationHelper.pushWithoutAnimation(
-                                  context,
-                                  const SearchScreen(
-                                    isInitial: true,
-                                  ),
-                                );
-                              },
-                            ),
+                            child: SnippetHomeSearch(),
                           ),
                           if (!authViewModel.isLoggedIn)
                             Padding(

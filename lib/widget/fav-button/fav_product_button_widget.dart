@@ -50,7 +50,9 @@ class _FavProductButtonWidgetState extends State<FavProductButtonWidget> {
                     child: Icon(
                       isInWishlist ? Icons.favorite : Icons.favorite_outline,
                       size: widget.iconSize,
-                      color: AppColors.black,
+                      color: isInWishlist
+                          ? AppColors.secondaryMain
+                          : AppColors.grayMain,
                     ),
                   ),
                 );

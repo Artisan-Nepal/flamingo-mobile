@@ -52,8 +52,11 @@ class _FavVendorButtonWidgetState extends State<FavVendorButtonWidget> {
                           ? Icons.favorite
                           : Icons.favorite_outline,
                       size: widget.iconSize,
-                      color:
-                          widget.enabled ? widget.color : AppColors.grayLight,
+                      color: widget.enabled
+                          ? isFavourited
+                              ? AppColors.secondaryMain
+                              : AppColors.grayMain
+                          : AppColors.grayLight,
                     ),
                   ),
                 );

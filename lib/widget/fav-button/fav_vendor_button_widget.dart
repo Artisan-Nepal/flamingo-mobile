@@ -10,7 +10,7 @@ class FavVendorButtonWidget extends StatefulWidget {
     super.key,
     required this.vendorId,
     this.iconSize = Dimens.iconSize_22,
-    this.color = AppColors.black,
+    this.color = AppColors.secondaryMain,
     this.padding,
     this.enabled = true,
   });

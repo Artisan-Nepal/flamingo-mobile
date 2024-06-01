@@ -150,6 +150,8 @@
 //   }
 // }
 
+import 'dart:io';
+
 import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/auth/auth.dart';
 import 'package:flamingo/feature/dashboard/dashboard.dart';
@@ -244,7 +246,10 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                               ),
                             ),
                           ],
-                        )
+                        ),
+                        if (Platform.isIOS)
+                          VerticalSpaceWidget(
+                              height: Dimens.spacingSizeDefault),
                       ],
                     ),
                   )

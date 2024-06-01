@@ -21,31 +21,50 @@ class SnippetDashboardNavBar extends StatelessWidget {
           onTap: (value) {
             viewModel.setPageIndex(value);
           },
-          // selectedIconTheme: const IconThemeData(color:is),
+          selectedIconTheme:
+              const IconThemeData(color: AppColors.secondaryMain),
+          selectedLabelStyle: TextStyle(
+            color: AppColors.secondaryMain,
+          ),
+          selectedItemColor: AppColors.secondaryMain,
           unselectedFontSize: Dimens.fontSizeExtraSmall,
           selectedFontSize: Dimens.fontSizeExtraSmall,
           type: BottomNavigationBarType.fixed,
           showSelectedLabels: true,
           showUnselectedLabels: true,
-          items: const [
+          items: [
             BottomNavigationBarItem(
-              icon: Icon(CupertinoIcons.home),
+              icon: Image.asset(
+                ImageConstants.appIcon,
+                height: 24,
+                color: viewModel.pageIndex == 0
+                    ? AppColors.secondaryMain
+                    : AppColors.grayMain,
+              ),
               label: 'HOME',
             ),
             BottomNavigationBarItem(
-              icon: Icon(CupertinoIcons.square_grid_2x2),
+              icon: viewModel.pageIndex == 1
+                  ? Icon(CupertinoIcons.square_grid_2x2_fill)
+                  : Icon(CupertinoIcons.square_grid_2x2),
               label: 'CATEGORY',
             ),
             BottomNavigationBarItem(
-              icon: Icon(CupertinoIcons.tag),
+              icon: viewModel.pageIndex == 2
+                  ? Icon(CupertinoIcons.tag_fill)
+                  : Icon(CupertinoIcons.tag),
               label: 'BRAND',
             ),
             BottomNavigationBarItem(
-              icon: Icon(CupertinoIcons.heart),
+              icon: viewModel.pageIndex == 3
+                  ? Icon(CupertinoIcons.heart_fill)
+                  : Icon(CupertinoIcons.heart),
               label: 'WISHLIST',
             ),
             BottomNavigationBarItem(
-              icon: Icon(CupertinoIcons.person),
+              icon: viewModel.pageIndex == 4
+                  ? Icon(CupertinoIcons.person_fill)
+                  : Icon(CupertinoIcons.person),
               label: 'ME',
             ),
           ],

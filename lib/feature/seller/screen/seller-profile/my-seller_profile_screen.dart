@@ -49,6 +49,10 @@ class _MySellerProfileScreenState extends State<MySellerProfileScreen> {
                 onPressed: () {},
               ),
               ListTileV2Wdiget(
+                title: 'Orders',
+                onPressed: () {},
+              ),
+              ListTileV2Wdiget(
                 title: 'Statements',
                 onPressed: () {},
               ),

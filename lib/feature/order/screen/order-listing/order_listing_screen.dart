@@ -44,7 +44,7 @@ class _OrderListingScreenState extends State<OrderListingScreen> {
               child: Column(
                 children: [
                   _buildTabBar(),
-                  !viewModel.orderUseCase.hasCompleted
+                  viewModel.orderUseCase.isLoading
                       ? const DefaultScreenLoaderWidget(
                           manuallyCenter: true,
                         )
@@ -111,13 +111,14 @@ class _OrderListingScreenState extends State<OrderListingScreen> {
   Widget _buildTabBarView(OrderListingViewModel viewModel) {
     final orders = viewModel.orderUseCase.data?.rows ?? [];
     return Expanded(
-      child: Consumer(
-        builder: (context, provider, child) => TabBarView(
+      child: Consumer<OrderListingViewModel>(
+        builder: (context, viewModel, child) => TabBarView(
           children: [
             // All
             SnippetOrderListingTab(
                 orders: orders,
                 tabName: 'All',
+                error: viewModel.orderUseCase.exception,
                 showStatus: true,
                 emptyMessage: 'You have not placed any orders',
                 onRefresh: () async {
@@ -128,6 +129,7 @@ class _OrderListingScreenState extends State<OrderListingScreen> {
             SnippetOrderListingTab(
                 tabName: 'To Receive',
                 showStatus: true,
+                error: viewModel.orderUseCase.exception,
                 orders: List<Order>.from(
                   orders.where(
                     (order) => ['PENDING', 'PROCESSING', 'OUT_FOR_DELIVERY']
@@ -140,6 +142,7 @@ class _OrderListingScreenState extends State<OrderListingScreen> {
             // Received
             SnippetOrderListingTab(
                 tabName: 'Received',
+                error: viewModel.orderUseCase.exception,
                 orders: List<Order>.from(
                   orders.where(
                     (order) => order.orderStatus.code == 'DELIVERED',
@@ -151,6 +154,7 @@ class _OrderListingScreenState extends State<OrderListingScreen> {
             // Cancelled
             SnippetOrderListingTab(
               tabName: 'Cancelled',
+              error: viewModel.orderUseCase.exception,
               orders: List<Order>.from(
                 orders.where(
                   (order) => order.orderStatus.code == 'CANCELLED',

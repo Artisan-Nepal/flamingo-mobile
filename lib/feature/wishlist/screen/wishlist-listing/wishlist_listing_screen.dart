@@ -8,7 +8,6 @@ import 'package:flamingo/widget/error/default_error_widget.dart';
 import 'package:flamingo/widget/loader/default_screen_loader_widget.dart';
 import 'package:flamingo/widget/not-logged-in/not_logged_in_widget.dart';
 import 'package:flamingo/widget/widget.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

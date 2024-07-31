@@ -9,18 +9,14 @@ class LoadMoreWidget extends StatefulWidget {
     super.key,
     required this.scrollController,
     required this.onLoadMore,
-    required this.child,
     this.initialPage,
     this.limit,
-    this.useSliver = false,
   });
 
   final ScrollController scrollController;
   final Future<bool> Function(int page, int limit) onLoadMore;
   final int? initialPage;
   final int? limit;
-  final Widget child;
-  final bool useSliver;
 
   @override
   State<LoadMoreWidget> createState() => _LoadMoreWidgetState();
@@ -60,36 +56,14 @@ class _LoadMoreWidgetState extends State<LoadMoreWidget> {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => _viewModel,
-      child: widget.useSliver ? buildSliver() : buildNormal(),
-    );
-  }
-
-  Widget buildSliver() {
-    return CustomScrollView(
-      controller: widget.scrollController,
-      slivers: [
-        widget.child,
-        Consumer<LoadMoreViewModel>(builder: (context, viewModel, child) {
+      child: Consumer<LoadMoreViewModel>(
+        builder: (context, viewModel, child) {
           if (viewModel.isLoading) {
             return SliverToBoxAdapter(child: CircularProgressIndicatorWidget());
           }
           return SliverToBoxAdapter(child: SizedBox());
-        })
-      ],
-    );
-  }
-
-  Widget buildNormal() {
-    return Column(
-      children: [
-        widget.child,
-        Consumer<LoadMoreViewModel>(builder: (context, viewModel, child) {
-          if (viewModel.isLoading) {
-            return CircularProgressIndicatorWidget();
-          }
-          return SizedBox();
-        })
-      ],
+        },
+      ),
     );
   }
 }

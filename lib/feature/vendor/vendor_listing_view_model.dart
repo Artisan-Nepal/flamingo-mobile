@@ -1,4 +1,5 @@
 import 'package:flamingo/data/data.dart';
+import 'package:flamingo/data/model/paginated_option.dart';
 import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/vendor/data/model/vendor.dart';
 import 'package:flamingo/feature/vendor/data/vendor_repository.dart';
@@ -21,15 +22,18 @@ class VendorListingViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getVendors({bool isRefresh = false}) async {
+  Future<void> getVendors({
+    bool updateState = true,
+    PaginationOption? paginationOption,
+  }) async {
     try {
-      if (!isRefresh) setVendorUseCase(Response.loading());
-      final response = await _vendorRepository.getVendors();
+      if (updateState) setVendorUseCase(Response.loading());
+      final response = await _vendorRepository.getVendors(paginationOption);
       locator<FavouriteVendorViewModel>()
           .initFavouriteVendorStatus(response.rows);
       setVendorUseCase(Response.complete(response));
     } catch (exception) {
-      if (!isRefresh) setVendorUseCase(Response.error(exception));
+      if (updateState) setVendorUseCase(Response.error(exception));
     }
   }
 

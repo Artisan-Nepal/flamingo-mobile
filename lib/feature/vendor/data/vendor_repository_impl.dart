@@ -1,6 +1,7 @@
 // ignore_for_file: unused_field
 
 import 'package:flamingo/data/model/fetch_response.dart';
+import 'package:flamingo/data/model/paginated_option.dart';
 import 'package:flamingo/feature/auth/auth.dart';
 import 'package:flamingo/feature/vendor/data/model/update_favourite_vendor_request.dart';
 import 'package:flamingo/feature/vendor/data/model/vendor.dart';
@@ -23,8 +24,9 @@ class VendorRepositoryImpl implements VendorRepository {
         _vendorRemote = vendorRemote;
 
   @override
-  Future<FetchResponse<Vendor>> getVendors() async {
-    return await _vendorRemote.getVendors();
+  Future<FetchResponse<Vendor>> getVendors(
+      PaginationOption? paginationOption) async {
+    return await _vendorRemote.getVendors(paginationOption);
   }
 
   @override

@@ -1,4 +1,3 @@
-import 'package:flamingo/di/di.dart';
 import 'package:flamingo/widget/load-more/load_more_view_model.dart';
 import 'package:flamingo/widget/loader/loader.dart';
 import 'package:flutter/material.dart';
@@ -23,30 +22,32 @@ class LoadMoreWidget extends StatefulWidget {
 }
 
 class _LoadMoreWidgetState extends State<LoadMoreWidget> {
-  final _viewModel = locator<LoadMoreViewModel>();
-
   @override
   void initState() {
     super.initState();
 
-    _viewModel.init(widget.initialPage ?? 1, widget.limit ?? 10);
+    final viewModel = Provider.of<LoadMoreViewModel>(context, listen: false);
+    viewModel.init(widget.initialPage ?? 2, widget.limit ?? 10);
 
     attachScrollControllerListener();
   }
 
   attachScrollControllerListener() {
+    final viewModel = Provider.of<LoadMoreViewModel>(context, listen: false);
+
     widget.scrollController.addListener(() async {
       if (widget.scrollController.position.maxScrollExtent ==
-          widget.scrollController.position.pixels) {
+              widget.scrollController.position.pixels &&
+          !viewModel.isLoading) {
         print('Hit bottom');
 
-        _viewModel.setLoader(true);
+        viewModel.setLoader(true);
         final success =
-            await widget.onLoadMore(_viewModel.page, _viewModel.limit);
-        _viewModel.setLoader(false);
+            await widget.onLoadMore(viewModel.page, viewModel.limit);
+        viewModel.setLoader(false);
 
         if (success) {
-          _viewModel.increasePage();
+          viewModel.increasePage();
         }
       }
     });
@@ -54,16 +55,13 @@ class _LoadMoreWidgetState extends State<LoadMoreWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => _viewModel,
-      child: Consumer<LoadMoreViewModel>(
-        builder: (context, viewModel, child) {
-          if (viewModel.isLoading) {
-            return SliverToBoxAdapter(child: CircularProgressIndicatorWidget());
-          }
-          return SliverToBoxAdapter(child: SizedBox());
-        },
-      ),
+    return Consumer<LoadMoreViewModel>(
+      builder: (context, viewModel, child) {
+        if (viewModel.isLoading) {
+          return Center(child: CircularProgressIndicatorWidget());
+        }
+        return SizedBox();
+      },
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flamingo/data/data.dart';
+import 'package:flamingo/data/model/paginated_option.dart';
 import 'package:flamingo/feature/vendor/data/model/update_favourite_vendor_request.dart';
 import 'package:flamingo/feature/vendor/data/model/vendor.dart';
 import 'package:flamingo/feature/vendor/data/model/vendor_like_response.dart';
@@ -10,9 +11,12 @@ class VendorRemoteImpl implements VendorRemote {
   VendorRemoteImpl({required ApiClient apiClient}) : _apiClient = apiClient;
 
   @override
-  Future<FetchResponse<Vendor>> getVendors() async {
-    final apiResponse =
-        await _apiClient.get(ApiUrls.vendors, queryParams: {'limit': 1000});
+  Future<FetchResponse<Vendor>> getVendors(
+      PaginationOption? paginationOption) async {
+    final apiResponse = await _apiClient.get(
+      ApiUrls.vendors,
+      queryParams: paginationOption?.toJson(),
+    );
     return FetchResponse.fromJson(
       apiResponse.data,
       Vendor.fromJsonList,

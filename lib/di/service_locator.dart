@@ -14,6 +14,7 @@ import 'package:flamingo/di/registration/feature/user.dart';
 import 'package:flamingo/di/registration/feature/vendor.dart';
 import 'package:flamingo/di/registration/feature/wishlist.dart';
 import 'package:flamingo/di/registration/registration.dart';
+import 'package:flamingo/di/registration/shared.dart';
 import 'package:get_it/get_it.dart';
 
 GetIt locator = GetIt.instance;
@@ -41,4 +42,7 @@ Future setUpServiceLocator() async {
   registerSearchFeature(locator);
   registerAdvertisementFeature(locator);
   registerProductStoryFeature(locator);
+
+  // shared
+  registerShared(locator);
 }

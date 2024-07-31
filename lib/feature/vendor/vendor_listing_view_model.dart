@@ -22,8 +22,15 @@ class VendorListingViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void appendVendorUseCase(FetchResponse<Vendor> response) {
+    _vendorUseCase.data!.rows.addAll(response.rows);
+    _vendorUseCase.data!.metadata = response.metadata;
+    notifyListeners();
+  }
+
   Future<void> getVendors({
     bool updateState = true,
+    bool paginate = false,
     PaginationOption? paginationOption,
   }) async {
     try {
@@ -31,7 +38,12 @@ class VendorListingViewModel extends ChangeNotifier {
       final response = await _vendorRepository.getVendors(paginationOption);
       locator<FavouriteVendorViewModel>()
           .initFavouriteVendorStatus(response.rows);
-      setVendorUseCase(Response.complete(response));
+
+      if (paginate) {
+        appendVendorUseCase(response);
+      } else {
+        setVendorUseCase(Response.complete(response));
+      }
     } catch (exception) {
       if (updateState) setVendorUseCase(Response.error(exception));
     }

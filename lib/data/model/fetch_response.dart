@@ -1,6 +1,6 @@
 class FetchResponse<T> {
-  final List<T> rows;
-  final FetchResponseMetadata metadata;
+  List<T> rows;
+  FetchResponseMetadata metadata;
 
   FetchResponse({
     required this.rows,

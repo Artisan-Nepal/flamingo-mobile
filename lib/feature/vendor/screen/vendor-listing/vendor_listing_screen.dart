@@ -88,6 +88,7 @@ class _VendorListingScreenState extends State<VendorListingScreen> {
                         onLoadMore: (page, limit) async {
                           await viewModel.getVendors(
                               updateState: false,
+                              paginate: true,
                               paginationOption: PaginationOption(
                                 page: page,
                                 limit: limit,

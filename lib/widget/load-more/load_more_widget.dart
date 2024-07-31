@@ -39,8 +39,6 @@ class _LoadMoreWidgetState extends State<LoadMoreWidget> {
       if (widget.scrollController.position.maxScrollExtent ==
               widget.scrollController.position.pixels &&
           !viewModel.isLoading) {
-        print('Hit bottom');
-
         viewModel.setLoader(true);
         final success =
             await widget.onLoadMore(viewModel.page, viewModel.limit);

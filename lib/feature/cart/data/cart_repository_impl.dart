@@ -1,5 +1,6 @@
 // ignore_for_file: unused_field
 import 'package:flamingo/data/model/fetch_response.dart';
+import 'package:flamingo/data/model/paginated_option.dart';
 import 'package:flamingo/feature/auth/auth.dart';
 import 'package:flamingo/feature/cart/data/cart_repository.dart';
 import 'package:flamingo/feature/cart/data/local/cart_local.dart';
@@ -28,9 +29,10 @@ class CartRepositoryImpl implements CartRepository {
   }
 
   @override
-  Future<FetchResponse<CartItem>> getUserCart() async {
+  Future<FetchResponse<CartItem>> getUserCart(
+      PaginationOption? paginationOption) async {
     final customerId = (await _authRepository.getUserLocal())!.id;
-    return await _cartRemote.getUserCart(customerId);
+    return await _cartRemote.getUserCart(customerId, paginationOption);
   }
 
   @override

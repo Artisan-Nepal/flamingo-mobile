@@ -1,3 +1,4 @@
+import 'package:flamingo/data/model/paginated_option.dart';
 import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/auth/auth_view_model.dart';
 import 'package:flamingo/feature/cart/screen/cart-listing/cart_listing_view_model.dart';
@@ -9,10 +10,13 @@ import 'package:flamingo/widget/button/button.dart';
 import 'package:flamingo/widget/error/default_error_widget.dart';
 import 'package:flamingo/widget/loader/loader.dart';
 import 'package:flamingo/widget/not-logged-in/not_logged_in_widget.dart';
+import 'package:flamingo/widget/refresher/refresher_widget.dart';
 import 'package:flamingo/widget/screen/screen.dart';
 import 'package:flamingo/widget/space/space.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:flamingo/widget/load-more/load_more_view_model.dart';
 
 class CartListingScreen extends StatefulWidget {
   const CartListingScreen({super.key});
@@ -23,6 +27,9 @@ class CartListingScreen extends StatefulWidget {
 
 class _CartListingScreenState extends State<CartListingScreen> {
   final _viewModel = locator<CartListingViewModel>();
+  final _loadMoreViewModel = locator<LoadMoreViewModel>();
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
 
   @override
   void initState() {
@@ -35,91 +42,108 @@ class _CartListingScreenState extends State<CartListingScreen> {
     final authViewModel = Provider.of<AuthViewModel>(context);
     final cartCount = Provider.of<CustomerActivityViewModel>(context).cartCount;
     return ChangeNotifierProvider(
-      create: (context) => _viewModel,
-      builder: (context, child) {
-        return Consumer<CartListingViewModel>(
-          builder: (context, viewModel, child) {
-            final cartItems = viewModel.cartUseCase.data?.rows ?? [];
-            return TitledScreen(
-              scrollable: false,
-              padding: EdgeInsets.zero,
-              title: 'SHOPPING BAG ($cartCount)',
-              child: !authViewModel.isLoggedIn
-                  ? Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: Dimens.spacingSizeDefault,
-                      ),
-                      child: NotLoggedInWidget(
-                          title: 'YOUR BAG IS EMPTY',
-                          message:
-                              'Looking for pieces you previously added? Login to pick up where you left off'),
-                    )
-                  : Stack(
-                      children: [
-                        Column(
-                          children: [
-                            _buildCartSummary(viewModel),
-                            Expanded(
-                              child: viewModel.cartUseCase.isLoading
-                                  ? const DefaultScreenLoaderWidget()
-                                  : RefreshIndicator.adaptive(
-                                      onRefresh: () async {
-                                        await _viewModel.getCart(
-                                            isRefresh: true);
-                                      },
-                                      child: viewModel.cartUseCase.hasError
-                                          ? DefaultErrorWidget(
-                                              useListView: true,
-                                              manuallyCenter: true,
-                                              errorMessage: viewModel
-                                                  .cartUseCase.exception!,
-                                              onActionButtonPressed: () async {
-                                                await _viewModel.getCart();
-                                              },
-                                            )
-                                          : cartItems.isEmpty
-                                              ? const DefaultErrorWidget(
-                                                  useListView: true,
-                                                  manuallyCenter: true,
-                                                  errorMessage:
-                                                      'Your shopping bag is empty.',
-                                                )
-                                              : ListView.builder(
-                                                  itemBuilder:
-                                                      (context, index) {
-                                                    return Padding(
-                                                      padding: EdgeInsets.only(
-                                                        top: index == 0
-                                                            ? Dimens
-                                                                .spacingSizeSmall
-                                                            : 0,
-                                                        bottom: index ==
-                                                                cartItems
-                                                                        .length -
-                                                                    1
-                                                            ? 80
-                                                            : 0,
-                                                      ),
-                                                      child:
-                                                          SnippetCartListingItem(
-                                                        cartItem:
-                                                            cartItems[index],
-                                                      ),
-                                                    );
-                                                  },
-                                                  itemCount: cartItems.length,
-                                                ),
-                                    ),
-                            )
-                          ],
+      create: (context) => _loadMoreViewModel,
+      child: ChangeNotifierProvider(
+        create: (context) => _viewModel,
+        builder: (context, child) {
+          return Consumer<CartListingViewModel>(
+            builder: (context, viewModel, child) {
+              final cartItems = viewModel.cartUseCase.data?.rows ?? [];
+              return TitledScreen(
+                scrollable: false,
+                padding: EdgeInsets.zero,
+                title: 'SHOPPING BAG ($cartCount)',
+                child: !authViewModel.isLoggedIn
+                    ? Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: Dimens.spacingSizeDefault,
                         ),
-                        _buildCheckoutButton(viewModel)
-                      ],
-                    ),
-            );
-          },
-        );
-      },
+                        child: NotLoggedInWidget(
+                            title: 'YOUR BAG IS EMPTY',
+                            message:
+                                'Looking for pieces you previously added? Login to pick up where you left off'),
+                      )
+                    : Column(
+                        children: [
+                          _buildCartSummary(viewModel),
+                          Expanded(
+                            child: viewModel.cartUseCase.isLoading
+                                ? const DefaultScreenLoaderWidget()
+                                : RefresherWidget(
+                                    controller: _refreshController,
+                                    // enablePullUp: viewModel
+                                    //         .cartUseCase.hasCompleted &&
+                                    //     viewModel.cartUseCase.data!.rows
+                                    //             .length >=
+                                    //         10,
+                                    enablePullUp: true,
+                                    onRefresh: () async {
+                                      await _viewModel.getCart(
+                                        updateState: false,
+                                      );
+                                    },
+                                    onLoadMore: (page, limit) async {
+                                      await viewModel.getCart(
+                                        updateState: false,
+                                        paginate: true,
+                                        paginationOption: PaginationOption(
+                                          page: page,
+                                          limit: limit,
+                                        ),
+                                      );
+                                      return incrementPage(
+                                          viewModel.cartUseCase);
+                                    },
+                                    child: viewModel.cartUseCase.hasError
+                                        ? DefaultErrorWidget(
+                                            useListView: true,
+                                            manuallyCenter: true,
+                                            errorMessage: viewModel
+                                                .cartUseCase.exception!,
+                                            onActionButtonPressed: () async {
+                                              await _viewModel.getCart();
+                                            },
+                                          )
+                                        : cartItems.isEmpty
+                                            ? const DefaultErrorWidget(
+                                                useListView: true,
+                                                manuallyCenter: true,
+                                                errorMessage:
+                                                    'Your shopping bag is empty.',
+                                              )
+                                            : ListView.builder(
+                                                itemBuilder: (context, index) {
+                                                  return Padding(
+                                                    padding: EdgeInsets.only(
+                                                      top: index == 0
+                                                          ? Dimens
+                                                              .spacingSizeSmall
+                                                          : 0,
+                                                      // bottom: index ==
+                                                      //         cartItems.length -
+                                                      //             1
+                                                      //     ? 80
+                                                      //     : 0,
+                                                    ),
+                                                    child:
+                                                        SnippetCartListingItem(
+                                                      cartItem:
+                                                          cartItems[index],
+                                                    ),
+                                                  );
+                                                },
+                                                itemCount: cartItems.length,
+                                              ),
+                                  ),
+                          ),
+                          _buildCheckoutButton(viewModel)
+                        ],
+                      ),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 
@@ -176,10 +200,10 @@ class _CartListingScreenState extends State<CartListingScreen> {
   Widget _buildCheckoutButton(CartListingViewModel viewModel) {
     if (!viewModel.cartUseCase.hasCompleted ||
         viewModel.cartUseCase.data!.rows.isEmpty) return const SizedBox();
-    return Positioned(
-      bottom: Dimens.spacingSizeDefault,
-      right: Dimens.spacingSizeDefault,
-      left: Dimens.spacingSizeDefault,
+    return Container(
+      padding: EdgeInsets.only(
+        bottom: Dimens.spacingSizeDefault,
+      ),
       child: FilledButtonWidget(
         label: 'Proceed To Checkout',
         width: SizeConfig.screenWidth - 2 * Dimens.spacingSizeDefault,

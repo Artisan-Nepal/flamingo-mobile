@@ -53,7 +53,7 @@ class _VendorListingScreenState extends State<VendorListingScreen> {
               return RefresherWidget(
                 controller: _refreshController,
                 enablePullUp: viewModel.vendorUseCase.hasCompleted &&
-                    viewModel.vendorUseCase.data!.rows.length >= 6,
+                    viewModel.vendorUseCase.data!.rows.length >= 10,
                 onRefresh: () async {
                   await _viewModel.getVendors(updateState: false);
                 },

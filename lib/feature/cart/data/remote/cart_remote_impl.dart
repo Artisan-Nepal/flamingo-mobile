@@ -1,4 +1,5 @@
 import 'package:flamingo/data/data.dart';
+import 'package:flamingo/data/model/paginated_option.dart';
 import 'package:flamingo/feature/cart/data/model/add_to_cart_request.dart';
 import 'package:flamingo/feature/cart/data/model/cart.dart';
 import 'package:flamingo/feature/cart/data/model/cart_item.dart';
@@ -18,9 +19,11 @@ class CartRemoteImpl implements CartRemote {
   }
 
   @override
-  Future<FetchResponse<CartItem>> getUserCart(String customerId) async {
+  Future<FetchResponse<CartItem>> getUserCart(
+      String customerId, PaginationOption? paginationOption) async {
     final url = '${ApiUrls.carts}/customer/$customerId';
-    final apiResponse = await _apiClient.get(url);
+    final apiResponse =
+        await _apiClient.get(url, queryParams: paginationOption?.toJson());
     return FetchResponse.fromJson(
       apiResponse.data,
       CartItem.fromJsonList,

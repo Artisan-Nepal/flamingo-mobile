@@ -1,4 +1,5 @@
 import 'package:flamingo/data/data.dart';
+import 'package:flamingo/data/model/paginated_option.dart';
 import 'package:flamingo/feature/cart/data/cart_repository.dart';
 import 'package:flamingo/feature/cart/data/model/cart_item.dart';
 import 'package:flamingo/shared/shared.dart';
@@ -19,13 +20,28 @@ class CartListingViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getCart({bool isRefresh = false}) async {
+  void appendCartUseCase(FetchResponse<CartItem> response) {
+    _cartUseCase.data!.rows.addAll(response.rows);
+    _cartUseCase.data!.metadata = response.metadata;
+    notifyListeners();
+  }
+
+  Future<void> getCart({
+    bool updateState = true,
+    bool paginate = false,
+    PaginationOption? paginationOption,
+  }) async {
     try {
-      if (!isRefresh) setCartUseCase(Response.loading());
-      final response = await _cartRepository.getUserCart();
-      setCartUseCase(Response.complete(response));
+      if (updateState) setCartUseCase(Response.loading());
+      final response = await _cartRepository.getUserCart(paginationOption);
+
+      if (paginate) {
+        appendCartUseCase(response);
+      } else {
+        setCartUseCase(Response.complete(response));
+      }
     } catch (exception) {
-      if (!isRefresh) setCartUseCase(Response.error(exception));
+      if (updateState) setCartUseCase(Response.error(exception));
     }
   }
 

@@ -1,4 +1,5 @@
 import 'package:flamingo/widget/load-more/load_more_view_model.dart';
+import 'package:flamingo/widget/loader/default_screen_loader_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -66,6 +67,14 @@ class _RefresherWidgetState extends State<RefresherWidget> {
       enablePullUp: widget.enablePullUp,
       onLoading: _onLoading,
       onRefresh: _onRefresh,
+      footer: CustomFooter(
+        builder: (context, mode) {
+          if (mode == LoadStatus.loading) {
+            return DefaultScreenLoaderWidget();
+          }
+          return SizedBox();
+        },
+      ),
       child: widget.child,
     );
   }

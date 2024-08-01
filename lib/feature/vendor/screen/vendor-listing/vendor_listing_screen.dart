@@ -8,11 +8,12 @@ import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/button/button.dart';
 import 'package:flamingo/widget/fav-button/fav_vendor_button_widget.dart';
 import 'package:flamingo/widget/load-more/load_more_view_model.dart';
-import 'package:flamingo/widget/load-more/load_more_widget.dart';
 import 'package:flamingo/widget/loader/loader.dart';
+import 'package:flamingo/widget/refresher/refresher_widget.dart';
 import 'package:flamingo/widget/screen/screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class VendorListingScreen extends StatefulWidget {
   const VendorListingScreen({super.key});
@@ -24,7 +25,8 @@ class VendorListingScreen extends StatefulWidget {
 class _VendorListingScreenState extends State<VendorListingScreen> {
   final _viewModel = locator<VendorListingViewModel>();
   final _loadMoreViewModel = locator<LoadMoreViewModel>();
-  final _scrollController = ScrollController();
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
 
   @override
   void initState() {
@@ -48,12 +50,25 @@ class _VendorListingScreenState extends State<VendorListingScreen> {
               if (!viewModel.vendorUseCase.hasCompleted) {
                 return const DefaultScreenLoaderWidget();
               }
-              return RefreshIndicator.adaptive(
+              return RefresherWidget(
+                controller: _refreshController,
+                enablePullUp: viewModel.vendorUseCase.hasCompleted &&
+                    viewModel.vendorUseCase.data!.rows.length >= 6,
                 onRefresh: () async {
                   await _viewModel.getVendors(updateState: false);
                 },
+                onLoadMore: (page, limit) async {
+                  await viewModel.getVendors(
+                    updateState: false,
+                    paginate: true,
+                    paginationOption: PaginationOption(
+                      page: page,
+                      limit: limit,
+                    ),
+                  );
+                  return incrementPage(viewModel.vendorUseCase);
+                },
                 child: CustomScrollView(
-                  controller: _scrollController,
                   slivers: [
                     if (viewModel.favoriteBrands.isNotEmpty)
                       SliverToBoxAdapter(
@@ -82,22 +97,6 @@ class _VendorListingScreenState extends State<VendorListingScreen> {
                     SnippetVendorListing(
                       vendors: _viewModel.nonFavoriteBrands,
                     ),
-                    SliverToBoxAdapter(
-                      child: LoadMoreWidget(
-                        scrollController: _scrollController,
-                        onLoadMore: (page, limit) async {
-                          await viewModel.getVendors(
-                            updateState: false,
-                            paginate: true,
-                            paginationOption: PaginationOption(
-                              page: page,
-                              limit: limit,
-                            ),
-                          );
-                          return incrementPage(viewModel.vendorUseCase);
-                        },
-                      ),
-                    )
                   ],
                 ),
               );

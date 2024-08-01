@@ -7,7 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class SnippetColorSelectionBottomSheet extends StatefulWidget {
-  const SnippetColorSelectionBottomSheet({super.key});
+  const SnippetColorSelectionBottomSheet({
+    super.key,
+    this.productImagePageController,
+  });
+
+  final PageController? productImagePageController;
 
   @override
   State<SnippetColorSelectionBottomSheet> createState() =>
@@ -60,8 +65,21 @@ class _SnippetColorSelectionBottomSheetState
                 label: 'Select',
                 width: double.infinity,
                 onPressed: () {
-                  Provider.of<ProductDetailViewModel>(context, listen: false)
-                      .setSelectedColor(_selectedColor);
+                  final viewModel = Provider.of<ProductDetailViewModel>(context,
+                      listen: false);
+                  viewModel.setSelectedColor(_selectedColor);
+
+                  final indexOfSelectedColor = viewModel.availableColors
+                      .indexWhere((element) => element.id == _selectedColor.id);
+                  if (widget.productImagePageController != null) {
+                    widget.productImagePageController!.animateToPage(
+                      indexOfSelectedColor,
+                      duration: Duration(
+                        milliseconds: 200,
+                      ),
+                      curve: Curves.easeIn,
+                    );
+                  }
                   NavigationHelper.pop(context);
                 },
               )

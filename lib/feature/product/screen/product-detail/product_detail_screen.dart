@@ -46,6 +46,7 @@ class ProductDetailScreen extends StatefulWidget {
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
   final _scrollController = ScrollController();
+  late PageController _productImagePageController;
 
   final _viewModel = locator<ProductDetailViewModel>();
   final _appBarViewModel = locator<ProductDetailAppBarViewModel>();
@@ -54,6 +55,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   @override
   void initState() {
     super.initState();
+    _productImagePageController = PageController(viewportFraction: 0.99999999);
+
     _viewModel.setProduct(widget.productId, widget.product,
         leadSource: widget.leadSource, advertisementId: widget.advertisementId);
     _appBarViewModel.init();
@@ -103,6 +106,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       SnippetProductDetailImages(
+                                        pageController:
+                                            _productImagePageController,
                                         seller: viewModel
                                             .productUseCase.data!.seller,
                                         title: viewModel
@@ -153,7 +158,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                                           .value(
                                                         value: _viewModel,
                                                         child:
-                                                            const SnippetColorSelectionBottomSheet(),
+                                                            SnippetColorSelectionBottomSheet(
+                                                          productImagePageController:
+                                                              _productImagePageController,
+                                                        ),
                                                       )
                                                     ],
                                                   ),

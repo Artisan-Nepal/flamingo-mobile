@@ -22,6 +22,7 @@ class SnippetProductDetailImages extends StatefulWidget {
     required this.productId,
     required this.stories,
     this.leadSource,
+    required this.pageController,
     this.advertisementId,
     required this.title,
     required this.seller,
@@ -34,6 +35,7 @@ class SnippetProductDetailImages extends StatefulWidget {
   final List<ProductStory> stories;
   final String title;
   final Seller seller;
+  final PageController pageController;
 
   @override
   State<SnippetProductDetailImages> createState() =>
@@ -42,14 +44,6 @@ class SnippetProductDetailImages extends StatefulWidget {
 
 class _SnippetProductDetailImagesState
     extends State<SnippetProductDetailImages> {
-  late PageController _pageController;
-  @override
-  void initState() {
-    _pageController = PageController(viewportFraction: 0.99999999);
-
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -62,7 +56,7 @@ class _SnippetProductDetailImagesState
         alignment: Alignment.center,
         children: [
           PageView.builder(
-            controller: _pageController,
+            controller: widget.pageController,
             itemCount: widget.images.length,
             itemBuilder: (context, index) => GestureDetector(
               onTap: () {
@@ -93,7 +87,7 @@ class _SnippetProductDetailImagesState
     return Positioned(
       bottom: 10,
       child: SmoothPageIndicator(
-        controller: _pageController,
+        controller: widget.pageController,
         count: widget.images.length,
         effect: ColorTransitionEffect(
           dotHeight: 2.5,

@@ -1,4 +1,5 @@
 import 'package:flamingo/data/data.dart';
+import 'package:flamingo/data/model/paginated_option.dart';
 import 'package:flamingo/feature/wishlist/data/model/wishlist_item.dart';
 import 'package:flamingo/feature/wishlist/data/wishlist_repository.dart';
 import 'package:flamingo/shared/shared.dart';
@@ -19,13 +20,28 @@ class WishlistListingViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getWishlist({bool isRefresh = false}) async {
+  void appendWishlistUseCase(FetchResponse<WishlistItem> response) {
+    _wishlistUseCase.data!.rows.addAll(response.rows);
+    _wishlistUseCase.data!.metadata = response.metadata;
+    notifyListeners();
+  }
+
+  Future<void> getWishlist({
+    bool updateState = true,
+    bool paginate = false,
+    PaginationOption? paginationOption,
+  }) async {
     try {
-      if (!isRefresh) setWishlistUseCase(Response.loading());
-      final response = await _wishlistRepository.getUserWishlist();
-      if (!isRefresh) setWishlistUseCase(Response.complete(response));
+      if (updateState) setWishlistUseCase(Response.loading());
+      final response =
+          await _wishlistRepository.getUserWishlist(paginationOption);
+      if (paginate) {
+        appendWishlistUseCase(response);
+      } else {
+        setWishlistUseCase(Response.complete(response));
+      }
     } catch (exception) {
-      setWishlistUseCase(Response.error(exception));
+      if (updateState) setWishlistUseCase(Response.error(exception));
     }
   }
 

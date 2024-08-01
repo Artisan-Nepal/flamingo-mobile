@@ -16,6 +16,8 @@ class TitledScreen extends StatelessWidget {
     ),
     this.appbarActions,
     this.automaticallyImplyAppBarLeading = true,
+    this.scrollController,
+    this.sliverChildren,
   });
 
   final String title;
@@ -24,6 +26,8 @@ class TitledScreen extends StatelessWidget {
   final EdgeInsets padding;
   final List<Widget>? appbarActions;
   final bool automaticallyImplyAppBarLeading;
+  final ScrollController? scrollController;
+  final List<Widget>? sliverChildren;
 
   @override
   Widget build(BuildContext context) {
@@ -63,6 +67,7 @@ class TitledScreen extends StatelessWidget {
                 child: GestureDetector(
                   child: scrollable
                       ? SingleChildScrollView(
+                          controller: scrollController,
                           child: Padding(
                             padding: padding,
                             child: child,

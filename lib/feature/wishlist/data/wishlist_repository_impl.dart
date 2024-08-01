@@ -1,6 +1,7 @@
 // ignore_for_file: unused_field
 
 import 'package:flamingo/data/model/fetch_response.dart';
+import 'package:flamingo/data/model/paginated_option.dart';
 import 'package:flamingo/feature/auth/auth.dart';
 import 'package:flamingo/feature/wishlist/data/local/wishlist_local.dart';
 import 'package:flamingo/feature/wishlist/data/model/add_to_wishlist_request.dart';
@@ -27,8 +28,10 @@ class WishlistRepositoryImpl implements WishlistRepository {
   }
 
   @override
-  Future<FetchResponse<WishlistItem>> getUserWishlist() async {
+  Future<FetchResponse<WishlistItem>> getUserWishlist(
+    PaginationOption? paginationOption,
+  ) async {
     final customerId = (await _authRepository.getUserLocal())!.id;
-    return await _wishlistRemote.getUserWishlist(customerId);
+    return await _wishlistRemote.getUserWishlist(customerId, paginationOption);
   }
 }

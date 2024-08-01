@@ -268,7 +268,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     if (viewModel.getProductsUseCase.hasCompleted && products.isNotEmpty) {
       return SnippetProductListing(
         useSliver: true,
-        padding: 0,
         needFavIcon: false,
         products: products,
         shrinkWrap: false,

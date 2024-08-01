@@ -13,6 +13,7 @@ import 'package:flamingo/shared/util/util.dart';
 import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 class AdvertisementScreen extends StatefulWidget {
@@ -110,7 +111,6 @@ class _AdvertisementScreenState extends State<AdvertisementScreen> {
                 ),
                 SnippetProductListing(
                   useSliver: true,
-                  padding: 0,
                   advertisementId: widget.advertisement.id,
                   leadSource: LeadSource.advertisement,
                   products: widget.advertisement.collection.products
@@ -129,7 +129,7 @@ class _AdvertisementScreenState extends State<AdvertisementScreen> {
                         ),
                       )
                       .toList(),
-                )
+                ),
               ],
             ),
             SnippetAdvertisementAppBar(

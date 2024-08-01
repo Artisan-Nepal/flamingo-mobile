@@ -4,7 +4,6 @@ import 'package:flamingo/feature/product/screen/product-listing/product_listing_
 import 'package:flamingo/feature/product/screen/product-listing/snippet_filter_products_bottomsheet.dart';
 import 'package:flamingo/feature/product/screen/product-listing/snippet_product_listing.dart';
 import 'package:flamingo/feature/vendor/data/model/seller.dart';
-import 'package:flamingo/feature/vendor/data/model/vendor.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/error/default_error_widget.dart';
 import 'package:flamingo/widget/screen/default_screen.dart';
@@ -63,6 +62,8 @@ class _ProductListingScreenState extends State<ProductListingScreen> {
         return DefaultScreen(
           appBarTitle: Text(widget.title),
           scrollable: false,
+          padding:
+              const EdgeInsets.symmetric(horizontal: Dimens.spacingSizeSmall),
           appBarActions: [
             IconButton(
               onPressed: _onPressFilter,
@@ -90,6 +91,7 @@ class _ProductListingScreenState extends State<ProductListingScreen> {
               }
               return RefreshIndicator.adaptive(
                 child: SnippetProductListing(
+                  padding: 0,
                   products: products
                       .map(
                         (product) => Product(

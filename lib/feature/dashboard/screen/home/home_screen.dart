@@ -186,7 +186,6 @@ class _HomeScreenState extends State<HomeScreen>
                     ),
                     SnippetProductListing(
                         useSliver: true,
-                        padding: 0,
                         needFavIcon: false,
                         products:
                             (Provider.of<MinProductListingViewModel>(context)

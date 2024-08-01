@@ -12,7 +12,7 @@ class SnippetProductListing extends StatelessWidget {
     this.needFavIcon = true,
     this.shrinkWrap = true,
     this.useSliver = false,
-    this.padding = Dimens.spacingSizeDefault,
+    this.padding = Dimens.spacingSizeSmall,
     this.leadSource,
     this.advertisementId,
     this.onProductTap,
@@ -30,27 +30,31 @@ class SnippetProductListing extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (useSliver)
-      return SliverMasonryGrid(
-        delegate: SliverChildBuilderDelegate(
-          (context, index) {
-            return Padding(
-              padding: EdgeInsets.only(
-                left: index % 2 == 0 ? padding : 0,
-                right: index % 2 != 0 ? padding : 0,
-              ),
-              child: _buildProductWidget(products[index]),
-            );
-          },
-          childCount: products.length,
+      return SliverPadding(
+        padding: EdgeInsets.only(
+          left: padding,
+          right: padding,
         ),
-        mainAxisSpacing: Dimens.spacingSizeSmall,
-        crossAxisSpacing: Dimens.spacingSizeSmall,
-        gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
+        sliver: SliverMasonryGrid(
+          delegate: SliverChildBuilderDelegate(
+            (context, index) {
+              return _buildProductWidget(products[index]);
+            },
+            childCount: products.length,
+          ),
+          mainAxisSpacing: Dimens.spacingSizeSmall,
+          crossAxisSpacing: Dimens.spacingSizeSmall,
+          gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+          ),
         ),
       );
 
     return MasonryGridView.builder(
+      padding: EdgeInsets.only(
+        left: padding,
+        right: padding,
+      ),
       mainAxisSpacing: Dimens.spacingSizeSmall,
       crossAxisSpacing: Dimens.spacingSizeSmall,
       itemCount: products.length,

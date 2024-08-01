@@ -71,12 +71,11 @@ class _CartListingScreenState extends State<CartListingScreen> {
                                 ? const DefaultScreenLoaderWidget()
                                 : RefresherWidget(
                                     controller: _refreshController,
-                                    // enablePullUp: viewModel
-                                    //         .cartUseCase.hasCompleted &&
-                                    //     viewModel.cartUseCase.data!.rows
-                                    //             .length >=
-                                    //         10,
-                                    enablePullUp: true,
+                                    enablePullUp:
+                                        viewModel.cartUseCase.hasCompleted &&
+                                            viewModel.cartUseCase.data!.rows
+                                                    .length >=
+                                                10,
                                     onRefresh: () async {
                                       await _viewModel.getCart(
                                         updateState: false,

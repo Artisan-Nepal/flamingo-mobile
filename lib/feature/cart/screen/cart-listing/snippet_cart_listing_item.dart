@@ -43,7 +43,7 @@ class _SnippetCartListingItemState extends State<SnippetCartListingItem> {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Flexible(
+                      Expanded(
                         flex: 2,
                         child: CachedNetworkImageWidget(
                           image: extractProductVariantImage(

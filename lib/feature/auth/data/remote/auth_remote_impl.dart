@@ -1,4 +1,5 @@
 import 'package:flamingo/data/remote/api_urls.dart';
+import 'package:flamingo/feature/auth/data/model/logout_request.dart';
 import 'package:flamingo/feature/auth/data/model/resend_otp_request.dart';
 import 'package:flamingo/feature/auth/data/model/send_otp_response.dart';
 import 'package:flamingo/feature/auth/data/model/verify_otp_request.dart';
@@ -29,5 +30,10 @@ class AuthRemoteImpl implements AuthRemote {
     final apiResponse =
         await _apiClient.post(ApiUrls.verifyLoginOtp, body: request.toJson());
     return LoginResponse.fromJson(apiResponse.data);
+  }
+
+  @override
+  Future<void> logout(LogoutRequest request) async {
+    await await _apiClient.post(ApiUrls.logout, body: request.toJson());
   }
 }

@@ -48,4 +48,7 @@ class ApiUrls {
   static String getUserRecommendations =
       '/recommender/users/:userId/recommend_products';
   static String vendorBySellerId = '/vendors/seller/:id';
+  static String device = '/devices';
+  static String deviceNotificationToken = '/devices/notification-token';
+  static String logout = '/auth/logout';
 }

@@ -1,8 +1,10 @@
+import 'package:flamingo/feature/auth/data/model/logout_request.dart';
 import 'package:flamingo/feature/auth/data/model/resend_otp_request.dart';
 import 'package:flamingo/feature/auth/data/model/send_otp_response.dart';
 import 'package:flamingo/feature/auth/data/model/verify_otp_request.dart';
 import 'package:flamingo/feature/feature.dart';
 import 'package:flamingo/feature/user/data/customer.dart';
+import 'package:flamingo/shared/shared.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthLocal _authLocal;
@@ -58,6 +60,9 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future logout() async {
+    final deviceInfo = await DeviceInfoHelper.getDeviceInfo();
+    final request = LogoutRequest(deviceId: deviceInfo.deviceId);
+    await _authRemote.logout(request);
     await _authLocal.removeAccessToken();
     await _authLocal.removeUser();
   }

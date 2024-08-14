@@ -1,5 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flamingo/di/di.dart';
+import 'package:flamingo/feature/user/data/user_repository.dart';
 import 'package:flamingo/firebase_options.dart';
 import 'package:flamingo/shared/constant/common_constants.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -12,6 +14,10 @@ class NotificationService {
     await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform);
     await FirebaseMessaging.instance.setAutoInitEnabled(true);
+  }
+
+  Future<String?> getNotificationToken() async {
+    return await FirebaseMessaging.instance.getToken();
   }
 
   setup() async {
@@ -46,7 +52,9 @@ class NotificationService {
     // when app is in background and user click the notification tray
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {});
 
-    FirebaseMessaging.instance.onTokenRefresh.listen((token) {});
+    FirebaseMessaging.instance.onTokenRefresh.listen((token) {
+      locator<UserRepository>().updateDeviceNotificationToken(token);
+    });
   }
 
   void _display(RemoteMessage message) async {

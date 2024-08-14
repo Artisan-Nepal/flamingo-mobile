@@ -9,7 +9,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.artisan.flamingo</string>
+	<string>com.artisan.flamingo.nepal</string>
 	<key>PROJECT_ID</key>
 	<string>flamingo-34e85</string>
 	<key>STORAGE_BUCKET</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:409809764031:ios:5f76552cb795efc27a100a</string>
+	<string>1:409809764031:ios:b357b3120158d61c7a100a</string>
 </dict>
 </plist>

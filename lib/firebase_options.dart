@@ -59,10 +59,10 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyBO40Ond72VyLe-B1f6XiX6uC8DM2RR94M',
-    appId: '1:409809764031:ios:5f76552cb795efc27a100a',
+    appId: '1:409809764031:ios:b357b3120158d61c7a100a',
     messagingSenderId: '409809764031',
     projectId: 'flamingo-34e85',
     storageBucket: 'flamingo-34e85.appspot.com',
-    iosBundleId: 'com.artisan.flamingo',
+    iosBundleId: 'com.artisan.flamingo.nepal',
   );
 }

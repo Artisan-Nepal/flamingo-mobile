@@ -1,7 +1,8 @@
 class ApiUrls {
-  static String baseUrl = 'https://api.flamingo.com.np/api';
-  // static String baseUrl = 'http://10.0.2.2:8848/api';
-  // static String baseUrl = 'http://localhost:8848/api';
+  // AWS App Runner (dev) — public HTTPS, reachable from emulator/device/anywhere
+  static String baseUrl = 'https://4msfgmfzfz.ap-south-1.awsapprunner.com/api';
+  // static String baseUrl = 'http://10.0.2.2:8848/api'; // Android emulator -> local backend
+  // static String baseUrl = 'http://192.168.1.12:8848/api'; // physical device on same Wi-Fi
 
   // AUTH
   static String sendLoginOtp = '/auth/send-otp';

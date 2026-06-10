@@ -60,9 +60,14 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future logout() async {
-    final deviceInfo = await DeviceInfoHelper.getDeviceInfo();
-    final request = LogoutRequest(deviceId: deviceInfo.deviceId);
-    await _authRemote.logout(request);
+    // Notify the server best-effort, but always clear the local session so the
+    // user is logged out even if the server call fails (404, expired token, etc.).
+    try {
+      final deviceInfo = await DeviceInfoHelper.getDeviceInfo();
+      await _authRemote.logout(LogoutRequest(deviceId: deviceInfo.deviceId));
+    } catch (_) {
+      // ignore: local logout below must still happen
+    }
     await _authLocal.removeAccessToken();
     await _authLocal.removeUser();
   }

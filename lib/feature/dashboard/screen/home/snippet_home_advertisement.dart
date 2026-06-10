@@ -16,11 +16,11 @@ class SnippetHomeAdvertisement extends StatefulWidget {
 }
 
 class _SnippetHomeAdvertisementState extends State<SnippetHomeAdvertisement> {
-  late CarouselControllerImpl _sliderController;
+  late CarouselSliderController _sliderController;
 
   @override
   void initState() {
-    _sliderController = CarouselControllerImpl();
+    _sliderController = CarouselSliderController();
     super.initState();
   }
 

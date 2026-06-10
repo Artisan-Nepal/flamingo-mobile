@@ -143,7 +143,10 @@ class _ChangeDisplayPictureScreenState
     final cropped = await ImageCropper().cropImage(
       sourcePath: viewModel.selectedImage!.path,
       aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
-      cropStyle: CropStyle.circle,
+      uiSettings: [
+        AndroidUiSettings(cropStyle: CropStyle.circle),
+        IOSUiSettings(cropStyle: CropStyle.circle),
+      ],
     );
     if (cropped != null) {
       viewModel.setCroppedImage(File(cropped.path));

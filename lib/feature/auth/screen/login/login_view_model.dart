@@ -82,12 +82,24 @@ class LoginViewModel extends ChangeNotifier {
       final response = await _authRepository.verifyLoginOtp(_otpToken, otpCode);
       locator<AuthViewModel>().syncLocally();
       locator<CustomerActivityViewModel>().getCustomerCountInfo();
-      locator<UserRepository>().createDevice(
-          await locator<NotificationService>().getNotificationToken());
 
+      // Complete login (and navigate) immediately.
       setVerifyOtpUseCase(Response.complete(response));
+
+      // Register for push notifications in the background — best-effort, must
+      // never block or fail the login (e.g. FCM getToken throws on emulators).
+      _registerDeviceForPush();
     } catch (exception) {
       setVerifyOtpUseCase(Response.error(exception));
+    }
+  }
+
+  Future<void> _registerDeviceForPush() async {
+    try {
+      final token = await locator<NotificationService>().getNotificationToken();
+      await locator<UserRepository>().createDevice(token);
+    } catch (_) {
+      // Push registration is optional; ignore failures so login is unaffected.
     }
   }
 

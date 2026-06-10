@@ -11,8 +11,12 @@ class NotificationService {
       FlutterLocalNotificationsPlugin();
 
   Future<void> initialize() async {
-    await Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform);
+    try {
+      await Firebase.initializeApp(
+          options: DefaultFirebaseOptions.currentPlatform);
+    } on FirebaseException catch (e) {
+      if (e.code != 'duplicate-app') rethrow;
+    }
     await FirebaseMessaging.instance.setAutoInitEnabled(true);
   }
 

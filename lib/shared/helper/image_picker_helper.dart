@@ -91,9 +91,9 @@ class ImagePickerHelper {
     final cropped = await ImageCropper().cropImage(
         sourcePath: image.path,
         aspectRatio: aspectRatio ?? CropAspectRatio(ratioX: 1, ratioY: 1),
-        cropStyle: cropStyle,
         uiSettings: [
           AndroidUiSettings(
+            cropStyle: cropStyle,
             toolbarTitle: title,
             toolbarColor: AppColors.black,
             toolbarWidgetColor: Colors.white,
@@ -101,6 +101,7 @@ class ImagePickerHelper {
             lockAspectRatio: false,
           ),
           IOSUiSettings(
+            cropStyle: cropStyle,
             title: title,
             doneButtonTitle: doneButtonTitle,
             cancelButtonTitle: cancelButtonTitle,

@@ -61,6 +61,7 @@ class SnippetHomeProducts extends StatelessWidget {
               width: SizeConfig.screenWidth * 0.6,
               child: ProductWidget(
                 imageHeight: SizeConfig.screenHeight * 0.35,
+                nameMaxLines: 1,
                 payload: Product(
                   quantity: products[index].variants.first.quantityInStock,
                   product: products[index],

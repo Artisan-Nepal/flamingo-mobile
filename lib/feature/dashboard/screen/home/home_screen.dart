@@ -31,6 +31,7 @@ class _HomeScreenState extends State<HomeScreen>
   final _advertisementListingViewModel =
       locator<AdvertisementListingViewModel>();
   final _latestProductListingViewModel = locator<ProductListingViewModel>();
+  final _trendingProductListingViewModel = locator<ProductListingViewModel>();
   final _favVendorProductListingViewModel = locator<ProductListingViewModel>();
   final _recommendedProductListingViewModel =
       locator<MinProductListingViewModel>();
@@ -44,6 +45,8 @@ class _HomeScreenState extends State<HomeScreen>
 
   getData() async {
     _latestProductListingViewModel.getProducts(productType: ProductType.LATEST);
+    _trendingProductListingViewModel.getProducts(
+        productType: ProductType.TRENDING);
 
     _recommendedProductListingViewModel.getUserRecommendation();
     _advertisementListingViewModel.getAdvertisements();
@@ -124,6 +127,27 @@ class _HomeScreenState extends State<HomeScreen>
                                       viewModel.getProductsUseCase.isLoading,
                                   title: 'Latest',
                                   productType: ProductType.LATEST,
+                                  products:
+                                      viewModel.getProductsUseCase.data?.rows ??
+                                          [],
+                                );
+                              },
+                            ),
+                          ),
+                          const VerticalSpaceWidget(
+                              height: Dimens.spacingSizeLarge),
+
+                          // Trending now
+                          ChangeNotifierProvider(
+                            create: (context) =>
+                                _trendingProductListingViewModel,
+                            child: Consumer<ProductListingViewModel>(
+                              builder: (context, viewModel, child) {
+                                return SnippetHomeProducts(
+                                  isLoading:
+                                      viewModel.getProductsUseCase.isLoading,
+                                  title: 'Trending now',
+                                  productType: ProductType.TRENDING,
                                   products:
                                       viewModel.getProductsUseCase.data?.rows ??
                                           [],

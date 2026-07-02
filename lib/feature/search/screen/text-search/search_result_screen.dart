@@ -1,3 +1,4 @@
+import 'package:flamingo/feature/category/screen/category-search/category_search_screen.dart';
 import 'package:flamingo/feature/product/data/model/product.dart';
 import 'package:flamingo/feature/product/screen/product-listing/snippet_product_listing.dart';
 import 'package:flamingo/feature/search/screen/text-search/search_screen.dart';
@@ -98,6 +99,13 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                                       manuallyCenter: true,
                                       manualTop: 0.1,
                                       errorMessage: 'Sorry, no products found',
+                                      actionButtonLabel: 'Browse Categories',
+                                      onActionButtonPressed: () {
+                                        NavigationHelper.push(
+                                          context,
+                                          const CategorySearchScreen(),
+                                        );
+                                      },
                                     )
                                   : Padding(
                                       padding: EdgeInsets.symmetric(

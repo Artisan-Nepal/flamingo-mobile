@@ -9,6 +9,7 @@ import 'package:flamingo/feature/search/data/remote/search_remote.dart';
 import 'package:flamingo/feature/search/data/remote/search_remote_impl.dart';
 import 'package:flamingo/feature/search/screen/image-search/image_search_view_model.dart';
 import 'package:flamingo/feature/search/screen/text-search/search_view_model.dart';
+import 'package:flamingo/feature/vendor/data/vendor_repository.dart';
 import 'package:get_it/get_it.dart';
 
 void registerSearchFeature(GetIt locator) {
@@ -34,6 +35,7 @@ void registerSearchFeature(GetIt locator) {
   locator.registerLazySingleton<SearchViewModel>(
     () => SearchViewModel(
       searchRepository: locator<SearchRepository>(),
+      vendorRepository: locator<VendorRepository>(),
     ),
   );
   locator.registerFactory<ImageSearchViewModel>(

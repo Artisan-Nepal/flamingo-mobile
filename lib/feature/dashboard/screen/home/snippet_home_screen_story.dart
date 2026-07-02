@@ -97,7 +97,7 @@ class SnippetHomeScreenStory extends StatelessWidget {
                               border: Border.all(
                                 color: hasViewed
                                     ? AppColors.grayLight
-                                    : AppColors.black,
+                                    : AppColors.secondaryMain,
                                 width: hasViewed ? 1.5 : 2.5,
                               ),
                             ),

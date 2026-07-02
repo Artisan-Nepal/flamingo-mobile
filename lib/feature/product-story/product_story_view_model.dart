@@ -16,9 +16,13 @@ class ProductStoryViewModel extends ChangeNotifier {
   Response _viewStoryUseCase = Response();
   Response<List<GroupedProductStory>> _productStoryUseCase =
       Response<List<GroupedProductStory>>();
+  Response<List<ProductStory>> _vendorStoriesUseCase =
+      Response<List<ProductStory>>();
 
   Response<List<GroupedProductStory>> get productStoryUseCase =>
       _productStoryUseCase;
+  Response<List<ProductStory>> get vendorStoriesUseCase =>
+      _vendorStoriesUseCase;
 
   Response get viewStoryUseCase => _viewStoryUseCase;
 
@@ -30,6 +34,22 @@ class ProductStoryViewModel extends ChangeNotifier {
   void setProductStoryUseCase(Response<List<GroupedProductStory>> response) {
     _productStoryUseCase = response;
     notifyListeners();
+  }
+
+  void setVendorStoriesUseCase(Response<List<ProductStory>> response) {
+    _vendorStoriesUseCase = response;
+    notifyListeners();
+  }
+
+  Future<void> getVendorStories(String vendorId) async {
+    try {
+      setVendorStoriesUseCase(Response.loading());
+      final response = await _productStoryRepository.getVendorStories(vendorId);
+      locator<ProductStoryEngagementViewModel>().initViewStatus(response);
+      setVendorStoriesUseCase(Response.complete(response));
+    } catch (exception) {
+      setVendorStoriesUseCase(Response.error(exception));
+    }
   }
 
   Future<void> getLikedVendorStories() async {

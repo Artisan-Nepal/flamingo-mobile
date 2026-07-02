@@ -45,6 +45,26 @@ class _GroupedProductStoriesScreenState
             return ProductStoryScreen(
               groupedStory: widget.groupedStories[index],
               needVisitProductButton: true,
+              onRequestNextGroup: () {
+                if (index < widget.groupedStories.length - 1) {
+                  _pageController.nextPage(
+                    duration: const Duration(milliseconds: 250),
+                    curve: Curves.easeOut,
+                  );
+                } else {
+                  // Finished the last vendor's last story — close the viewer,
+                  // same as Instagram returning to the feed.
+                  Navigator.of(context).pop();
+                }
+              },
+              onRequestPreviousGroup: index > 0
+                  ? () {
+                      _pageController.previousPage(
+                        duration: const Duration(milliseconds: 250),
+                        curve: Curves.easeOut,
+                      );
+                    }
+                  : null,
             );
           },
         ),

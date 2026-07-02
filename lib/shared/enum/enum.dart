@@ -6,3 +6,4 @@ export 'vendor_type.dart';
 export 'productType.dart';
 export 'alert_dialog_type.dart';
 export 'video_view_behaviour.dart';
+export 'search_scope.dart';

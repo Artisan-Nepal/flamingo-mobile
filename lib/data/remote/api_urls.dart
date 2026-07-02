@@ -32,6 +32,7 @@ class ApiUrls {
   static String paymentMethods = '/payment-methods';
   static String orders = '/orders';
   static String vendors = '/vendors';
+  static String vendorSearch = '/vendors/search';
   static String vendorLikes = '/vendors/:id/likes';
   static String customersCountInfo = '/customers/count-info';
   static String advertisements = '/advertisements/active';
@@ -42,6 +43,7 @@ class ApiUrls {
   static String advertisementActivity = '/advertisement-activity';
   static String trackOrder = '/orders/:id/track';
   static String likedVendorStory = '/product-story/liked-vendor';
+  static String vendorStory = '/product-story/vendor/:id';
   static String viewStory = '/product-story/:id/view';
   static String getRelatedProducts =
       '/recommender/products/:productId/related_products';

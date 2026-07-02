@@ -51,4 +51,16 @@ class VendorRemoteImpl implements VendorRemote {
     final apiResponse = await _apiClient.get(url);
     return Vendor.fromJson(apiResponse.data);
   }
+
+  @override
+  Future<FetchResponse<Vendor>> searchVendors(String key) async {
+    final apiResponse = await _apiClient.post(
+      ApiUrls.vendorSearch,
+      body: {'key': key},
+    );
+    return FetchResponse.fromJson(
+      apiResponse.data,
+      Vendor.fromJsonList,
+    );
+  }
 }

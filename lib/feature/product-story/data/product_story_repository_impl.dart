@@ -3,6 +3,7 @@
 import 'package:flamingo/feature/feature.dart';
 import 'package:flamingo/feature/product-story/data/local/product_story_local.dart';
 import 'package:flamingo/feature/product-story/data/model/grouped_product_story.dart';
+import 'package:flamingo/feature/product-story/data/model/product_story.dart';
 import 'package:flamingo/feature/product-story/data/product_story_repository.dart';
 import 'package:flamingo/feature/product-story/data/remote/product_story_remote.dart';
 
@@ -22,6 +23,11 @@ class ProductStoryRepositoryImpl implements ProductStoryRepository {
   @override
   Future<List<GroupedProductStory>> getLikedVendorStories() async {
     return await _productStoryRemote.getLikedVendorStories();
+  }
+
+  @override
+  Future<List<ProductStory>> getVendorStories(String vendorId) async {
+    return await _productStoryRemote.getVendorStories(vendorId);
   }
 
   @override

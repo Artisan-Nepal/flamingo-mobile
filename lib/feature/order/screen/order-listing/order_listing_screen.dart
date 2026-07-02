@@ -130,6 +130,7 @@ class _OrderListingScreenState extends State<OrderListingScreen> {
                 tabName: 'To Receive',
                 showStatus: true,
                 error: viewModel.orderUseCase.exception,
+                emptyMessage: 'No orders to receive right now',
                 orders: List<Order>.from(
                   orders.where(
                     (order) => ['PENDING', 'PROCESSING', 'OUT_FOR_DELIVERY']
@@ -143,6 +144,7 @@ class _OrderListingScreenState extends State<OrderListingScreen> {
             SnippetOrderListingTab(
                 tabName: 'Received',
                 error: viewModel.orderUseCase.exception,
+                emptyMessage: 'No delivered orders yet',
                 orders: List<Order>.from(
                   orders.where(
                     (order) => order.orderStatus.code == 'DELIVERED',
@@ -155,6 +157,7 @@ class _OrderListingScreenState extends State<OrderListingScreen> {
             SnippetOrderListingTab(
               tabName: 'Cancelled',
               error: viewModel.orderUseCase.exception,
+              emptyMessage: 'No cancelled orders',
               orders: List<Order>.from(
                 orders.where(
                   (order) => order.orderStatus.code == 'CANCELLED',

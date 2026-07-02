@@ -10,4 +10,5 @@ abstract class VendorRepository {
   Future<VendorLikeResponse> getVendorLikes(String vendorId);
   Future updateFavouriteVendor(UpdateFavouriteVendorRequest request);
   Future<Vendor> getVendorBySellerId(String sellerId);
+  Future<FetchResponse<Vendor>> searchVendors(String key);
 }

@@ -1,0 +1,1 @@
+enum SearchScope { product, brand }

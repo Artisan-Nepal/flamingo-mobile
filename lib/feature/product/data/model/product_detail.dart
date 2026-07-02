@@ -16,6 +16,7 @@ class ProductDetail {
   final bool isInWishlist;
   final String? details;
   final Seller seller;
+  final String? categoryName;
 
   ProductDetail({
     required this.id,
@@ -29,6 +30,7 @@ class ProductDetail {
     required this.stories,
     required this.seller,
     this.details,
+    this.categoryName,
   });
 
   factory ProductDetail.fromJson(Map<String, dynamic> json) => ProductDetail(
@@ -50,6 +52,10 @@ class ProductDetail {
         isInWishlist: json['wishlist'] == null
             ? false
             : List.from(json['wishlist']).isNotEmpty,
+        categoryName: json['productCategory'] == null ||
+                List.from(json['productCategory']).isEmpty
+            ? null
+            : json['productCategory'][0]['category']['name'],
       );
 
   static List<ProductDetail> fromJsonList(dynamic json) =>

@@ -101,13 +101,30 @@ class _SnippetAddToCartSummaryBottomSheetState
                 ],
               ),
               const VerticalSpaceWidget(height: Dimens.spacingSizeExtraLarge),
-              FilledButtonWidget(
-                width: double.infinity,
-                label: 'Go to bag',
-                onPressed: () {
-                  NavigationHelper.pop(context);
-                  NavigationHelper.push(context, const CartListingScreen());
-                },
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButtonWidget(
+                      label: 'Continue Shopping',
+                      onPressed: () {
+                        NavigationHelper.pop(context);
+                      },
+                    ),
+                  ),
+                  const HorizontalSpaceWidget(
+                      width: Dimens.spacingSizeSmall),
+                  Expanded(
+                    child: FilledButtonWidget(
+                      width: double.infinity,
+                      label: 'Go to bag',
+                      onPressed: () {
+                        NavigationHelper.pop(context);
+                        NavigationHelper.push(
+                            context, const CartListingScreen());
+                      },
+                    ),
+                  ),
+                ],
               )
             ],
           );

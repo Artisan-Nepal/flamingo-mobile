@@ -16,6 +16,7 @@ class SnippetProductListing extends StatelessWidget {
     this.leadSource,
     this.advertisementId,
     this.onProductTap,
+    this.physics,
   });
 
   final List<Product> products;
@@ -26,6 +27,7 @@ class SnippetProductListing extends StatelessWidget {
   final String? advertisementId;
   final bool needFavIcon;
   final void Function(Product product)? onProductTap;
+  final ScrollPhysics? physics;
 
   @override
   Widget build(BuildContext context) {
@@ -59,6 +61,7 @@ class SnippetProductListing extends StatelessWidget {
       crossAxisSpacing: Dimens.spacingSizeSmall,
       itemCount: products.length,
       shrinkWrap: shrinkWrap,
+      physics: physics,
       gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
       ),

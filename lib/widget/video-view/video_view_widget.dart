@@ -12,12 +12,18 @@ class VideoViewWidget extends StatefulWidget {
     this.coverParent = false,
     this.loaderColor = AppColors.white,
     this.behaviour = VideoViewBehaviour.holdToPause,
+    this.looping = true,
+    this.onProgress,
+    this.onVideoEnd,
   });
 
   final String url;
   final bool coverParent;
   final Color loaderColor;
   final VideoViewBehaviour behaviour;
+  final bool looping;
+  final void Function(double progress)? onProgress;
+  final VoidCallback? onVideoEnd;
 
   @override
   State<VideoViewWidget> createState() => _VideoViewWidgetState();
@@ -28,6 +34,7 @@ class _VideoViewWidgetState extends State<VideoViewWidget>
   late VideoPlayerController videoPlayerController;
   late Future initializeVideoPlayer;
   bool _isPlaying = true;
+  bool _hasEnded = false;
 
   _playVideo() {
     _isPlaying = true;
@@ -47,18 +54,37 @@ class _VideoViewWidgetState extends State<VideoViewWidget>
     setState(() {});
   }
 
+  void _onPositionChanged() {
+    final value = videoPlayerController.value;
+    if (!value.isInitialized || value.duration.inMilliseconds == 0) return;
+
+    widget.onProgress?.call(
+      (value.position.inMilliseconds / value.duration.inMilliseconds)
+          .clamp(0.0, 1.0),
+    );
+
+    if (!widget.looping &&
+        !_hasEnded &&
+        value.position >= value.duration - const Duration(milliseconds: 200)) {
+      _hasEnded = true;
+      widget.onVideoEnd?.call();
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     videoPlayerController =
         VideoPlayerController.networkUrl(Uri.parse(widget.url));
     initializeVideoPlayer = videoPlayerController.initialize();
-    videoPlayerController.setLooping(true);
+    videoPlayerController.setLooping(widget.looping);
+    videoPlayerController.addListener(_onPositionChanged);
   }
 
   @override
   void dispose() {
     super.dispose();
+    videoPlayerController.removeListener(_onPositionChanged);
     videoPlayerController.dispose();
   }
 

@@ -16,8 +16,8 @@ class AuthViewModel extends ChangeNotifier {
     syncLocally();
   }
 
-  late bool _isLoggedIn;
-  late bool _isGuestUser;
+  bool _isLoggedIn = false;
+  bool _isGuestUser = false;
   Customer? _user;
 
   bool get isLoggedIn => _isLoggedIn;

@@ -1,8 +1,13 @@
 class ApiUrls {
-  // AWS App Runner (dev) — public HTTPS, reachable from emulator/device/anywhere
-  static String baseUrl = 'https://4msfgmfzfz.ap-south-1.awsapprunner.com/api';
-  // static String baseUrl = 'http://10.0.2.2:8848/api'; // Android emulator -> local backend
-  // static String baseUrl = 'http://192.168.1.12:8848/api'; // physical device on same Wi-Fi
+  // Environment is chosen at launch via --dart-define-from-file (see config/).
+  //   Sim + local:    flutter run --dart-define-from-file=config/local-sim.json
+  //   Device + local: flutter run --dart-define-from-file=config/local-device.json
+  //   AWS:            flutter run --dart-define-from-file=config/aws.json
+  // Default is the AWS URL so a bare `flutter run` / release build never ships localhost.
+  static const String baseUrl = String.fromEnvironment(
+    'API_BASE_URL',
+    defaultValue: 'https://saeuxrpkr4.ap-south-1.awsapprunner.com/api',
+  );
 
   // AUTH
   static String sendLoginOtp = '/auth/send-otp';

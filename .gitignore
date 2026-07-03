@@ -57,3 +57,6 @@ android/key.properties
 firebase-service-account.json
 .env
 .env.*
+
+# Machine/network-specific launch config (LAN IP differs per machine/Wi-Fi)
+config/local-device.json

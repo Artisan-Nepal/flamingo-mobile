@@ -1,0 +1,4 @@
+{
+  "_comment": "Copy this file to config/local-device.json and set your Mac's LAN IP (run: ipconfig getifaddr en0). Used when testing on a physical iPhone against the local Docker API. config/local-device.json is gitignored.",
+  "API_BASE_URL": "http://192.168.1.X:8848/api"
+}

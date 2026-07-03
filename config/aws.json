@@ -1,0 +1,4 @@
+{
+  "_comment": "Dev AWS App Runner URL. Update API_BASE_URL after each AWS redeploy (the App Runner URL changes when the service is recreated).",
+  "API_BASE_URL": "https://saeuxrpkr4.ap-south-1.awsapprunner.com/api"
+}

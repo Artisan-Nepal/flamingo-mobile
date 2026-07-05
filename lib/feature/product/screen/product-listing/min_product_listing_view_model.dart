@@ -43,4 +43,32 @@ class MinProductListingViewModel extends ChangeNotifier {
       if (!isRefresh) setProductsUseCase(Response.error(exception));
     }
   }
+
+  Future<void> getCheaperAlternatives(
+    String productId, {
+    bool isRefresh = false,
+  }) async {
+    try {
+      if (!isRefresh) setProductsUseCase(Response.loading());
+      final response =
+          await _productRepository.getCheaperAlternatives(productId);
+      setProductsUseCase(Response.complete(response));
+    } catch (exception) {
+      if (!isRefresh) setProductsUseCase(Response.error(exception));
+    }
+  }
+
+  Future<void> getInStockAlternatives(
+    String productId, {
+    bool isRefresh = false,
+  }) async {
+    try {
+      if (!isRefresh) setProductsUseCase(Response.loading());
+      final response =
+          await _productRepository.getInStockAlternatives(productId);
+      setProductsUseCase(Response.complete(response));
+    } catch (exception) {
+      if (!isRefresh) setProductsUseCase(Response.error(exception));
+    }
+  }
 }

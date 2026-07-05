@@ -133,8 +133,12 @@ class _OrderListingScreenState extends State<OrderListingScreen> {
                 emptyMessage: 'No orders to receive right now',
                 orders: List<Order>.from(
                   orders.where(
-                    (order) => ['PENDING', 'PROCESSING', 'OUT_FOR_DELIVERY']
-                        .contains(order.orderStatus.code),
+                    (order) => [
+                      'PENDING',
+                      'PROCESSING',
+                      'READY_FOR_DELIVERY',
+                      'OUT_FOR_DELIVERY'
+                    ].contains(order.orderStatus.code),
                   ),
                 ),
                 onRefresh: () async {

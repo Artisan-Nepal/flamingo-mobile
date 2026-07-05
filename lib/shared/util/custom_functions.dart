@@ -144,6 +144,8 @@ Color getOrderStatusColor(String code) {
       return AppColors.warning;
     case 'PROCESSING':
       return AppColors.info;
+    case 'READY_FOR_DELIVERY':
+      return AppColors.info;
     case 'OUT_FOR_DELIVERY':
       return AppColors.success;
     case 'DELIVERED':

@@ -25,6 +25,9 @@ class AppColors {
   static const grayMain = Color(0xFF848484);
   static const grayLight = Color(0xFFB3B3B3);
   static const grayLighter = Color(0xFFF8F9FA);
+  // Soft divider line: sits between grayLight and grayLighter — visible but
+  // gentle, a middle ground between a stark divider and a near-invisible one.
+  static const grayLine = Color(0xFFEAEAEA);
 
   // others
   static const purple = Color(0xFF8D5EF2);

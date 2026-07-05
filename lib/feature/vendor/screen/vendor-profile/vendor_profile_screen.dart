@@ -19,6 +19,7 @@ import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/error/default_error_widget.dart';
 import 'package:flamingo/widget/fav-button/fav_vendor_button_widget.dart';
 import 'package:flamingo/widget/image/cached_network_image_widget.dart';
+import 'package:flamingo/widget/store-avatar/store_avatar_widget.dart';
 import 'package:flamingo/widget/shimmer/shimmer.dart';
 import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/cupertino.dart';
@@ -117,34 +118,28 @@ class _VendorProfileScreenState extends State<VendorProfileScreen> {
                         children: [
                           VerticalSpaceWidget(
                               height: Dimens.spacingSizeDefault),
-                          if (widget.seller.displayImageUrl != null)
-                            Container(
-                              padding: const EdgeInsets.all(3),
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                border: Border.all(
-                                  color: AppColors.grayLighter,
-                                  width: 2,
-                                ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: AppColors.black.withOpacity(0.08),
-                                    blurRadius: 12,
-                                    offset: const Offset(0, 4),
-                                  ),
-                                ],
+                          Container(
+                            padding: const EdgeInsets.all(3),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: AppColors.grayLighter,
+                                width: 2,
                               ),
-                              child: ClipOval(
-                                child: CachedNetworkImageWidget(
-                                  placeHolder:
-                                      ImageConstants.displayPicturePlaceHolder,
-                                  image: widget.seller.displayImageUrl ?? "",
-                                  fit: BoxFit.cover,
-                                  height: SizeConfig.screenHeight * 0.1,
-                                  width: SizeConfig.screenHeight * 0.1,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: AppColors.black.withOpacity(0.08),
+                                  blurRadius: 12,
+                                  offset: const Offset(0, 4),
                                 ),
-                              ),
+                              ],
                             ),
+                            child: StoreAvatarWidget(
+                              name: widget.seller.storeName,
+                              imageUrl: widget.seller.displayImageUrl,
+                              size: SizeConfig.screenHeight * 0.1,
+                            ),
+                          ),
                           VerticalSpaceWidget(
                               height: Dimens.spacingSizeSmall),
                           Consumer<FavouriteVendorViewModel>(

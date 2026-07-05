@@ -2,6 +2,7 @@ import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/advertisement/advertisement_listing_view_model.dart';
 import 'package:flamingo/feature/auth/auth_view_model.dart';
 import 'package:flamingo/feature/customer-activity/customer_activity_view_model.dart';
+import 'package:flamingo/feature/dashboard/screen/dashboard/dashboard_view_model.dart';
 import 'package:flamingo/feature/dashboard/screen/home/snippet_home_advertisement.dart';
 import 'package:flamingo/feature/dashboard/screen/home/snippet_home_screen_story.dart';
 import 'package:flamingo/feature/dashboard/screen/home/snippet_home_products.dart';
@@ -36,11 +37,35 @@ class _HomeScreenState extends State<HomeScreen>
   final _recommendedProductListingViewModel =
       locator<MinProductListingViewModel>();
   final _storyViewModel = locator<ProductStoryViewModel>();
+  final _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
     getData();
+    // Let re-tapping the HOME nav tab scroll this screen back to the top.
+    Provider.of<DashboardViewModel>(context, listen: false).onHomeReselected =
+        _scrollToTop;
+  }
+
+  @override
+  void dispose() {
+    final dashboardViewModel =
+        Provider.of<DashboardViewModel>(context, listen: false);
+    if (dashboardViewModel.onHomeReselected == _scrollToTop) {
+      dashboardViewModel.onHomeReselected = null;
+    }
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollToTop() {
+    if (!_scrollController.hasClients) return;
+    _scrollController.animateTo(
+      0,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeOut,
+    );
   }
 
   getData() async {
@@ -86,6 +111,7 @@ class _HomeScreenState extends State<HomeScreen>
             child: Builder(
               builder: (context) {
                 return CustomScrollView(
+                  controller: _scrollController,
                   slivers: [
                     SliverToBoxAdapter(
                       child: Column(
@@ -237,7 +263,7 @@ class _HomeScreenState extends State<HomeScreen>
         ImageConstants.appIconWithName,
         height: SizeConfig.appBarHeight - 25,
       ),
-      centerTitle: false,
+      centerTitle: true,
       // title: Text(
       //   'Flamingo',
       //   style: textTheme(context).headlineSmall!.copyWith(

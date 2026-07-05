@@ -66,4 +66,14 @@ class ProductRepositoryImpl implements ProductRepository {
     final userId = (await _authRepository.getUserLocal())!.userId;
     return await _productRemote.getUserRecommendations(userId);
   }
+
+  @override
+  Future<List<Product>> getCheaperAlternatives(String productId) async {
+    return await _productRemote.getCheaperAlternatives(productId);
+  }
+
+  @override
+  Future<List<Product>> getInStockAlternatives(String productId) async {
+    return await _productRemote.getInStockAlternatives(productId);
+  }
 }

@@ -2,7 +2,7 @@ import 'package:flamingo/feature/product-story/product_story_engagement_view_mod
 import 'package:flamingo/feature/product-story/product_story_view_model.dart';
 import 'package:flamingo/feature/product-story/screen/product-story/grouped_product_story_screen.dart';
 import 'package:flamingo/shared/shared.dart';
-import 'package:flamingo/widget/image/image.dart';
+import 'package:flamingo/widget/store-avatar/store_avatar_widget.dart';
 import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -102,15 +102,12 @@ class SnippetHomeScreenStory extends StatelessWidget {
                               ),
                             ),
                             padding: EdgeInsets.all(2),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(100),
-                              child: CachedNetworkImageWidget(
-                                image: stories[index].seller.displayImageUrl ??
-                                    stories[index].items[0].productImage,
-                                height: 60,
-                                width: 60,
-                                fit: BoxFit.cover,
-                              ),
+                            child: StoreAvatarWidget(
+                              name: stories[index].seller.storeName,
+                              imageUrl:
+                                  stories[index].seller.displayImageUrl ??
+                                      stories[index].items[0].productImage,
+                              size: 60,
                             ),
                           ),
                         ),

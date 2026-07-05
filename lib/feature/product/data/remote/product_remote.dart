@@ -12,4 +12,6 @@ abstract class ProductRemote {
   Future<ProductDetail> getSingleProduct(String productId);
   Future<List<Product>> getRelatedProducts(String productId);
   Future<List<Product>> getUserRecommendations(String userId);
+  Future<List<Product>> getCheaperAlternatives(String productId);
+  Future<List<Product>> getInStockAlternatives(String productId);
 }

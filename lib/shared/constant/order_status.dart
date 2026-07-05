@@ -18,17 +18,24 @@ final orderStatusLookup = [
   ),
   OrderStatus(
     id: '',
+    name: 'Ready for delivery',
+    description: 'Your order is packed and ready to be handed to the courier.',
+    sequenceNumber: 2,
+    code: 'READY_FOR_DELIVERY',
+  ),
+  OrderStatus(
+    id: '',
     name: 'Out for delivery',
     description:
         'Your order is out for delivery and will be at your doorstep soon.',
-    sequenceNumber: 2,
+    sequenceNumber: 3,
     code: 'OUT_FOR_DELIVERY',
   ),
   OrderStatus(
     id: '',
     name: 'Delivered',
     description: 'Your order has been successfully delivered.',
-    sequenceNumber: 3,
+    sequenceNumber: 4,
     code: 'DELIVERED',
   ),
   OrderStatus(

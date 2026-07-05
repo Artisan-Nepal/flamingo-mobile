@@ -55,6 +55,10 @@ class ApiUrls {
   static String imageSearch = '/recommender/image_search';
   static String getUserRecommendations =
       '/recommender/users/:userId/recommend_products';
+  static String getCheaperAlternatives =
+      '/recommender/products/:productId/cheaper_alternatives';
+  static String getInStockAlternatives =
+      '/recommender/products/:productId/in_stock_alternatives';
   static String vendorBySellerId = '/vendors/seller/:id';
   static String device = '/devices';
   static String deviceNotificationToken = '/devices/notification-token';

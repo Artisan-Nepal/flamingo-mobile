@@ -60,21 +60,33 @@ class _RefresherWidgetState extends State<RefresherWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return SmartRefresher(
-      controller: widget.controller,
-      enablePullDown: widget.enablePullDown,
-      enablePullUp: widget.enablePullUp,
-      onLoading: _onLoading,
-      onRefresh: _onRefresh,
-      // footer: CustomFooter(
-      //   builder: (context, mode) {
-      //     if (mode == LoadStatus.loading) {
-      //       return DefaultScreenLoaderWidget();
-      //     }
-      //     return SizedBox();
-      //   },
-      // ),
-      child: widget.child,
+    // pull_to_refresh's default spring (mass 2.2, stiffness 150, damping 16) is
+    // underdamped — critical damping for those values is ~36, so it oscillates
+    // and the overscroll visibly bounces. Override it with Flutter's own scroll
+    // spring (critically damped) so these screens settle like the native
+    // RefreshIndicator-based screens (Home, Category) instead of bouncing extra.
+    return RefreshConfiguration(
+      springDescription: SpringDescription.withDampingRatio(
+        mass: 0.5,
+        stiffness: 100.0,
+        ratio: 1.1,
+      ),
+      child: SmartRefresher(
+        controller: widget.controller,
+        enablePullDown: widget.enablePullDown,
+        enablePullUp: widget.enablePullUp,
+        onLoading: _onLoading,
+        onRefresh: _onRefresh,
+        // footer: CustomFooter(
+        //   builder: (context, mode) {
+        //     if (mode == LoadStatus.loading) {
+        //       return DefaultScreenLoaderWidget();
+        //     }
+        //     return SizedBox();
+        //   },
+        // ),
+        child: widget.child,
+      ),
     );
   }
 }

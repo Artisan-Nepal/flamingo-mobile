@@ -1,5 +1,7 @@
 import 'package:flamingo/di/di.dart';
+import 'package:flamingo/feature/product/data/model/product.dart';
 import 'package:flamingo/feature/product/screen/product-detail/product_detail_screen.dart';
+import 'package:flamingo/feature/product/screen/product-listing/min_product_listing_view_model.dart';
 import 'package:flamingo/feature/wishlist/data/model/wishlist_item.dart';
 import 'package:flamingo/feature/wishlist/screen/wishlist-listing/wishlist_listing_view_model.dart';
 import 'package:flamingo/feature/wishlist/update_wishlist_view_model.dart';
@@ -23,11 +25,21 @@ class SnippetWishListItem extends StatefulWidget {
 
 class _SnippetWishListItemState extends State<SnippetWishListItem> {
   final _updateWishlistViewModel = locator<UpdateWishlistViewModel>();
+  final _alternativeViewModel = locator<MinProductListingViewModel>();
+
+  @override
+  void initState() {
+    super.initState();
+    _alternativeViewModel.getCheaperAlternatives(widget.item.product.id);
+  }
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => _updateWishlistViewModel,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => _updateWishlistViewModel),
+        ChangeNotifierProvider(create: (context) => _alternativeViewModel),
+      ],
       builder: (context, child) => GestureDetector(
         onTap: () {
           _navigateToProductDetail(context);
@@ -81,6 +93,44 @@ class _SnippetWishListItemState extends State<SnippetWishListItem> {
                         },
                       ),
                     ),
+                    // Cheaper-alternative badge - a corner overlay rather than
+                    // extra Column content, since this card sits in a grid
+                    // with a fixed mainAxisExtent and shouldn't grow taller.
+                    Positioned(
+                      bottom: 8,
+                      left: 8,
+                      child: Consumer<MinProductListingViewModel>(
+                        builder: (context, viewModel, child) {
+                          final alternatives =
+                              viewModel.getProductsUseCase.data ?? [];
+                          if (!viewModel.getProductsUseCase.hasCompleted ||
+                              alternatives.isEmpty) {
+                            return const SizedBox();
+                          }
+                          return GestureDetector(
+                            onTap: () =>
+                                _navigateToAlternative(context, alternatives.first),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: Dimens.spacingSizeSmall,
+                                vertical: Dimens.spacing_2,
+                              ),
+                              decoration: BoxDecoration(
+                                color: AppColors.white,
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: Text(
+                                'Cheaper option available',
+                                style: textTheme(context).bodySmall!.copyWith(
+                                      color: AppColors.black,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -112,6 +162,16 @@ class _SnippetWishListItemState extends State<SnippetWishListItem> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  void _navigateToAlternative(BuildContext context, Product alternative) {
+    NavigationHelper.push(
+      context,
+      ProductDetailScreen(
+        productId: alternative.productId,
+        title: alternative.sellerStoreName,
       ),
     );
   }

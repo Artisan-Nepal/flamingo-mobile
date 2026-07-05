@@ -6,7 +6,7 @@ import 'package:flamingo/feature/product-story/product_story_view_model.dart';
 import 'package:flamingo/feature/product/screen/product-detail/product_detail_screen.dart';
 import 'package:flamingo/feature/vendor/screen/vendor-profile/vendor_profile_screen.dart';
 import 'package:flamingo/shared/shared.dart';
-import 'package:flamingo/widget/image/cached_network_image_widget.dart';
+import 'package:flamingo/widget/store-avatar/store_avatar_widget.dart';
 import 'package:flamingo/widget/video-view/video_view_widget.dart';
 import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/material.dart';
@@ -343,14 +343,10 @@ class _ProductStoryScreenState extends State<ProductStoryScreen>
     return GestureDetector(
       onTap: () => NavigationHelper.push(
           context, VendorProfileScreen(seller: widget.groupedStory.seller)),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(100),
-        child: CachedNetworkImageWidget(
-          image: widget.groupedStory.seller.displayImageUrl ?? "",
-          height: 40,
-          width: 40,
-          fit: BoxFit.cover,
-        ),
+      child: StoreAvatarWidget(
+        name: widget.groupedStory.seller.storeName,
+        imageUrl: widget.groupedStory.seller.displayImageUrl,
+        size: 40,
       ),
     );
   }

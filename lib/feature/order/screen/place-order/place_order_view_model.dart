@@ -7,6 +7,7 @@ import 'package:flamingo/feature/order/data/model/create_order_request.dart';
 import 'package:flamingo/feature/order/data/model/payment_method.dart';
 import 'package:flamingo/feature/order/data/model/shipping_method.dart';
 import 'package:flamingo/feature/order/data/order_repository.dart';
+import 'package:flamingo/shared/constant/delivery.dart';
 import 'package:flamingo/shared/constant/user_activity_type.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flutter/cupertino.dart';
@@ -77,12 +78,21 @@ class PlaceOrderViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  int getShippingFee() {
-    if (_selectedShippingMethod == null) {
-      return 0;
-    } else {
-      return _selectedShippingMethod!.cost;
+  // Delivery charge for one pickup from one store. Standard shipping is priced
+  // by delivery city (Rs 100, or Rs 150 for extended zones); other methods use
+  // their flat cost. A courier makes one pickup per store, so the total charge
+  // scales with the number of distinct stores in the cart, not the item count.
+  int get deliveryChargePerStore {
+    final method = _selectedShippingMethod;
+    if (method == null) return 0;
+    if (method.code == kStandardShippingCode) {
+      return getDeliveryChargeForCity(_selectedShippingAddress?.area.city.name);
     }
+    return method.cost;
+  }
+
+  int getShippingFee() {
+    return deliveryChargePerStore;
   }
 
   Future<void> placeOrder({String? paymentToken}) async {
@@ -122,8 +132,12 @@ class PlaceOrderViewModel extends ChangeNotifier {
     return price;
   }
 
+  int get distinctStoreCount {
+    return items.map((item) => item.product.sellerId).toSet().length;
+  }
+
   int get shippingCost {
-    return (_selectedShippingMethod?.cost ?? 0) * items.length;
+    return deliveryChargePerStore * distinctStoreCount;
   }
 
   int get orderTotal {

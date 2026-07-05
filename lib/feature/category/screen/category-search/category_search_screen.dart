@@ -82,7 +82,7 @@ class _CategorySearchScreenState extends State<CategorySearchScreen>
         border: Border(
           bottom: BorderSide(
             color: isLightMode(context)
-                ? AppColors.grayLighter
+                ? AppColors.grayLine
                 : AppColors.grayDarker,
             width: 1,
           ),
@@ -107,6 +107,9 @@ class _CategorySearchScreenState extends State<CategorySearchScreen>
             unselectedLabelStyle: textTheme(context).titleSmall!,
             indicatorColor:
                 isLightMode(context) ? AppColors.grayDarker : AppColors.white,
+            // Hide Material 3's default full-width divider; the container's
+            // lighter grayLighter/grayDarker bottom border is the intended line.
+            dividerColor: AppColors.transparent,
             labelPadding:
                 const EdgeInsets.symmetric(horizontal: Dimens.spacingSizeSmall),
             tabs: List<Widget>.from(

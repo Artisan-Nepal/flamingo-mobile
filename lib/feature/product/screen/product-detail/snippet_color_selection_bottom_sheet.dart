@@ -112,6 +112,11 @@ class _SnippetColorSelectionBottomSheetState
             children: List<Widget>.generate(
               viewModel.availableColors.length,
               (index) {
+                // Stock isn't shown here on purpose: a color spans multiple
+                // sizes, and this picker doesn't fix a size yet, so there's no
+                // single stock number that's accurate for the whole color
+                // (see the size picker below, where stock per size for the
+                // now-chosen color is meaningful and shown).
                 final productVariant = viewModel.getVariantByColorAndSize(
                     viewModel.availableColors[index],
                     viewModel.selectedSizeOption);
@@ -126,19 +131,10 @@ class _SnippetColorSelectionBottomSheetState
                     Expanded(
                       child: Text(
                         viewModel.availableColors[index].name,
-                        textAlign: TextAlign.center,
-                        style: textTheme(context).labelLarge,
-                      ),
-                    ),
-                    Expanded(
-                      child: Text(
-                        productVariant.quantityInStock > 0
-                            ? 'Last ${productVariant.quantityInStock} left'
-                            : 'Out of Stock',
                         textAlign: TextAlign.end,
                         style: textTheme(context).labelLarge,
                       ),
-                    )
+                    ),
                   ],
                 );
               },

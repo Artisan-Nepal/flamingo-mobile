@@ -33,6 +33,7 @@ class CartItemProduct {
   final String body;
   final String status;
   final List<String> images;
+  final String sellerId;
 
   CartItemProduct({
     required this.id,
@@ -40,6 +41,7 @@ class CartItemProduct {
     required this.body,
     required this.status,
     required this.images,
+    required this.sellerId,
   });
 
   factory CartItemProduct.fromJson(Map<String, dynamic> json) =>
@@ -51,5 +53,6 @@ class CartItemProduct {
         images: json['images'] == null
             ? []
             : List<String>.from(json['images'].map((e) => e['imageUrl'])),
+        sellerId: json['sellerId'] ?? '',
       );
 }

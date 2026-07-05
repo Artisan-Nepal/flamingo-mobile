@@ -2,10 +2,12 @@ import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/cart/data/model/cart_item.dart';
 import 'package:flamingo/feature/cart/screen/cart-listing/cart_listing_view_model.dart';
 import 'package:flamingo/feature/cart/update_cart_view_model.dart';
+import 'package:flamingo/feature/product/screen/product-listing/min_product_listing_view_model.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/button/button.dart';
 import 'package:flamingo/widget/image/cached_network_image_widget.dart';
 import 'package:flamingo/widget/loader/circular_progress_indicator_widget.dart';
+import 'package:flamingo/widget/product/snippet_cheaper_alternative_banner.dart';
 import 'package:flamingo/widget/space/space.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -24,11 +26,21 @@ class SnippetCartListingItem extends StatefulWidget {
 
 class _SnippetCartListingItemState extends State<SnippetCartListingItem> {
   final _viewModel = locator<UpdateCartViewModel>();
+  final _alternativeViewModel = locator<MinProductListingViewModel>();
+
+  @override
+  void initState() {
+    super.initState();
+    _alternativeViewModel.getCheaperAlternatives(widget.cartItem.product.id);
+  }
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => _viewModel,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => _viewModel),
+        ChangeNotifierProvider(create: (context) => _alternativeViewModel),
+      ],
       builder: (context, child) {
         return Consumer<UpdateCartViewModel>(
           builder: (context, viewModel, child) {
@@ -40,76 +52,83 @@ class _SnippetCartListingItemState extends State<SnippetCartListingItem> {
                   padding: const EdgeInsets.all(
                     Dimens.spacingSizeDefault,
                   ),
-                  child: Row(
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(
-                        flex: 2,
-                        child: CachedNetworkImageWidget(
-                          image: extractProductVariantImage(
-                            widget.cartItem.product.images,
-                            widget.cartItem.productVariant,
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            flex: 2,
+                            child: CachedNetworkImageWidget(
+                              image: extractProductVariantImage(
+                                widget.cartItem.product.images,
+                                widget.cartItem.productVariant,
+                              ),
+                              needPlaceHolder: true,
+                              fit: BoxFit.cover,
+                              height: 150,
+                            ),
                           ),
-                          needPlaceHolder: true,
-                          fit: BoxFit.cover,
-                          height: 150,
-                        ),
-                      ),
-                      const HorizontalSpaceWidget(
-                          width: Dimens.spacingSizeDefault),
-                      Flexible(
-                        flex: 4,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // title
-                            Row(
+                          const HorizontalSpaceWidget(
+                              width: Dimens.spacingSizeDefault),
+                          Flexible(
+                            flex: 4,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Expanded(
-                                  child: Text(
-                                    widget.cartItem.product.title,
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                                const HorizontalSpaceWidget(
-                                    width: Dimens.spacingSizeDefault),
+                                // title
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        widget.cartItem.product.title,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                    const HorizontalSpaceWidget(
+                                        width: Dimens.spacingSizeDefault),
 
-                                // Remove button
-                                GestureDetector(
-                                  onTap: () {
-                                    _onRemove(viewModel);
-                                  },
-                                  child: const Icon(
-                                    Icons.close,
-                                    color: AppColors.black,
+                                    // Remove button
+                                    GestureDetector(
+                                      onTap: () {
+                                        _onRemove(viewModel);
+                                      },
+                                      child: const Icon(
+                                        Icons.close,
+                                        color: AppColors.black,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const VerticalSpaceWidget(
+                                    height: Dimens.spacingSizeExtraSmall),
+                                _buildVariantDetails(),
+                                const VerticalSpaceWidget(
+                                    height: Dimens.spacingSizeSmall),
+                                _buildQuantityInStock(),
+                                const VerticalSpaceWidget(
+                                    height: Dimens.spacingSizeSmall),
+                                _buildQuantityAdjuster(viewModel),
+                                const VerticalSpaceWidget(
+                                    height: Dimens.spacingSizeDefault),
+                                Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Text(
+                                    'Rs. ${formatNepaliCurrency(widget.cartItem.productVariant.price * widget.cartItem.quantity)}',
+                                    style:
+                                        textTheme(context).labelLarge!.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                   ),
                                 ),
                               ],
                             ),
-                            const VerticalSpaceWidget(
-                                height: Dimens.spacingSizeExtraSmall),
-                            _buildVariantDetails(),
-                            const VerticalSpaceWidget(
-                                height: Dimens.spacingSizeSmall),
-                            _buildQuantityInStock(),
-                            const VerticalSpaceWidget(
-                                height: Dimens.spacingSizeSmall),
-                            _buildQuantityAdjuster(viewModel),
-                            const VerticalSpaceWidget(
-                                height: Dimens.spacingSizeDefault),
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: Text(
-                                'Rs. ${formatNepaliCurrency(widget.cartItem.productVariant.price * widget.cartItem.quantity)}',
-                                style: textTheme(context).labelLarge!.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
+                      _buildCheaperAlternative(),
                     ],
                   ),
                 ),
@@ -117,6 +136,24 @@ class _SnippetCartListingItemState extends State<SnippetCartListingItem> {
               ],
             );
           },
+        );
+      },
+    );
+  }
+
+  Widget _buildCheaperAlternative() {
+    return Consumer<MinProductListingViewModel>(
+      builder: (context, viewModel, child) {
+        final alternatives = viewModel.getProductsUseCase.data ?? [];
+        if (!viewModel.getProductsUseCase.hasCompleted ||
+            alternatives.isEmpty) {
+          return const SizedBox();
+        }
+        return Padding(
+          padding: const EdgeInsets.only(top: Dimens.spacingSizeSmall),
+          child: SnippetCheaperAlternativeBanner(
+            alternative: alternatives.first,
+          ),
         );
       },
     );

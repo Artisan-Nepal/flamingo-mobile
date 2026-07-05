@@ -1,4 +1,5 @@
 import 'package:flamingo/di/di.dart';
+import 'package:flamingo/widget/fav-button/fav_heart_pop.dart';
 import 'package:flamingo/feature/wishlist/update_wishlist_view_model.dart';
 import 'package:flamingo/feature/wishlist/wishlist_view_model.dart';
 import 'package:flamingo/shared/enum/lead_source.dart';
@@ -26,8 +27,27 @@ class FavProductButtonWidget extends StatefulWidget {
   State<FavProductButtonWidget> createState() => _FavProductButtonWidgetState();
 }
 
-class _FavProductButtonWidgetState extends State<FavProductButtonWidget> {
+class _FavProductButtonWidgetState extends State<FavProductButtonWidget>
+    with SingleTickerProviderStateMixin {
   final _updateWishlistViewModel = locator<UpdateWishlistViewModel>();
+  late final AnimationController _popController;
+  late final Animation<double> _popScale;
+
+  @override
+  void initState() {
+    super.initState();
+    _popController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 250),
+    );
+    _popScale = FavHeartPop.buildScale(_popController);
+  }
+
+  @override
+  void dispose() {
+    _popController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,17 +62,21 @@ class _FavProductButtonWidgetState extends State<FavProductButtonWidget> {
                     wishlistViewModel.isInWishlist(widget.productId);
                 return GestureDetector(
                   onTap: () {
+                    _popController.forward(from: 0);
                     _onUpdateWishlist(updateWishlistViewModel);
                   },
                   child: Container(
                     padding: widget.padding,
                     color: AppColors.transparent,
-                    child: Icon(
-                      isInWishlist ? Icons.favorite : Icons.favorite_outline,
-                      size: widget.iconSize,
-                      color: isInWishlist
-                          ? AppColors.secondaryMain
-                          : AppColors.grayMain,
+                    child: ScaleTransition(
+                      scale: _popScale,
+                      child: Icon(
+                        isInWishlist ? Icons.favorite : Icons.favorite_outline,
+                        size: widget.iconSize,
+                        color: isInWishlist
+                            ? AppColors.secondaryMain
+                            : AppColors.grayMain,
+                      ),
                     ),
                   ),
                 );

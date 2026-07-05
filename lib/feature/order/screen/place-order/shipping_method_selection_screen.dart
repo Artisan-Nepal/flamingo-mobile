@@ -1,6 +1,7 @@
 import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/order/screen/place-order/checkout_method_view_model.dart';
 import 'package:flamingo/feature/order/screen/place-order/place_order_view_model.dart';
+import 'package:flamingo/shared/constant/delivery.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/loader/circular_progress_indicator_widget.dart';
 import 'package:flamingo/widget/widget.dart';
@@ -36,8 +37,11 @@ class _ShippingMethodSelectionScreenState
           builder: (context, placeOrderViewModel, child) {
             return Consumer<CheckoutMethodViewModel>(
               builder: (context, viewModel, child) {
+                // Click & Collect is retired; Same-day is shown but disabled for now.
                 final shippingMethods =
-                    viewModel.shippingMethodUseCase.data?.rows ?? [];
+                    (viewModel.shippingMethodUseCase.data?.rows ?? [])
+                        .where((m) => m.code != kClickAndCollectCode)
+                        .toList();
                 return !viewModel.shippingMethodUseCase.hasCompleted
                     ? const Center(
                         child: CircularProgressIndicatorWidget(
@@ -48,23 +52,31 @@ class _ShippingMethodSelectionScreenState
                         padding: EdgeInsets.zero,
                         itemCount: shippingMethods.length,
                         itemBuilder: (context, index) {
+                          final method = shippingMethods[index];
+                          final isDisabled = method.code == kSameDayDeliveryCode;
                           return ListTile(
-                            onTap: () {
-                              placeOrderViewModel.setSelectedShippingMethod(
-                                  shippingMethods[index]);
-                              Navigator.pop(context);
-                            },
-                            title: Text(shippingMethods[index].name),
-                            subtitle: Text(hoursToDaysString(
-                                shippingMethods[index].duration)),
-                            trailing: SelectionIndicatorWidget(
-                              isSelected:
-                                  placeOrderViewModel.selectedShippingMethod !=
-                                          null &&
-                                      placeOrderViewModel
-                                              .selectedShippingMethod?.id ==
-                                          shippingMethods[index].id,
-                            ),
+                            enabled: !isDisabled,
+                            onTap: isDisabled
+                                ? null
+                                : () {
+                                    placeOrderViewModel
+                                        .setSelectedShippingMethod(method);
+                                    Navigator.pop(context);
+                                  },
+                            title: Text(method.name),
+                            subtitle: Text(isDisabled
+                                ? 'Coming soon'
+                                : hoursToDaysString(method.duration)),
+                            trailing: isDisabled
+                                ? null
+                                : SelectionIndicatorWidget(
+                                    isSelected: placeOrderViewModel
+                                                .selectedShippingMethod !=
+                                            null &&
+                                        placeOrderViewModel
+                                                .selectedShippingMethod?.id ==
+                                            method.id,
+                                  ),
                           );
                         },
                       );

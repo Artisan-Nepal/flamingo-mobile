@@ -104,6 +104,7 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   Widget _buildScopeToggle(SearchViewModel viewModel) {
+    final isBrand = viewModel.scope == SearchScope.brand;
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: Dimens.spacingSizeDefault,
@@ -115,10 +116,37 @@ class _SearchScreenState extends State<SearchScreen> {
           color: AppColors.grayLighter,
           borderRadius: BorderRadius.circular(Dimens.radiusSmall),
         ),
-        child: Row(
+        child: Stack(
           children: [
-            _buildScopeTab(viewModel, SearchScope.product, 'Products'),
-            _buildScopeTab(viewModel, SearchScope.brand, 'Brands'),
+            AnimatedAlign(
+              duration: const Duration(milliseconds: 180),
+              curve: Curves.easeInOut,
+              alignment:
+                  isBrand ? Alignment.centerRight : Alignment.centerLeft,
+              child: FractionallySizedBox(
+                widthFactor: 0.5,
+                heightFactor: 1,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: AppColors.white,
+                    borderRadius: BorderRadius.circular(Dimens.radius_5),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.black.withOpacity(0.08),
+                        blurRadius: 4,
+                        offset: const Offset(0, 1),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Row(
+              children: [
+                _buildScopeTab(viewModel, SearchScope.product, 'Products'),
+                _buildScopeTab(viewModel, SearchScope.brand, 'Brands'),
+              ],
+            ),
           ],
         ),
       ),
@@ -133,6 +161,7 @@ class _SearchScreenState extends State<SearchScreen> {
     final isSelected = viewModel.scope == scope;
     return Expanded(
       child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
         onTap: () {
           if (isSelected) return;
           viewModel.setScope(scope);
@@ -145,28 +174,16 @@ class _SearchScreenState extends State<SearchScreen> {
             }
           }
         },
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 180),
+        child: Container(
           alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: isSelected ? AppColors.white : AppColors.transparent,
-            borderRadius: BorderRadius.circular(Dimens.radius_5),
-            boxShadow: isSelected
-                ? [
-                    BoxShadow(
-                      color: AppColors.black.withOpacity(0.08),
-                      blurRadius: 4,
-                      offset: const Offset(0, 1),
-                    ),
-                  ]
-                : null,
-          ),
-          child: Text(
-            label,
-            style: TextStyle(
-              fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-              color: isSelected ? AppColors.grayDarker : AppColors.grayMain,
-            ),
+          child: AnimatedDefaultTextStyle(
+            duration: const Duration(milliseconds: 180),
+            curve: Curves.easeInOut,
+            style: textTheme(context).bodyMedium!.copyWith(
+                  fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                  color: isSelected ? AppColors.grayDarker : AppColors.grayMain,
+                ),
+            child: Text(label),
           ),
         ),
       ),

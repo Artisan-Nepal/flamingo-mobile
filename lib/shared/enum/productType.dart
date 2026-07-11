@@ -6,7 +6,8 @@ enum ProductType {
   LATEST,
   FAVORITE_VENDOR,
   WISHLIST,
-  TRENDING
+  TRENDING,
+  SALE
 }
 
 extension ProductTypeGetters on ProductType {

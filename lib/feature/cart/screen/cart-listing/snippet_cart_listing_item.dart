@@ -115,12 +115,34 @@ class _SnippetCartListingItemState extends State<SnippetCartListingItem> {
                                     height: Dimens.spacingSizeDefault),
                                 Align(
                                   alignment: Alignment.centerRight,
-                                  child: Text(
-                                    'Rs. ${formatNepaliCurrency(widget.cartItem.productVariant.price * widget.cartItem.quantity)}',
-                                    style:
-                                        textTheme(context).labelLarge!.copyWith(
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      if (widget.cartItem.productVariant
+                                              .originalPrice !=
+                                          null) ...[
+                                        Text(
+                                          'Rs. ${formatNepaliCurrency(widget.cartItem.productVariant.originalPrice! * widget.cartItem.quantity)}',
+                                          style: textTheme(context)
+                                              .labelLarge!
+                                              .copyWith(
+                                                color: AppColors.grayMain,
+                                                decoration:
+                                                    TextDecoration.lineThrough,
+                                              ),
+                                        ),
+                                        const HorizontalSpaceWidget(
+                                            width: Dimens.spacingSizeExtraSmall),
+                                      ],
+                                      Text(
+                                        'Rs. ${formatNepaliCurrency(widget.cartItem.productVariant.effectivePrice * widget.cartItem.quantity)}',
+                                        style: textTheme(context)
+                                            .labelLarge!
+                                            .copyWith(
                                               fontWeight: FontWeight.bold,
                                             ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ],

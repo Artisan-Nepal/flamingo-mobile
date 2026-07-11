@@ -6,4 +6,6 @@ class LocalStorageKeys {
   static const String user = 'user';
   static const String searchedTextHistory = 'searched_text_history';
   static const String guestId = 'guest_id';
+  static const String pendingKhaltiPidx = 'pending_khalti_pidx';
+  static const String pendingKhaltiPidxExpiresAt = 'pending_khalti_pidx_expires_at';
 }

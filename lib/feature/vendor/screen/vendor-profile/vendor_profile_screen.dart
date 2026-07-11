@@ -519,21 +519,7 @@ class _VendorProfileScreenState extends State<VendorProfileScreen> {
       // category section); without this they fight the outer view for scroll
       // gestures, which is what caused the scroll glitch/cutoff.
       physics: useSliver ? null : const NeverScrollableScrollPhysics(),
-      products: products
-          .map(
-            (p) => Product(
-              quantity: p.variants.first.quantityInStock,
-              image: extractProductDefaultImage(
-                p.images,
-                p.variants,
-              ),
-              price: p.variants.first.price,
-              productId: p.id,
-              title: p.title,
-              sellerStoreName: p.seller.storeName,
-            ),
-          )
-          .toList(),
+      products: products.map(Product.fromDetail).toList(),
     );
     return useSliver ? grid : SliverToBoxAdapter(child: grid);
   }

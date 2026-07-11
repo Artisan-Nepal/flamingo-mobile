@@ -2,10 +2,14 @@
 import 'package:flamingo/data/model/fetch_response.dart';
 import 'package:flamingo/feature/auth/auth.dart';
 import 'package:flamingo/feature/order/data/local/order_local.dart';
+import 'package:flamingo/feature/order/data/model/apply_coupon_response.dart';
 import 'package:flamingo/feature/order/data/model/create_order_request.dart';
+import 'package:flamingo/feature/order/data/model/khalti_initiate_request.dart';
+import 'package:flamingo/feature/order/data/model/khalti_initiate_response.dart';
 import 'package:flamingo/feature/order/data/model/order.dart';
 import 'package:flamingo/feature/order/data/model/order_status_log.dart';
 import 'package:flamingo/feature/order/data/model/payment_method.dart';
+import 'package:flamingo/feature/order/data/model/saved_coupon.dart';
 import 'package:flamingo/feature/order/data/model/shipping_method.dart';
 import 'package:flamingo/feature/order/data/order_repository.dart';
 import 'package:flamingo/feature/order/data/remote/order_remote.dart';
@@ -47,5 +51,31 @@ class OrderRepositoryImpl implements OrderRepository {
   @override
   Future<List<OrderStatusLog>> trackOrder(String orderId) async {
     return await _orderRemote.trackOrder(orderId);
+  }
+
+  @override
+  Future cancelOrder(String orderId) async {
+    return await _orderRemote.cancelOrder(orderId);
+  }
+
+  @override
+  Future<KhaltiInitiateResponse> initiateKhaltiOrder(
+      KhaltiInitiateRequest request) async {
+    return await _orderRemote.initiateKhaltiOrder(request);
+  }
+
+  @override
+  Future<List<String>> confirmKhaltiOrder(String pidx) async {
+    return await _orderRemote.confirmKhaltiOrder(pidx);
+  }
+
+  @override
+  Future<ApplyCouponResponse> validateCoupon(String code) async {
+    return await _orderRemote.validateCoupon(code);
+  }
+
+  @override
+  Future<List<SavedCoupon>> getSavedCoupons() async {
+    return await _orderRemote.getSavedCoupons();
   }
 }

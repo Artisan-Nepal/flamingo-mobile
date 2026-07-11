@@ -1,10 +1,16 @@
+import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/order/data/model/order.dart';
+import 'package:flamingo/feature/order/screen/order-detail/order_detail_view_model.dart';
 import 'package:flamingo/feature/order/screen/order-detail/snippet_order_detail_info.dart';
 import 'package:flamingo/feature/order/screen/order-detail/track_order_screen.dart';
 import 'package:flamingo/feature/order/screen/place-order/snippet_order_item.dart';
 import 'package:flamingo/shared/shared.dart';
+import 'package:flamingo/widget/alert-dialog/alert_dialog_widget.dart';
 import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+const _cancellableStatusCodes = ['PENDING', 'PROCESSING'];
 
 class OrderDetailScreen extends StatefulWidget {
   const OrderDetailScreen({
@@ -19,123 +25,131 @@ class OrderDetailScreen extends StatefulWidget {
 }
 
 class _OrderDetailScreenState extends State<OrderDetailScreen> {
+  final _viewModel = locator<OrderDetailViewModel>();
+  bool _cancelled = false;
+
   @override
   Widget build(BuildContext context) {
-    return DefaultScreen(
-      appBarTitle: Text('Order ID: ${widget.order.orderId.toString()}'),
-      bottomNavigationBar: _buildBottomBar(),
-      child: Column(
-        children: [
-          // Order and Estimated delivery date
-          SizedBox(
-            width: double.infinity,
-            child: Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    children: [
-                      const Text(
-                        'Ordered on',
-                        style: TextStyle(
-                            // color: AppColors.primaryColor,
+    return ChangeNotifierProvider(
+      create: (context) => _viewModel,
+      child: Consumer<OrderDetailViewModel>(
+        builder: (context, viewModel, child) => DefaultScreen(
+          appBarTitle: Text('Order ID: ${widget.order.orderId.toString()}'),
+          bottomNavigationBar: _buildBottomBar(viewModel),
+          child: Column(
+            children: [
+              // Order and Estimated delivery date
+              SizedBox(
+                width: double.infinity,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        children: [
+                          const Text(
+                            'Ordered on',
+                            style: TextStyle(
+                                // color: AppColors.primaryColor,
+                                ),
+                          ),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                              color: themedPrimaryColor(context),
+                              borderRadius: BorderRadius.circular(4),
                             ),
-                      ),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: themedPrimaryColor(context),
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        padding: const EdgeInsets.all(5),
-                        child: Text(
-                          formatDate(widget.order.createdAt,
-                              format: DateFormatConstant.fullDate),
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: Dimens.fontSizeLarge,
+                            padding: const EdgeInsets.all(5),
+                            child: Text(
+                              formatDate(widget.order.createdAt,
+                                  format: DateFormatConstant.fullDate),
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: Dimens.fontSizeLarge,
+                              ),
+                            ),
                           ),
-                        ),
+                        ],
                       ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: Column(
-                    children: [
-                      const Text(
-                        'Est. Delivery on',
-                      ),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: themedPrimaryColor(context),
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        padding: const EdgeInsets.all(5),
-                        child: Text(
-                          formatDate(widget.order.estimatedDelivery,
-                              format: DateFormatConstant.fullDate),
-                          style: const TextStyle(
-                            fontSize: Dimens.fontSizeLarge,
-                            color: Colors.white,
+                    ),
+                    Expanded(
+                      child: Column(
+                        children: [
+                          const Text(
+                            'Est. Delivery on',
                           ),
-                        ),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                              color: themedPrimaryColor(context),
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            padding: const EdgeInsets.all(5),
+                            child: Text(
+                              formatDate(widget.order.estimatedDelivery,
+                                  format: DateFormatConstant.fullDate),
+                              style: const TextStyle(
+                                fontSize: Dimens.fontSizeLarge,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
-          const SizedBox(
-            height: 25,
-          ),
+              ),
+              const SizedBox(
+                height: 25,
+              ),
 
-          // Products Detail
-          _buildProductsDetail(),
-          // const SizedBox(
-          //   height: 20,
-          // ),
+              // Products Detail
+              _buildProductsDetail(),
+              // const SizedBox(
+              //   height: 20,
+              // ),
 // Billing Details
-          _buildBillingDetails(),
-          _buildDivider(),
+              _buildBillingDetails(),
+              _buildDivider(),
 
-          // Shipping address
-          SnippetOrderDetailInfo(
-            label: 'Shipping Address',
-            title:
-                '${widget.order.shippingAddress.name}, ${widget.order.shippingAddress.area.name}',
-            subtitle:
-                '${widget.order.shippingAddress.fullName}, ${widget.order.shippingAddress.mobileNumber}',
-          ),
-          _buildDivider(),
-          // Billing address
-          SnippetOrderDetailInfo(
-            label: 'Billing Address',
-            title:
-                '${widget.order.billingAddress.name}, ${widget.order.billingAddress.area.name}',
-            subtitle:
-                '${widget.order.billingAddress.fullName}, ${widget.order.billingAddress.mobileNumber}',
-          ),
-          _buildDivider(),
+              // Shipping address
+              SnippetOrderDetailInfo(
+                label: 'Shipping Address',
+                title:
+                    '${widget.order.shippingAddress.name}, ${widget.order.shippingAddress.area.name}',
+                subtitle:
+                    '${widget.order.shippingAddress.fullName}, ${widget.order.shippingAddress.mobileNumber}',
+              ),
+              _buildDivider(),
+              // Billing address
+              SnippetOrderDetailInfo(
+                label: 'Billing Address',
+                title:
+                    '${widget.order.billingAddress.name}, ${widget.order.billingAddress.area.name}',
+                subtitle:
+                    '${widget.order.billingAddress.fullName}, ${widget.order.billingAddress.mobileNumber}',
+              ),
+              _buildDivider(),
 
-          // Shipping Method
-          SnippetOrderDetailInfo(
-            label: 'Shipping Method',
-            title: widget.order.shippingMethod.name,
-          ),
-          _buildDivider(),
+              // Shipping Method
+              SnippetOrderDetailInfo(
+                label: 'Shipping Method',
+                title: widget.order.shippingMethod.name,
+              ),
+              _buildDivider(),
 
-          // Payment Method
-          SnippetOrderDetailInfo(
-            label: 'Payment Method',
-            title: widget.order.paymentMethod.name,
+              // Payment Method
+              SnippetOrderDetailInfo(
+                label: 'Payment Method',
+                title: widget.order.paymentMethod.name,
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -149,17 +163,63 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     );
   }
 
-  _buildBottomBar() {
-    return FilledButtonWidget(
-      label: 'Track Order',
-      onPressed: () {
-        NavigationHelper.push(
-          context,
-          TrackOrderScreen(
-            order: widget.order,
+  Widget _buildBottomBar(OrderDetailViewModel viewModel) {
+    final canCancel =
+        _cancellableStatusCodes.contains(widget.order.orderStatus.code) &&
+            !_cancelled;
+    return Row(
+      children: [
+        Expanded(
+          child: FilledButtonWidget(
+            label: 'Track Order',
+            onPressed: () {
+              NavigationHelper.push(
+                context,
+                TrackOrderScreen(
+                  order: widget.order,
+                ),
+              );
+            },
           ),
-        );
-      },
+        ),
+        if (canCancel) ...[
+          const HorizontalSpaceWidget(width: Dimens.spacingSizeDefault),
+          Expanded(
+            child: OutlinedButtonWidget(
+              label: 'Cancel Order',
+              isLoading: viewModel.cancelOrderUseCase.isLoading,
+              onPressed: () => _onCancelOrder(viewModel),
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
+  void _onCancelOrder(OrderDetailViewModel viewModel) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialogWidget(
+        title: 'Cancel this order?',
+        description: 'This cannot be undone.',
+        needSecondButton: true,
+        firstButtonLabel: 'Cancel Order',
+        firstButtonOnPressed: () async {
+          Navigator.pop(ctx);
+          await viewModel.cancelOrder(widget.order.id);
+          if (!mounted) return;
+          if (viewModel.cancelOrderUseCase.hasCompleted) {
+            setState(() => _cancelled = true);
+            showToast(context, message: 'Order cancelled', isSuccess: true);
+          } else {
+            showToast(
+              context,
+              message: viewModel.cancelOrderUseCase.exception,
+              isSuccess: false,
+            );
+          }
+        },
+      ),
     );
   }
 
@@ -194,12 +254,21 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
         const SizedBox(height: 5),
         _buildOrderDetailItem(
             title: 'Order Cost', amount: widget.order.orderTotal),
+        // The actually-charged delivery fee, not the shipping method's flat
+        // cost - standard shipping is priced by delivery city (see
+        // resolveStandardDeliveryCharge server-side) and split across a store's
+        // items, so shippingMethod.cost alone doesn't match what was billed.
+        // netTotal = orderTotal + deliveryShare - discountAmount, so the
+        // discount has to be added back to isolate just the delivery share.
         _buildOrderDetailItem(
-            title: 'Shipping Fee', amount: widget.order.shippingMethod.cost),
+            title: 'Shipping Fee',
+            amount: widget.order.netTotal -
+                widget.order.orderTotal +
+                widget.order.discountAmount),
         _buildOrderDetailItem(
           title: 'Discount',
           isDiscount: true,
-          amount: 0,
+          amount: widget.order.discountAmount,
         ),
         const SizedBox(height: 5),
         _buildOrderDetailItem(

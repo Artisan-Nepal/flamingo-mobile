@@ -61,6 +61,7 @@ class _CategorySearchScreenState extends State<CategorySearchScreen>
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      _buildSaleRow(),
                       _buildTabBar(),
                       _buildTabBarView(),
                     ],
@@ -71,6 +72,56 @@ class _CategorySearchScreenState extends State<CategorySearchScreen>
           ),
         );
       },
+    );
+  }
+
+  // Independent "Sale" entry (not a real DB category) - opens a listing of all
+  // currently-discounted products. Pinned above the category tabs, styled in
+  // the app's brand pink to stand out.
+  Widget _buildSaleRow() {
+    return InkWell(
+      onTap: () {
+        NavigationHelper.push(
+          context,
+          const ProductListingScreen(
+            title: 'Sale',
+            productType: ProductType.SALE,
+          ),
+        );
+      },
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(
+          horizontal: Dimens.spacingSizeDefault,
+          vertical: Dimens.spacingSizeDefault,
+        ),
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(
+              color: isLightMode(context)
+                  ? AppColors.grayLine
+                  : AppColors.grayDarker,
+              width: 1,
+            ),
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Sale',
+              style: textTheme(context).titleMedium!.copyWith(
+                    color: AppColors.secondaryMain,
+                    fontWeight: FontWeight.w600,
+                  ),
+            ),
+            const Icon(
+              Icons.chevron_right,
+              color: AppColors.secondaryMain,
+            ),
+          ],
+        ),
+      ),
     );
   }
 

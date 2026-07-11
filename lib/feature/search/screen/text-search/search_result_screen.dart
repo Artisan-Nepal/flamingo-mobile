@@ -115,25 +115,7 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                                       child: SnippetProductListing(
                                         padding: 0,
                                         products: products
-                                            .map(
-                                              (product) => Product(
-                                                quantity: product.variants.first
-                                                    .quantityInStock,
-                                                image:
-                                                    extractProductDefaultImage(
-                                                  product.images,
-                                                  product.variants,
-                                                ),
-                                                sellerId: product.seller.id,
-                                                price: product
-                                                    .variants.first.price,
-                                                productId: product.id,
-                                                title: product.title,
-                                                sellerStoreName:
-                                                    product.seller.storeName,
-                                                product: product,
-                                              ),
-                                            )
+                                            .map(Product.fromDetail)
                                             .toList(),
                                         shrinkWrap: false,
                                       ),

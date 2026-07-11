@@ -90,28 +90,6 @@ class _PaymentMethodSelectionScreenState
                           );
                         }),
                       );
-                // : ListView.builder(
-                //     padding: EdgeInsets.zero,
-                //     itemCount: paymentMethods.length,
-                //     itemBuilder: (context, index) {
-                //       return ListTile(
-                //         onTap: () {
-                //           placeOrderViewModel.setSelectedPaymentMethod(
-                //               paymentMethods[index]);
-                //           Navigator.pop(context);
-                //         },
-                //         title: Text(paymentMethods[index].name),
-                //         trailing: SelectionIndicatorWidget(
-                //           isSelected:
-                //               placeOrderViewModel.selectedPaymentMethod !=
-                //                       null &&
-                //                   placeOrderViewModel
-                //                           .selectedPaymentMethod!.id ==
-                //                       paymentMethods[index].id,
-                //         ),
-                //       );
-                //     },
-                //   );
               },
             );
           },

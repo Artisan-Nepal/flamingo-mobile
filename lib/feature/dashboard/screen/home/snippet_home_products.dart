@@ -13,12 +13,17 @@ class SnippetHomeProducts extends StatelessWidget {
     this.isLoading = false,
     required this.productType,
     required this.title,
+    this.categoryId,
   }) : super(key: key);
 
   final List<ProductDetail> products;
   final bool isLoading;
   final ProductType productType;
   final String title;
+
+  // When set (e.g. a "For You" category row), "See More" opens that category's
+  // listing instead of a productType-based one.
+  final String? categoryId;
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +47,7 @@ class SnippetHomeProducts extends StatelessWidget {
               ProductListingScreen(
                 title: title,
                 productType: productType,
+                categoryId: categoryId,
               ),
             );
           },
@@ -62,18 +68,7 @@ class SnippetHomeProducts extends StatelessWidget {
               child: ProductWidget(
                 imageHeight: SizeConfig.screenHeight * 0.35,
                 nameMaxLines: 1,
-                payload: Product(
-                  quantity: products[index].variants.first.quantityInStock,
-                  product: products[index],
-                  image: extractProductDefaultImage(
-                    products[index].images,
-                    products[index].variants,
-                  ),
-                  price: products[index].variants.first.price,
-                  productId: products[index].id,
-                  title: products[index].title,
-                  sellerStoreName: products[index].seller.storeName,
-                ),
+                payload: Product.fromDetail(products[index]),
               ),
             ),
           ),

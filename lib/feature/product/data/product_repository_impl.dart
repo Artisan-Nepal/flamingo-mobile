@@ -3,6 +3,7 @@
 import 'package:flamingo/data/data.dart';
 import 'package:flamingo/feature/feature.dart';
 import 'package:flamingo/feature/product/data/local/product_local.dart';
+import 'package:flamingo/feature/product/data/model/for_you_section.dart';
 import 'package:flamingo/feature/product/data/model/get_product_request.dart';
 import 'package:flamingo/feature/product/data/model/product.dart';
 import 'package:flamingo/feature/product/data/model/product_detail.dart';
@@ -54,6 +55,11 @@ class ProductRepositoryImpl implements ProductRepository {
   @override
   Future<FetchResponse<ProductDetail>> getLatestProducts() async {
     return await _productRemote.getLatestProducts();
+  }
+
+  @override
+  Future<List<ForYouSection>> getForYouSections() async {
+    return await _productRemote.getForYouSections();
   }
 
   @override

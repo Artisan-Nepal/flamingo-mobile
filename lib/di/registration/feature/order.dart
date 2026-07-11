@@ -7,6 +7,7 @@ import 'package:flamingo/feature/order/data/order_repository.dart';
 import 'package:flamingo/feature/order/data/order_repository_impl.dart';
 import 'package:flamingo/feature/order/data/remote/order_remote.dart';
 import 'package:flamingo/feature/order/data/remote/order_remote_impl.dart';
+import 'package:flamingo/feature/order/screen/order-detail/order_detail_view_model.dart';
 import 'package:flamingo/feature/order/screen/order-detail/order_status_view_model.dart';
 import 'package:flamingo/feature/order/screen/order-listing/order_listing_view_model.dart';
 import 'package:flamingo/feature/order/screen/place-order/checkout_method_view_model.dart';
@@ -48,6 +49,11 @@ void registerOrderFeature(GetIt locator) {
   );
   locator.registerFactory<OrderStatusViewModel>(
     () => OrderStatusViewModel(
+      orderRepository: locator<OrderRepository>(),
+    ),
+  );
+  locator.registerFactory<OrderDetailViewModel>(
+    () => OrderDetailViewModel(
       orderRepository: locator<OrderRepository>(),
     ),
   );

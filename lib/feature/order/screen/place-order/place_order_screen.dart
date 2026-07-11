@@ -1,8 +1,8 @@
 import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/address/screen/address-listing/address_listing_screen.dart';
-import 'package:flamingo/feature/auth/auth_view_model.dart';
 import 'package:flamingo/feature/cart/data/model/cart_item.dart';
 import 'package:flamingo/feature/order/screen/order-listing/order_listing_screen.dart';
+import 'package:flamingo/feature/order/screen/place-order/khalti_webview_screen.dart';
 import 'package:flamingo/feature/order/screen/place-order/payment_method_selection_screen.dart';
 import 'package:flamingo/feature/order/screen/place-order/place_order_view_model.dart';
 import 'package:flamingo/feature/order/screen/place-order/shipping_method_selection_screen.dart';
@@ -11,6 +11,7 @@ import 'package:flamingo/feature/order/screen/place-order/snippet_order_item.dar
 import 'package:flamingo/shared/constant/payment_method.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/alert-dialog/alert_dialog_widget.dart';
+import 'package:flamingo/widget/loader/circular_progress_indicator_widget.dart';
 import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -30,11 +31,19 @@ class PlaceOrderScreen extends StatefulWidget {
 class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
   final _scrollController = ScrollController();
   final _viewModel = locator<PlaceOrderViewModel>();
+  final _couponController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _viewModel.setCartItems(widget.items);
+    _viewModel.getSavedCoupons();
+  }
+
+  @override
+  void dispose() {
+    _couponController.dispose();
+    super.dispose();
   }
 
   @override
@@ -254,6 +263,8 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
               thickness: 0.5,
             ),
             const SizedBox(height: 5),
+            _buildCouponSection(viewModel),
+            const SizedBox(height: 5),
             _buildOrderDetailItem(
                 title: 'Order Cost', amount: viewModel.subTotal),
             _buildOrderDetailItem(
@@ -261,7 +272,7 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
             _buildOrderDetailItem(
               title: 'Discount',
               isDiscount: true,
-              amount: 0,
+              amount: viewModel.discountAmount,
             ),
             const Divider(
               thickness: 0.5,
@@ -276,6 +287,118 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
         );
       },
     );
+  }
+
+  Widget _buildCouponSection(PlaceOrderViewModel viewModel) {
+    final applied = viewModel.appliedCoupon;
+    if (applied != null) {
+      return Padding(
+        padding: const EdgeInsets.only(bottom: Dimens.spacingSizeDefault),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Applied: ${applied.code}',
+              style: textTheme(context).titleSmall!.copyWith(
+                    color: AppColors.secondaryMain,
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+            GestureDetector(
+              onTap: () {
+                _couponController.clear();
+                viewModel.removeCoupon();
+              },
+              child: const Text('Remove'),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: Dimens.spacingSizeDefault),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildSavedCouponSuggestions(viewModel),
+          Row(
+            children: [
+              Expanded(
+                child: TextFieldWidget(
+                  controller: _couponController,
+                  hintText: 'Have a coupon code?',
+                ),
+              ),
+              const HorizontalSpaceWidget(width: Dimens.spacingSizeSmall),
+              TextButton(
+                onPressed: viewModel.applyCouponUseCase.isLoading
+                    ? null
+                    : () => _applyCode(viewModel, _couponController.text),
+                child: viewModel.applyCouponUseCase.isLoading
+                    ? const CircularProgressIndicatorWidget(
+                        size: Dimens.iconSizeSmall)
+                    : const Text('Apply'),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Tappable chips for codes the customer already saved (e.g. from a home
+  // promo banner). Tapping fills the field and applies it the same way typing
+  // + pressing Apply would - eligibility against the live cart is still
+  // checked server-side (validateCoupon), so a saved-but-ineligible code
+  // surfaces the same error toast as a manually typed one.
+  Widget _buildSavedCouponSuggestions(PlaceOrderViewModel viewModel) {
+    final saved = viewModel.savedCoupons;
+    if (saved.isEmpty) return const SizedBox.shrink();
+    return Padding(
+      padding: const EdgeInsets.only(bottom: Dimens.spacingSizeSmall),
+      child: Wrap(
+        spacing: Dimens.spacingSizeSmall,
+        runSpacing: Dimens.spacingSizeExtraSmall,
+        children: saved.map((coupon) {
+          return GestureDetector(
+            onTap: viewModel.applyCouponUseCase.isLoading
+                ? null
+                : () => _applyCode(viewModel, coupon.code),
+            child: Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: Dimens.spacingSizeDefault,
+                vertical: Dimens.spacingSizeExtraSmall,
+              ),
+              decoration: BoxDecoration(
+                border: Border.all(color: AppColors.secondaryMain),
+                borderRadius: BorderRadius.circular(Dimens.radiusLarge),
+              ),
+              child: Text(
+                '${coupon.code} · ${coupon.label}',
+                style: textTheme(context).bodySmall!.copyWith(
+                      color: AppColors.secondaryMain,
+                      fontWeight: FontWeight.w600,
+                    ),
+              ),
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  Future<void> _applyCode(PlaceOrderViewModel viewModel, String code) async {
+    _couponController.text = code;
+    await viewModel.applyCoupon(code);
+    if (!context.mounted) return;
+    if (viewModel.appliedCoupon == null) {
+      showToast(
+        context,
+        message: viewModel.applyCouponUseCase.exception,
+        isSuccess: false,
+      );
+    }
   }
 
   Widget _buildOrderDetailItem({
@@ -332,13 +455,14 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
             Navigator.pop(ctx);
 
             if (viewModel.selectedPaymentMethod!.code == PaymentMethod.KHALTI) {
+              // Khalti manages its own navigation-on-success internally (and
+              // does nothing on user-cancel), unlike the COD path below.
               await _checkoutWithKhalti(viewModel);
             } else {
               await viewModel.placeOrder();
+              if (!context.mounted) return;
+              _observeCheckoutResponse(viewModel);
             }
-
-            if (!context.mounted) return;
-            _observeCheckoutResponse(viewModel);
           },
         ),
       );
@@ -346,17 +470,31 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
   }
 
   Future<void> _checkoutWithKhalti(PlaceOrderViewModel viewModel) async {
-    final response = await KhaltiHelper.pay(
-      context,
-      amount: viewModel.orderTotal,
-      productId: viewModel.orderItemIds,
-      productName: viewModel.orderItemNames,
-      mobileNumber:
-          Provider.of<AuthViewModel>(context, listen: false).user!.mobileNumber,
-    );
-    if (response.success) {
-      await viewModel.placeOrder(paymentToken: response.token);
+    final initiateRes = await viewModel.initiateKhaltiOrder();
+    if (initiateRes == null) {
+      if (!context.mounted) return;
+      showToast(
+        context,
+        message: viewModel.khaltiInitiateUseCase.exception,
+        isSuccess: false,
+      );
+      return;
     }
+
+    if (!context.mounted) return;
+    final result = await NavigationHelper.push(
+      context,
+      KhaltiWebViewScreen(paymentUrl: initiateRes.paymentUrl),
+    ) as Map<String, String?>?;
+
+    // User closed the WebView without completing payment - nothing to
+    // confirm. The reserved stock/cart resolve on their own once the payment
+    // intent expires; there's no explicit cancel call for this path.
+    if (result == null) return;
+
+    await viewModel.confirmKhaltiOrder(result['pidx'] ?? initiateRes.pidx);
+    if (!context.mounted) return;
+    _observeCheckoutResponse(viewModel);
   }
 
   _observeCheckoutResponse(PlaceOrderViewModel viewModel) {

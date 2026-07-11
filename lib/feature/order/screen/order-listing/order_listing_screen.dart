@@ -1,6 +1,7 @@
 import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/customer-activity/customer_activity_view_model.dart';
 import 'package:flamingo/feature/order/data/model/order.dart';
+import 'package:flamingo/feature/order/khalti_reconciler.dart';
 import 'package:flamingo/feature/order/screen/order-listing/order_listing_view_model.dart';
 import 'package:flamingo/feature/order/screen/order-listing/snippet_order_listing_tab.dart';
 import 'package:flamingo/shared/shared.dart';
@@ -23,6 +24,9 @@ class _OrderListingScreenState extends State<OrderListingScreen> {
   void initState() {
     super.initState();
     _viewModel.getUserOrders();
+    // Fire-and-forget: catches a Khalti payment that completed but whose
+    // confirm call never reached the server (e.g. app killed mid-flow).
+    KhaltiReconciler.retryPendingConfirmIfAny();
   }
 
   @override

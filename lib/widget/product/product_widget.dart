@@ -107,9 +107,31 @@ class ProductWidget extends StatelessWidget {
                       textOverflow: TextOverflow.ellipsis,
                       style: textTheme(context).bodyMedium!,
                     ),
-                    TextWidget(
-                      'Rs. ${formatNepaliCurrency(payload.price)}',
-                      style: textTheme(context).labelLarge!,
+                    Row(
+                      children: [
+                        TextWidget(
+                          'Rs. ${formatNepaliCurrency(payload.price)}',
+                          style: textTheme(context).labelLarge!.copyWith(
+                                color: payload.isDiscounted
+                                    ? AppColors.primaryMain
+                                    : null,
+                              ),
+                        ),
+                        if (payload.isDiscounted) ...[
+                          const HorizontalSpaceWidget(
+                              width: Dimens.spacingSizeExtraSmall),
+                          Flexible(
+                            child: TextWidget(
+                              'Rs. ${formatNepaliCurrency(payload.originalPrice!)}',
+                              textOverflow: TextOverflow.ellipsis,
+                              style: textTheme(context).bodySmall!.copyWith(
+                                    color: AppColors.grayMain,
+                                    decoration: TextDecoration.lineThrough,
+                                  ),
+                            ),
+                          ),
+                        ],
+                      ],
                     ),
                     const SizedBox(height: Dimens.spacingSizeSmall),
                   ],

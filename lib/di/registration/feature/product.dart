@@ -10,6 +10,7 @@ import 'package:flamingo/feature/product/data/remote/product_remote.dart';
 import 'package:flamingo/feature/product/data/remote/product_remote_impl.dart';
 import 'package:flamingo/feature/product/screen/product-detail/product_detail_app_bar_view_model.dart';
 import 'package:flamingo/feature/product/screen/product-detail/product_detail_view_model.dart';
+import 'package:flamingo/feature/product/screen/product-listing/for_you_view_model.dart';
 import 'package:flamingo/feature/product/screen/product-listing/min_product_listing_view_model.dart';
 import 'package:flamingo/feature/product/screen/product-listing/product_listing_view_model.dart';
 import 'package:get_it/get_it.dart';
@@ -41,6 +42,11 @@ void registerProductFeature(GetIt locator) {
   );
   locator.registerFactory<MinProductListingViewModel>(
     () => MinProductListingViewModel(
+      productRepository: locator<ProductRepository>(),
+    ),
+  );
+  locator.registerFactory<ForYouViewModel>(
+    () => ForYouViewModel(
       productRepository: locator<ProductRepository>(),
     ),
   );

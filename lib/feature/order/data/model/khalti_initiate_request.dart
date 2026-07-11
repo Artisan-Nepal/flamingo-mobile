@@ -1,11 +1,11 @@
-class CreateOrderRequest {
+class KhaltiInitiateRequest {
   final String billingAddressId;
   final String shippingAddressId;
   final String paymentMethodCode;
   final String shippingMethodId;
   final String? couponCode;
 
-  CreateOrderRequest({
+  KhaltiInitiateRequest({
     required this.billingAddressId,
     required this.shippingAddressId,
     required this.paymentMethodCode,

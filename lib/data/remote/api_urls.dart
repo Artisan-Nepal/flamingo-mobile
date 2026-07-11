@@ -22,6 +22,7 @@ class ApiUrls {
   static String areasByCity = '/areas/city';
   static String products = '/products';
   static String latestProducts = '/products/latest';
+  static String forYou = '/products/for-you';
   static String productSearch = '/products/search';
   static String productSearchSuggestion = '/products/search/suggestions';
   static String productsByVendorId = '/products/vendor/:id';
@@ -36,6 +37,12 @@ class ApiUrls {
   static String shippingMethods = '/shipping-methods';
   static String paymentMethods = '/payment-methods';
   static String orders = '/orders';
+  static String khaltiInitiate = '/orders/khalti/initiate';
+  static String khaltiConfirm = '/orders/khalti/confirm';
+  static String couponValidate = '/coupons/validate';
+  static String couponRedeem = '/coupons/redeem';
+  static String savedCoupons = '/coupons/saved';
+  static String promoBannersActive = '/promo-banners/active';
   static String vendors = '/vendors';
   static String vendorSearch = '/vendors/search';
   static String vendorLikes = '/vendors/:id/likes';
@@ -47,6 +54,7 @@ class ApiUrls {
   static String userActivity = '/user-activity';
   static String advertisementActivity = '/advertisement-activity';
   static String trackOrder = '/orders/:id/track';
+  static String cancelOrder = '/orders/:id/cancel';
   static String likedVendorStory = '/product-story/liked-vendor';
   static String vendorStory = '/product-story/vendor/:id';
   static String viewStory = '/product-story/:id/view';

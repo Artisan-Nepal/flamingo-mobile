@@ -7,10 +7,12 @@ import 'package:flamingo/feature/dashboard/screen/home/snippet_home_advertisemen
 import 'package:flamingo/feature/dashboard/screen/home/snippet_home_screen_story.dart';
 import 'package:flamingo/feature/dashboard/screen/home/snippet_home_products.dart';
 import 'package:flamingo/feature/dashboard/screen/home/snippet_home_search.dart';
+import 'package:flamingo/feature/dashboard/screen/home/snippet_promo_banners.dart';
+import 'package:flamingo/feature/promo-banner/promo_banner_view_model.dart';
 import 'package:flamingo/feature/product-story/product_story_view_model.dart';
-import 'package:flamingo/feature/product/screen/product-listing/min_product_listing_view_model.dart';
+import 'package:flamingo/feature/product/data/model/for_you_section.dart';
+import 'package:flamingo/feature/product/screen/product-listing/for_you_view_model.dart';
 import 'package:flamingo/feature/product/screen/product-listing/product_listing_view_model.dart';
-import 'package:flamingo/feature/product/screen/product-listing/snippet_product_listing.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/not-logged-in/not_logged_in_widget.dart';
 import 'package:flamingo/widget/widget.dart';
@@ -34,9 +36,9 @@ class _HomeScreenState extends State<HomeScreen>
   final _latestProductListingViewModel = locator<ProductListingViewModel>();
   final _trendingProductListingViewModel = locator<ProductListingViewModel>();
   final _favVendorProductListingViewModel = locator<ProductListingViewModel>();
-  final _recommendedProductListingViewModel =
-      locator<MinProductListingViewModel>();
+  final _forYouViewModel = locator<ForYouViewModel>();
   final _storyViewModel = locator<ProductStoryViewModel>();
+  final _promoBannerViewModel = locator<PromoBannerViewModel>();
   final _scrollController = ScrollController();
 
   @override
@@ -73,9 +75,10 @@ class _HomeScreenState extends State<HomeScreen>
     _trendingProductListingViewModel.getProducts(
         productType: ProductType.TRENDING);
 
-    _recommendedProductListingViewModel.getUserRecommendation();
+    _forYouViewModel.getForYou();
     _advertisementListingViewModel.getAdvertisements();
     _storyViewModel.getLikedVendorStories();
+    _promoBannerViewModel.getBanners();
 
     if (Provider.of<AuthViewModel>(context, listen: false).isLoggedIn) {
       _favVendorProductListingViewModel.getProducts(
@@ -98,7 +101,10 @@ class _HomeScreenState extends State<HomeScreen>
           create: (context) => _storyViewModel,
         ),
         ChangeNotifierProvider(
-          create: (context) => _recommendedProductListingViewModel,
+          create: (context) => _forYouViewModel,
+        ),
+        ChangeNotifierProvider(
+          create: (context) => _promoBannerViewModel,
         ),
       ],
       child: Scaffold(
@@ -124,6 +130,7 @@ class _HomeScreenState extends State<HomeScreen>
                                 horizontal: Dimens.spacingSizeSmall),
                             child: SnippetHomeSearch(),
                           ),
+                          const SnippetPromoBanners(),
                           if (!authViewModel.isLoggedIn)
                             Padding(
                               padding: const EdgeInsets.symmetric(
@@ -210,38 +217,47 @@ class _HomeScreenState extends State<HomeScreen>
                       ),
                     ),
 
-                    // All Products
+                    // For You — category-grouped horizontal rows built from the
+                    // user's own activity (see ForYouViewModel).
                     SliverToBoxAdapter(
-                      child: Builder(builder: (context) {
-                        final _viewModel =
-                            Provider.of<MinProductListingViewModel>(context);
-                        if (_viewModel.getProductsUseCase.hasCompleted &&
-                            (_viewModel.getProductsUseCase.data ?? [])
-                                .isNotEmpty) {
-                          return Padding(
-                            padding: const EdgeInsets.only(
-                                left: Dimens.spacingSizeSmall,
-                                bottom: Dimens.spacingSizeDefault),
-                            child: Text(
-                              'FOR YOU',
-                              style: textTheme(context).bodyLarge!.copyWith(
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                            ),
+                      child: Consumer<ForYouViewModel>(
+                        builder: (context, viewModel, child) {
+                          final sections =
+                              viewModel.getForYouUseCase.data ?? <ForYouSection>[];
+                          if (!viewModel.getForYouUseCase.hasCompleted ||
+                              sections.isEmpty) {
+                            return const SizedBox();
+                          }
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: Dimens.spacingSizeSmall,
+                                    bottom: Dimens.spacingSizeDefault),
+                                child: Text(
+                                  'FOR YOU',
+                                  style:
+                                      textTheme(context).bodyLarge!.copyWith(
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                ),
+                              ),
+                              for (final section in sections) ...[
+                                SnippetHomeProducts(
+                                  title: section.categoryName,
+                                  productType: ProductType.CATEGORY,
+                                  categoryId: section.categoryId,
+                                  products: section.products,
+                                ),
+                                const VerticalSpaceWidget(
+                                    height: Dimens.spacingSizeLarge),
+                              ],
+                            ],
                           );
-                        }
-
-                        return SizedBox();
-                      }),
+                        },
+                      ),
                     ),
-                    SnippetProductListing(
-                        useSliver: true,
-                        needFavIcon: false,
-                        products:
-                            (Provider.of<MinProductListingViewModel>(context)
-                                    .getProductsUseCase
-                                    .data ??
-                                [])),
                     SliverToBoxAdapter(
                       child: VerticalSpaceWidget(
                         height: Dimens.spacingSizeDefault,

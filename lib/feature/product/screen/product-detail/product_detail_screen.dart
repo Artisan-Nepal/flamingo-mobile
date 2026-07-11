@@ -546,9 +546,23 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         textOverflow: TextOverflow.ellipsis,
         style: textTheme(context).bodyMedium!,
       ),
-      TextWidget(
-        'Rs. ${formatNepaliCurrency(viewModel.selectedVariant.price)}',
-        style: textTheme(context).labelLarge!,
+      Row(
+        children: [
+          TextWidget(
+            'Rs. ${formatNepaliCurrency(viewModel.selectedVariant.effectivePrice)}',
+            style: textTheme(context).labelLarge!,
+          ),
+          if (viewModel.selectedVariant.originalPrice != null) ...[
+            const HorizontalSpaceWidget(width: Dimens.spacingSizeSmall),
+            TextWidget(
+              'Rs. ${formatNepaliCurrency(viewModel.selectedVariant.originalPrice!)}',
+              style: textTheme(context).labelLarge!.copyWith(
+                    color: AppColors.grayMain,
+                    decoration: TextDecoration.lineThrough,
+                  ),
+            ),
+          ],
+        ],
       ),
     ];
   }

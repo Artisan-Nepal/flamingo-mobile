@@ -71,6 +71,8 @@ class ProductVariant {
   final String sku;
   final int quantityInStock;
   final int price;
+  final int effectivePrice;
+  final int? originalPrice;
   final String productId;
   final ProductColor color;
   final ProductSizeOption size;
@@ -82,6 +84,8 @@ class ProductVariant {
     required this.sku,
     required this.quantityInStock,
     required this.price,
+    required this.effectivePrice,
+    required this.originalPrice,
     required this.productId,
     required this.color,
     required this.attributes,
@@ -94,6 +98,8 @@ class ProductVariant {
         sku: json['sku'],
         quantityInStock: json['quantityInStock'],
         price: json['price'],
+        effectivePrice: json['effectivePrice'] ?? json['price'],
+        originalPrice: json['originalPrice'],
         productId: json['productId'],
         size: ProductSizeOption.fromJson(json['productSizeOption']),
         color: ProductColor.fromJson(

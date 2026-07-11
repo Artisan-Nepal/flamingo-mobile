@@ -1,4 +1,5 @@
 import 'package:flamingo/data/data.dart';
+import 'package:flamingo/feature/product/data/model/for_you_section.dart';
 import 'package:flamingo/feature/product/data/model/get_product_request.dart';
 import 'package:flamingo/feature/product/data/model/product.dart';
 import 'package:flamingo/feature/product/data/model/product_detail.dart';
@@ -68,6 +69,12 @@ class ProductRemoteImpl implements ProductRemote {
       apiResponse.data,
       ProductDetail.fromJsonList,
     );
+  }
+
+  @override
+  Future<List<ForYouSection>> getForYouSections() async {
+    final apiResponse = await _apiClient.get(ApiUrls.forYou);
+    return ForYouSection.fromJsonList(apiResponse.data);
   }
 
   @override

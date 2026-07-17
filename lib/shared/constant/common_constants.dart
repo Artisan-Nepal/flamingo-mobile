@@ -5,4 +5,8 @@ class CommonConstants {
   static const contactNumber = '9840382035';
   static const contactEmail = 'flamingoo202310@gmail.com';
   static const notificationChannel = 'flamingo';
+  // FCM topic every install subscribes to at launch, regardless of login
+  // state - must match the API's PROMOTIONS_TOPIC constant
+  // (flamingo-api/src/shared/constant/push-notification-topic.ts).
+  static const promotionsTopic = 'promotions';
 }

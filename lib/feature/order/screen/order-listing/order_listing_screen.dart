@@ -118,9 +118,17 @@ class _OrderListingScreenState extends State<OrderListingScreen> {
       child: Consumer<OrderListingViewModel>(
         builder: (context, viewModel, child) => TabBarView(
           children: [
-            // All
+            // All - excludes delivered and cancelled orders; those have their
+            // own Received/Cancelled tabs, so All doesn't grow into an endless
+            // history list.
             SnippetOrderListingTab(
-                orders: orders,
+                orders: List<Order>.from(
+                  orders.where(
+                    (order) =>
+                        order.orderStatus.code != 'DELIVERED' &&
+                        order.orderStatus.code != 'CANCELLED',
+                  ),
+                ),
                 tabName: 'All',
                 error: viewModel.orderUseCase.exception,
                 showStatus: true,

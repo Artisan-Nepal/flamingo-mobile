@@ -11,12 +11,19 @@ class SnippetOrderItem extends StatelessWidget {
     required this.productVariant,
     required this.quantity,
     required this.image,
+    this.unitPrice,
   }) : super(key: key);
 
   final String productTitle;
   final ProductVariant productVariant;
   final int quantity;
   final String image;
+
+  // Per-unit price to display. For a placed order pass the order's snapshot
+  // price so it reflects what was actually charged (not the live/changed
+  // variant price). When null, falls back to the variant's current
+  // effectivePrice - correct for the pre-order checkout summary.
+  final int? unitPrice;
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +118,7 @@ class SnippetOrderItem extends StatelessWidget {
                 const VerticalSpaceWidget(height: Dimens.spacingSizeExtraSmall),
                 // Price
                 Text(
-                  'Rs. ${formatNepaliCurrency(quantity * productVariant.price)}',
+                  'Rs. ${formatNepaliCurrency(quantity * (unitPrice ?? productVariant.effectivePrice))}',
                   style: const TextStyle(
                     color: AppColors.primaryMain,
                     fontSize: Dimens.fontSizeLarge,

@@ -4,6 +4,7 @@ import 'package:flamingo/feature/order/screen/order-detail/order_detail_view_mod
 import 'package:flamingo/feature/order/screen/order-detail/snippet_order_detail_info.dart';
 import 'package:flamingo/feature/order/screen/order-detail/track_order_screen.dart';
 import 'package:flamingo/feature/order/screen/place-order/snippet_order_item.dart';
+import 'package:flamingo/feature/product/screen/product-detail/product_detail_screen.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/alert-dialog/alert_dialog_widget.dart';
 import 'package:flamingo/widget/widget.dart';
@@ -231,13 +232,31 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
           'PRODUCT DETAIL',
         ),
         const VerticalSpaceWidget(height: Dimens.spacingSizeDefault),
-        SnippetOrderItem(
-          quantity: widget.order.quantity,
-          productTitle: widget.order.product.title,
-          productVariant: widget.order.productVariant,
-          image: extractProductVariantImage(
-            widget.order.product.images,
-            widget.order.productVariant,
+        GestureDetector(
+          // Opens the product's detail page read-only, with a back button to
+          // return to this order.
+          behavior: HitTestBehavior.opaque,
+          onTap: () {
+            NavigationHelper.push(
+              context,
+              ProductDetailScreen(
+                productId: widget.order.product.id,
+                title: widget.order.product.title,
+                readOnly: true,
+              ),
+            );
+          },
+          child: SnippetOrderItem(
+            quantity: widget.order.quantity,
+            productTitle: widget.order.product.title,
+            productVariant: widget.order.productVariant,
+            // Snapshot price from when the order was placed, so it matches the
+            // billing "Order Cost" and isn't affected by later price changes.
+            unitPrice: widget.order.price,
+            image: extractProductVariantImage(
+              widget.order.product.images,
+              widget.order.productVariant,
+            ),
           ),
         )
       ],

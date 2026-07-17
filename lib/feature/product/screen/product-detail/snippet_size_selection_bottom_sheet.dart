@@ -1,5 +1,6 @@
 import 'package:flamingo/feature/product/data/model/product_size.dart';
 import 'package:flamingo/feature/product/screen/product-detail/product_detail_view_model.dart';
+import 'package:flamingo/feature/product/screen/product-detail/snippet_variant_price.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/cupertino.dart';
@@ -100,10 +101,7 @@ class _SnippetSizeSelectionBottomSheetState
                 return Row(
                   children: [
                     Expanded(
-                      child: Text(
-                        'Rs. ${formatNepaliCurrency(productVariant.price)}',
-                        style: textTheme(context).labelLarge,
-                      ),
+                      child: VariantPriceText(variant: productVariant),
                     ),
                     Expanded(
                       child: Text(

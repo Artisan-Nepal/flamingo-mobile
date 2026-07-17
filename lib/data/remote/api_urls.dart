@@ -6,7 +6,7 @@ class ApiUrls {
   // Default is the AWS URL so a bare `flutter run` / release build never ships localhost.
   static const String baseUrl = String.fromEnvironment(
     'API_BASE_URL',
-    defaultValue: 'https://saeuxrpkr4.ap-south-1.awsapprunner.com/api',
+    defaultValue: 'https://api.flamingo.com.np/api',
   );
 
   // AUTH
@@ -71,4 +71,7 @@ class ApiUrls {
   static String device = '/devices';
   static String deviceNotificationToken = '/devices/notification-token';
   static String logout = '/auth/logout';
+  static String notificationsSelf = '/notifications/self';
+  static String notificationRead = '/notifications/:id/read';
+  static String notificationDelete = '/notifications/:id';
 }

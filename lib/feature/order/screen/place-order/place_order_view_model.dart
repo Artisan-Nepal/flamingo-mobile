@@ -229,7 +229,10 @@ class PlaceOrderViewModel extends ChangeNotifier {
   int get subTotal {
     int price = 0;
     for (CartItem cart in items) {
-      price = price + (cart.productVariant.price * cart.quantity);
+      // effectivePrice (post vendor-discount) is what the customer is actually
+      // charged; using .price here would show a higher total than the backend
+      // bills when a variant discount is active.
+      price = price + (cart.productVariant.effectivePrice * cart.quantity);
     }
     return price;
   }

@@ -91,8 +91,9 @@ class _CategorySearchScreenState extends State<CategorySearchScreen>
       },
       child: Container(
         width: double.infinity,
+        // No horizontal padding: keeps "Sale" flush with the subcategory rows
+        // (which sit at the screen's content edge) rather than inset further.
         padding: const EdgeInsets.symmetric(
-          horizontal: Dimens.spacingSizeDefault,
           vertical: Dimens.spacingSizeDefault,
         ),
         decoration: BoxDecoration(
@@ -129,16 +130,6 @@ class _CategorySearchScreenState extends State<CategorySearchScreen>
     return Container(
       width: double.infinity,
       height: 55,
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            color: isLightMode(context)
-                ? AppColors.grayLine
-                : AppColors.grayDarker,
-            width: 1,
-          ),
-        ),
-      ),
       child: Consumer<CategorySearchViewModel>(
         builder: (context, viewModel, child) => Theme(
           data: Theme.of(context).copyWith(
@@ -158,11 +149,13 @@ class _CategorySearchScreenState extends State<CategorySearchScreen>
             unselectedLabelStyle: textTheme(context).titleSmall!,
             indicatorColor:
                 isLightMode(context) ? AppColors.grayDarker : AppColors.white,
-            // Hide Material 3's default full-width divider; the container's
-            // lighter grayLighter/grayDarker bottom border is the intended line.
+            // Hide Material 3's default full-width divider - we intentionally
+            // show no line beneath the tabs, only the selected-tab indicator.
             dividerColor: AppColors.transparent,
+            // Right-only padding so the first tab sits flush with the Sale row
+            // and subcategory rows, while tabs keep their spacing.
             labelPadding:
-                const EdgeInsets.symmetric(horizontal: Dimens.spacingSizeSmall),
+                const EdgeInsets.only(right: Dimens.spacingSizeLarge),
             tabs: List<Widget>.from(
               viewModel.categoriesUseCase.data!.map(
                 (e) => Tab(

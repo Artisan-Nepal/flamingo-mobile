@@ -2,6 +2,7 @@ import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/cart/data/model/cart_item.dart';
 import 'package:flamingo/feature/cart/screen/cart-listing/cart_listing_view_model.dart';
 import 'package:flamingo/feature/cart/update_cart_view_model.dart';
+import 'package:flamingo/feature/product/screen/product-detail/product_detail_screen.dart';
 import 'package:flamingo/feature/product/screen/product-listing/min_product_listing_view_model.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/button/button.dart';
@@ -55,7 +56,13 @@ class _SnippetCartListingItemState extends State<SnippetCartListingItem> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
+                      GestureDetector(
+                        // Tapping the product (image/title/details) opens its
+                        // detail page read-only; the inner remove/quantity
+                        // controls keep handling their own taps.
+                        behavior: HitTestBehavior.opaque,
+                        onTap: () => _openProductDetail(),
+                        child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Expanded(
@@ -150,6 +157,7 @@ class _SnippetCartListingItemState extends State<SnippetCartListingItem> {
                           ),
                         ],
                       ),
+                      ),
                       _buildCheaperAlternative(),
                     ],
                   ),
@@ -160,6 +168,17 @@ class _SnippetCartListingItemState extends State<SnippetCartListingItem> {
           },
         );
       },
+    );
+  }
+
+  void _openProductDetail() {
+    NavigationHelper.push(
+      context,
+      ProductDetailScreen(
+        productId: widget.cartItem.product.id,
+        title: widget.cartItem.product.title,
+        readOnly: true,
+      ),
     );
   }
 

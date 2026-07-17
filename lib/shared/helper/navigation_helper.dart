@@ -1,8 +1,33 @@
 import 'package:flutter/material.dart';
 
 class NavigationHelper {
+  // Set as MaterialApp's navigatorKey in app.dart. Needed for navigation
+  // triggered outside any screen's BuildContext - specifically, routing on a
+  // notification tap, which can happen while the app is backgrounded or was
+  // freshly launched from a terminated state (see NotificationService).
+  static final GlobalKey<NavigatorState> navigatorKey =
+      GlobalKey<NavigatorState>();
+
   static bool canPop(BuildContext context) {
     return Navigator.canPop(context);
+  }
+
+  // Context-free variants of push/pushAndReplaceAll for use from
+  // NotificationService. Silently no-ops if the navigator isn't mounted yet
+  // (e.g. a background-tap handler firing before the first frame).
+  static Future<void> pushGlobal(Widget screen) async {
+    final state = navigatorKey.currentState;
+    if (state == null) return;
+    await state.push(MaterialPageRoute(builder: (context) => screen));
+  }
+
+  static Future<void> pushAndReplaceAllGlobal(Widget screen) async {
+    final state = navigatorKey.currentState;
+    if (state == null) return;
+    await state.pushAndRemoveUntil(
+      MaterialPageRoute(builder: (context) => screen),
+      (route) => false,
+    );
   }
 
   static Future push(BuildContext context, Widget screen) async {

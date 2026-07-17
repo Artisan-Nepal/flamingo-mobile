@@ -1,5 +1,6 @@
 import 'package:flamingo/feature/product/data/model/product_color.dart';
 import 'package:flamingo/feature/product/screen/product-detail/product_detail_view_model.dart';
+import 'package:flamingo/feature/product/screen/product-detail/snippet_variant_price.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/cupertino.dart';
@@ -69,11 +70,17 @@ class _SnippetColorSelectionBottomSheetState
                       listen: false);
                   viewModel.setSelectedColor(_selectedColor);
 
-                  final indexOfSelectedColor = viewModel.availableColors
-                      .indexWhere((element) => element.id == _selectedColor.id);
+                  // Jump to this color's first (primary) image page - colors
+                  // can have a different number of images (primary only, or
+                  // primary+secondary), so the target page isn't just the
+                  // color's index in the list.
+                  final targetPageIndex = getColorImagePageIndex(
+                    viewModel.productUseCase.data!,
+                    _selectedColor.id,
+                  );
                   if (widget.productImagePageController != null) {
                     widget.productImagePageController!.animateToPage(
-                      indexOfSelectedColor,
+                      targetPageIndex,
                       duration: Duration(
                         milliseconds: 200,
                       ),
@@ -123,10 +130,7 @@ class _SnippetColorSelectionBottomSheetState
                 return Row(
                   children: [
                     Expanded(
-                      child: Text(
-                        'Rs. ${formatNepaliCurrency(productVariant.price)}',
-                        style: textTheme(context).labelLarge,
-                      ),
+                      child: VariantPriceText(variant: productVariant),
                     ),
                     Expanded(
                       child: Text(

@@ -32,6 +32,7 @@ class ProductDetailScreen extends StatefulWidget {
     required this.title,
     this.leadSource,
     this.advertisementId,
+    this.readOnly = false,
   });
 
   final ProductDetail? product;
@@ -39,6 +40,11 @@ class ProductDetailScreen extends StatefulWidget {
   final String title;
   final LeadSource? leadSource;
   final String? advertisementId;
+
+  // When opened from the shopping bag or an order, the product is shown for
+  // reference only: no add-to-bag, no colour/size selectors, and no
+  // recommendations - just a back button to return where you came from.
+  final bool readOnly;
 
   @override
   State<ProductDetailScreen> createState() => _ProductDetailScreenState();
@@ -65,11 +71,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       _appBarViewModel.setScrollOffset(_scrollController.offset);
     });
 
-    _relatedProductsViewModel.getRelatedProducts(widget.productId);
-    // The recommender resolves alternatives at the product level (based on its
-    // primary image), so one fetch here covers every variant - whether it's
-    // shown just depends on which variant is selected at render time.
-    _inStockAlternativesViewModel.getInStockAlternatives(widget.productId);
+    // Recommendations/alternatives aren't shown in read-only mode, so skip the
+    // fetches entirely.
+    if (!widget.readOnly) {
+      _relatedProductsViewModel.getRelatedProducts(widget.productId);
+      // The recommender resolves alternatives at the product level (based on
+      // its primary image), so one fetch here covers every variant - whether
+      // it's shown just depends on which variant is selected at render time.
+      _inStockAlternativesViewModel.getInStockAlternatives(widget.productId);
+    }
   }
 
   @override
@@ -164,11 +174,17 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                                   height:
                                                       Dimens.spacingSizeSmall),
 
+                                              // Colour/size: interactive
+                                              // selectors normally; in read-only
+                                              // mode they are shown as plain
+                                              // reference info (no tap, no
+                                              // chevron).
                                               // Color
                                               _buildAttributeSelection(
                                                 name: 'Color',
-                                                value: viewModel
-                                                    .selectedColor.name,
+                                                value:
+                                                    viewModel.selectedColor.name,
+                                                readOnly: widget.readOnly,
                                                 onPressed: () {
                                                   showCupertinoModalPopup(
                                                     context: context,
@@ -197,6 +213,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                                 name: 'Size',
                                                 value: viewModel
                                                     .selectedSizeOption.value,
+                                                readOnly: widget.readOnly,
                                                 onPressed: () {
                                                   showCupertinoModalPopup(
                                                     context: context,
@@ -217,9 +234,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                                   height: Dimens
                                                       .spacingSizeDefault),
 
-                                              if (viewModel.selectedVariant
-                                                      .quantityInStock ==
-                                                  0) ...[
+                                              if (!widget.readOnly &&
+                                                  viewModel.selectedVariant
+                                                          .quantityInStock ==
+                                                      0) ...[
                                                 _buildOutOfStockAlternatives(),
                                                 const SizedBox(
                                                     height: Dimens
@@ -242,8 +260,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                     child: const SizedBox(
                                         height: Dimens.spacing_30),
                                   ),
-                                  _buildRelatedProductsHeader(context),
-                                  _buildRelatedProducts(context),
+                                  // "Recommended for you" is hidden in
+                                  // read-only mode.
+                                  if (!widget.readOnly) ...[
+                                    _buildRelatedProductsHeader(context),
+                                    _buildRelatedProducts(context),
+                                  ],
                                   SliverToBoxAdapter(
                                     child: const SizedBox(
                                       height: Dimens.spacing_64,
@@ -254,8 +276,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             ),
                             SnippetProductDetailAppBar(
                               title: widget.title,
+                              showCartAction: !widget.readOnly,
                             ),
-                            _buildAddToBagButton(viewModel),
+                            if (!widget.readOnly)
+                              _buildAddToBagButton(viewModel),
                           ],
                         ),
             );
@@ -440,9 +464,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     required String name,
     required String value,
     VoidCallback? onPressed,
+    bool readOnly = false,
   }) {
     return GestureDetector(
-      onTap: onPressed,
+      onTap: readOnly ? null : onPressed,
       child: Container(
         decoration: BoxDecoration(
           border: Border.all(
@@ -467,10 +492,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   .copyWith(fontWeight: FontWeight.w600),
             ),
             const Expanded(child: SizedBox()),
-            const Icon(
-              CupertinoIcons.chevron_down,
-              size: Dimens.iconSizeSmall,
-            )
+            // The chevron signals "tap to change" - omitted in read-only mode.
+            if (!readOnly)
+              const Icon(
+                CupertinoIcons.chevron_down,
+                size: Dimens.iconSizeSmall,
+              )
           ],
         ),
       ),

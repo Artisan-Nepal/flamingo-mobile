@@ -78,6 +78,7 @@ class ProductVariant {
   final ProductSizeOption size;
   final List<ProductAttributeResponse> attributes;
   final UploadFileResponse? image;
+  final UploadFileResponse? secondaryImage;
 
   ProductVariant({
     required this.id,
@@ -90,6 +91,7 @@ class ProductVariant {
     required this.color,
     required this.attributes,
     required this.image,
+    this.secondaryImage,
     required this.size,
   });
 
@@ -110,6 +112,11 @@ class ProductVariant {
             ? null
             : UploadFileResponse.fromJson(
                 json['productVariantColor'][0]['image'],
+              ),
+        secondaryImage: json['productVariantColor'][0]['secondaryImage'] == null
+            ? null
+            : UploadFileResponse.fromJson(
+                json['productVariantColor'][0]['secondaryImage'],
               ),
       );
 

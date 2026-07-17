@@ -122,35 +122,44 @@ class SnippetVendorListing extends StatelessWidget {
     return SliverList.builder(
       itemCount: vendors.length,
       itemBuilder: (context, index) {
+        final vendor = vendors[index];
         return GestureDetector(
           onTap: () {
             NavigationHelper.push(
               context,
               VendorProfileScreen(
-                seller: vendors[index].seller,
+                seller: vendor.seller,
               ),
             );
           },
           child: Container(
-            height: 70,
+            height: 64,
             padding: const EdgeInsets.symmetric(
               horizontal: Dimens.spacingSizeDefault,
             ),
-            margin: const EdgeInsets.only(bottom: Dimens.spacingSizeDefault),
-            color: AppColors.grayLighter,
+            margin: const EdgeInsets.only(bottom: Dimens.spacingSizeSmall),
+            decoration: BoxDecoration(
+              color: AppColors.transparent,
+              borderRadius: BorderRadius.circular(Dimens.radiusDefault),
+              border: Border.all(color: AppColors.grayLine),
+            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  vendors[index].seller.storeName,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
+                Expanded(
+                  child: Text(
+                    vendor.seller.storeName,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: textTheme(context).titleSmall!.copyWith(
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 0.3,
+                        ),
                   ),
                 ),
                 if (authViewModel.isLoggedIn)
                   FavVendorButtonWidget(
-                    vendorId: vendors[index].id,
+                    vendorId: vendor.id,
                   )
               ],
             ),

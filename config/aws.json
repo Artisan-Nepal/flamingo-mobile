@@ -1,4 +1,4 @@
 {
-  "_comment": "Dev AWS App Runner URL. Update API_BASE_URL after each AWS redeploy (the App Runner URL changes when the service is recreated).",
-  "API_BASE_URL": "https://saeuxrpkr4.ap-south-1.awsapprunner.com/api"
+  "_comment": "Production API, served via Cloudflare in front of AWS App Runner. This is a stable custom domain, unlike the old awsapprunner.com URL - no need to update after redeploys.",
+  "API_BASE_URL": "https://api.flamingo.com.np/api"
 }

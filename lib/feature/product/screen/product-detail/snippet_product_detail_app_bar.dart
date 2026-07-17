@@ -11,9 +11,14 @@ class SnippetProductDetailAppBar extends StatelessWidget {
   const SnippetProductDetailAppBar({
     super.key,
     required this.title,
+    this.showCartAction = true,
   });
 
   final String title;
+
+  // Hidden when the product is opened read-only (from the bag/an order), where
+  // a shortcut to the bag would be redundant or out of place.
+  final bool showCartAction;
 
   @override
   Widget build(BuildContext context) {
@@ -75,15 +80,16 @@ class SnippetProductDetailAppBar extends StatelessWidget {
                     ),
                   ),
                 ),
-                actions: const [
+                actions: [
                   // Shopping bag
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: Dimens.spacingSizeDefault,
-                      vertical: Dimens.spacing_8,
-                    ),
-                    child: CartButtonWidget(),
-                  )
+                  if (showCartAction)
+                    const Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: Dimens.spacingSizeDefault,
+                        vertical: Dimens.spacing_8,
+                      ),
+                      child: CartButtonWidget(),
+                    )
                 ],
               );
             },

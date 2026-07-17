@@ -1,5 +1,6 @@
 import 'package:flamingo/feature/auth/auth_view_model.dart';
 import 'package:flamingo/feature/customer-activity/customer_activity_view_model.dart';
+import 'package:flamingo/feature/notification/notification_view_model.dart';
 import 'package:flamingo/feature/product-story/product_story_engagement_view_model.dart';
 import 'package:flamingo/feature/search/screen/text-search/search_view_model.dart';
 import 'package:flamingo/feature/vendor/favourite_vendor_view_model.dart';
@@ -32,11 +33,14 @@ class App extends StatelessWidget {
             create: (ctx) => locator<FavouriteVendorViewModel>()),
         ChangeNotifierProvider(
             create: (ctx) => locator<CustomerActivityViewModel>()),
+        ChangeNotifierProvider(
+            create: (ctx) => locator<NotificationViewModel>()),
       ],
       builder: (ctx, child) {
         final navigationService = locator<NavigationService>();
 
         return MaterialApp(
+          navigatorKey: NavigationHelper.navigatorKey,
           debugShowCheckedModeBanner: false,
           title: Strings.appName,
           theme: lightTheme,

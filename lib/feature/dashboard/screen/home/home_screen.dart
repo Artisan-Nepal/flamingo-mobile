@@ -8,12 +8,14 @@ import 'package:flamingo/feature/dashboard/screen/home/snippet_home_screen_story
 import 'package:flamingo/feature/dashboard/screen/home/snippet_home_products.dart';
 import 'package:flamingo/feature/dashboard/screen/home/snippet_home_search.dart';
 import 'package:flamingo/feature/dashboard/screen/home/snippet_promo_banners.dart';
+import 'package:flamingo/feature/notification/notification_view_model.dart';
 import 'package:flamingo/feature/promo-banner/promo_banner_view_model.dart';
 import 'package:flamingo/feature/product-story/product_story_view_model.dart';
 import 'package:flamingo/feature/product/data/model/for_you_section.dart';
 import 'package:flamingo/feature/product/screen/product-listing/for_you_view_model.dart';
 import 'package:flamingo/feature/product/screen/product-listing/product_listing_view_model.dart';
 import 'package:flamingo/shared/shared.dart';
+import 'package:flamingo/widget/button/notification_glow_widget.dart';
 import 'package:flamingo/widget/not-logged-in/not_logged_in_widget.dart';
 import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/material.dart';
@@ -84,6 +86,7 @@ class _HomeScreenState extends State<HomeScreen>
       _favVendorProductListingViewModel.getProducts(
           productType: ProductType.FAVORITE_VENDOR);
       locator<CustomerActivityViewModel>().getCustomerCountInfo();
+      locator<NotificationViewModel>().getNotifications();
     }
   }
 
@@ -280,16 +283,11 @@ class _HomeScreenState extends State<HomeScreen>
         height: SizeConfig.appBarHeight - 25,
       ),
       centerTitle: true,
-      // title: Text(
-      //   'Flamingo',
-      //   style: textTheme(context).headlineSmall!.copyWith(
-      //         color: isLightMode(context)
-      //             ? themedPrimaryColor(context)
-      //             : AppColors.white,
-      //         fontWeight: FontWeight.w600,
-      //         letterSpacing: 0.8,
-      //       ),
-      // ),
+      leadingWidth: 52,
+      leading: const Padding(
+        padding: EdgeInsets.only(left: Dimens.spacingSizeSmall),
+        child: NotificationGlowWidget(),
+      ),
       actions: [
         Padding(
           padding: const EdgeInsets.only(

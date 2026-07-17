@@ -192,16 +192,54 @@ String extractProductVariantImage(
   return variantImage.image?.url ?? defaultImages.firstOrNull ?? "";
 }
 
+// The carousel shows the per-colour images the vendor actually manages
+// (primary + optional secondary, one set per colour). Product-level
+// `product.images` are intentionally NOT included: the seeder duplicates each
+// product's single image into BOTH a product-level ProductImage and the
+// colour's primary image (see seed-products.ts), and there is no vendor UI to
+// manage product-level images - so including them just showed a duplicate that
+// the vendor side never displayed. Only fall back to product.images if the
+// variants somehow carry no images at all, so the carousel is never empty.
 List<String> getDetailImages(ProductDetail product) {
-  final List<String> images = [...product.images];
+  final List<String> images = [];
 
-  Map<String, String> imageByColor = {};
+  final seenColorIds = <String>{};
+  for (final variant in product.variants) {
+    if (!seenColorIds.add(variant.color.id)) continue;
+    final primaryUrl = variant.image?.url;
+    if (primaryUrl != null && primaryUrl.isNotEmpty) {
+      images.add(primaryUrl);
+    }
+    final secondaryUrl = variant.secondaryImage?.url;
+    if (secondaryUrl != null && secondaryUrl.isNotEmpty) {
+      images.add(secondaryUrl);
+    }
+  }
 
-  product.variants.forEach((variant) {
-    imageByColor[variant.color.id] = variant.image?.url ?? "";
-  });
-
-  images.addAll(imageByColor.values);
+  if (images.isEmpty) images.addAll(product.images);
 
   return images;
+}
+
+// The page index (within getDetailImages(product)) of the given color's
+// first/primary image - lets the color picker jump the image carousel to the
+// right page. Colors can carry a different number of images (primary only,
+// or primary+secondary), so this walks the same construction order as
+// getDetailImages rather than assuming a fixed number of images per color.
+int getColorImagePageIndex(ProductDetail product, String colorId) {
+  int index = 0;
+  final seenColorIds = <String>{};
+  for (final variant in product.variants) {
+    if (!seenColorIds.add(variant.color.id)) continue;
+    if (variant.color.id == colorId) return index;
+    final primaryUrl = variant.image?.url;
+    if (primaryUrl != null && primaryUrl.isNotEmpty) {
+      index += 1;
+    }
+    final secondaryUrl = variant.secondaryImage?.url;
+    if (secondaryUrl != null && secondaryUrl.isNotEmpty) {
+      index += 1;
+    }
+  }
+  return index;
 }

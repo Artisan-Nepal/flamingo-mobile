@@ -50,19 +50,18 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDaxMVw6ktCExjnMuCK3qmD82gb_eANw9s',
-    appId: '1:409809764031:android:3f1e7eee5897a33b7a100a',
-    messagingSenderId: '409809764031',
-    projectId: 'flamingo-34e85',
-    storageBucket: 'flamingo-34e85.appspot.com',
+    apiKey: 'AIzaSyAsOwe-fexyuQGC7P6xlfkZQx-ddL32Qv4',
+    appId: '1:165901469128:android:deaf7d423195d8cc3becfd',
+    messagingSenderId: '165901469128',
+    projectId: 'flamingo-customer',
+    storageBucket: 'flamingo-customer.firebasestorage.app',
   );
-
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyBO40Ond72VyLe-B1f6XiX6uC8DM2RR94M',
-    appId: '1:409809764031:ios:b357b3120158d61c7a100a',
-    messagingSenderId: '409809764031',
-    projectId: 'flamingo-34e85',
-    storageBucket: 'flamingo-34e85.appspot.com',
-    iosBundleId: 'com.artisan.flamingo.nepal',
+    apiKey: 'AIzaSyCqVUexUyQVzNDoCjhO6w6NqnZQ_UU5FnE',
+    appId: '1:165901469128:ios:1f4cfffd5e1b67f73becfd',
+    messagingSenderId: '165901469128',
+    projectId: 'flamingo-customer',
+    storageBucket: 'flamingo-customer.firebasestorage.app',
+    iosBundleId: 'np.com.flamingo.customer',
   );
 }

@@ -1,4 +1,4 @@
-package com.artisan.flamingo
+package np.com.flamingo.customer
 
 import io.flutter.embedding.android.FlutterActivity
 

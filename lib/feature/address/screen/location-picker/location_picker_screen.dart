@@ -12,7 +12,7 @@ import 'package:google_places_flutter/model/prediction.dart';
 /// Full-screen map location picker (Pathao-style): the pin stays fixed at the
 /// centre of the screen and the map pans underneath it. Reverse-geocoding
 /// happens exactly once - when the user taps Confirm - to keep API usage
-/// minimal (see LOCATION_PICKER_PLAN.md). Pops with a [PickedLocation].
+/// minimal. Pops with a [PickedLocation].
 class LocationPickerScreen extends StatefulWidget {
   const LocationPickerScreen({
     super.key,

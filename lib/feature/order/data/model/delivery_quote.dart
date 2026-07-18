@@ -20,7 +20,7 @@ class DeliveryQuoteStore {
 
 /// The real, server-computed delivery total for the current cart + address +
 /// shipping method - the per-store distance-based fees, summed. See
-/// LOCATION_PICKER_PLAN.md: this replaces the old client-side city guess.
+/// This replaces the old client-side city guess.
 class DeliveryQuote {
   final int totalDeliveryCharge;
   final int storeCount;

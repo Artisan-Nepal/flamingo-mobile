@@ -1,6 +1,6 @@
 /// The result returned by [LocationPickerScreen]: the exact pin the user
 /// confirmed, plus the reverse-geocoded readable address (resolved once, on
-/// Confirm - see LOCATION_PICKER_PLAN.md for the cost rationale).
+/// Confirm).
 class PickedLocation {
   final double latitude;
   final double longitude;

@@ -103,7 +103,7 @@ class PlaceOrderViewModel extends ChangeNotifier {
   }
 
   // Asks the server for the real per-store distance-based delivery total for
-  // the current cart (store -> customer, see LOCATION_PICKER_PLAN.md). Only
+  // the current cart (store -> customer). Only
   // STANDARD_SHIPPING is distance-priced; other methods (Click & Collect,
   // Same Day) have their own flat cost and don't need a quote call. Safe to
   // call repeatedly - if the selection changes again while a call is still in

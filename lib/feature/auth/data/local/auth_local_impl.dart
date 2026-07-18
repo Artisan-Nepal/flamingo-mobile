@@ -4,19 +4,23 @@ import 'package:flamingo/feature/user/data/customer.dart';
 
 class AuthLocalImpl implements AuthLocal {
   final LocalStorageClient _sharedPrefManager;
+  final SecureTokenStore _tokenStore;
 
-  AuthLocalImpl({required LocalStorageClient sharedPrefManager})
-      : _sharedPrefManager = sharedPrefManager;
+  AuthLocalImpl({
+    required LocalStorageClient sharedPrefManager,
+    required SecureTokenStore tokenStore,
+  })  : _sharedPrefManager = sharedPrefManager,
+        _tokenStore = tokenStore;
 
   @override
   Future<String?> getAccessToken() async {
-    return await _sharedPrefManager.getString(LocalStorageKeys.accessToken);
+    // Encrypted store (Keychain/Keystore); migrates any legacy plaintext token.
+    return await _tokenStore.getToken();
   }
 
   @override
   Future<void> setAccessToken(String accessToken) async {
-    await _sharedPrefManager.setString(
-        LocalStorageKeys.accessToken, accessToken);
+    await _tokenStore.setToken(accessToken);
   }
 
   @override
@@ -37,7 +41,7 @@ class AuthLocalImpl implements AuthLocal {
 
   @override
   Future removeAccessToken() async {
-    return await _sharedPrefManager.remove(LocalStorageKeys.accessToken);
+    return await _tokenStore.removeToken();
   }
 
   @override

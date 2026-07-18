@@ -31,6 +31,7 @@ void registerServices(GetIt locator) {
       sharedPrefManager: locator<LocalStorageClient>(
         instanceName: ServiceNames.sharedPrefManager,
       ),
+      tokenStore: locator<SecureTokenStore>(),
     ),
   );
 

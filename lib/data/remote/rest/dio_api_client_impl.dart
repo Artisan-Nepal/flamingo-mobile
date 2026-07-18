@@ -6,10 +6,10 @@ import 'package:flamingo/shared/shared.dart' hide Response;
 
 class DioApiClientImpl implements ApiClient {
   late Dio dio;
-  final LocalStorageClient _sharedPrefManager;
+  final SecureTokenStore _tokenStore;
 
-  DioApiClientImpl({required LocalStorageClient sharedPrefManager})
-      : _sharedPrefManager = sharedPrefManager {
+  DioApiClientImpl({required SecureTokenStore tokenStore})
+      : _tokenStore = tokenStore {
     dio = Dio(
       BaseOptions(
         baseUrl: ApiUrls.baseUrl,
@@ -162,8 +162,7 @@ class DioApiClientImpl implements ApiClient {
 
   _requestInterceptorToAttachAccessToken(
       RequestOptions options, RequestInterceptorHandler handler) async {
-    final accessToken =
-        await _sharedPrefManager.getString(LocalStorageKeys.accessToken);
+    final accessToken = await _tokenStore.getToken();
     if (accessToken != null) {
       options.headers['Authorization'] = "Bearer $accessToken";
     }

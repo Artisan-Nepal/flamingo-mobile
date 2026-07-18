@@ -17,12 +17,20 @@ Future<void> registerDataModule(GetIt locator) async {
     instanceName: ServiceNames.sharedPrefManager,
   );
 
+  // Encrypted store for the auth token (Keychain/Keystore), with one-time
+  // migration from the old plaintext SharedPreferences location.
+  locator.registerLazySingleton<SecureTokenStore>(
+    () => SecureTokenStore(
+      legacySharedPref: locator<LocalStorageClient>(
+        instanceName: ServiceNames.sharedPrefManager,
+      ),
+    ),
+  );
+
   // Remote Clients
   locator.registerLazySingleton<ApiClient>(
     () => DioApiClientImpl(
-      sharedPrefManager: locator<LocalStorageClient>(
-        instanceName: ServiceNames.sharedPrefManager,
-      ),
+      tokenStore: locator<SecureTokenStore>(),
     ),
   );
 }

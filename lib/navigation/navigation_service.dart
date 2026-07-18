@@ -3,9 +3,13 @@ import 'package:flamingo/navigation/navigation_route_names.dart';
 
 class NavigationService {
   final LocalStorageClient _sharedPrefManager;
+  final SecureTokenStore _tokenStore;
 
-  NavigationService({required LocalStorageClient sharedPrefManager})
-      : _sharedPrefManager = sharedPrefManager;
+  NavigationService({
+    required LocalStorageClient sharedPrefManager,
+    required SecureTokenStore tokenStore,
+  })  : _sharedPrefManager = sharedPrefManager,
+        _tokenStore = tokenStore;
 
   late String initialRoute;
 
@@ -24,7 +28,7 @@ class NavigationService {
   }
 
   Future<bool> _getIsLoggedIn() async {
-    return await _sharedPrefManager.containsKey(LocalStorageKeys.accessToken);
+    return await _tokenStore.hasToken();
   }
 
   Future<bool> _getIsFirstTime() async {

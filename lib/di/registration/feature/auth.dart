@@ -11,6 +11,7 @@ void registerAuthFeature(GetIt locator) {
       sharedPrefManager: locator<LocalStorageClient>(
         instanceName: ServiceNames.sharedPrefManager,
       ),
+      tokenStore: locator<SecureTokenStore>(),
     ),
   );
   locator.registerLazySingleton<AuthRemote>(

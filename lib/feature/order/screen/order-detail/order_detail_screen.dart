@@ -121,7 +121,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
               SnippetOrderDetailInfo(
                 label: 'Shipping Address',
                 title:
-                    '${widget.order.shippingAddress.name}, ${widget.order.shippingAddress.area.name}',
+                    '${widget.order.shippingAddress.name}, ${widget.order.shippingAddress.displayLocation}',
                 subtitle:
                     '${widget.order.shippingAddress.fullName}, ${widget.order.shippingAddress.mobileNumber}',
               ),
@@ -130,7 +130,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
               SnippetOrderDetailInfo(
                 label: 'Billing Address',
                 title:
-                    '${widget.order.billingAddress.name}, ${widget.order.billingAddress.area.name}',
+                    '${widget.order.billingAddress.name}, ${widget.order.billingAddress.displayLocation}',
                 subtitle:
                     '${widget.order.billingAddress.fullName}, ${widget.order.billingAddress.mobileNumber}',
               ),

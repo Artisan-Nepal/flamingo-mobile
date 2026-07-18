@@ -9,12 +9,16 @@ void showToast(BuildContext context,
         message ?? (isSuccess ? 'Success' : 'An error occured'),
         textAlign: TextAlign.center,
         style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-              color: isSuccess ? AppColors.grayDarker : AppColors.white,
+              color: AppColors.white,
             ),
       ),
     ),
-    backgroundColor:
-        isSuccess ? Theme.of(context).primaryColorLight : AppColors.error,
+    // AppColors.success/.error - the same feedback colors used everywhere
+    // else (form validation, order status, checkout retry). Previously used
+    // Theme.of(context).primaryColorLight for success, an auto-derived
+    // Material default (primaryColor here is plain black/white) that never
+    // matched the app's actual palette.
+    backgroundColor: isSuccess ? AppColors.success : AppColors.error,
     duration: Duration(milliseconds: duration),
     behavior: SnackBarBehavior.floating,
     elevation: 0,

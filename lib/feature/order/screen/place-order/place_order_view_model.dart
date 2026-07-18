@@ -6,6 +6,7 @@ import 'package:flamingo/feature/customer-activity/customer_activity_view_model.
 import 'package:flamingo/feature/order/data/local/order_local.dart';
 import 'package:flamingo/feature/order/data/model/apply_coupon_response.dart';
 import 'package:flamingo/feature/order/data/model/create_order_request.dart';
+import 'package:flamingo/feature/order/data/model/delivery_quote.dart';
 import 'package:flamingo/feature/order/data/model/khalti_initiate_request.dart';
 import 'package:flamingo/feature/order/data/model/khalti_initiate_response.dart';
 import 'package:flamingo/feature/order/data/model/payment_method.dart';
@@ -34,6 +35,8 @@ class PlaceOrderViewModel extends ChangeNotifier {
   ApplyCouponResponse? _appliedCoupon;
   List<SavedCoupon> _savedCoupons = [];
   List<CartItem> _items = [];
+  DeliveryQuote? _deliveryQuote;
+  Response _deliveryQuoteUseCase = Response();
 
   int get orderIndex => _orderIndex;
   ShippingMethod? get selectedShippingMethod => _selectedShippingMethod;
@@ -46,6 +49,7 @@ class PlaceOrderViewModel extends ChangeNotifier {
   ApplyCouponResponse? get appliedCoupon => _appliedCoupon;
   List<SavedCoupon> get savedCoupons => _savedCoupons;
   List<CartItem> get items => _items;
+  Response get deliveryQuoteUseCase => _deliveryQuoteUseCase;
 
   void setCartItems(List<CartItem> items) {
     _items = items;
@@ -64,6 +68,7 @@ class PlaceOrderViewModel extends ChangeNotifier {
   setSelectedShippingAddress(Address address) {
     _selectedShippingAddress = address;
     notifyListeners();
+    fetchDeliveryQuote();
   }
 
   setSelectedBillingAddress(Address address) {
@@ -89,6 +94,7 @@ class PlaceOrderViewModel extends ChangeNotifier {
   setSelectedShippingMethod(ShippingMethod? shippingMethod) {
     _selectedShippingMethod = shippingMethod;
     notifyListeners();
+    fetchDeliveryQuote();
   }
 
   setSelectedPaymentMethod(PaymentMethod? paymentMethod) {
@@ -96,21 +102,39 @@ class PlaceOrderViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Delivery charge for one pickup from one store. Standard shipping is priced
-  // by delivery city (Rs 100, or Rs 150 for extended zones); other methods use
-  // their flat cost. A courier makes one pickup per store, so the total charge
-  // scales with the number of distinct stores in the cart, not the item count.
-  int get deliveryChargePerStore {
+  // Asks the server for the real per-store distance-based delivery total for
+  // the current cart (store -> customer, see LOCATION_PICKER_PLAN.md). Only
+  // STANDARD_SHIPPING is distance-priced; other methods (Click & Collect,
+  // Same Day) have their own flat cost and don't need a quote call. Safe to
+  // call repeatedly - if the selection changes again while a call is still in
+  // flight, the stale response is discarded instead of overwriting the newer one.
+  Future<void> fetchDeliveryQuote() async {
+    final address = _selectedShippingAddress;
     final method = _selectedShippingMethod;
-    if (method == null) return 0;
-    if (method.code == kStandardShippingCode) {
-      return getDeliveryChargeForCity(_selectedShippingAddress?.area.city.name);
+    if (address == null || method == null || method.code != kStandardShippingCode) {
+      _deliveryQuote = null;
+      _deliveryQuoteUseCase = Response();
+      notifyListeners();
+      return;
     }
-    return method.cost;
-  }
-
-  int getShippingFee() {
-    return deliveryChargePerStore;
+    try {
+      _deliveryQuoteUseCase = Response.loading();
+      notifyListeners();
+      final quote = await _orderRepository.getDeliveryQuote(
+        shippingAddressId: address.id,
+        shippingMethodId: method.id,
+      );
+      if (_selectedShippingAddress?.id != address.id || _selectedShippingMethod?.id != method.id) {
+        return; // selection moved on while this was in flight
+      }
+      _deliveryQuote = quote;
+      _deliveryQuoteUseCase = Response.complete(quote);
+      notifyListeners();
+    } catch (exception) {
+      _deliveryQuote = null;
+      _deliveryQuoteUseCase = Response.error(exception);
+      notifyListeners();
+    }
   }
 
   // Checkout "apply code" preview - just validates and shows what the
@@ -241,8 +265,17 @@ class PlaceOrderViewModel extends ChangeNotifier {
     return items.map((item) => item.product.sellerId).toSet().length;
   }
 
+  // STANDARD_SHIPPING: the real server-computed total (sum of each store's own
+  // distance-based fee - stores are NOT all charged the same amount, so this
+  // can't be a flat rate x storeCount). Other methods: their flat cost applies
+  // per store, same as before.
   int get shippingCost {
-    return deliveryChargePerStore * distinctStoreCount;
+    final method = _selectedShippingMethod;
+    if (method == null) return 0;
+    if (method.code == kStandardShippingCode) {
+      return _deliveryQuote?.totalDeliveryCharge ?? 0;
+    }
+    return method.cost * distinctStoreCount;
   }
 
   int get discountAmount {

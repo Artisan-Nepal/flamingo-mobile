@@ -1,6 +1,7 @@
 import 'package:flamingo/data/data.dart';
 import 'package:flamingo/feature/order/data/model/apply_coupon_response.dart';
 import 'package:flamingo/feature/order/data/model/create_order_request.dart';
+import 'package:flamingo/feature/order/data/model/delivery_quote.dart';
 import 'package:flamingo/feature/order/data/model/khalti_initiate_request.dart';
 import 'package:flamingo/feature/order/data/model/khalti_initiate_response.dart';
 import 'package:flamingo/feature/order/data/model/order.dart';
@@ -93,5 +94,20 @@ class OrderRemoteImpl implements OrderRemote {
   Future<List<SavedCoupon>> getSavedCoupons() async {
     final apiResponse = await _apiClient.get(ApiUrls.savedCoupons);
     return SavedCoupon.fromJsonList(apiResponse.data);
+  }
+
+  @override
+  Future<DeliveryQuote> getDeliveryQuote({
+    required String shippingAddressId,
+    required String shippingMethodId,
+  }) async {
+    final apiResponse = await _apiClient.get(
+      ApiUrls.deliveryQuote,
+      queryParams: {
+        'shippingAddressId': shippingAddressId,
+        'shippingMethodId': shippingMethodId,
+      },
+    );
+    return DeliveryQuote.fromJson(apiResponse.data);
   }
 }

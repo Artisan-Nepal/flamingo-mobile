@@ -54,6 +54,11 @@ android {
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        // Google Maps SDK key, injected into AndroidManifest's
+        // com.google.android.geo.API_KEY meta-data. Supply the real key via
+        // gradle.properties (MAPS_API_KEY=...) or -PMAPS_API_KEY=... in Phase 2;
+        // the placeholder just lets the build succeed until then.
+        manifestPlaceholders["MAPS_API_KEY"] = project.findProperty("MAPS_API_KEY") ?: "MAPS_API_KEY_NOT_SET"
     }
 
     signingConfigs {

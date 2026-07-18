@@ -1,7 +1,8 @@
 import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/address/data/model/address.dart';
-import 'package:flamingo/feature/address/data/model/sub_address.dart';
+import 'package:flamingo/feature/address/data/model/picked_location.dart';
 import 'package:flamingo/feature/address/screen/address-listing/address_listing_view_model.dart';
+import 'package:flamingo/feature/address/screen/location-picker/location_picker_screen.dart';
 import 'package:flamingo/feature/address/screen/manage-address/manage_address_view_model.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/widget.dart';
@@ -35,13 +36,27 @@ class _ManageAddressScreenState extends State<ManageAddressScreen> {
     _setAddressValues(widget.existingAddress);
   }
 
-  _setAddressValues(Address? address) async {
+  void _setAddressValues(Address? address) {
     _viewModel.init(address);
     _fullNameController.text = address?.fullName ?? "";
     _mobileNumberController.text = address?.mobileNumber ?? "";
     _addressController.text = address?.name ?? "";
     _landmarkController.text = address?.landmark ?? "";
-    _viewModel.getProvinces();
+  }
+
+  Future<void> _openLocationPicker(ManageAddressViewModel viewModel) async {
+    FocusScope.of(context).unfocus();
+    final result = await Navigator.of(context).push<PickedLocation>(
+      MaterialPageRoute(
+        builder: (_) => LocationPickerScreen(
+          initialLatitude: viewModel.latitude,
+          initialLongitude: viewModel.longitude,
+        ),
+      ),
+    );
+    if (result != null) {
+      viewModel.setPickedLocation(result);
+    }
   }
 
   @override
@@ -52,9 +67,7 @@ class _ManageAddressScreenState extends State<ManageAddressScreen> {
         builder: (context, viewModel, child) {
           return DefaultScreen(
             appBarTitle: Text(
-              widget.existingAddress == null
-                  ? 'Add New Address'
-                  : 'Edit Address',
+              widget.existingAddress == null ? 'Add New Address' : 'Edit Address',
             ),
             bottomNavBarWithButton: true,
             bottomNavBarWithButtonLabel: 'Save And Continue',
@@ -65,14 +78,13 @@ class _ManageAddressScreenState extends State<ManageAddressScreen> {
             child: Form(
               key: _formKey,
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   TextFieldWidget(
                     controller: _fullNameController,
                     label: 'Full Name',
                     hintText: 'Enter full name',
-                    validator: (text) {
-                      return checkIfEmpty('Full name', text);
-                    },
+                    validator: (text) => checkIfEmpty('Full name', text),
                     enabled: !viewModel.manageAddressUseCase.isLoading,
                   ),
                   const VerticalSpaceWidget(height: Dimens.spacingSizeDefault),
@@ -85,78 +97,13 @@ class _ManageAddressScreenState extends State<ManageAddressScreen> {
                     validator: validatePhoneNumber,
                   ),
                   const VerticalSpaceWidget(height: Dimens.spacingSizeDefault),
-                  DropDownFieldWidget<SubAddress>(
-                    label: 'Province',
-                    hintText: viewModel.provinceUseCase.isLoading
-                        ? 'Loading...'
-                        : 'Select Province',
-                    items: viewModel.provinceUseCase.data ?? [],
-                    selectedItem: viewModel.selectedProvince,
-                    itemAsString: (province) => province.name,
-                    compareFn: (p0, p1) => p0.id == p0.id,
-                    enabled: !viewModel.provinceUseCase.isLoading &&
-                        !viewModel.manageAddressUseCase.isLoading,
-                    onChanged: (province) {
-                      if (province != null) {
-                        viewModel.setSelectedProvince(province);
-                      }
-                    },
-                    validator: (province) {
-                      return checkIfEmpty('Province', province?.name);
-                    },
-                  ),
-                  const VerticalSpaceWidget(height: Dimens.spacingSizeDefault),
-                  DropDownFieldWidget<City>(
-                    label: 'City',
-                    hintText: viewModel.cityUseCase.isLoading
-                        ? 'Loading...'
-                        : 'Select City',
-                    selectedItem: viewModel.selectedCity,
-                    compareFn: (p0, p1) => p0.id == p0.id,
-                    enabled: viewModel.selectedProvince != null &&
-                        !viewModel.cityUseCase.isLoading &&
-                        !viewModel.manageAddressUseCase.isLoading,
-                    itemAsString: (province) => province.name,
-                    items: viewModel.cityUseCase.data ?? [],
-                    onChanged: (city) {
-                      if (city != null) {
-                        viewModel.setSelectedCity(city);
-                      }
-                    },
-                    validator: (city) {
-                      return checkIfEmpty('City', city?.name);
-                    },
-                  ),
-                  const VerticalSpaceWidget(height: Dimens.spacingSizeDefault),
-                  DropDownFieldWidget<Area>(
-                    label: 'Area',
-                    hintText: viewModel.areaUseCase.isLoading
-                        ? 'Loading...'
-                        : 'Select Area',
-                    selectedItem: viewModel.selectedArea,
-                    itemAsString: (province) => province.name,
-                    compareFn: (p0, p1) => p0.id == p0.id,
-                    items: viewModel.areaUseCase.data ?? [],
-                    enabled: viewModel.selectedCity != null &&
-                        !viewModel.areaUseCase.isLoading &&
-                        !viewModel.manageAddressUseCase.isLoading,
-                    onChanged: (area) {
-                      if (area != null) {
-                        viewModel.setSelectedArea(area);
-                      }
-                    },
-                    validator: (area) {
-                      return checkIfEmpty('Area', area?.name);
-                    },
-                  ),
+                  _buildLocationField(viewModel),
                   const VerticalSpaceWidget(height: Dimens.spacingSizeDefault),
                   TextFieldWidget(
                     controller: _addressController,
                     label: 'Address',
-                    hintText: 'Enter address',
-                    validator: (text) {
-                      return checkIfEmpty('Address', text);
-                    },
+                    hintText: 'Eg. Home, Office',
+                    validator: (text) => checkIfEmpty('Address', text),
                     enabled: !viewModel.manageAddressUseCase.isLoading,
                   ),
                   const VerticalSpaceWidget(height: Dimens.spacingSizeDefault),
@@ -177,28 +124,78 @@ class _ManageAddressScreenState extends State<ManageAddressScreen> {
     );
   }
 
-  _onSubmit(ManageAddressViewModel viewModel) async {
-    if (_formKey.currentState!.validate()) {
-      await viewModel.manageAddress(
-        _fullNameController.text,
-        _mobileNumberController.text,
-        _addressController.text,
-        _landmarkController.text,
-        widget.existingAddress?.id,
-      );
+  Widget _buildLocationField(ManageAddressViewModel viewModel) {
+    final hasLocation = viewModel.hasLocation;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Location', style: TypographyStyles.bodyMedium),
+        const VerticalSpaceWidget(height: Dimens.spacingSizeExtraSmall),
+        InkWell(
+          onTap: viewModel.manageAddressUseCase.isLoading ? null : () => _openLocationPicker(viewModel),
+          borderRadius: BorderRadius.circular(Dimens.radiusSmall),
+          child: Container(
+            padding: const EdgeInsets.all(Dimens.spacingSizeDefault),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(Dimens.radiusSmall),
+              border: Border.all(color: AppColors.grayLight),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  hasLocation ? Icons.location_on : Icons.add_location_alt_outlined,
+                  color: hasLocation ? AppColors.secondaryMain : AppColors.grayMain,
+                  size: Dimens.iconSizeDefault,
+                ),
+                const SizedBox(width: Dimens.spacingSizeSmall),
+                Expanded(
+                  child: Text(
+                    hasLocation ? (viewModel.formattedAddress ?? 'Location selected') : 'Set location on map',
+                    style: TypographyStyles.bodyMedium.copyWith(
+                      color: hasLocation ? AppColors.grayDarker : AppColors.grayMain,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                Text(
+                  hasLocation ? 'Change' : '',
+                  style: TypographyStyles.labelLarge.copyWith(color: AppColors.secondaryMain),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 
-      if (!context.mounted) return;
-      if (viewModel.manageAddressUseCase.hasCompleted) {
-        Provider.of<AddressListingViewModel>(context, listen: false)
-            .getAddresses();
-        NavigationHelper.pop(context);
-      } else {
-        showToast(
-          context,
-          message: viewModel.manageAddressUseCase.exception!,
-          isSuccess: false,
-        );
-      }
+  Future<void> _onSubmit(ManageAddressViewModel viewModel) async {
+    final formValid = _formKey.currentState!.validate();
+    if (!viewModel.hasLocation) {
+      showToast(context, message: 'Please set your location on the map', isSuccess: false);
+      return;
+    }
+    if (!formValid) return;
+
+    await viewModel.manageAddress(
+      _fullNameController.text,
+      _mobileNumberController.text,
+      _addressController.text,
+      _landmarkController.text,
+      widget.existingAddress?.id,
+    );
+
+    if (!context.mounted) return;
+    if (viewModel.manageAddressUseCase.hasCompleted) {
+      Provider.of<AddressListingViewModel>(context, listen: false).getAddresses();
+      NavigationHelper.pop(context);
+    } else {
+      showToast(
+        context,
+        message: viewModel.manageAddressUseCase.exception!,
+        isSuccess: false,
+      );
     }
   }
 }

@@ -1,9 +1,18 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Location for the map picker ("use my location" + initial centre). -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <application
         android:label="Flamingo"
         android:name="${applicationName}"
         android:roundIcon="@mipmap/round_launcher"
         android:icon="@mipmap/ic_launcher">
+        <!-- Google Maps SDK key. The value comes from the MAPS_API_KEY manifest
+             placeholder (see android/app/build.gradle) so the real key isn't
+             committed. Set it in Phase 2 (Google Cloud setup). -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="${MAPS_API_KEY}" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

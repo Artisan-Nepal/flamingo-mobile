@@ -1,6 +1,7 @@
 import 'package:flamingo/data/data.dart';
 import 'package:flamingo/feature/order/data/model/apply_coupon_response.dart';
 import 'package:flamingo/feature/order/data/model/create_order_request.dart';
+import 'package:flamingo/feature/order/data/model/delivery_quote.dart';
 import 'package:flamingo/feature/order/data/model/khalti_initiate_request.dart';
 import 'package:flamingo/feature/order/data/model/khalti_initiate_response.dart';
 import 'package:flamingo/feature/order/data/model/order.dart';
@@ -20,4 +21,8 @@ abstract class OrderRemote {
   Future<List<String>> confirmKhaltiOrder(String pidx);
   Future<ApplyCouponResponse> validateCoupon(String code);
   Future<List<SavedCoupon>> getSavedCoupons();
+  Future<DeliveryQuote> getDeliveryQuote({
+    required String shippingAddressId,
+    required String shippingMethodId,
+  });
 }

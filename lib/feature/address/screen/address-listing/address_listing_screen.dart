@@ -148,9 +148,15 @@ class _AddressListingScreenState extends State<AddressListingScreen> {
                       ]
                     ],
                   ),
-                  Text(addresses[index].address.area.name),
-                  Text(addresses[index].address.area.city.name),
-                  Text(addresses[index].address.area.city.province.name)
+                  // Prefer the map-picker's readable address; fall back to the
+                  // legacy area breadcrumb for older addresses.
+                  if (addresses[index].address.formattedAddress != null)
+                    Text(addresses[index].address.formattedAddress!)
+                  else if (addresses[index].address.area != null) ...[
+                    Text(addresses[index].address.area!.name),
+                    Text(addresses[index].address.area!.city.name),
+                    Text(addresses[index].address.area!.city.province.name)
+                  ]
                 ],
               ),
               trailing: _selectionStatus(addresses[index].address.id),

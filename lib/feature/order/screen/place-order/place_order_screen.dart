@@ -89,7 +89,7 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
                       isSet: viewModel.selectedShippingAddress != null,
                       placeholder: 'Select a shipping address',
                       title:
-                          '${viewModel.selectedShippingAddress?.name}, ${viewModel.selectedShippingAddress?.area.name}',
+                          '${viewModel.selectedShippingAddress?.name ?? ""}, ${viewModel.selectedShippingAddress?.displayLocation ?? ""}',
                       subtitle:
                           '${viewModel.selectedShippingAddress?.fullName}, ${viewModel.selectedShippingAddress?.mobileNumber}',
                     ),
@@ -114,7 +114,7 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
                       isSet: viewModel.selectedBillingAddress != null,
                       placeholder: 'Select a billing address',
                       title:
-                          '${viewModel.selectedBillingAddress?.name}, ${viewModel.selectedBillingAddress?.area.name}',
+                          '${viewModel.selectedBillingAddress?.name ?? ""}, ${viewModel.selectedBillingAddress?.displayLocation ?? ""}',
                       subtitle:
                           '${viewModel.selectedBillingAddress?.fullName}, ${viewModel.selectedBillingAddress?.mobileNumber}',
                     ),
@@ -268,7 +268,12 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
             _buildOrderDetailItem(
                 title: 'Order Cost', amount: viewModel.subTotal),
             _buildOrderDetailItem(
-                title: 'Shipping Fee', amount: viewModel.shippingCost),
+                title: 'Shipping Fee',
+                amount: viewModel.shippingCost,
+                isLoading: viewModel.deliveryQuoteUseCase.isLoading,
+                onRetry: viewModel.deliveryQuoteUseCase.hasError
+                    ? viewModel.fetchDeliveryQuote
+                    : null),
             _buildOrderDetailItem(
               title: 'Discount',
               isDiscount: true,
@@ -406,6 +411,8 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
     required int amount,
     bool boldText = false,
     bool isDiscount = false,
+    bool isLoading = false,
+    VoidCallback? onRetry,
   }) {
     final textStyle = textTheme(context).titleSmall!.copyWith(
           fontWeight: boldText ? FontWeight.bold : null,
@@ -419,12 +426,30 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
             title,
             style: textStyle,
           ),
-          Text(
-            isDiscount
-                ? '-Rs. ${formatNepaliCurrency(amount)}'
-                : 'Rs. ${formatNepaliCurrency(amount)}',
-            style: textStyle,
-          )
+          if (isLoading)
+            const SizedBox(
+              height: 16,
+              width: 16,
+              child: CircularProgressIndicatorWidget(size: 16, strokeWidth: 2),
+            )
+          else if (onRetry != null)
+            GestureDetector(
+              onTap: onRetry,
+              child: Row(
+                children: [
+                  Text('Retry', style: textStyle.copyWith(color: AppColors.error)),
+                  const SizedBox(width: Dimens.spacingSizeExtraSmall),
+                  Icon(Icons.refresh, size: Dimens.iconSizeSmall, color: AppColors.error),
+                ],
+              ),
+            )
+          else
+            Text(
+              isDiscount
+                  ? '-Rs. ${formatNepaliCurrency(amount)}'
+                  : 'Rs. ${formatNepaliCurrency(amount)}',
+              style: textStyle,
+            )
         ],
       ),
     );

@@ -4,6 +4,7 @@ import 'package:flamingo/feature/auth/auth.dart';
 import 'package:flamingo/feature/order/data/local/order_local.dart';
 import 'package:flamingo/feature/order/data/model/apply_coupon_response.dart';
 import 'package:flamingo/feature/order/data/model/create_order_request.dart';
+import 'package:flamingo/feature/order/data/model/delivery_quote.dart';
 import 'package:flamingo/feature/order/data/model/khalti_initiate_request.dart';
 import 'package:flamingo/feature/order/data/model/khalti_initiate_response.dart';
 import 'package:flamingo/feature/order/data/model/order.dart';
@@ -77,5 +78,16 @@ class OrderRepositoryImpl implements OrderRepository {
   @override
   Future<List<SavedCoupon>> getSavedCoupons() async {
     return await _orderRemote.getSavedCoupons();
+  }
+
+  @override
+  Future<DeliveryQuote> getDeliveryQuote({
+    required String shippingAddressId,
+    required String shippingMethodId,
+  }) async {
+    return await _orderRemote.getDeliveryQuote(
+      shippingAddressId: shippingAddressId,
+      shippingMethodId: shippingMethodId,
+    );
   }
 }

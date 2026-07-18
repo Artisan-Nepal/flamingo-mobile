@@ -37,6 +37,7 @@ class ApiUrls {
   static String shippingMethods = '/shipping-methods';
   static String paymentMethods = '/payment-methods';
   static String orders = '/orders';
+  static String deliveryQuote = '/orders/delivery-quote';
   static String khaltiInitiate = '/orders/khalti/initiate';
   static String khaltiConfirm = '/orders/khalti/confirm';
   static String couponValidate = '/coupons/validate';

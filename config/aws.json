@@ -1,4 +1,5 @@
 {
   "_comment": "Production API, served via Cloudflare in front of AWS App Runner. This is a stable custom domain, unlike the old awsapprunner.com URL - no need to update after redeploys.",
-  "API_BASE_URL": "https://api.flamingo.com.np/api"
+  "API_BASE_URL": "https://api.flamingo.com.np/api",
+  "GOOGLE_PLACES_API_KEY": "AIzaSyDEimIrTzzLXIL9174mC_HlSJsLbCSRK6o"
 }

@@ -1,3 +1,4 @@
 {
-  "API_BASE_URL": "http://localhost:8848/api"
+  "API_BASE_URL": "http://localhost:8848/api",
+  "GOOGLE_PLACES_API_KEY": "AIzaSyDEimIrTzzLXIL9174mC_HlSJsLbCSRK6o"
 }

@@ -1,0 +1,8 @@
+# Copy this file to key.properties and fill in real values, then place the
+# release keystore at android/upload-keystore.jks. Both key.properties and
+# *.jks are gitignored - obtain them from the secure backup / team, never
+# commit them. storeFile is resolved relative to the android/ directory.
+storePassword=CHANGEME
+keyPassword=CHANGEME
+keyAlias=key0
+storeFile=upload-keystore.jks

@@ -49,7 +49,6 @@ google-services.json
 GoogleService-Info.plist
 
 # Local secrets & keystore (release signing)
-android/gradle.properties
 android/key.properties
 **/upload-keystore.jks
 **/*.keystore

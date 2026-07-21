@@ -15,9 +15,7 @@ class SecureTokenStore {
 
   SecureTokenStore({required LocalStorageClient legacySharedPref})
       : _legacySharedPref = legacySharedPref,
-        _secure = const FlutterSecureStorage(
-          aOptions: AndroidOptions(encryptedSharedPreferences: true),
-        );
+        _secure = const FlutterSecureStorage();
 
   Future<String?> getToken() async {
     try {

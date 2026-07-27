@@ -8,4 +8,5 @@ abstract class UserRemote {
   Future<Customer> getCustomer(String customerId);
   Future<void> createDevice(CreateDeviceRequest request);
   Future<void> updateDevice(UpdateDeviceRequest request);
+  Future<Customer> markMeasurementPromptSeen();
 }

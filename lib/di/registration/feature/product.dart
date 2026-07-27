@@ -2,6 +2,7 @@ import 'package:flamingo/data/data.dart';
 import 'package:flamingo/di/service_names.dart';
 import 'package:flamingo/feature/cart/data/cart_repository.dart';
 import 'package:flamingo/feature/feature.dart';
+import 'package:flamingo/feature/fit-reference/data/fit_reference_repository.dart';
 import 'package:flamingo/feature/product/data/local/product_local.dart';
 import 'package:flamingo/feature/product/data/local/product_local_impl.dart';
 import 'package:flamingo/feature/product/data/product_repository.dart';
@@ -54,6 +55,7 @@ void registerProductFeature(GetIt locator) {
     () => ProductDetailViewModel(
       cartRepository: locator<CartRepository>(),
       productRepository: locator<ProductRepository>(),
+      fitReferenceRepository: locator<FitReferenceRepository>(),
     ),
   );
   locator.registerFactory<ProductDetailAppBarViewModel>(

@@ -6,9 +6,14 @@ import 'package:flamingo/feature/cart/data/model/add_to_cart_request.dart';
 import 'package:flamingo/feature/cart/data/model/cart.dart';
 import 'package:flamingo/feature/customer-activity/create_activity_view_model.dart';
 import 'package:flamingo/feature/customer-activity/customer_activity_view_model.dart';
+import 'package:flamingo/feature/fit-reference/data/fit_reference_repository.dart';
+import 'package:flamingo/feature/fit-reference/data/model/fit_comparison.dart';
+import 'package:flamingo/feature/fit-reference/data/model/fit_reference.dart';
+import 'package:flamingo/feature/fit-reference/data/model/suggested_size.dart';
 import 'package:flamingo/feature/product/data/model/product_detail.dart';
 import 'package:flamingo/feature/product/data/model/product_color.dart';
 import 'package:flamingo/feature/product/data/model/product_size.dart';
+import 'package:flamingo/feature/product/data/model/variant_measurement.dart';
 import 'package:flamingo/feature/product/data/product_repository.dart';
 import 'package:flamingo/feature/wishlist/wishlist_view_model.dart';
 import 'package:flamingo/shared/constant/advertisement_activity_type.dart';
@@ -20,12 +25,15 @@ import 'package:flutter/material.dart';
 class ProductDetailViewModel extends ChangeNotifier {
   final ProductRepository _productRepository;
   final CartRepository _cartRepository;
+  final FitReferenceRepository _fitReferenceRepository;
 
   ProductDetailViewModel({
     required ProductRepository productRepository,
     required CartRepository cartRepository,
+    required FitReferenceRepository fitReferenceRepository,
   })  : _productRepository = productRepository,
-        _cartRepository = cartRepository;
+        _cartRepository = cartRepository,
+        _fitReferenceRepository = fitReferenceRepository;
 
   Response<ProductDetail> _productUseCase = Response<ProductDetail>();
   late ProductColor _selectedColor;
@@ -127,6 +135,46 @@ class ProductDetailViewModel extends ChangeNotifier {
       ProductColor color, ProductSizeOption? size) {
     return productUseCase.data!.variants.firstWhere((variant) =>
         variant.color.id == color.id && variant.size.id == size?.id);
+  }
+
+  // Measurements don't vary by colour, only by size - any variant matching
+  // the given size works as the representative for the size chart.
+  ProductVariant getVariantBySize(ProductSizeOption size) {
+    return productUseCase.data!.variants
+        .firstWhere((variant) => variant.size.id == size.id);
+  }
+
+  Future<List<VariantMeasurement>> getVariantMeasurements(
+      String variantId) async {
+    return await _productRepository.getVariantMeasurements(variantId);
+  }
+
+  Future<List<FitReference>> getMyFitReferences() async {
+    return await _fitReferenceRepository.getFitReferences();
+  }
+
+  // Information, never a verdict (SIZE_AND_FIT_PLAN.md §2.2) - see
+  // snippet_fit_comparison.dart for how the result is rendered.
+  Future<FitComparisonResult> getFitComparison({
+    required String variantId,
+    required String referenceId,
+  }) async {
+    return await _fitReferenceRepository.getFitComparison(
+      variantId: variantId,
+      referenceId: referenceId,
+    );
+  }
+
+  // "Closest to your reference: L" - SIZE_AND_FIT_PLAN.md §9/B1. A
+  // similarity ranking, never a fit prediction - see suggested_size.dart.
+  Future<SuggestedSizeResult> getSuggestedSize({
+    required String productId,
+    required String referenceId,
+  }) async {
+    return await _fitReferenceRepository.getSuggestedSize(
+      productId: productId,
+      referenceId: referenceId,
+    );
   }
 
   Future<void> addToCart({

@@ -3,6 +3,7 @@ import 'package:flamingo/feature/product/data/model/for_you_section.dart';
 import 'package:flamingo/feature/product/data/model/get_product_request.dart';
 import 'package:flamingo/feature/product/data/model/product.dart';
 import 'package:flamingo/feature/product/data/model/product_detail.dart';
+import 'package:flamingo/feature/product/data/model/variant_measurement.dart';
 
 abstract class ProductRemote {
   Future<FetchResponse<ProductDetail>> getVendorProducts(String vendorId);
@@ -16,4 +17,5 @@ abstract class ProductRemote {
   Future<List<Product>> getUserRecommendations(String userId);
   Future<List<Product>> getCheaperAlternatives(String productId);
   Future<List<Product>> getInStockAlternatives(String productId);
+  Future<List<VariantMeasurement>> getVariantMeasurements(String variantId);
 }

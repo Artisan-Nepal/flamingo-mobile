@@ -18,6 +18,7 @@ class SnippetHomeScreenStory extends StatelessWidget {
         if (viewModel.productStoryUseCase.isLoading)
           return Container(
             height: 105,
+            margin: const EdgeInsets.only(top: Dimens.spacingSizeLarge),
             decoration: BoxDecoration(
               border: Border(
                 bottom: BorderSide(
@@ -56,6 +57,7 @@ class SnippetHomeScreenStory extends StatelessWidget {
               height: 105,
               width: double.infinity,
               alignment: Alignment.center,
+              margin: const EdgeInsets.only(top: Dimens.spacingSizeLarge),
               padding: EdgeInsets.only(bottom: Dimens.spacingSizeSmall),
               decoration: BoxDecoration(
                 border: Border(

@@ -5,6 +5,7 @@ import 'package:flamingo/di/registration/feature/cart.dart';
 import 'package:flamingo/di/registration/feature/category.dart';
 import 'package:flamingo/di/registration/feature/customer_activity.dart';
 import 'package:flamingo/di/registration/feature/dashboard.dart';
+import 'package:flamingo/di/registration/feature/fit_reference.dart';
 import 'package:flamingo/di/registration/feature/notification.dart';
 import 'package:flamingo/di/registration/feature/order.dart';
 import 'package:flamingo/di/registration/feature/product.dart';
@@ -46,6 +47,7 @@ Future setUpServiceLocator() async {
   registerProductStoryFeature(locator);
   registerPromoBannerFeature(locator);
   registerNotificationFeature(locator);
+  registerFitReferenceFeature(locator);
 
   // shared
   registerShared(locator);

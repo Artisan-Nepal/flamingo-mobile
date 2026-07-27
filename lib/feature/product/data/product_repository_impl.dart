@@ -7,6 +7,7 @@ import 'package:flamingo/feature/product/data/model/for_you_section.dart';
 import 'package:flamingo/feature/product/data/model/get_product_request.dart';
 import 'package:flamingo/feature/product/data/model/product.dart';
 import 'package:flamingo/feature/product/data/model/product_detail.dart';
+import 'package:flamingo/feature/product/data/model/variant_measurement.dart';
 import 'package:flamingo/feature/product/data/product_repository.dart';
 import 'package:flamingo/feature/product/data/remote/product_remote.dart';
 
@@ -81,5 +82,11 @@ class ProductRepositoryImpl implements ProductRepository {
   @override
   Future<List<Product>> getInStockAlternatives(String productId) async {
     return await _productRemote.getInStockAlternatives(productId);
+  }
+
+  @override
+  Future<List<VariantMeasurement>> getVariantMeasurements(
+      String variantId) async {
+    return await _productRemote.getVariantMeasurements(variantId);
   }
 }

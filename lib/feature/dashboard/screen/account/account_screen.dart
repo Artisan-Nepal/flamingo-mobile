@@ -4,6 +4,7 @@ import 'package:flamingo/feature/auth/auth_view_model.dart';
 import 'package:flamingo/feature/cart/screen/cart-listing/cart_listing_screen.dart';
 import 'package:flamingo/feature/customer-activity/customer_activity_view_model.dart';
 import 'package:flamingo/feature/dashboard/screen/dashboard/dashboard_view_model.dart';
+import 'package:flamingo/feature/fit-reference/screen/fit-reference-listing/fit_reference_listing_screen.dart';
 import 'package:flamingo/feature/order/screen/order-listing/order_listing_screen.dart';
 import 'package:flamingo/feature/user/screen/account-setting/account_setting_screen.dart';
 import 'package:flamingo/shared/shared.dart';
@@ -211,6 +212,12 @@ class _AccountScreenState extends State<AccountScreen> {
               const AddressListingScreen(
                   showSelectionIndication: false, title: "Addresses"),
             );
+          },
+        ),
+        ListTileV2Wdiget(
+          title: 'My Sizes',
+          onPressed: () {
+            NavigationHelper.push(context, const FitReferenceListingScreen());
           },
         ),
         VerticalSpaceWidget(height: Dimens.spacingSizeOverLarge),

@@ -6,4 +6,5 @@ abstract class UserRepository {
   Future<Customer> getCustomer();
   Future<void> createDevice(String? notificationToken);
   Future<void> updateDeviceNotificationToken(String notificationToken);
+  Future<Customer> markMeasurementPromptSeen();
 }

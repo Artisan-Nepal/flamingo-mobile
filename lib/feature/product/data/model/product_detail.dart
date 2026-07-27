@@ -17,6 +17,17 @@ class ProductDetail {
   final String? details;
   final Seller seller;
   final String? categoryName;
+  // Size & fit fields (SIZE_AND_FIT_PLAN.md §3.2) - null/NONE for the vast
+  // majority of the seeded catalog, which predates this feature and has no
+  // verified measurements yet. The size-guide UI only renders when
+  // measurementStatus is FLAMINGO_VERIFIED - see snippet_size_chart.dart.
+  final String? fitType;
+  final String? stretchLevel;
+  final String measurementStatus;
+  // Which body zone this product's category belongs to - UPPER/LOWER/FULL, or
+  // null when the category has no fitZone set (e.g. sarees; size chart still
+  // shows, comparison doesn't - SIZE_AND_FIT_PLAN.md §9 A1).
+  final String? fitZone;
 
   ProductDetail({
     required this.id,
@@ -31,6 +42,10 @@ class ProductDetail {
     required this.seller,
     this.details,
     this.categoryName,
+    this.fitType,
+    this.stretchLevel,
+    this.measurementStatus = 'NONE',
+    this.fitZone,
   });
 
   factory ProductDetail.fromJson(Map<String, dynamic> json) => ProductDetail(
@@ -56,6 +71,13 @@ class ProductDetail {
                 List.from(json['productCategory']).isEmpty
             ? null
             : json['productCategory'][0]['category']['name'],
+        fitType: json['fitType'],
+        stretchLevel: json['stretchLevel'],
+        measurementStatus: json['measurementStatus'] ?? 'NONE',
+        fitZone: json['productCategory'] == null ||
+                List.from(json['productCategory']).isEmpty
+            ? null
+            : json['productCategory'][0]['category']['fitZone'],
       );
 
   static List<ProductDetail> fromJsonList(dynamic json) =>

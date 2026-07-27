@@ -33,4 +33,10 @@ class UserRemoteImpl implements UserRemote {
     await _apiClient.post(ApiUrls.deviceNotificationToken,
         body: request.toJson());
   }
+
+  @override
+  Future<Customer> markMeasurementPromptSeen() async {
+    final apiResponse = await _apiClient.patch(ApiUrls.measurementPromptSeen);
+    return Customer.fromJson(apiResponse.data);
+  }
 }

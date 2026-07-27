@@ -8,4 +8,5 @@ class LocalStorageKeys {
   static const String guestId = 'guest_id';
   static const String pendingKhaltiPidx = 'pending_khalti_pidx';
   static const String pendingKhaltiPidxExpiresAt = 'pending_khalti_pidx_expires_at';
+  static const String measurementsBannerFirstShownAt = 'measurements_banner_first_shown_at';
 }

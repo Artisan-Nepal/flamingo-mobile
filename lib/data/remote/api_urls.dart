@@ -15,6 +15,7 @@ class ApiUrls {
   static String verifyLoginOtp = '/auth/login/verify-otp';
 
   static String customers = '/customers';
+  static String measurementPromptSeen = '/customers/measurement-prompt-seen';
   static String categories = '/categories';
   static String uploadFiles = '/upload-files';
   static String provinces = '/provinces';
@@ -28,6 +29,10 @@ class ApiUrls {
   static String productsByVendorId = '/products/vendor/:id';
   static String productsBySellerId = '/products/seller/:id';
   static String productsByCategoryId = '/products/category/:id';
+  static String variantMeasurements = '/product-variants/:id/measurements';
+  static String fitReferences = '/me/fit-references';
+  static String fitComparison = '/product-variants/:id/fit-comparison';
+  static String suggestedSize = '/products/:id/suggested-size';
   static String carts = '/carts';
   static String wishlists = '/wishlists';
   static String updateWishlist = '/wishlists/update';

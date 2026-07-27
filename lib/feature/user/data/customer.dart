@@ -11,6 +11,7 @@ class Customer extends JsonSerializable {
   final String? email;
   final String? displayImageUrl;
   final String? sellerId;
+  final DateTime? measurementPromptSeenAt;
 
   Customer(
       {required this.roles,
@@ -22,7 +23,8 @@ class Customer extends JsonSerializable {
       this.firstName,
       this.lastName,
       this.email,
-      this.sellerId});
+      this.sellerId,
+      this.measurementPromptSeenAt});
 
   factory Customer.fromJson(Map<String, dynamic> json) => Customer(
         roles: List<UserRole>.from(
@@ -36,6 +38,9 @@ class Customer extends JsonSerializable {
         lastName: json['lastName'],
         email: json['email'],
         sellerId: json['sellerId'],
+        measurementPromptSeenAt: json['measurementPromptSeenAt'] == null
+            ? null
+            : DateTime.parse(json['measurementPromptSeenAt']),
       );
 
   @override
@@ -50,5 +55,6 @@ class Customer extends JsonSerializable {
         "email": email,
         "displayImageUrl": displayImageUrl,
         "sellerId": sellerId,
+        "measurementPromptSeenAt": measurementPromptSeenAt?.toIso8601String(),
       };
 }

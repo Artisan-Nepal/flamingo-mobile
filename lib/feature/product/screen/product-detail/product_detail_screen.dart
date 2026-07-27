@@ -7,7 +7,9 @@ import 'package:flamingo/feature/product/screen/product-detail/product_detail_vi
 import 'package:flamingo/feature/product/screen/product-detail/snippet_add_to_cart_summary_bottom_sheet.dart';
 import 'package:flamingo/feature/product/screen/product-detail/snippet_color_selection_bottom_sheet.dart';
 import 'package:flamingo/feature/product/screen/product-detail/snippet_product_detail_app_bar.dart';
+import 'package:flamingo/feature/product/screen/product-detail/snippet_fit_comparison.dart';
 import 'package:flamingo/feature/product/screen/product-detail/snippet_product_detail_images.dart';
+import 'package:flamingo/feature/product/screen/product-detail/snippet_size_chart.dart';
 import 'package:flamingo/feature/product/screen/product-detail/snippet_size_selection_bottom_sheet.dart';
 import 'package:flamingo/feature/product/screen/product-listing/min_product_listing_view_model.dart';
 import 'package:flamingo/feature/product/screen/product-listing/snippet_product_listing.dart';
@@ -58,6 +60,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   final _appBarViewModel = locator<ProductDetailAppBarViewModel>();
   final _relatedProductsViewModel = locator<MinProductListingViewModel>();
   final _inStockAlternativesViewModel = locator<MinProductListingViewModel>();
+
+  // Reported up from SnippetFitComparison (SIZE_AND_FIT_PLAN.md §9/B1) so the
+  // size selector row - "where the decision is actually made" - can show the
+  // same suggestion the comparison panel shows, without a second fetch.
+  String? _suggestedSizeLabel;
 
   @override
   void initState() {
@@ -230,6 +237,31 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                                   );
                                                 },
                                               ),
+                                              // "Where the decision is
+                                              // actually made" - the plan's
+                                              // higher-value placement for the
+                                              // suggested size (SIZE_AND_FIT_
+                                              // PLAN.md §9/B1), fed by
+                                              // SnippetFitComparison below via
+                                              // onSuggestionChanged so this
+                                              // doesn't need its own fetch.
+                                              if (_suggestedSizeLabel != null &&
+                                                  _suggestedSizeLabel !=
+                                                      viewModel
+                                                          .selectedSizeOption
+                                                          .value) ...[
+                                                const SizedBox(
+                                                    height: Dimens
+                                                        .spacingSizeExtraSmall),
+                                                Text(
+                                                  'Closest to your reference: $_suggestedSizeLabel',
+                                                  style: textTheme(context)
+                                                      .bodySmall!
+                                                      .copyWith(
+                                                          color: AppColors
+                                                              .grayMain),
+                                                ),
+                                              ],
                                               const SizedBox(
                                                   height: Dimens
                                                       .spacingSizeDefault),
@@ -366,8 +398,38 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   List<Widget> _buildExpansionTiles(ProductDetailViewModel viewModel) {
     final product = viewModel.productUseCase.data!;
     return [
+      // Only rendered once staff have actually verified the chart
+      // (SIZE_AND_FIT_PLAN.md §3.2/§9.2) - "S/M/L alone is not a size chart",
+      // so an unmeasured product shows no chart at all rather than an empty one.
+      if (product.measurementStatus == 'FLAMINGO_VERIFIED') ...[
+        ExpansionTileWidget(
+          initiallyExpanded: true,
+          title: Text(
+            'SIZE GUIDE',
+            style: textTheme(context).bodyMedium,
+          ),
+          children: <Widget>[
+            SnippetSizeChart(
+              product: product,
+              availableSizes: viewModel.availableSizes,
+            ),
+            // No fitZone (e.g. sarees) = chart only, no reference comparison -
+            // there's no zone to match a saved reference garment against yet
+            // (SIZE_AND_FIT_PLAN.md §9 A1/B4).
+            if (product.fitZone != null)
+              SnippetFitComparison(
+                productId: product.id,
+                variantId: viewModel.selectedVariant.id,
+                productFitZone: product.fitZone!,
+                sizeLabel: viewModel.selectedVariant.size.value,
+                onSuggestionChanged: (label) =>
+                    setState(() => _suggestedSizeLabel = label),
+              ),
+          ],
+        ),
+        Divider(color: AppColors.grayLight),
+      ],
       ExpansionTileWidget(
-        initiallyExpanded: true,
         title: Text(
           'THE DETAILS',
           style: textTheme(context).bodyMedium,

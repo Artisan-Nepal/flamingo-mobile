@@ -56,4 +56,11 @@ class UserRepositoryImpl implements UserRepository {
     );
     return await _userRemote.updateDevice(request);
   }
+
+  @override
+  Future<Customer> markMeasurementPromptSeen() async {
+    final customer = await _userRemote.markMeasurementPromptSeen();
+    await _authRepository.setUserLocal(customer);
+    return customer;
+  }
 }

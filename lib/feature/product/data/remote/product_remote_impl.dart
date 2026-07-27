@@ -3,6 +3,7 @@ import 'package:flamingo/feature/product/data/model/for_you_section.dart';
 import 'package:flamingo/feature/product/data/model/get_product_request.dart';
 import 'package:flamingo/feature/product/data/model/product.dart';
 import 'package:flamingo/feature/product/data/model/product_detail.dart';
+import 'package:flamingo/feature/product/data/model/variant_measurement.dart';
 import 'package:flamingo/feature/product/data/remote/product_remote.dart';
 
 class ProductRemoteImpl implements ProductRemote {
@@ -106,5 +107,13 @@ class ProductRemoteImpl implements ProductRemote {
         .replaceFirst(':productId', productId);
     final apiResponse = await _apiClient.get(url);
     return Product.fromJsonList(apiResponse.data);
+  }
+
+  @override
+  Future<List<VariantMeasurement>> getVariantMeasurements(
+      String variantId) async {
+    final url = ApiUrls.variantMeasurements.replaceFirst(':id', variantId);
+    final apiResponse = await _apiClient.get(url);
+    return VariantMeasurement.fromJsonList(apiResponse.data);
   }
 }

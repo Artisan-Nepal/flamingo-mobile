@@ -255,17 +255,27 @@ class _SnippetFitComparisonState extends State<SnippetFitComparison> {
               .copyWith(color: AppColors.grayMain),
         ),
         const VerticalSpaceWidget(height: Dimens.spacingSizeSmall),
-        Row(
+        // Wrap, not Row - "+ Measure a pair of bottoms you own" plus "See
+        // your saved sizes" together don't reliably fit one line, and a Row
+        // would overflow instead of dropping the second item below.
+        Wrap(
+          spacing: Dimens.spacingSizeDefault,
+          runSpacing: Dimens.spacingSizeExtraSmall,
+          crossAxisAlignment: WrapCrossAlignment.center,
           children: [
             TextButton(
               onPressed: _addReference,
-              style: TextButton.styleFrom(padding: EdgeInsets.zero),
+              style: TextButton.styleFrom(
+                padding: EdgeInsets.zero,
+                minimumSize: Size.zero,
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
               child: Text(_addReferenceCta),
             ),
-            const SizedBox(width: Dimens.spacingSizeDefault),
             GestureDetector(
               onTap: () => _showReferencePicker(references),
               child: Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Text('See your saved sizes',
                       style: textTheme(context).bodySmall),

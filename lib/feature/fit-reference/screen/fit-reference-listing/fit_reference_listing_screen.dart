@@ -4,11 +4,11 @@ import 'package:flamingo/feature/fit-reference/screen/fit-reference-listing/fit_
 import 'package:flamingo/feature/fit-reference/screen/manage-fit-reference/manage_fit_reference_screen.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/alert-dialog/alert_dialog_widget.dart';
+import 'package:flamingo/widget/image/svg_image.dart';
 import 'package:flamingo/widget/loader/loader.dart';
 import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 
 // "My sizes" (SIZE_AND_FIT_PLAN.md §4.2): the buyer's saved reference
 // garments - "my favourite tee", measured flat, used as the comparison
@@ -99,53 +99,120 @@ class _FitReferenceListingScreenState
     );
   }
 
+  // Fixed zone order so the sections don't reshuffle as references are added.
+  static const List<String> _zoneOrder = ['UPPER', 'LOWER', 'FULL'];
+
   Widget _buildList(
     FitReferenceListingViewModel viewModel,
     List<FitReference> references,
   ) {
-    return ListView.builder(
-      padding: const EdgeInsets.only(top: Dimens.spacingSizeSmall),
+    // Group by garment zone - a Top and a Bottom can each have their own
+    // default, and grouping makes that (and the two DEFAULT badges) read as
+    // intentional rather than confusing.
+    final byZone = <String, List<FitReference>>{};
+    for (final reference in references) {
+      byZone.putIfAbsent(reference.garmentZone, () => []).add(reference);
+    }
+    final zones = [
+      ..._zoneOrder.where(byZone.containsKey),
+      ...byZone.keys.where((z) => !_zoneOrder.contains(z)),
+    ];
+
+    return ListView(
+      padding: const EdgeInsets.symmetric(vertical: Dimens.spacingSizeSmall),
       physics: const BouncingScrollPhysics(),
-      itemCount: references.length,
-        itemBuilder: (context, index) {
-          final reference = references[index];
-          return Slidable(
-            endActionPane: ActionPane(
-              motion: const ScrollMotion(),
-              children: [
-                SlidableAction(
-                  onPressed: (_) {
-                    NavigationHelper.push(
-                      context,
-                      ChangeNotifierProvider.value(
-                        value: viewModel,
-                        builder: (context, child) => ManageFitReferenceScreen(
-                          existingReference: reference,
-                        ),
-                      ),
-                    );
-                  },
-                  backgroundColor: Colors.blue,
-                  icon: Icons.edit,
-                ),
-                SlidableAction(
-                  onPressed: (_) => _handleDelete(viewModel, reference.id),
-                  backgroundColor: Colors.red,
-                  icon: Icons.delete,
-                ),
-              ],
+      children: [
+        for (final zone in zones) ...[
+          Padding(
+            padding: const EdgeInsets.only(
+              left: Dimens.spacingSizeExtraSmall,
+              bottom: Dimens.spacingSizeSmall,
             ),
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: Dimens.spacingSizeDefault),
-              child: ListTile(
-                onTap: reference.isDefaultForZone
-                    ? null
-                    : () => viewModel.setDefault(reference.id),
-                title: Row(
+            child: Text(
+              _zoneHeader(zone),
+              style: textTheme(context).bodySmall!.copyWith(
+                    color: AppColors.grayMain,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 0.5,
+                  ),
+            ),
+          ),
+          _buildZoneCard(viewModel, byZone[zone]!),
+          const VerticalSpaceWidget(height: Dimens.spacingSizeLarge),
+        ],
+      ],
+    );
+  }
+
+  Widget _buildZoneCard(
+    FitReferenceListingViewModel viewModel,
+    List<FitReference> references,
+  ) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(Dimens.radiusSmall),
+        border: Border.all(color: AppColors.grayLine),
+      ),
+      child: Column(
+        children: [
+          for (int i = 0; i < references.length; i++) ...[
+            if (i > 0)
+              Divider(
+                height: 1,
+                thickness: 1,
+                color: AppColors.grayLine,
+                indent: Dimens.spacingSizeDefault,
+                endIndent: Dimens.spacingSizeDefault,
+              ),
+            _buildReferenceRow(viewModel, references[i]),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildReferenceRow(
+    FitReferenceListingViewModel viewModel,
+    FitReference reference,
+  ) {
+    final fitType = reference.fitTypeHint == 'UNKNOWN'
+        ? null
+        : fitTypeHintLabels[reference.fitTypeHint] ?? reference.fitTypeHint;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: Dimens.spacingSizeDefault,
+        vertical: Dimens.spacingSizeDefault,
+      ),
+      child: Row(
+        children: [
+          Container(
+            height: 40,
+            width: 40,
+            alignment: Alignment.center,
+            decoration: const BoxDecoration(
+              color: AppColors.grayLighter,
+              shape: BoxShape.circle,
+            ),
+            child: SvgImageWidget(
+              image: _garmentIcon(reference.garmentZone),
+              width: Dimens.iconSize_20,
+              height: Dimens.iconSize_20,
+              color: AppColors.primaryMain,
+            ),
+          ),
+          const HorizontalSpaceWidget(width: Dimens.spacingSizeDefault),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
                   children: [
                     Flexible(
                       child: Text(
                         reference.label,
+                        overflow: TextOverflow.ellipsis,
                         style: textTheme(context)
                             .bodyMedium!
                             .copyWith(fontWeight: FontWeight.bold),
@@ -154,52 +221,114 @@ class _FitReferenceListingScreenState
                     if (reference.isDefaultForZone) ...[
                       const HorizontalSpaceWidget(
                           width: Dimens.spacingSizeExtraSmall),
-                      _buildDefaultBadge(context),
+                      _buildDefaultPill(context),
                     ],
                   ],
                 ),
-                subtitle: Text(
-                  [
-                    garmentZoneLabels[reference.garmentZone] ??
-                        reference.garmentZone,
-                    if (reference.fitTypeHint != 'UNKNOWN')
-                      fitTypeHintLabels[reference.fitTypeHint] ??
-                          reference.fitTypeHint,
-                  ].join(' · '),
-                ),
-                trailing: reference.isDefaultForZone
-                    ? null
-                    : TextButton(
-                        onPressed: () => viewModel.setDefault(reference.id),
-                        child: const Text('Set default'),
-                      ),
-              ),
+                if (fitType != null) ...[
+                  const VerticalSpaceWidget(height: Dimens.spacing_2),
+                  Text(
+                    fitType,
+                    style: textTheme(context)
+                        .bodySmall!
+                        .copyWith(color: AppColors.grayMain),
+                  ),
+                ],
+              ],
             ),
-          );
-        },
+          ),
+          _buildRowMenu(viewModel, reference),
+        ],
+      ),
     );
   }
 
-  Widget _buildDefaultBadge(BuildContext context) {
+  Widget _buildRowMenu(
+    FitReferenceListingViewModel viewModel,
+    FitReference reference,
+  ) {
+    return PopupMenuButton<String>(
+      icon: const Icon(Icons.more_vert, color: AppColors.grayMain),
+      padding: EdgeInsets.zero,
+      onSelected: (value) {
+        switch (value) {
+          case 'default':
+            viewModel.setDefault(reference.id);
+            break;
+          case 'edit':
+            _openManageScreen(existingReference: reference);
+            break;
+          case 'delete':
+            _handleDelete(viewModel, reference.id);
+            break;
+        }
+      },
+      itemBuilder: (context) => [
+        if (!reference.isDefaultForZone)
+          const PopupMenuItem(
+            value: 'default',
+            child: Text('Set as default'),
+          ),
+        const PopupMenuItem(value: 'edit', child: Text('Edit')),
+        const PopupMenuItem(
+          value: 'delete',
+          child: Text('Remove', style: TextStyle(color: AppColors.error)),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDefaultPill(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      padding: const EdgeInsets.symmetric(horizontal: Dimens.spacing_8, vertical: 3),
       decoration: BoxDecoration(
         color: AppColors.primaryMain,
-        borderRadius: BorderRadius.circular(Dimens.radius_5),
+        borderRadius: BorderRadius.circular(Dimens.radius_10),
       ),
       child: const Text(
-        'DEFAULT',
-        style: TextStyle(color: AppColors.white, fontSize: 10),
+        'Default',
+        style: TextStyle(
+          color: AppColors.white,
+          fontSize: Dimens.fontSizeExtraSmall,
+          fontWeight: FontWeight.w600,
+        ),
       ),
     );
   }
 
-  void _openManageScreen() {
+  String _zoneHeader(String zone) {
+    switch (zone) {
+      case 'UPPER':
+        return 'Tops';
+      case 'LOWER':
+        return 'Bottoms';
+      case 'FULL':
+        return 'Full body';
+      default:
+        return garmentZoneLabels[zone] ?? zone;
+    }
+  }
+
+  String _garmentIcon(String zone) {
+    switch (zone) {
+      case 'LOWER':
+        return ImageConstants.garmentBottom;
+      case 'FULL':
+        return ImageConstants.garmentFull;
+      case 'UPPER':
+      default:
+        return ImageConstants.garmentTop;
+    }
+  }
+
+  void _openManageScreen({FitReference? existingReference}) {
     NavigationHelper.push(
       context,
       ChangeNotifierProvider.value(
         value: _viewModel,
-        builder: (context, child) => const ManageFitReferenceScreen(),
+        builder: (context, child) => ManageFitReferenceScreen(
+          existingReference: existingReference,
+        ),
       ),
     );
   }

@@ -15,4 +15,7 @@ class ImageConstants {
   static const String IC_PAYMENT_ESEWA = 'assets/drawable/esewa.png';
   static const String IC_PAYMENT_KHALTI = 'assets/drawable/khalti.png';
   static const String IC_PAYMENT_IME = 'assets/drawable/ime.png';
+  static const String garmentTop = 'assets/drawable/ic_garment_top.svg';
+  static const String garmentBottom = 'assets/drawable/ic_garment_bottom.svg';
+  static const String garmentFull = 'assets/drawable/ic_garment_full.svg';
 }

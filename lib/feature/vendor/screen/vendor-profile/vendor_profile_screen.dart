@@ -103,6 +103,29 @@ class _VendorProfileScreenState extends State<VendorProfileScreen> {
     }
   }
 
+  Future<void> _openSizePicker() async {
+    final sizes = _productListingViewModel.facetsUseCase.data?.sizes ?? [];
+    final result = await showMultiSelectFilterSheet(
+      context: context,
+      title: 'Choose size',
+      options: [for (final s in sizes) MultiSelectOption(value: s, label: s)],
+      initialSelected: _filters.sizeValues.toSet(),
+    );
+    if (result != null) {
+      setState(() {
+        _filters = _filters.copyWith(sizeValues: result.toList());
+      });
+      await _applyFilters();
+    }
+  }
+
+  Future<void> _toggleSale() async {
+    setState(() {
+      _filters = _filters.copyWith(onSale: !_filters.onSale);
+    });
+    await _applyFilters();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -366,6 +389,7 @@ class _VendorProfileScreenState extends State<VendorProfileScreen> {
 
   Widget _buildRefineAndCategoryRow(ProductListingViewModel viewModel) {
     final categoryCount = _filters.categoryIds.length;
+    final sizeCount = _filters.sizeValues.length;
     return SliverToBoxAdapter(
       child: SizedBox(
         height: 40,
@@ -387,6 +411,20 @@ class _VendorProfileScreenState extends State<VendorProfileScreen> {
               icon: Icons.expand_more,
               selected: categoryCount > 0,
               onPressed: _openCategoryPicker,
+            ),
+            const HorizontalSpaceWidget(width: Dimens.spacingSizeSmall),
+            _buildFilterPill(
+              label: sizeCount > 0 ? 'Size ($sizeCount)' : 'Choose size',
+              icon: Icons.expand_more,
+              selected: sizeCount > 0,
+              onPressed: _openSizePicker,
+            ),
+            const HorizontalSpaceWidget(width: Dimens.spacingSizeSmall),
+            _buildFilterPill(
+              label: 'Sale',
+              icon: Icons.local_offer_outlined,
+              selected: _filters.onSale,
+              onPressed: _toggleSale,
             ),
           ],
         ),

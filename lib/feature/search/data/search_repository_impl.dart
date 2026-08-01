@@ -6,6 +6,8 @@ import 'package:flamingo/feature/product/data/model/product.dart';
 import 'package:flamingo/feature/product/data/model/product_detail.dart';
 import 'package:flamingo/feature/search/data/local/search_local.dart';
 import 'package:flamingo/feature/search/data/model/search_request.dart';
+import 'package:flamingo/feature/search/data/model/brand_facet.dart';
+import 'package:flamingo/feature/product/data/model/product_filter_params.dart';
 import 'package:flamingo/feature/search/data/remote/search_remote.dart';
 import 'package:flamingo/feature/search/data/search_repository.dart';
 
@@ -36,9 +38,14 @@ class SearchRepositoryImpl implements SearchRepository {
   }
 
   @override
-  Future<FetchResponse<ProductDetail>> searchProducts(
-      SearchRequest request) async {
-    return await _searchRemote.searchProducts(request);
+  Future<FetchResponse<ProductDetail>> searchProducts(SearchRequest request,
+      {ProductFilterParams? filters}) async {
+    return await _searchRemote.searchProducts(request, filters: filters);
+  }
+
+  @override
+  Future<List<BrandFacet>> getSearchBrands(String key) async {
+    return await _searchRemote.getSearchBrands(key);
   }
 
   @override

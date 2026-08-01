@@ -2,6 +2,8 @@ import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/customer-activity/create_activity_view_model.dart';
 import 'package:flamingo/feature/product/data/model/product_detail.dart';
 import 'package:flamingo/feature/search/data/model/search_request.dart';
+import 'package:flamingo/feature/search/data/model/brand_facet.dart';
+import 'package:flamingo/feature/product/data/model/product_filter_params.dart';
 import 'package:flamingo/feature/search/data/search_repository.dart';
 import 'package:flamingo/feature/vendor/data/model/vendor.dart';
 import 'package:flamingo/feature/vendor/data/vendor_repository.dart';
@@ -48,6 +50,31 @@ class SearchViewModel extends ChangeNotifier {
   List<ProductDetail> get recentlySearchedProducts => _recentlySearchedProducts;
   List<String> get searchTextHistory => _searchTextHistory;
   SearchScope get scope => _scope;
+
+  // Active search filters (brand/price/sale) + the brand options for the
+  // current keyword.
+  ProductFilterParams _filters = const ProductFilterParams();
+  Response<List<BrandFacet>> _searchBrandsUseCase = Response();
+  ProductFilterParams get filters => _filters;
+  Response<List<BrandFacet>> get searchBrandsUseCase => _searchBrandsUseCase;
+
+  Future<void> getSearchBrands(String key) async {
+    try {
+      _searchBrandsUseCase = Response.loading();
+      notifyListeners();
+      final brands = await _searchRepository.getSearchBrands(key);
+      _searchBrandsUseCase = Response.complete(brands);
+    } catch (exception) {
+      _searchBrandsUseCase = Response.error(exception);
+    }
+    notifyListeners();
+  }
+
+  // Apply new filters and re-run the current search.
+  Future<void> applyFilters(String keyword, ProductFilterParams filters) async {
+    _filters = filters;
+    await searchProducts(keyword);
+  }
 
   void setScope(SearchScope scope) {
     _scope = scope;
@@ -129,8 +156,10 @@ class SearchViewModel extends ChangeNotifier {
         setSearchProductsUseCase(Response.loading(), notify: false);
       }
 
-      final response =
-          await _searchRepository.searchProducts(SearchRequest(key: text));
+      final response = await _searchRepository.searchProducts(
+        SearchRequest(key: text),
+        filters: _filters.isEmpty ? null : _filters,
+      );
       if (isNewSearch) {
         setSearchProductsUseCase(Response.complete(response.rows));
       } else {

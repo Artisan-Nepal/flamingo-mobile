@@ -3,6 +3,8 @@ import 'package:flamingo/feature/search/data/model/image_search_request.dart';
 import 'package:flamingo/feature/product/data/model/product.dart';
 import 'package:flamingo/feature/product/data/model/product_detail.dart';
 import 'package:flamingo/feature/search/data/model/search_request.dart';
+import 'package:flamingo/feature/search/data/model/brand_facet.dart';
+import 'package:flamingo/feature/product/data/model/product_filter_params.dart';
 import 'package:flamingo/feature/search/data/remote/search_remote.dart';
 
 class SearchRemoteImpl implements SearchRemote {
@@ -12,14 +14,24 @@ class SearchRemoteImpl implements SearchRemote {
   SearchRemoteImpl({required ApiClient apiClient}) : _apiClient = apiClient;
 
   @override
-  Future<FetchResponse<ProductDetail>> searchProducts(
-      SearchRequest request) async {
-    final apiResponse =
-        await _apiClient.post(ApiUrls.productSearch, body: request.toJson());
+  Future<FetchResponse<ProductDetail>> searchProducts(SearchRequest request,
+      {ProductFilterParams? filters}) async {
+    final apiResponse = await _apiClient.post(
+      ApiUrls.productSearch,
+      body: request.toJson(),
+      queryParams: filters?.toQueryParams(),
+    );
     return FetchResponse.fromJson(
       apiResponse.data,
       ProductDetail.fromJsonList,
     );
+  }
+
+  @override
+  Future<List<BrandFacet>> getSearchBrands(String key) async {
+    final apiResponse = await _apiClient
+        .post(ApiUrls.productSearchBrands, body: {'key': key});
+    return BrandFacet.fromJsonList(apiResponse.data);
   }
 
   @override

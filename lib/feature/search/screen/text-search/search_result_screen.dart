@@ -1,6 +1,8 @@
 import 'package:flamingo/feature/category/screen/category-search/category_search_screen.dart';
 import 'package:flamingo/feature/product/data/model/product.dart';
 import 'package:flamingo/feature/product/screen/product-listing/snippet_product_listing.dart';
+import 'package:flamingo/feature/product/data/model/product_filter_params.dart';
+import 'package:flamingo/feature/product/screen/product-listing/multi_select_filter_sheet.dart';
 import 'package:flamingo/feature/search/screen/text-search/search_screen.dart';
 import 'package:flamingo/feature/search/screen/text-search/search_view_model.dart';
 import 'package:flamingo/shared/shared.dart';
@@ -28,9 +30,146 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
   @override
   void initState() {
     _searchController.text = widget.keyword;
-    Provider.of<SearchViewModel>(context, listen: false)
-        .searchProducts(widget.keyword);
+    final vm = Provider.of<SearchViewModel>(context, listen: false);
+    // Start each search unfiltered, then load the brand options for the keyword.
+    vm.applyFilters(widget.keyword, const ProductFilterParams());
+    vm.getSearchBrands(widget.keyword);
     super.initState();
+  }
+
+  Widget _buildFilterRow(SearchViewModel vm) {
+    final f = vm.filters;
+    final hasPrice = f.minPrice != null || f.maxPrice != null;
+    return SizedBox(
+      height: 40,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: Dimens.spacingSizeSmall),
+        children: [
+          _filterPill(
+            label: f.sellerIds.isNotEmpty
+                ? 'Brand (${f.sellerIds.length})'
+                : 'Brand',
+            icon: Icons.expand_more,
+            selected: f.sellerIds.isNotEmpty,
+            onTap: () => _openBrandPicker(vm),
+          ),
+          _filterPill(
+            label: hasPrice ? 'Price ✓' : 'Price',
+            icon: Icons.expand_more,
+            selected: hasPrice,
+            onTap: () => _openPricePicker(vm),
+          ),
+          _filterPill(
+            label: 'Sale',
+            icon: Icons.local_offer_outlined,
+            selected: f.onSale,
+            onTap: () => vm.applyFilters(
+              widget.keyword,
+              f.copyWith(onSale: !f.onSale),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _filterPill({
+    required String label,
+    required IconData icon,
+    required bool selected,
+    required VoidCallback onTap,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(right: Dimens.spacingSizeSmall),
+      child: OutlinedButton.icon(
+        onPressed: onTap,
+        icon: Icon(icon, size: 16),
+        label: Text(label),
+        style: OutlinedButton.styleFrom(
+          foregroundColor: selected ? AppColors.white : AppColors.grayDarker,
+          backgroundColor: selected ? AppColors.grayDarker : Colors.transparent,
+          side: BorderSide(
+              color: selected ? AppColors.grayDarker : AppColors.grayLight),
+          visualDensity: VisualDensity.compact,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(Dimens.radiusSmall)),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _openBrandPicker(SearchViewModel vm) async {
+    final brands = vm.searchBrandsUseCase.data ?? [];
+    final result = await showMultiSelectFilterSheet(
+      context: context,
+      title: 'Choose brand',
+      options: [
+        for (final b in brands)
+          MultiSelectOption(value: b.sellerId, label: b.storeName)
+      ],
+      initialSelected: vm.filters.sellerIds.toSet(),
+    );
+    if (result != null) {
+      await vm.applyFilters(
+        widget.keyword,
+        vm.filters.copyWith(sellerIds: result.toList()),
+      );
+    }
+  }
+
+  Future<void> _openPricePicker(SearchViewModel vm) async {
+    final f = vm.filters;
+    final minCtrl = TextEditingController(
+        text: f.minPrice != null ? (f.minPrice! ~/ 100).toString() : '');
+    final maxCtrl = TextEditingController(
+        text: f.maxPrice != null ? (f.maxPrice! ~/ 100).toString() : '');
+    final apply = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Price range (Rs)'),
+        content: Row(
+          children: [
+            Expanded(
+              child: TextField(
+                controller: minCtrl,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(labelText: 'Min'),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: TextField(
+                controller: maxCtrl,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(labelText: 'Max'),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(ctx, false),
+              child: const Text('Clear')),
+          ElevatedButton(
+              onPressed: () => Navigator.pop(ctx, true),
+              child: const Text('Apply')),
+        ],
+      ),
+    );
+    if (apply == null) return; // dismissed
+    final minRs = int.tryParse(minCtrl.text.trim());
+    final maxRs = int.tryParse(maxCtrl.text.trim());
+    // Rupees in the UI, paisa on the wire.
+    final newFilters = ProductFilterParams(
+      categoryIds: f.categoryIds,
+      sizeValues: f.sizeValues,
+      sellerIds: f.sellerIds,
+      onSale: f.onSale,
+      minPrice: apply && minRs != null ? minRs * 100 : null,
+      maxPrice: apply && maxRs != null ? maxRs * 100 : null,
+    );
+    await vm.applyFilters(widget.keyword, newFilters);
   }
 
   @override
@@ -74,6 +213,8 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const VerticalSpaceWidget(height: Dimens.spacingSizeSmall),
+              _buildFilterRow(viewModel),
               Expanded(
                 child: Container(
                   child: viewModel.searchProductsUseCase.isLoading

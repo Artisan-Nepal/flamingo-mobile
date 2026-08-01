@@ -33,7 +33,7 @@ class ProductFilterParams {
       (onSale ? 1 : 0) +
       ((minPrice != null || maxPrice != null) ? 1 : 0);
 
-  Map<String, dynamic> toQueryParams() => {
+  Map<String, String> toQueryParams() => {
         if (categoryIds.isNotEmpty) 'categoryIds': categoryIds.join(','),
         if (sizeValues.isNotEmpty) 'sizeValues': sizeValues.join(','),
         if (sellerIds.isNotEmpty) 'sellerIds': sellerIds.join(','),

@@ -11,6 +11,7 @@ class ApiUrls {
 
   // AUTH
   static String sendLoginOtp = '/auth/send-otp';
+  static String refreshToken = '/auth/refresh';
   static String resendLoginOtp = '/auth/resend-otp';
   static String verifyLoginOtp = '/auth/login/verify-otp';
 

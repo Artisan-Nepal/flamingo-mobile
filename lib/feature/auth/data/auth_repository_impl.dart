@@ -37,6 +37,9 @@ class AuthRepositoryImpl implements AuthRepository {
     final apiResponse = await _authRemote.verifyLoginOtp(request);
 
     await _authLocal.setAccessToken(apiResponse.accessToken);
+    if (apiResponse.refreshToken != null) {
+      await _authLocal.setRefreshToken(apiResponse.refreshToken!);
+    }
     await _authLocal.setUser(apiResponse.user);
     await _authLocal.removeGuestId();
 
@@ -69,6 +72,7 @@ class AuthRepositoryImpl implements AuthRepository {
       // ignore: local logout below must still happen
     }
     await _authLocal.removeAccessToken();
+    await _authLocal.removeRefreshToken();
     await _authLocal.removeUser();
   }
 

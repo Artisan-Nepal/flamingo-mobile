@@ -52,4 +52,30 @@ class SecureTokenStore {
   }
 
   Future<bool> hasToken() async => (await getToken()) != null;
+
+  // Refresh token (also encrypted). Backs the silent access-token refresh in
+  // DioApiClientImpl; longer-lived than the access token.
+  Future<String?> getRefreshToken() async {
+    try {
+      return await _secure.read(key: LocalStorageKeys.refreshToken);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<void> setRefreshToken(String token) async {
+    await _secure.write(key: LocalStorageKeys.refreshToken, value: token);
+  }
+
+  Future<void> removeRefreshToken() async {
+    try {
+      await _secure.delete(key: LocalStorageKeys.refreshToken);
+    } catch (_) {}
+  }
+
+  // Clear the whole session (both tokens) - used on a failed refresh / logout.
+  Future<void> clearSession() async {
+    await removeToken();
+    await removeRefreshToken();
+  }
 }

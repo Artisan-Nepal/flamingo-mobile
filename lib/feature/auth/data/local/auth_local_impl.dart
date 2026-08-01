@@ -24,6 +24,16 @@ class AuthLocalImpl implements AuthLocal {
   }
 
   @override
+  Future<void> setRefreshToken(String refreshToken) async {
+    await _tokenStore.setRefreshToken(refreshToken);
+  }
+
+  @override
+  Future removeRefreshToken() async {
+    return await _tokenStore.removeRefreshToken();
+  }
+
+  @override
   Future<void> setIsFirstTime(bool value) async {
     await _sharedPrefManager.setBool(LocalStorageKeys.isFirstTime, value);
   }

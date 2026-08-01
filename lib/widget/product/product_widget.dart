@@ -95,6 +95,7 @@ class ProductWidget extends StatelessWidget {
                   children: [
                     TextWidget(
                       payload.sellerStoreName,
+                      maxLines: 1,
                       textOverflow: TextOverflow.ellipsis,
                       style: textTheme(context).bodyMedium!.copyWith(
                             fontWeight: FontWeight.w800,

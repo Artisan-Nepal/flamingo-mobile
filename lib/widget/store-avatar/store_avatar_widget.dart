@@ -31,6 +31,10 @@ class StoreAvatarWidget extends StatelessWidget {
     return ClipOval(
       child: CachedNetworkImage(
         imageUrl: url,
+        // Decode at avatar size, not the store logo's full upload resolution -
+        // see CachedNetworkImageWidget for why this matters. Square target, so
+        // capping width alone is enough.
+        memCacheWidth: (size * MediaQuery.devicePixelRatioOf(context)).round(),
         width: size,
         height: size,
         fit: BoxFit.cover,

@@ -115,10 +115,15 @@ class SnippetHomeScreenTitle extends StatelessWidget {
   const SnippetHomeScreenTitle({
     Key? key,
     required this.title,
+    this.subtitle,
     this.onTap,
     this.needSeeMore = true,
   }) : super(key: key);
   final String title;
+  // The one-line "why am I seeing this" reason shown under the title (see
+  // HOME_SCREEN_OVERHAUL_PLAN.md §5.1) - optional so existing headers that
+  // don't pass one render exactly as before.
+  final String? subtitle;
   final VoidCallback? onTap;
   final bool needSeeMore;
 
@@ -126,31 +131,50 @@ class SnippetHomeScreenTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: Dimens.spacingSizeSmall),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Text(
-                title,
-                style: textTheme(context).bodyLarge!.copyWith(
-                      fontWeight: FontWeight.w500,
-                    ),
-              ),
-            ],
-          ),
-          if (needSeeMore)
-            InkWell(
-              onTap: onTap,
-              highlightColor: Colors.transparent,
-              splashColor: Colors.transparent,
-              child: Text(
-                'See More',
-                style: TextStyle(
-                  color: AppColors.grayMain,
+              // A long title (e.g. a category name in "Because you've been
+              // looking at X") is unbounded text with no truncation - without
+              // Expanded here it pushes straight through "See More" and
+              // overflows the row instead of yielding space to it.
+              Expanded(
+                child: Text(
+                  title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: textTheme(context).bodyLarge!.copyWith(
+                        fontWeight: FontWeight.w500,
+                      ),
                 ),
               ),
+              if (needSeeMore) ...[
+                const HorizontalSpaceWidget(width: Dimens.spacingSizeSmall),
+                InkWell(
+                  onTap: onTap,
+                  highlightColor: Colors.transparent,
+                  splashColor: Colors.transparent,
+                  child: Text(
+                    'See More',
+                    style: TextStyle(
+                      color: AppColors.grayMain,
+                    ),
+                  ),
+                ),
+              ],
+            ],
+          ),
+          if (subtitle != null) ...[
+            const VerticalSpaceWidget(height: Dimens.spacing_2),
+            Text(
+              subtitle!,
+              style: textTheme(context).bodySmall!.copyWith(
+                    color: AppColors.grayMain,
+                  ),
             ),
+          ],
         ],
       ),
     );

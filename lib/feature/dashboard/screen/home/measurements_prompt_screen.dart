@@ -5,9 +5,10 @@ import 'package:flamingo/widget/space/space.dart';
 import 'package:flamingo/widget/text/text_widget.dart';
 import 'package:flutter/material.dart';
 
-// Full-screen "standout" intro for the Size & Fit feature, shown once (per
-// account, server-tracked) after login when the customer has no saved
-// measurements. Presented as a fullscreen modal route from HomeScreen so it
+// Full-screen "standout" intro for the Size & Fit feature. Shown up to twice
+// a day (per account, server-tracked - see HomeScreen._sameHalfDayWindow)
+// while the customer has no saved measurements, then stops for good once
+// they add one. Presented as a fullscreen modal route from HomeScreen so it
 // reads as a proper feature moment rather than a small dismissable sheet.
 class MeasurementsPromptScreen extends StatelessWidget {
   const MeasurementsPromptScreen({super.key});

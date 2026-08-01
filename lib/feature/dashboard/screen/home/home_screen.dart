@@ -6,8 +6,11 @@ import 'package:flamingo/feature/auth/auth_view_model.dart';
 import 'package:flamingo/feature/customer-activity/customer_activity_view_model.dart';
 import 'package:flamingo/feature/dashboard/screen/dashboard/dashboard_view_model.dart';
 import 'package:flamingo/feature/dashboard/screen/home/snippet_home_advertisement.dart';
+import 'package:flamingo/feature/dashboard/screen/home/snippet_home_brands.dart';
+import 'package:flamingo/feature/dashboard/screen/home/snippet_home_for_you.dart';
+import 'package:flamingo/feature/dashboard/screen/home/snippet_home_new_in.dart';
 import 'package:flamingo/feature/dashboard/screen/home/snippet_home_screen_story.dart';
-import 'package:flamingo/feature/dashboard/screen/home/snippet_home_products.dart';
+import 'package:flamingo/feature/dashboard/screen/home/snippet_home_trending.dart';
 import 'package:flamingo/feature/dashboard/screen/home/snippet_home_search.dart';
 import 'package:flamingo/feature/dashboard/screen/home/measurements_prompt_screen.dart';
 import 'package:flamingo/feature/dashboard/screen/home/snippet_measurements_banner.dart';
@@ -17,7 +20,6 @@ import 'package:flamingo/feature/fit-reference/data/model/fit_reference.dart';
 import 'package:flamingo/feature/notification/notification_view_model.dart';
 import 'package:flamingo/feature/promo-banner/promo_banner_view_model.dart';
 import 'package:flamingo/feature/product-story/product_story_view_model.dart';
-import 'package:flamingo/feature/product/data/model/for_you_section.dart';
 import 'package:flamingo/feature/product/screen/product-listing/for_you_view_model.dart';
 import 'package:flamingo/feature/product/screen/product-listing/product_listing_view_model.dart';
 import 'package:flamingo/feature/user/data/user_repository.dart';
@@ -36,7 +38,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen>
-    with AutomaticKeepAliveClientMixin {
+    with AutomaticKeepAliveClientMixin, WidgetsBindingObserver {
   @override
   bool get wantKeepAlive => true;
 
@@ -54,18 +56,18 @@ class _HomeScreenState extends State<HomeScreen>
   // by _evaluateMeasurementsNudges once we know the customer is logged in,
   // has no saved measurements, and the banner hasn't expired yet.
   bool _showMeasurementsBanner = false;
-  // AuthViewModel.isLoggedIn starts false and only flips (via notifyListeners)
-  // once its constructor's fire-and-forget syncLocally() resolves - on a cold
-  // `flutter run` that hasn't happened yet by the time this screen's first
-  // frame renders. So this can't be a one-shot check: it re-tries off
-  // AuthViewModel's own change notifications until it sees isLoggedIn true,
-  // then stops for the rest of this screen's lifetime.
-  bool _measurementsNudgeChecked = false;
+  // Guards against overlapping checks (e.g. the auth listener and a resume
+  // event firing close together), not against repeat checks in general - the
+  // popup itself is now allowed to reappear up to twice a day (see
+  // _shownInCurrentHalfDayWindow).
+  bool _measurementsNudgeCheckInFlight = false;
+  DateTime? _lastMeasurementsNudgeCheckAt;
 
   @override
   void initState() {
     super.initState();
     getData();
+    WidgetsBinding.instance.addObserver(this);
     // Let re-tapping the HOME nav tab scroll this screen back to the top.
     Provider.of<DashboardViewModel>(context, listen: false).onHomeReselected =
         _scrollToTop;
@@ -79,16 +81,48 @@ class _HomeScreenState extends State<HomeScreen>
         .addPostFrameCallback((_) => _maybeEvaluateMeasurementsNudges());
   }
 
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // AuthViewModel.isLoggedIn starts false and only flips (via
+    // notifyListeners) once its constructor's fire-and-forget syncLocally()
+    // resolves - on a cold launch that hasn't happened yet by the time this
+    // screen's first frame renders, which is why initState also listens for
+    // that separately. Re-checking on resume is what actually makes the
+    // twice-a-day popup work for a customer who keeps the app running in the
+    // background across the AM/PM boundary instead of cold-launching again.
+    if (state == AppLifecycleState.resumed) {
+      _maybeEvaluateMeasurementsNudges();
+    }
+  }
+
   void _maybeEvaluateMeasurementsNudges() {
-    if (_measurementsNudgeChecked || !mounted) return;
+    if (!mounted || _measurementsNudgeCheckInFlight) return;
     if (!Provider.of<AuthViewModel>(context, listen: false).isLoggedIn) {
       return;
     }
-    _measurementsNudgeChecked = true;
+    // Cheap rate-limit so rapid-fire lifecycle/auth events (e.g. resuming
+    // twice in quick succession) don't each trigger their own network call -
+    // this is not what enforces the twice-a-day popup cadence, the server
+    // timestamp check inside _evaluateMeasurementsNudges is.
+    final lastCheck = _lastMeasurementsNudgeCheckAt;
+    if (lastCheck != null &&
+        DateTime.now().difference(lastCheck) < const Duration(minutes: 1)) {
+      return;
+    }
+    _lastMeasurementsNudgeCheckAt = DateTime.now();
     _evaluateMeasurementsNudges();
   }
 
   Future<void> _evaluateMeasurementsNudges() async {
+    _measurementsNudgeCheckInFlight = true;
+    try {
+      await _doEvaluateMeasurementsNudges();
+    } finally {
+      _measurementsNudgeCheckInFlight = false;
+    }
+  }
+
+  Future<void> _doEvaluateMeasurementsNudges() async {
     List<FitReference> references;
     try {
       references = await locator<FitReferenceRepository>().getFitReferences();
@@ -123,24 +157,55 @@ class _HomeScreenState extends State<HomeScreen>
       setState(() => _showMeasurementsBanner = true);
     }
 
-    // Popup: shown once ever, the first time we find a logged-in customer
-    // with no saved measurements - never again after that, dismissed or not.
-    // Tracked server-side (Customer.measurementPromptSeenAt) rather than in
-    // local storage, so it stays dismissed across reinstalls/devices instead
-    // of resetting with the app's local state.
-    final alreadySeen = Provider.of<AuthViewModel>(context, listen: false)
-            .user
-            ?.measurementPromptSeenAt !=
-        null;
-    if (!alreadySeen && mounted) {
+    // Popup: shown up to twice a day - once in the 12am-12pm window and once
+    // in the 12pm-12am window - until the customer actually saves a
+    // measurement (references.isNotEmpty above stops it for good at that
+    // point). Tracked server-side (Customer.measurementPromptSeenAt, which
+    // now means "last shown at" rather than a one-time flag) rather than in
+    // local storage, so the cadence stays correct across reinstalls/devices
+    // instead of resetting with the app's local state.
+    //
+    // Fetched fresh here rather than read off AuthViewModel.user: that field
+    // is also being raced by DashboardScreen's own independent syncRemotely()
+    // call on every launch, and syncLocally()'s local-cache read (fast, but
+    // possibly stale by up to a half-day window) resolves first - trusting
+    // it caused this check to intermittently see yesterday's/this-morning's
+    // cached timestamp instead of the true current one.
+    DateTime? lastShownAt;
+    try {
+      lastShownAt =
+          (await locator<UserRepository>().getCustomer()).measurementPromptSeenAt;
+    } catch (_) {
+      // Fall back to whatever AuthViewModel already has rather than skip the
+      // check entirely - stale-but-present beats not checking at all.
+      lastShownAt = Provider.of<AuthViewModel>(context, listen: false)
+          .user
+          ?.measurementPromptSeenAt;
+    }
+    if (!mounted) return;
+    final alreadyShownThisWindow =
+        lastShownAt != null && _sameHalfDayWindow(lastShownAt, DateTime.now());
+    if (!alreadyShownThisWindow && mounted) {
       _showMeasurementsPromptDialog();
       try {
         await locator<UserRepository>().markMeasurementPromptSeen();
       } catch (_) {
-        // Best effort - if this fails we might show the popup again next
-        // session, an acceptable outcome for a soft nudge.
+        // Best effort - if this fails we might show the popup again sooner
+        // than the cadence intends, an acceptable outcome for a soft nudge.
       }
     }
+  }
+
+  // Both instants compared in local time, since "12am-12pm" is about the
+  // customer's own clock, not UTC. measurementPromptSeenAt comes back from
+  // the API as UTC, so .toLocal() matters here.
+  bool _sameHalfDayWindow(DateTime a, DateTime b) {
+    final localA = a.toLocal();
+    final localB = b.toLocal();
+    final sameDay = localA.year == localB.year &&
+        localA.month == localB.month &&
+        localA.day == localB.day;
+    return sameDay && (localA.hour < 12) == (localB.hour < 12);
   }
 
   void _showMeasurementsPromptDialog() {
@@ -161,6 +226,7 @@ class _HomeScreenState extends State<HomeScreen>
     }
     Provider.of<AuthViewModel>(context, listen: false)
         .removeListener(_maybeEvaluateMeasurementsNudges);
+    WidgetsBinding.instance.removeObserver(this);
     _scrollController.dispose();
     super.dispose();
   }
@@ -262,16 +328,18 @@ class _HomeScreenState extends State<HomeScreen>
                               height: Dimens.spacingSizeDefault),
                           SnippetHomeAdvertisement(),
 
-                          // Latest products
+                          // New in this week — compact rail (see
+                          // SnippetHomeNewIn / HOME_SCREEN_OVERHAUL_PLAN.md
+                          // module C). Same "Latest" fetch as before; smaller
+                          // cards so a freshness signal doesn't cost half a
+                          // screen.
                           ChangeNotifierProvider(
                             create: (context) => _latestProductListingViewModel,
                             child: Consumer<ProductListingViewModel>(
                               builder: (context, viewModel, child) {
-                                return SnippetHomeProducts(
+                                return SnippetHomeNewIn(
                                   isLoading:
                                       viewModel.getProductsUseCase.isLoading,
-                                  title: 'Latest',
-                                  productType: ProductType.LATEST,
                                   products:
                                       viewModel.getProductsUseCase.data?.rows ??
                                           [],
@@ -282,17 +350,19 @@ class _HomeScreenState extends State<HomeScreen>
                           const VerticalSpaceWidget(
                               height: Dimens.spacingSizeLarge),
 
-                          // Trending now
+                          // Most wanted right now — ranked list (see
+                          // SnippetHomeTrending / HOME_SCREEN_OVERHAUL_PLAN.md
+                          // module B). Same view model and fetch as before;
+                          // only the rendering changed from a generic rail to
+                          // a legible, numbered ranking.
                           ChangeNotifierProvider(
                             create: (context) =>
                                 _trendingProductListingViewModel,
                             child: Consumer<ProductListingViewModel>(
                               builder: (context, viewModel, child) {
-                                return SnippetHomeProducts(
+                                return SnippetHomeTrending(
                                   isLoading:
                                       viewModel.getProductsUseCase.isLoading,
-                                  title: 'Trending now',
-                                  productType: ProductType.TRENDING,
                                   products:
                                       viewModel.getProductsUseCase.data?.rows ??
                                           [],
@@ -303,18 +373,20 @@ class _HomeScreenState extends State<HomeScreen>
                           const VerticalSpaceWidget(
                               height: Dimens.spacingSizeLarge),
 
-                          // Favorite vendor products
+                          // Brands you follow — a standalone entry-point card
+                          // (see SnippetHomeBrands / HOME_SCREEN_OVERHAUL_PLAN.md
+                          // module D) opening FollowedBrandsScreen. Same
+                          // "favorite vendor" fetch as before, used only to
+                          // decide whether the card is worth showing.
                           if (authViewModel.isLoggedIn) ...[
                             ChangeNotifierProvider(
                               create: (context) =>
                                   _favVendorProductListingViewModel,
                               child: Consumer<ProductListingViewModel>(
                                 builder: (context, viewModel, child) {
-                                  return SnippetHomeProducts(
+                                  return SnippetHomeBrands(
                                     isLoading:
                                         viewModel.getProductsUseCase.isLoading,
-                                    title: 'Favorite brands',
-                                    productType: ProductType.FAVORITE_VENDOR,
                                     products: viewModel
                                             .getProductsUseCase.data?.rows ??
                                         [],
@@ -324,51 +396,15 @@ class _HomeScreenState extends State<HomeScreen>
                             ),
                             const VerticalSpaceWidget(
                                 height: Dimens.spacingSizeLarge),
-                          ]
+                          ],
                         ],
                       ),
                     ),
 
-                    // For You — category-grouped horizontal rows built from the
-                    // user's own activity (see ForYouViewModel).
+                    // For You — one editorial pair from the user's top
+                    // category (see SnippetHomeForYou / HOME_SCREEN_OVERHAUL_PLAN.md).
                     SliverToBoxAdapter(
-                      child: Consumer<ForYouViewModel>(
-                        builder: (context, viewModel, child) {
-                          final sections =
-                              viewModel.getForYouUseCase.data ?? <ForYouSection>[];
-                          if (!viewModel.getForYouUseCase.hasCompleted ||
-                              sections.isEmpty) {
-                            return const SizedBox();
-                          }
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    left: Dimens.spacingSizeSmall,
-                                    bottom: Dimens.spacingSizeDefault),
-                                child: Text(
-                                  'FOR YOU',
-                                  style:
-                                      textTheme(context).bodyLarge!.copyWith(
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                ),
-                              ),
-                              for (final section in sections) ...[
-                                SnippetHomeProducts(
-                                  title: section.categoryName,
-                                  productType: ProductType.CATEGORY,
-                                  categoryId: section.categoryId,
-                                  products: section.products,
-                                ),
-                                const VerticalSpaceWidget(
-                                    height: Dimens.spacingSizeLarge),
-                              ],
-                            ],
-                          );
-                        },
-                      ),
+                      child: SnippetHomeForYou(),
                     ),
                     SliverToBoxAdapter(
                       child: VerticalSpaceWidget(

@@ -7,6 +7,16 @@ import 'di/service_locator.dart' as di;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Backstop for the image-cache growth that got the app jetsam-killed at iOS's
+  // ~3GB per-process limit. The per-widget decode caps (see
+  // CachedNetworkImageWidget) are the real fix; this bounds what the cache can
+  // retain on top of that. Flutter's defaults are 1000 images / 100MB, and the
+  // count limit is the one that hurts on image-heavy grids.
+  PaintingBinding.instance.imageCache
+    ..maximumSizeBytes = 80 << 20 // 80 MB
+    ..maximumSize = 150; // decoded images retained
+
   await di.setUpServiceLocator();
   await initApp();
 

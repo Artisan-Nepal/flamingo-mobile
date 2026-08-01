@@ -23,7 +23,30 @@ class CachedNetworkImageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Cap the DECODE size. A decoded image costs width*height*4 bytes of RAM
+    // regardless of how small it's drawn, so a 1800x2400 product photo costs
+    // ~16.5MB per copy even in a small grid tile. Without this the app walked
+    // up to iOS's ~3GB per-process limit and got jetsam-killed while scrolling
+    // (see the OOM investigation, 2026-07-31).
+    //
+    // Only ONE dimension is ever passed: ResizeImage stretches to fit when both
+    // are given, so capping a single axis is what preserves the aspect ratio.
+    // Falls back to the screen width so full-bleed images (no explicit size)
+    // are still bounded - the cap must hold no matter what a vendor uploads.
+    final devicePixelRatio = MediaQuery.devicePixelRatioOf(context);
+    int? decodeWidth;
+    int? decodeHeight;
+    if (width != null && width!.isFinite) {
+      decodeWidth = (width! * devicePixelRatio).round();
+    } else if (height != null && height!.isFinite) {
+      decodeHeight = (height! * devicePixelRatio).round();
+    } else {
+      decodeWidth = (MediaQuery.sizeOf(context).width * devicePixelRatio).round();
+    }
+
     return CachedNetworkImage(
+      memCacheWidth: decodeWidth,
+      memCacheHeight: decodeHeight,
       fadeInDuration: fadeDuration,
       fadeOutDuration: fadeDuration,
       placeholder: (context, _) {

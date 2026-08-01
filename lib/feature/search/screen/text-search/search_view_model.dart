@@ -107,8 +107,13 @@ class SearchViewModel extends ChangeNotifier {
   }
 
   clearSearchHistory() {
+    // Clears the in-memory list too, not just the stored one - and notifies,
+    // so the "Recent" section actually disappears. (Previously this emptied
+    // _searchProductsUseCase.data, which holds search *results*, not history,
+    // and never notified; nothing called it, so the bug was invisible.)
+    _searchTextHistory = [];
     _searchRepository.clearSearchHistory();
-    _searchProductsUseCase.data = [];
+    notifyListeners();
   }
 
   searchProducts(String text, {bool isNewSearch = true}) async {

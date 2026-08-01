@@ -160,7 +160,13 @@ class _SnippetProductDetailImagesState
         shareIconOpacity = shareIconOpacity.clamp(0, 1);
         return Positioned(
           right: 0,
-          top: SizeConfig.appBarHeight + SizeConfig.statusBarHeight - 20,
+          // This widget already sits inside a SafeArea (see
+          // product_detail_screen.dart) that shifts its whole coordinate
+          // space down by statusBarHeight to clear the notch - adding
+          // statusBarHeight again here double-counted it, pushing these
+          // icons a full status-bar's-height below where the app bar
+          // actually ends.
+          top: SizeConfig.appBarHeight - 20,
           child: Column(
             children: [
               Opacity(

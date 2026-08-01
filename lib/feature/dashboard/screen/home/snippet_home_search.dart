@@ -39,12 +39,13 @@ class SnippetHomeSearch extends StatelessWidget {
                   speed: const Duration(milliseconds: 100),
                   textStyle: TextStyle(color: AppColors.grayDark),
                 ),
-                TypewriterAnimatedText(
-                  cursor: '|',
-                  'Search with image',
-                  speed: const Duration(milliseconds: 100),
-                  textStyle: TextStyle(color: AppColors.grayDark),
-                ),
+                if (CommonConstants.imageSearchEnabled)
+                  TypewriterAnimatedText(
+                    cursor: '|',
+                    'Search with image',
+                    speed: const Duration(milliseconds: 100),
+                    textStyle: TextStyle(color: AppColors.grayDark),
+                  ),
                 TypewriterAnimatedText(
                   cursor: '|',
                   'Search your favorite brands',
@@ -66,17 +67,19 @@ class SnippetHomeSearch extends StatelessWidget {
               },
             ),
           ),
-          HorizontalSpaceWidget(width: Dimens.spacingSizeSmall),
-          GestureDetector(
-            onTap: () {
-              _onCameraSearch(context);
-            },
-            child: Icon(
-              CupertinoIcons.camera,
-              size: Dimens.iconSize_20,
-              color: AppColors.grayMain,
+          if (CommonConstants.imageSearchEnabled) ...[
+            HorizontalSpaceWidget(width: Dimens.spacingSizeSmall),
+            GestureDetector(
+              onTap: () {
+                _onCameraSearch(context);
+              },
+              child: Icon(
+                CupertinoIcons.camera,
+                size: Dimens.iconSize_20,
+                color: AppColors.grayMain,
+              ),
             ),
-          )
+          ],
         ],
       ),
     );

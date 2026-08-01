@@ -37,21 +37,19 @@ class _BrandSearchResultScreenState extends State<BrandSearchResultScreen> {
     return DefaultScreen(
       scrollable: false,
       appBarLeadingWidth: 45,
-      appBarTitle: Container(
-        child: SearchBarFieldWidget(
-          controller: _searchController,
-          readOnly: true,
-          hintText: 'Search for brands',
-          onTap: () {
-            NavigationHelper.pushWithoutAnimation(
-              context,
-              SearchScreen(
-                initialText: widget.keyword,
-                initialScope: SearchScope.brand,
-              ),
-            );
-          },
-        ),
+      appBarTitle: SearchBarFieldWidget(
+        controller: _searchController,
+        readOnly: true,
+        hintText: 'Search for brands',
+        onTap: () {
+          NavigationHelper.pushWithoutAnimation(
+            context,
+            SearchScreen(
+              initialText: widget.keyword,
+              initialScope: SearchScope.brand,
+            ),
+          );
+        },
       ),
       appBarLeading: Padding(
         padding: const EdgeInsets.only(left: Dimens.spacingSizeDefault),

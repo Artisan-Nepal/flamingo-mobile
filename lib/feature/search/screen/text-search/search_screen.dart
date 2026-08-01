@@ -67,9 +67,13 @@ class _SearchScreenState extends State<SearchScreen> {
     return DefaultScreen(
       scrollable: false,
       automaticallyImplyAppBarLeading: false,
-      appBarTitle: Container(
-        child: SearchBarFieldWidget(
-          hintText: 'Search for products',
+      appBarTitle: Consumer<SearchViewModel>(
+        // Rebuilds on scope change so the hint follows the selected tab -
+        // it previously always read "Search for products", even on Brands.
+        builder: (context, watchedViewModel, child) => SearchBarFieldWidget(
+          hintText: watchedViewModel.scope == SearchScope.brand
+              ? 'Search for brands'
+              : 'Search for products',
           controller: _searchController,
           autofocus: true,
           onChanged: (text) => _onChanged(viewModel, text),
@@ -77,14 +81,20 @@ class _SearchScreenState extends State<SearchScreen> {
         ),
       ),
       appBarActions: [
-        TextButtonWidget(
-          label: 'Cancel',
-          fontSize: 14,
-          fontWeight: FontWeight.bold,
-          padding: EdgeInsets.zero,
-          onPressed: () {
-            NavigationHelper.pop(context);
-          },
+        // Matches the right-edge padding convention used by the home app
+        // bar's own action (CartButtonWidget) - without it, zeroing the
+        // button's own padding left "Cancel" flush against the screen edge.
+        Padding(
+          padding: const EdgeInsets.only(right: Dimens.spacingSizeSmall),
+          child: TextButtonWidget(
+            label: 'Cancel',
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+            padding: EdgeInsets.zero,
+            onPressed: () {
+              NavigationHelper.pop(context);
+            },
+          ),
         )
       ],
       padding: EdgeInsets.zero,
@@ -93,8 +103,12 @@ class _SearchScreenState extends State<SearchScreen> {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Search bar sits in the app bar, which has no bottom margin of
+              // its own - without this the toggle butted straight up against
+              // it.
+              const VerticalSpaceWidget(height: Dimens.spacingSizeDefault),
               _buildScopeToggle(viewModel),
-              const VerticalSpaceWidget(height: Dimens.spacingSizeSmall),
+              const VerticalSpaceWidget(height: Dimens.spacingSizeLarge),
               Expanded(child: _buildBody(viewModel)),
             ],
           );
@@ -132,7 +146,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     borderRadius: BorderRadius.circular(Dimens.radius_5),
                     boxShadow: [
                       BoxShadow(
-                        color: AppColors.black.withOpacity(0.08),
+                        color: AppColors.black.withValues(alpha: 0.08),
                         blurRadius: 4,
                         offset: const Offset(0, 1),
                       ),
@@ -213,6 +227,11 @@ class _SearchScreenState extends State<SearchScreen> {
       return _buildIdleState(viewModel);
     }
     final suggestions = viewModel.getSuggestionsUseCase.data ?? [];
+    // Brand scope already said "No brands found" here; product scope rendered
+    // an empty list, so a query with no matches looked like a hung screen.
+    if (suggestions.isEmpty) {
+      return const DefaultErrorWidget(errorMessage: 'No suggestions found');
+    }
     return Padding(
       padding:
           const EdgeInsets.symmetric(horizontal: Dimens.spacingSizeDefault),
@@ -221,6 +240,11 @@ class _SearchScreenState extends State<SearchScreen> {
         itemBuilder: (context, index) {
           return _buildListItem(
             title: suggestions[index],
+            leading: const Icon(
+              Icons.search,
+              size: Dimens.iconSizeSmall,
+              color: AppColors.grayMain,
+            ),
             onTap: () {
               _searchController.text = suggestions[index];
               FocusScope.of(context).unfocus();
@@ -283,17 +307,28 @@ class _SearchScreenState extends State<SearchScreen> {
       child: ListView(
         children: [
           if (hasHistory) ...[
-            Text(
-              'Recent',
-              style: textTheme(context)
-                  .bodyMedium!
-                  .copyWith(fontWeight: FontWeight.bold),
+            _buildSectionHeader(
+              'RECENT',
+              action: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: viewModel.clearSearchHistory,
+                child: Text(
+                  'Clear all',
+                  style: textTheme(context)
+                      .bodySmall!
+                      .copyWith(color: AppColors.grayMain),
+                ),
+              ),
             ),
-            const VerticalSpaceWidget(height: Dimens.spacingSizeExtraSmall),
             ...List.generate(viewModel.searchTextHistory.length, (i) {
               final index = viewModel.searchTextHistory.length - 1 - i;
               return _buildListItem(
                 title: viewModel.searchTextHistory[index],
+                leading: const Icon(
+                  Icons.history,
+                  size: Dimens.iconSizeSmall,
+                  color: AppColors.grayMain,
+                ),
                 onTap: () {
                   _searchController.text = viewModel.searchTextHistory[index];
                   FocusScope.of(context).unfocus();
@@ -301,6 +336,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       viewModel, viewModel.searchTextHistory[index]);
                 },
                 trailing: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
                   onTap: () {
                     viewModel.removeSearchedText(
                         viewModel.searchTextHistory[index]);
@@ -308,21 +344,21 @@ class _SearchScreenState extends State<SearchScreen> {
                   child: const Icon(
                     Icons.close,
                     size: Dimens.iconSize_15,
-                    color: AppColors.primaryMain,
+                    // Secondary/destructive affordance - gray keeps it from
+                    // competing with the search term itself, matching how
+                    // trailing icons read elsewhere in the app.
+                    color: AppColors.grayMain,
                   ),
                 ),
               );
             }),
-            const VerticalSpaceWidget(height: Dimens.spacingSizeSmall),
+            const VerticalSpaceWidget(height: Dimens.spacingSizeDefault),
           ],
           if (viewModel.scope == SearchScope.product) ...[
-            Text(
-              'Trending',
-              style: textTheme(context)
-                  .bodyMedium!
-                  .copyWith(fontWeight: FontWeight.bold),
-            ),
-            const VerticalSpaceWidget(height: Dimens.spacingSizeSmall),
+            // Not analytics-backed - these are a fixed, curated set (see
+            // trendingSearchTerms), so the label says "popular", which is a
+            // claim a hardcoded list can actually support.
+            _buildSectionHeader('POPULAR SEARCHES'),
             Wrap(
               spacing: Dimens.spacingSizeSmall,
               runSpacing: Dimens.spacingSizeSmall,
@@ -336,28 +372,47 @@ class _SearchScreenState extends State<SearchScreen> {
                   child: Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: Dimens.spacingSizeDefault,
-                      vertical: Dimens.spacingSizeExtraSmall,
+                      vertical: Dimens.spacingSizeSmall,
                     ),
                     decoration: BoxDecoration(
-                      border: Border.all(color: AppColors.grayLight),
+                      // Muted fill + soft line, the same treatment as the
+                      // measurements banner and the "Brands you follow" card
+                      // on home - a bare outline read heavier than everything
+                      // around it.
+                      color: AppColors.grayLighter,
+                      border: Border.all(color: AppColors.grayLine),
                       borderRadius: BorderRadius.circular(Dimens.radiusLarge),
                     ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(Icons.trending_up,
-                            size: Dimens.iconSizeExtraSmall,
-                            color: AppColors.grayMain),
-                        const HorizontalSpaceWidget(
-                            width: Dimens.spacing_2),
-                        Text(term),
-                      ],
+                    child: Text(
+                      term,
+                      style: textTheme(context).bodyMedium,
                     ),
                   ),
                 );
               }).toList(),
             ),
           ],
+        ],
+      ),
+    );
+  }
+
+  // Matches the home screen's section headers (SnippetHomeScreenTitle):
+  // all-caps, bodyLarge, w500 - so search reads as the same app rather than
+  // its own sentence-case island.
+  Widget _buildSectionHeader(String title, {Widget? action}) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: Dimens.spacingSizeSmall),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            title,
+            style: textTheme(context).bodyLarge!.copyWith(
+                  fontWeight: FontWeight.w500,
+                ),
+          ),
+          if (action != null) action,
         ],
       ),
     );
@@ -387,17 +442,25 @@ class _SearchScreenState extends State<SearchScreen> {
     VoidCallback? onTap,
   }) {
     return GestureDetector(
+      behavior: HitTestBehavior.opaque,
       onTap: onTap,
       child: Container(
         color: AppColors.transparent,
-        height: 40,
+        height: 46,
         child: Row(
           children: [
             if (leading != null) ...[
               leading,
-              const HorizontalSpaceWidget(width: Dimens.spacingSizeSmall),
+              const HorizontalSpaceWidget(width: Dimens.spacingSizeDefault),
             ],
-            Expanded(child: Text(title)),
+            Expanded(
+              child: Text(
+                title,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: textTheme(context).bodyMedium,
+              ),
+            ),
             if (trailing != null) ...[
               const HorizontalSpaceWidget(width: Dimens.spacingSizeDefault),
               trailing

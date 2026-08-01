@@ -57,18 +57,21 @@ class SearchBarFieldWidget extends StatelessWidget {
             Icons.search_outlined,
             color: enabled ? Colors.grey.shade600 : Colors.grey.shade300,
           ),
-          suffixIcon: GestureDetector(
-            onTap: enabled
-                ? () {
-                    _onCameraSearch(context);
-                  }
-                : null,
-            child: Icon(
-              CupertinoIcons.camera,
-              size: Dimens.iconSize_20,
-              color: enabled ? Colors.grey.shade600 : Colors.grey.shade300,
-            ),
-          ),
+          suffixIcon: CommonConstants.imageSearchEnabled
+              ? GestureDetector(
+                  onTap: enabled
+                      ? () {
+                          _onCameraSearch(context);
+                        }
+                      : null,
+                  child: Icon(
+                    CupertinoIcons.camera,
+                    size: Dimens.iconSize_20,
+                    color:
+                        enabled ? Colors.grey.shade600 : Colors.grey.shade300,
+                  ),
+                )
+              : null,
           border: InputBorder.none,
           focusedBorder: InputBorder.none,
           focusedErrorBorder: InputBorder.none,

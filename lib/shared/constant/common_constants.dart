@@ -9,4 +9,8 @@ class CommonConstants {
   // state - must match the API's PROMOTIONS_TOPIC constant
   // (flamingo-api/src/shared/constant/push-notification-topic.ts).
   static const promotionsTopic = 'promotions';
+  // Image search (the camera icon on search bars, opening ImageSearchScreen)
+  // is fully implemented but disabled pending relaunch - flip to true to
+  // bring the entry points back without touching any other code.
+  static const bool imageSearchEnabled = false;
 }

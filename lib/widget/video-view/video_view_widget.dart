@@ -15,6 +15,7 @@ class VideoViewWidget extends StatefulWidget {
     this.looping = true,
     this.onProgress,
     this.onVideoEnd,
+    this.keepAlive = false,
   });
 
   final String url;
@@ -24,6 +25,14 @@ class VideoViewWidget extends StatefulWidget {
   final bool looping;
   final void Function(double progress)? onProgress;
   final VoidCallback? onVideoEnd;
+
+  /// Keep the player alive while scrolled off-screen. Defaults to false: this
+  /// widget is used inside PageViews (stories, ad carousel), and keeping every
+  /// swiped-past page alive meant one live VideoPlayerController per page, each
+  /// holding decode/network buffers - a steady climb toward the iOS per-process
+  /// memory limit that was killing the app. Opt in only where re-buffering on
+  /// return is genuinely worse than the memory cost.
+  final bool keepAlive;
 
   @override
   State<VideoViewWidget> createState() => _VideoViewWidgetState();
@@ -83,9 +92,11 @@ class _VideoViewWidgetState extends State<VideoViewWidget>
 
   @override
   void dispose() {
-    super.dispose();
+    // super.dispose() must come last - it tears down the State, and touching
+    // the controller afterwards is not guaranteed to run cleanly.
     videoPlayerController.removeListener(_onPositionChanged);
     videoPlayerController.dispose();
+    super.dispose();
   }
 
   @override
@@ -181,5 +192,5 @@ class _VideoViewWidgetState extends State<VideoViewWidget>
   }
 
   @override
-  bool get wantKeepAlive => true;
+  bool get wantKeepAlive => widget.keepAlive;
 }

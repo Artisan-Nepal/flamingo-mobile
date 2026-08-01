@@ -3,7 +3,6 @@ import 'package:flamingo/feature/product/data/model/product.dart';
 import 'package:flamingo/feature/product/screen/product-listing/snippet_product_listing.dart';
 import 'package:flamingo/feature/search/screen/text-search/search_screen.dart';
 import 'package:flamingo/feature/search/screen/text-search/search_view_model.dart';
-import 'package:flamingo/feature/search/screen/text-search/snippet_search_history_item.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/error/default_error_widget.dart';
 import 'package:flamingo/widget/loader/loader.dart';
@@ -39,19 +38,17 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
     return DefaultScreen(
       scrollable: false,
       appBarLeadingWidth: 45,
-      appBarTitle: Container(
-        child: SearchBarFieldWidget(
-          controller: _searchController,
-          readOnly: true,
-          onTap: () {
-            NavigationHelper.pushWithoutAnimation(
-              context,
-              SearchScreen(
-                initialText: widget.keyword,
-              ),
-            );
-          },
-        ),
+      appBarTitle: SearchBarFieldWidget(
+        controller: _searchController,
+        readOnly: true,
+        onTap: () {
+          NavigationHelper.pushWithoutAnimation(
+            context,
+            SearchScreen(
+              initialText: widget.keyword,
+            ),
+          );
+        },
       ),
       appBarLeading: Padding(
         padding: const EdgeInsets.only(left: Dimens.spacingSizeDefault),
@@ -112,12 +109,40 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                                         vertical: Dimens.spacingSizeSmall,
                                         horizontal: Dimens.spacingSizeSmall,
                                       ),
-                                      child: SnippetProductListing(
-                                        padding: 0,
-                                        products: products
-                                            .map(Product.fromDetail)
-                                            .toList(),
-                                        shrinkWrap: false,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          // Confirms the query actually
+                                          // matched something and how much,
+                                          // instead of dropping straight into
+                                          // an unlabelled grid.
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                              left: Dimens.spacingSizeExtraSmall,
+                                              bottom: Dimens.spacingSizeSmall,
+                                            ),
+                                            child: Text(
+                                              '${products.length} ${products.length == 1 ? 'result' : 'results'} for "${widget.keyword}"',
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: textTheme(context)
+                                                  .bodySmall!
+                                                  .copyWith(
+                                                    color: AppColors.grayMain,
+                                                  ),
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: SnippetProductListing(
+                                              padding: 0,
+                                              products: products
+                                                  .map(Product.fromDetail)
+                                                  .toList(),
+                                              shrinkWrap: false,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                 ),
@@ -129,41 +154,4 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
     );
   }
 
-  _buildSearchHistory(SearchViewModel viewModel) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // const Padding(
-        //   padding: EdgeInsets.symmetric(
-        //     horizontal: Dimens.spacingSizeDefault,
-        //     vertical: Dimens.spacingSizeSmall,
-        //   ),
-        //   child: Text(
-        //     'Search History :',
-        //     style: TextStyle(
-        //       fontWeight: FontWeight.w600,
-        //     ),
-        //   ),
-        // ),
-        Wrap(
-          children:
-              List<Widget>.generate(viewModel.searchTextHistory.length, (i) {
-            int index = viewModel.searchTextHistory.length - 1 - i;
-            return SnippetSearchHistoryItem(
-              title: viewModel.searchTextHistory[index],
-              onTap: () {
-                _searchController.text = viewModel.searchTextHistory[index];
-                FocusScope.of(context).unfocus();
-                viewModel.searchProducts(viewModel.searchTextHistory[index]);
-              },
-              onCancel: () {
-                viewModel
-                    .removeSearchedText(viewModel.searchTextHistory[index]);
-              },
-            );
-          }),
-        ),
-      ],
-    );
-  }
 }

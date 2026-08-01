@@ -10,6 +10,8 @@ import 'package:flamingo/feature/product/data/model/product.dart';
 import 'package:flamingo/feature/product/data/model/product_detail.dart';
 import 'package:flamingo/feature/product/screen/product-listing/product_listing_view_model.dart';
 import 'package:flamingo/feature/product/screen/product-listing/snippet_filter_products_bottomsheet.dart';
+import 'package:flamingo/feature/product/data/model/product_filter_params.dart';
+import 'package:flamingo/feature/product/screen/product-listing/multi_select_filter_sheet.dart';
 import 'package:flamingo/feature/product/screen/product-listing/snippet_product_listing.dart';
 import 'package:flamingo/feature/vendor/data/model/seller.dart';
 import 'package:flamingo/feature/vendor/favourite_vendor_view_model.dart';
@@ -42,7 +44,7 @@ class _VendorProfileScreenState extends State<VendorProfileScreen> {
   final _productListingViewModel = locator<ProductListingViewModel>();
   final _viewModel = locator<VendorProfileViewModel>();
   final _productStoryViewModel = locator<ProductStoryViewModel>();
-  String? _selectedCategory;
+  ProductFilterParams _filters = const ProductFilterParams();
 
   void initState() {
     super.initState();
@@ -65,9 +67,39 @@ class _VendorProfileScreenState extends State<VendorProfileScreen> {
     }
 
     await _productListingViewModel.getSellerProducts(widget.seller.id);
+    // Load the brand's filter options (categories/sizes) in the background.
+    _productListingViewModel.getSellerFacets(widget.seller.id);
 
     if (_productListingViewModel.getProductsUseCase.hasCompleted) {
       await logActivity();
+    }
+  }
+
+  // Re-fetch this brand's products with the current filters applied server-side.
+  Future<void> _applyFilters() async {
+    await _productListingViewModel.getSellerProducts(
+      widget.seller.id,
+      filters: _filters.isEmpty ? null : _filters,
+    );
+  }
+
+  Future<void> _openCategoryPicker() async {
+    final categories =
+        _productListingViewModel.facetsUseCase.data?.dedupedCategories ?? [];
+    final result = await showMultiSelectFilterSheet(
+      context: context,
+      title: 'Choose category',
+      options: [
+        for (final c in categories)
+          MultiSelectOption(value: c.id, label: c.name)
+      ],
+      initialSelected: _filters.categoryIds.toSet(),
+    );
+    if (result != null) {
+      setState(() {
+        _filters = _filters.copyWith(categoryIds: result.toList());
+      });
+      await _applyFilters();
     }
   }
 
@@ -333,11 +365,7 @@ class _VendorProfileScreenState extends State<VendorProfileScreen> {
   }
 
   Widget _buildRefineAndCategoryRow(ProductListingViewModel viewModel) {
-    final categories = <String>{
-      for (final p in viewModel.getProductsUseCase.data?.rows ?? [])
-        if (p.categoryName != null) p.categoryName!
-    }.toList();
-
+    final categoryCount = _filters.categoryIds.length;
     return SliverToBoxAdapter(
       child: SizedBox(
         height: 40,
@@ -346,64 +374,56 @@ class _VendorProfileScreenState extends State<VendorProfileScreen> {
           padding:
               const EdgeInsets.symmetric(horizontal: Dimens.spacingSizeSmall),
           children: [
-            ButtonWidget(
+            _buildFilterPill(
               label: 'Refine',
-              height: 36,
-              width: null,
-              needBorder: true,
-              backgroundColor: AppColors.transparent,
-              textColor: AppColors.grayDarker,
-              fontWeight: FontWeight.w600,
-              borderRaidus: BorderRadius.circular(Dimens.radiusSmall),
-              padding: const EdgeInsets.symmetric(
-                horizontal: Dimens.spacingSizeDefault,
-              ),
-              onPressed: () => _onPressFilter(),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: const [
-                  Icon(Icons.tune, size: Dimens.iconSizeSmall),
-                  HorizontalSpaceWidget(width: Dimens.spacingSizeExtraSmall),
-                  Text(
-                    'Refine',
-                    style: TextStyle(fontWeight: FontWeight.w600),
-                  ),
-                ],
-              ),
+              icon: Icons.tune,
+              onPressed: _onPressFilter,
             ),
             const HorizontalSpaceWidget(width: Dimens.spacingSizeSmall),
-            _buildCategoryChip(null),
-            const HorizontalSpaceWidget(width: Dimens.spacingSizeSmall),
-            for (final category in categories) ...[
-              _buildCategoryChip(category),
-              const HorizontalSpaceWidget(width: Dimens.spacingSizeSmall),
-            ],
+            _buildFilterPill(
+              label: categoryCount > 0
+                  ? 'Category ($categoryCount)'
+                  : 'Choose category',
+              icon: Icons.expand_more,
+              selected: categoryCount > 0,
+              onPressed: _openCategoryPicker,
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildCategoryChip(String? category) {
-    final isSelected = _selectedCategory == category;
+  Widget _buildFilterPill({
+    required String label,
+    required IconData icon,
+    required VoidCallback onPressed,
+    bool selected = false,
+  }) {
+    final fg = selected ? AppColors.white : AppColors.grayDarker;
     return ButtonWidget(
-      label: category ?? 'All',
+      label: label,
       height: 36,
       width: null,
       needBorder: true,
-      borderColor: isSelected ? AppColors.grayDarker : AppColors.grayLight,
+      borderColor: selected ? AppColors.grayDarker : AppColors.grayLight,
       backgroundColor:
-          isSelected ? AppColors.grayDarker : AppColors.transparent,
-      textColor: isSelected ? AppColors.white : AppColors.grayDarker,
+          selected ? AppColors.grayDarker : AppColors.transparent,
+      textColor: fg,
       fontWeight: FontWeight.w600,
       borderRaidus: BorderRadius.circular(Dimens.radiusSmall),
       padding:
           const EdgeInsets.symmetric(horizontal: Dimens.spacingSizeDefault),
-      onPressed: () {
-        setState(() {
-          _selectedCategory = category;
-        });
-      },
+      onPressed: onPressed,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: Dimens.iconSizeSmall, color: fg),
+          const HorizontalSpaceWidget(width: Dimens.spacingSizeExtraSmall),
+          Text(label,
+              style: TextStyle(fontWeight: FontWeight.w600, color: fg)),
+        ],
+      ),
     );
   }
 
@@ -443,34 +463,24 @@ class _VendorProfileScreenState extends State<VendorProfileScreen> {
     }
     if (viewModel.sortedProducts.isEmpty) {
       return [
-        const SliverToBoxAdapter(
+        SliverToBoxAdapter(
           child: DefaultErrorWidget(
             manuallyCenter: true,
-            errorMessage: 'No products available.',
+            errorMessage: _filters.isEmpty
+                ? 'No products available.'
+                : 'No products match your filters.',
           ),
         )
       ];
     }
 
-    // A specific category chip is selected: show a single flat grid.
-    if (_selectedCategory != null) {
-      final filtered = viewModel.sortedProducts
-          .where((p) => p.categoryName == _selectedCategory)
-          .toList();
-      if (filtered.isEmpty) {
-        return [
-          SliverToBoxAdapter(
-            child: DefaultErrorWidget(
-              manuallyCenter: true,
-              errorMessage: 'No products in $_selectedCategory.',
-            ),
-          )
-        ];
-      }
-      return [_buildProductGridSliver(filtered)];
+    // Filters applied: results are already narrowed server-side, so show a
+    // single flat grid rather than the per-category sections.
+    if (!_filters.isEmpty) {
+      return [_buildProductGridSliver(viewModel.sortedProducts)];
     }
 
-    // "All" is selected: split into one section per category, in first-seen order.
+    // No filters: split into one section per category, in first-seen order.
     final categoryOrder = <String>[];
     final productsByCategory = <String, List<ProductDetail>>{};
     for (final p in viewModel.sortedProducts) {

@@ -3,11 +3,14 @@ import 'package:flamingo/feature/product/data/model/for_you_section.dart';
 import 'package:flamingo/feature/product/data/model/get_product_request.dart';
 import 'package:flamingo/feature/product/data/model/product.dart';
 import 'package:flamingo/feature/product/data/model/product_detail.dart';
+import 'package:flamingo/feature/product/data/model/product_filter_params.dart';
+import 'package:flamingo/feature/product/data/model/seller_facets.dart';
 import 'package:flamingo/feature/product/data/model/variant_measurement.dart';
 
 abstract class ProductRepository {
   Future<FetchResponse<ProductDetail>> getVendorProducts(String vendorId);
-  Future<FetchResponse<ProductDetail>> getSellerProducts(String sellerId);
+  Future<FetchResponse<ProductDetail>> getSellerProducts(String sellerId, {ProductFilterParams? filters});
+  Future<SellerFacets> getSellerFacets(String sellerId);
   Future<FetchResponse<ProductDetail>> getProducts(GetProductRequest request);
   Future<FetchResponse<ProductDetail>> getLatestProducts();
   Future<FetchResponse<ProductDetail>> getCategoryProducts(String categoryId);

@@ -7,6 +7,8 @@ import 'package:flamingo/feature/product/data/model/for_you_section.dart';
 import 'package:flamingo/feature/product/data/model/get_product_request.dart';
 import 'package:flamingo/feature/product/data/model/product.dart';
 import 'package:flamingo/feature/product/data/model/product_detail.dart';
+import 'package:flamingo/feature/product/data/model/product_filter_params.dart';
+import 'package:flamingo/feature/product/data/model/seller_facets.dart';
 import 'package:flamingo/feature/product/data/model/variant_measurement.dart';
 import 'package:flamingo/feature/product/data/product_repository.dart';
 import 'package:flamingo/feature/product/data/remote/product_remote.dart';
@@ -31,9 +33,14 @@ class ProductRepositoryImpl implements ProductRepository {
   }
 
   @override
-  Future<FetchResponse<ProductDetail>> getSellerProducts(
-      String sellerId) async {
-    return await _productRemote.getSellerProducts(sellerId);
+  Future<FetchResponse<ProductDetail>> getSellerProducts(String sellerId,
+      {ProductFilterParams? filters}) async {
+    return await _productRemote.getSellerProducts(sellerId, filters: filters);
+  }
+
+  @override
+  Future<SellerFacets> getSellerFacets(String sellerId) async {
+    return await _productRemote.getSellerFacets(sellerId);
   }
 
   @override

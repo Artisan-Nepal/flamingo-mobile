@@ -2,6 +2,8 @@ import 'package:flamingo/data/data.dart';
 import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/product/data/model/get_product_request.dart';
 import 'package:flamingo/feature/product/data/model/product_detail.dart';
+import 'package:flamingo/feature/product/data/model/product_filter_params.dart';
+import 'package:flamingo/feature/product/data/model/seller_facets.dart';
 import 'package:flamingo/feature/product/data/product_repository.dart';
 import 'package:flamingo/feature/wishlist/wishlist_view_model.dart';
 import 'package:flamingo/shared/shared.dart';
@@ -72,14 +74,33 @@ class ProductListingViewModel extends ChangeNotifier {
   }
 
   Future<void> getSellerProducts(String sellerId,
-      {bool isRefresh = false}) async {
+      {bool isRefresh = false, ProductFilterParams? filters}) async {
     try {
       if (!isRefresh) setProductsUseCase(Response.loading());
-      final response = await _productRepository.getSellerProducts(sellerId);
+      final response =
+          await _productRepository.getSellerProducts(sellerId, filters: filters);
       locator<WishlistViewModel>().initWishlistStatus(response.rows);
       setProductsUseCase(Response.complete(response));
     } catch (exception) {
       if (!isRefresh) setProductsUseCase(Response.error(exception));
+    }
+  }
+
+  // Brand filter options (categories + sizes the brand stocks).
+  Response<SellerFacets> _facetsUseCase = Response<SellerFacets>();
+  Response<SellerFacets> get facetsUseCase => _facetsUseCase;
+  void setFacetsUseCase(Response<SellerFacets> response) {
+    _facetsUseCase = response;
+    notifyListeners();
+  }
+
+  Future<void> getSellerFacets(String sellerId) async {
+    try {
+      setFacetsUseCase(Response.loading());
+      final response = await _productRepository.getSellerFacets(sellerId);
+      setFacetsUseCase(Response.complete(response));
+    } catch (exception) {
+      setFacetsUseCase(Response.error(exception));
     }
   }
 

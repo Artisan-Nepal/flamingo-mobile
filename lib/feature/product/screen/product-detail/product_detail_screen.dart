@@ -13,6 +13,7 @@ import 'package:flamingo/feature/product/screen/product-detail/snippet_size_char
 import 'package:flamingo/feature/product/screen/product-detail/snippet_size_selection_bottom_sheet.dart';
 import 'package:flamingo/feature/product/screen/product-listing/min_product_listing_view_model.dart';
 import 'package:flamingo/feature/product/screen/product-listing/snippet_product_listing.dart';
+import 'package:flamingo/feature/vendor/screen/vendor-profile/vendor_profile_screen.dart';
 import 'package:flamingo/shared/enum/lead_source.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/error/default_error_widget.dart';
@@ -623,12 +624,30 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   List<Widget> _buildProductInformation(ProductDetailViewModel viewModel) {
     return [
-      TextWidget(
-        viewModel.productUseCase.data!.seller.storeName,
-        textOverflow: TextOverflow.ellipsis,
-        style: textTheme(context).bodyMedium!.copyWith(
-              fontWeight: FontWeight.w800,
+      // Tapping the brand name opens that brand's page (same destination as
+      // Brand tab -> a brand).
+      GestureDetector(
+        onTap: () => NavigationHelper.push(
+          context,
+          VendorProfileScreen(
+            seller: viewModel.productUseCase.data!.seller,
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Flexible(
+              child: TextWidget(
+                viewModel.productUseCase.data!.seller.storeName,
+                textOverflow: TextOverflow.ellipsis,
+                style: textTheme(context).bodyMedium!.copyWith(
+                      fontWeight: FontWeight.w800,
+                    ),
+              ),
             ),
+            const Icon(Icons.chevron_right, size: 18),
+          ],
+        ),
       ),
       TextWidget(
         viewModel.productUseCase.data!.title,

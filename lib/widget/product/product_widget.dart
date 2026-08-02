@@ -49,23 +49,24 @@ class ProductWidget extends StatelessWidget {
       },
       child: Container(
         width: double.infinity,
-        margin: const EdgeInsets.only(top: 1),
-        decoration: BoxDecoration(
-          color: isLightMode(context)
-              ? AppColors.grayLighter
-              : AppColors.grayDarker,
-          borderRadius: BorderRadius.circular(6),
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(6),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Stack(
+        color: AppColors.transparent,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Only the image carries the light-gray tile + rounded corners; the
+            // text below sits flush-left on the page background (no card chrome),
+            // matching the clean, chrome-less product cards this rail is modeled
+            // on. The gray also shows through while the photo fades in.
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Stack(
                 children: [
-                  SizedBox(
+                  Container(
                     height: imageHeight ?? SizeConfig.screenHeight * 0.3,
                     width: double.infinity,
+                    color: isLightMode(context)
+                        ? AppColors.grayLighter
+                        : AppColors.grayDarker,
                     child: CachedNetworkImageWidget(
                       image: payload.image,
                       fit: BoxFit.cover,
@@ -85,61 +86,53 @@ class ProductWidget extends StatelessWidget {
                     ),
                 ],
               ),
-              const SizedBox(height: 10),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: Dimens.spacingSizeSmall,
+            ),
+            const SizedBox(height: Dimens.spacingSizeSmall),
+            TextWidget(
+              payload.sellerStoreName,
+              maxLines: 1,
+              textOverflow: TextOverflow.ellipsis,
+              style: textTheme(context).bodyMedium!.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+            ),
+            const SizedBox(height: Dimens.spacing_2),
+            TextWidget(
+              payload.title,
+              maxLines: nameMaxLines,
+              textOverflow: TextOverflow.ellipsis,
+              style: textTheme(context).bodyMedium!.copyWith(
+                    color: AppColors.grayDark,
+                  ),
+            ),
+            const SizedBox(height: Dimens.spacingSizeExtraSmall),
+            Row(
+              children: [
+                TextWidget(
+                  'Rs. ${formatNepaliCurrency(payload.price)}',
+                  style: textTheme(context).labelLarge!.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color:
+                            payload.isDiscounted ? AppColors.primaryMain : null,
+                      ),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    TextWidget(
-                      payload.sellerStoreName,
-                      maxLines: 1,
+                if (payload.isDiscounted) ...[
+                  const HorizontalSpaceWidget(
+                      width: Dimens.spacingSizeExtraSmall),
+                  Flexible(
+                    child: TextWidget(
+                      'Rs. ${formatNepaliCurrency(payload.originalPrice!)}',
                       textOverflow: TextOverflow.ellipsis,
-                      style: textTheme(context).bodyMedium!.copyWith(
-                            fontWeight: FontWeight.w800,
+                      style: textTheme(context).bodySmall!.copyWith(
+                            color: AppColors.grayMain,
+                            decoration: TextDecoration.lineThrough,
                           ),
                     ),
-                    // const SizedBox(height: Dimens.spacingSizeExtraSmall),
-                    TextWidget(
-                      payload.title,
-                      maxLines: nameMaxLines,
-                      textOverflow: TextOverflow.ellipsis,
-                      style: textTheme(context).bodyMedium!,
-                    ),
-                    Row(
-                      children: [
-                        TextWidget(
-                          'Rs. ${formatNepaliCurrency(payload.price)}',
-                          style: textTheme(context).labelLarge!.copyWith(
-                                color: payload.isDiscounted
-                                    ? AppColors.primaryMain
-                                    : null,
-                              ),
-                        ),
-                        if (payload.isDiscounted) ...[
-                          const HorizontalSpaceWidget(
-                              width: Dimens.spacingSizeExtraSmall),
-                          Flexible(
-                            child: TextWidget(
-                              'Rs. ${formatNepaliCurrency(payload.originalPrice!)}',
-                              textOverflow: TextOverflow.ellipsis,
-                              style: textTheme(context).bodySmall!.copyWith(
-                                    color: AppColors.grayMain,
-                                    decoration: TextDecoration.lineThrough,
-                                  ),
-                            ),
-                          ),
-                        ],
-                      ],
-                    ),
-                    const SizedBox(height: Dimens.spacingSizeSmall),
-                  ],
-                ),
-              )
-            ],
-          ),
+                  ),
+                ],
+              ],
+            ),
+          ],
         ),
       ),
     );

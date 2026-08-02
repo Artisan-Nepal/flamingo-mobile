@@ -35,6 +35,9 @@ class PlaceOrderViewModel extends ChangeNotifier {
   ApplyCouponResponse? _appliedCoupon;
   List<SavedCoupon> _savedCoupons = [];
   List<CartItem> _items = [];
+  // "Buy Now" express checkout: when set, only these variant lines are ordered
+  // (and quoted for delivery). Null = whole cart, the normal checkout.
+  List<String>? _productVariantIds;
   DeliveryQuote? _deliveryQuote;
   Response _deliveryQuoteUseCase = Response();
 
@@ -53,6 +56,12 @@ class PlaceOrderViewModel extends ChangeNotifier {
 
   void setCartItems(List<CartItem> items) {
     _items = items;
+  }
+
+  // Restrict this checkout to specific variant lines (Buy Now). Pass null to
+  // check out the whole cart.
+  void setExpressScope(List<String>? productVariantIds) {
+    _productVariantIds = productVariantIds;
   }
 
   void setPlaceOrderUseCase(Response response) {
@@ -123,6 +132,7 @@ class PlaceOrderViewModel extends ChangeNotifier {
       final quote = await _orderRepository.getDeliveryQuote(
         shippingAddressId: address.id,
         shippingMethodId: method.id,
+        productVariantIds: _productVariantIds,
       );
       if (_selectedShippingAddress?.id != address.id || _selectedShippingMethod?.id != method.id) {
         return; // selection moved on while this was in flight
@@ -186,6 +196,7 @@ class PlaceOrderViewModel extends ChangeNotifier {
           paymentMethodCode: _selectedPaymentMethod!.code,
           shippingMethodId: _selectedShippingMethod!.id,
           couponCode: _appliedCoupon?.code,
+          productVariantIds: _productVariantIds,
         ),
       );
       locator<CustomerActivityViewModel>().getCustomerCountInfo();
@@ -211,6 +222,7 @@ class PlaceOrderViewModel extends ChangeNotifier {
           paymentMethodCode: _selectedPaymentMethod!.code,
           shippingMethodId: _selectedShippingMethod!.id,
           couponCode: _appliedCoupon?.code,
+          productVariantIds: _productVariantIds,
         ),
       );
       await locator<OrderLocal>().savePendingKhaltiPidx(

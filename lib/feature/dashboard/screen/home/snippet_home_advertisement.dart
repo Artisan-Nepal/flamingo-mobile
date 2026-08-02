@@ -37,6 +37,15 @@ class _SnippetHomeAdvertisementState extends State<SnippetHomeAdvertisement> {
         if (advertisements.isEmpty) {
           return const SizedBox();
         }
+        // A controlled editorial image size (4:5 portrait off the full content
+        // width) instead of a raw fraction of screen height - keeps the ad the
+        // same shape on every device and stops it eating ~60% of the screen.
+        final double adImageWidth =
+            SizeConfig.screenWidth - Dimens.spacingSizeSmall * 2;
+        final double adImageHeight = adImageWidth * 5 / 4;
+        // Room for the grand caption block below the image: a large title (up to
+        // 2 lines) plus the vendor's description (up to 2 lines).
+        final double carouselHeight = adImageHeight + 150;
         return Padding(
           padding: const EdgeInsets.only(bottom: 10),
           child: Column(
@@ -59,21 +68,21 @@ class _SnippetHomeAdvertisementState extends State<SnippetHomeAdvertisement> {
                   carouselController: _sliderController,
                   options: CarouselOptions(
                     enableInfiniteScroll: true,
-                    viewportFraction: 0.99,
+                    viewportFraction: 1,
                     disableCenter: true,
                     autoPlay: advertisements.length == 1 ? false : true,
                     scrollPhysics: advertisements.length == 1
                         ? NeverScrollableScrollPhysics()
                         : AlwaysScrollableScrollPhysics(),
-                    // enlargeCenterPage: true,
                     autoPlayInterval: const Duration(seconds: 8),
                     autoPlayAnimationDuration:
                         const Duration(milliseconds: 300),
-                    height: SizeConfig.screenHeight * 0.6,
+                    height: carouselHeight,
                   ),
                   itemCount: advertisements.length,
                   itemBuilder: (context, index, pgIndex) {
                     return SninppetHomeAdvertisementItem(
+                      imageHeight: adImageHeight,
                       onTap: () {
                         NavigationHelper.push(
                           context,
@@ -84,7 +93,7 @@ class _SnippetHomeAdvertisementState extends State<SnippetHomeAdvertisement> {
                       },
                       image: advertisements[index].primaryImageUrl,
                       title: advertisements[index].title,
-                      body: advertisements[index].vendor.seller.storeName,
+                      description: advertisements[index].description,
                     );
                   },
                 ),
@@ -98,6 +107,9 @@ class _SnippetHomeAdvertisementState extends State<SnippetHomeAdvertisement> {
   }
 
   Widget _buildLoader() {
+    final double adImageWidth =
+        SizeConfig.screenWidth - Dimens.spacingSizeSmall * 2;
+    final double adImageHeight = adImageWidth * 5 / 4;
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: Dimens.spacingSizeSmall),
       child: Column(
@@ -109,10 +121,13 @@ class _SnippetHomeAdvertisementState extends State<SnippetHomeAdvertisement> {
             width: 200,
           ),
           VerticalSpaceWidget(height: Dimens.spacingSizeSmall),
-          Container(
-            height: SizeConfig.screenHeight * 0.5,
-            width: double.infinity,
-            color: AppColors.grayLighter,
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: Container(
+              height: adImageHeight,
+              width: double.infinity,
+              color: AppColors.grayLighter,
+            ),
           ),
           VerticalSpaceWidget(height: Dimens.spacingSizeDefault),
         ],
@@ -126,17 +141,20 @@ class SninppetHomeAdvertisementItem extends StatelessWidget {
     Key? key,
     required this.image,
     required this.title,
-    required this.body,
+    required this.description,
+    required this.imageHeight,
     this.onTap,
   }) : super(key: key);
 
   final String image;
   final String title;
-  final String body;
+  final String? description;
+  final double imageHeight;
   final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
+    final hasDescription = description != null && description!.trim().isNotEmpty;
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -144,12 +162,18 @@ class SninppetHomeAdvertisementItem extends StatelessWidget {
         width: double.infinity,
         color: AppColors.transparent,
         child: Column(
+          // Fill the carousel's fixed height and top-align, so the image never
+          // shifts vertically as captions vary in length between slides.
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8),
               child: Container(
-                color: AppColors.grayLighter,
+                height: imageHeight,
                 width: double.infinity,
+                color: AppColors.grayLighter,
                 child: CachedNetworkImageWidget(
                   image: image,
                   fit: BoxFit.cover,
@@ -158,38 +182,41 @@ class SninppetHomeAdvertisementItem extends StatelessWidget {
               ),
             ),
             VerticalSpaceWidget(height: Dimens.spacingSizeDefault),
-            Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        title,
-                        style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: Dimens.fontSizeExtraLarge,
-                            color: AppColors.black),
-                      ),
-                      VerticalSpaceWidget(height: Dimens.spacingSizeExtraSmall),
-                      Text(
-                        body,
-                        style: const TextStyle(
-                          fontSize: Dimens.fontSizeLarge,
-                          color: AppColors.primaryMain,
-                        ),
-                        textAlign: TextAlign.right,
-                      )
-                    ],
-                  ),
-                ),
-                HorizontalSpaceWidget(width: Dimens.spacingSizeDefault),
-                Icon(
-                  Icons.arrow_forward,
+            // Full-width, left-aligned editorial caption - a large bold title
+            // over the vendor's description - modeled on the reference layout.
+            // The whole card is tappable, so no trailing affordance competes
+            // with the headline.
+            Text(
+              title,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                fontFamily: 'PlayfairDisplay',
+                // Variable-font weight axis - the reliable way to hit a specific
+                // weight on a variable TTF across platforms.
+                fontVariations: [FontVariation('wght', 600)],
+                fontWeight: FontWeight.w600,
+                fontSize: Dimens.fontSizeHuge,
+                height: 1.15,
+                letterSpacing: -0.2,
+                color: AppColors.black,
+              ),
+            ),
+            if (hasDescription) ...[
+              VerticalSpaceWidget(height: Dimens.spacingSizeSmall),
+              Text(
+                description!,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontFamily: 'PlayfairDisplay',
+                  fontVariations: [FontVariation('wght', 400)],
+                  fontSize: Dimens.fontSizeLarge,
+                  height: 1.4,
                   color: AppColors.grayDark,
                 ),
-              ],
-            ),
+              ),
+            ],
           ],
         ),
       ),

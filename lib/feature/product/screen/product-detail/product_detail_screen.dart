@@ -1,6 +1,8 @@
 import 'package:flamingo/di/di.dart';
 import 'package:flamingo/feature/auth/auth_view_model.dart';
 import 'package:flamingo/feature/auth/screen/login/login_screen.dart';
+import 'package:flamingo/feature/cart/data/model/cart_item.dart';
+import 'package:flamingo/feature/order/screen/place-order/place_order_screen.dart';
 import 'package:flamingo/feature/product/data/model/product_detail.dart';
 import 'package:flamingo/feature/product/screen/product-detail/product_detail_app_bar_view_model.dart';
 import 'package:flamingo/feature/product/screen/product-detail/product_detail_view_model.dart';
@@ -168,8 +170,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               const VerticalSpaceWidget(
-                                                  height: Dimens
-                                                      .spacingSizeDefault),
+                                                  height:
+                                                      Dimens.spacingSizeSmall),
 
                                               // Product information
                                               ..._buildProductInformation(
@@ -177,10 +179,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                               const VerticalSpaceWidget(
                                                   height: Dimens
                                                       .spacingSizeDefault),
-
-                                              const VerticalSpaceWidget(
-                                                  height:
-                                                      Dimens.spacingSizeSmall),
 
                                               // Colour/size: interactive
                                               // selectors normally; in read-only
@@ -299,20 +297,27 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                     _buildRelatedProductsHeader(context),
                                     _buildRelatedProducts(context),
                                   ],
+                                  // Clears the taller two-button bottom bar
+                                  // (Buy Now + Add to Bag) plus the device's
+                                  // safe-area inset so the last row isn't hidden.
                                   SliverToBoxAdapter(
                                     child: const SizedBox(
-                                      height: Dimens.spacing_64,
+                                      height: 120,
                                     ),
                                   )
                                 ],
                               ),
                             ),
+                            // No title: the store/brand name now lives only in
+                            // the product info block below the image (with a
+                            // chevron to the brand page), matching the cleaner
+                            // reference layout - the app bar is just back + bag.
                             SnippetProductDetailAppBar(
-                              title: widget.title,
+                              title: '',
                               showCartAction: !widget.readOnly,
                             ),
                             if (!widget.readOnly)
-                              _buildAddToBagButton(viewModel),
+                              _buildBottomBar(viewModel),
                           ],
                         ),
             );
@@ -567,33 +572,111 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     );
   }
 
-  Widget _buildAddToBagButton(ProductDetailViewModel viewModel) {
-    final authViewModel = Provider.of<AuthViewModel>(context);
-
+  Widget _buildBottomBar(ProductDetailViewModel viewModel) {
     return Positioned(
       bottom: 0,
-      right: Dimens.spacingSizeDefault,
-      left: Dimens.spacingSizeDefault,
-      child: FilledButtonWidget(
-        label: 'Add to Bag',
-        width: SizeConfig.screenWidth - 2 * Dimens.spacingSizeDefault,
-        onPressed: () async {
-          if (!authViewModel.isLoggedIn) {
-            NavigationHelper.push(
-              context,
-              LoginScreen(
-                needContinueAsGuest: false,
+      left: 0,
+      right: 0,
+      child: Container(
+        color: isLightMode(context) ? AppColors.white : AppColors.black,
+        padding: const EdgeInsets.only(
+          left: Dimens.spacingSizeDefault,
+          right: Dimens.spacingSizeDefault,
+          top: Dimens.spacingSizeSmall,
+          bottom: Dimens.spacingSizeSmall,
+        ),
+        child: SafeArea(
+          top: false,
+          child: Row(
+            children: [
+              Expanded(
+                child: OutlinedButtonWidget(
+                  label: 'Buy Now',
+                  onPressed: () => _onBuyNow(viewModel),
+                ),
               ),
-            );
-            return;
-          }
-          showFullScreenLoader(context);
-          await viewModel.addToCart(
-            leadSource: widget.leadSource,
-            advertisementId: widget.advertisementId,
-          );
-          _observeAddToCartResponse(viewModel);
-        },
+              const HorizontalSpaceWidget(width: Dimens.spacingSizeDefault),
+              Expanded(
+                child: FilledButtonWidget(
+                  label: 'Add to Bag',
+                  onPressed: () => _onAddToBag(viewModel),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // Both actions require login. Returns true if the caller should stop (a login
+  // screen was pushed instead).
+  bool _redirectToLoginIfNeeded() {
+    final authViewModel = Provider.of<AuthViewModel>(context, listen: false);
+    if (!authViewModel.isLoggedIn) {
+      NavigationHelper.push(
+        context,
+        LoginScreen(needContinueAsGuest: false),
+      );
+      return true;
+    }
+    return false;
+  }
+
+  Future<void> _onAddToBag(ProductDetailViewModel viewModel) async {
+    if (_redirectToLoginIfNeeded()) return;
+    showFullScreenLoader(context);
+    await viewModel.addToCart(
+      leadSource: widget.leadSource,
+      advertisementId: widget.advertisementId,
+    );
+    _observeAddToCartResponse(viewModel);
+  }
+
+  // "Buy Now" express checkout: add this item to the bag, then go straight to
+  // checkout scoped to ONLY this variant (the rest of the bag is untouched -
+  // see PlaceOrderScreen.productVariantIds / the backend order scope).
+  Future<void> _onBuyNow(ProductDetailViewModel viewModel) async {
+    if (_redirectToLoginIfNeeded()) return;
+    if (viewModel.selectedVariant.quantityInStock == 0) {
+      showToast(context, message: 'This item is out of stock.', isSuccess: false);
+      return;
+    }
+    showFullScreenLoader(context);
+    await viewModel.addToCart(
+      leadSource: widget.leadSource,
+      advertisementId: widget.advertisementId,
+    );
+    if (!mounted) return;
+    NavigationHelper.pop(context); // dismiss the loader
+
+    if (!viewModel.addToCartUseCase.hasCompleted) {
+      showToast(context,
+          message: viewModel.addToCartUseCase.exception, isSuccess: false);
+      return;
+    }
+
+    final product = viewModel.productUseCase.data!;
+    final variant = viewModel.selectedVariant;
+    final expressItem = CartItem(
+      id: viewModel.addToCartUseCase.data?.id ?? variant.id,
+      quantity: 1,
+      product: CartItemProduct(
+        id: product.id,
+        title: product.title,
+        body: product.body,
+        status: product.status,
+        images: product.images,
+        sellerId: product.seller.id,
+      ),
+      productVariant: variant,
+    );
+
+    NavigationHelper.push(
+      context,
+      PlaceOrderScreen(
+        items: [expressItem],
+        productVariantIds: [variant.id],
       ),
     );
   }
@@ -641,30 +724,38 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 viewModel.productUseCase.data!.seller.storeName,
                 textOverflow: TextOverflow.ellipsis,
                 style: textTheme(context).bodyMedium!.copyWith(
-                      fontWeight: FontWeight.w800,
+                      fontWeight: FontWeight.w700,
                     ),
               ),
             ),
-            const Icon(Icons.chevron_right, size: 18),
+            const Icon(Icons.chevron_right, size: 16),
           ],
         ),
       ),
+      const VerticalSpaceWidget(height: Dimens.spacing_2),
       TextWidget(
         viewModel.productUseCase.data!.title,
+        maxLines: 2,
         textOverflow: TextOverflow.ellipsis,
-        style: textTheme(context).bodyMedium!,
+        style: textTheme(context).bodyMedium!.copyWith(
+              color: AppColors.grayDark,
+            ),
       ),
+      const VerticalSpaceWidget(height: Dimens.spacing_2),
       Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           TextWidget(
             'Rs. ${formatNepaliCurrency(viewModel.selectedVariant.effectivePrice)}',
-            style: textTheme(context).labelLarge!,
+            style: textTheme(context).bodyMedium!.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
           ),
           if (viewModel.selectedVariant.originalPrice != null) ...[
             const HorizontalSpaceWidget(width: Dimens.spacingSizeSmall),
             TextWidget(
               'Rs. ${formatNepaliCurrency(viewModel.selectedVariant.originalPrice!)}',
-              style: textTheme(context).labelLarge!.copyWith(
+              style: textTheme(context).bodyMedium!.copyWith(
                     color: AppColors.grayMain,
                     decoration: TextDecoration.lineThrough,
                   ),

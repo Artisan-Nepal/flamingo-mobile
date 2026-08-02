@@ -148,6 +148,12 @@ flutter:
       fonts:
         - asset: assets/fonts/league-gothic/league-gothic.regular.ttf
           weight: 400
+    # Editorial serif for headline moments (e.g. the home advertisement title),
+    # matching the FLAMINGO serif wordmark. Variable font (wght axis) - specific
+    # weights are selected at use-site via fontVariations.
+    - family: PlayfairDisplay
+      fonts:
+        - asset: assets/fonts/playfair-display/PlayfairDisplay-Variable.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

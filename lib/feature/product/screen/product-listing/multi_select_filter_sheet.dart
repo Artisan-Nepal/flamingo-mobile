@@ -110,14 +110,44 @@ class _MultiSelectFilterSheetState extends State<_MultiSelectFilterSheet> {
                   padding: const EdgeInsets.symmetric(
                     horizontal: Dimens.spacingSizeDefault,
                   ),
-                  child: TextField(
-                    onChanged: (v) => setState(() => _query = v),
-                    decoration: InputDecoration(
-                      hintText: 'Search…',
-                      prefixIcon: const Icon(Icons.search, size: 20),
-                      isDense: true,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(Dimens.radiusSmall),
+                  child: SizedBox(
+                    height: 40,
+                    child: TextField(
+                      onChanged: (v) => setState(() => _query = v),
+                      style: const TextStyle(fontSize: Dimens.fontSizeDefault),
+                      decoration: InputDecoration(
+                        hintText: 'Search…',
+                        hintStyle: const TextStyle(
+                          fontSize: Dimens.fontSizeDefault,
+                          color: AppColors.grayMain,
+                        ),
+                        prefixIcon:
+                            const Icon(Icons.search, size: Dimens.iconSizeSmall),
+                        prefixIconConstraints: const BoxConstraints(
+                          minWidth: 36,
+                          minHeight: 36,
+                        ),
+                        isDense: true,
+                        contentPadding: const EdgeInsets.symmetric(
+                          vertical: Dimens.spacingSizeSmall,
+                        ),
+                        filled: true,
+                        fillColor: AppColors.grayLighter,
+                        border: OutlineInputBorder(
+                          borderRadius:
+                              BorderRadius.circular(Dimens.radiusDefault),
+                          borderSide: BorderSide.none,
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius:
+                              BorderRadius.circular(Dimens.radiusDefault),
+                          borderSide: BorderSide.none,
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius:
+                              BorderRadius.circular(Dimens.radiusDefault),
+                          borderSide: const BorderSide(color: AppColors.grayLight),
+                        ),
                       ),
                     ),
                   ),

@@ -156,11 +156,9 @@ class SnippetHomeScreenTitle extends StatelessWidget {
                   onTap: onTap,
                   highlightColor: Colors.transparent,
                   splashColor: Colors.transparent,
-                  child: Text(
-                    'See More',
-                    style: TextStyle(
-                      color: AppColors.grayMain,
-                    ),
+                  child: const Icon(
+                    Icons.chevron_right,
+                    color: AppColors.grayMain,
                   ),
                 ),
               ],

@@ -17,10 +17,22 @@ class SnippetFilterProductsBottomSheet extends StatefulWidget {
 
 class _SnippetFilterProductsBottomSheetState
     extends State<SnippetFilterProductsBottomSheet> {
-  final TextEditingController _firstPriceController = TextEditingController();
-  final FocusNode _firstFocus = FocusNode();
-  final TextEditingController _lastPriceController = TextEditingController();
-  final FocusNode _lastFocus = FocusNode();
+  // Pending price range (rupees) held while the sheet is open; applied on tap.
+  int _minPrice = 0;
+  int _maxPrice = 0;
+  late final double _maxBound;
+
+  @override
+  void initState() {
+    super.initState();
+    final products = Provider.of<ProductListingViewModel>(context, listen: false)
+            .getProductsUseCase
+            .data
+            ?.rows ??
+        [];
+    _maxBound = priceUpperBoundRupees(products);
+    _maxPrice = _maxBound.round();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,8 +61,20 @@ class _SnippetFilterProductsBottomSheetState
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const VerticalSpaceWidget(height: Dimens.spacingSizeSmall),
-                    _buildPriceRange(),
-                    const VerticalSpaceWidget(height: Dimens.spacingSizeSmall),
+                    _buildSectionLabel('Price range'),
+                    const VerticalSpaceWidget(
+                        height: Dimens.spacingSizeExtraSmall),
+                    PriceRangeSelector(
+                      maxBound: _maxBound,
+                      initialMin: _minPrice,
+                      initialMax: _maxPrice,
+                      onChanged: (min, max) {
+                        _minPrice = min;
+                        _maxPrice = max;
+                      },
+                    ),
+                    const VerticalSpaceWidget(
+                        height: Dimens.spacingSizeDefault),
                     _buildFilterSelection(),
                     const VerticalSpaceWidget(height: Dimens.spacingSizeSmall),
                     Center(
@@ -72,95 +96,64 @@ class _SnippetFilterProductsBottomSheetState
   }
 
   void _onApplyFilter() {
-    double minPrice = 0.0;
-    double maxPrice = 0.0;
-    if (_firstPriceController.text.isNotEmpty &&
-        _lastPriceController.text.isNotEmpty) {
-      minPrice = double.parse(_firstPriceController.text);
-      maxPrice = double.parse(_lastPriceController.text);
-    }
-
+    // A range that still spans the whole track means "no price filter" - pass 0s
+    // so sortProductsHelper keeps every product.
+    final isFullRange = _minPrice <= 0 && _maxPrice >= _maxBound.round();
     Provider.of<ProductListingViewModel>(context, listen: false).sortProducts(
-      startingPrice: minPrice,
-      endingPrice: maxPrice,
+      startingPrice: isFullRange ? 0 : _minPrice.toDouble(),
+      endingPrice: isFullRange ? 0 : _maxPrice.toDouble(),
     );
     Navigator.pop(context);
   }
 
+  Widget _buildSectionLabel(String text) {
+    return Text(
+      text,
+      style: const TextStyle(
+        fontSize: Dimens.fontSizeDefault,
+        fontWeight: FontWeight.w700,
+      ),
+    );
+  }
+
   Widget _buildFilterSelection() {
-    return const Column(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Sort By',
-        ),
-        Row(
+        _buildSectionLabel('Sort by'),
+        const Row(
           children: [
             Expanded(
               child: SnippetFilterProductCheckBox(
-                title: 'Low To High Price',
+                title: 'Newest first',
+                filterType: ProductFilterType.newest,
+              ),
+            ),
+            Expanded(
+              child: SnippetFilterProductCheckBox(
+                title: 'Oldest first',
+                filterType: ProductFilterType.oldest,
+              ),
+            ),
+          ],
+        ),
+        const Row(
+          children: [
+            Expanded(
+              child: SnippetFilterProductCheckBox(
+                title: 'Price: Low to High',
                 filterType: ProductFilterType.priceAsc,
               ),
             ),
             Expanded(
               child: SnippetFilterProductCheckBox(
-                title: 'High To Low Price',
+                title: 'Price: High to Low',
                 filterType: ProductFilterType.priceDesc,
               ),
             ),
           ],
         ),
       ],
-    );
-  }
-
-  Widget _buildPriceRange() {
-    return Row(
-      children: [
-        const Text('Price range'),
-        const Expanded(child: SizedBox()),
-        _buildTextInput(
-          controller: _firstPriceController,
-          focusNode: _firstFocus,
-        ),
-        const Text(' - '),
-        _buildTextInput(
-          controller: _lastPriceController,
-          focusNode: _lastFocus,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildTextInput({
-    required TextEditingController controller,
-    required FocusNode focusNode,
-  }) {
-    return SizedBox(
-      height: 40,
-      width: 100,
-      child: TextField(
-        keyboardType: TextInputType.number,
-        textAlign: TextAlign.center,
-        controller: controller,
-        maxLines: 1,
-        focusNode: focusNode,
-        textInputAction: TextInputAction.done,
-        style: TypographyStyles.labelLarge,
-        decoration: InputDecoration(
-          filled: true,
-          fillColor: themedPrimaryColor(context).withOpacity(0.2),
-          contentPadding: const EdgeInsets.only(bottom: 8),
-          focusedBorder: UnderlineInputBorder(
-            borderSide: BorderSide.none,
-            borderRadius: BorderRadius.circular(5),
-          ),
-          enabledBorder: UnderlineInputBorder(
-            borderSide: BorderSide.none,
-            borderRadius: BorderRadius.circular(5.7),
-          ),
-        ),
-      ),
     );
   }
 

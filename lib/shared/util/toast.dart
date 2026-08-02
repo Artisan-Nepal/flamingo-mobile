@@ -13,12 +13,11 @@ void showToast(BuildContext context,
             ),
       ),
     ),
-    // AppColors.success/.error - the same feedback colors used everywhere
-    // else (form validation, order status, checkout retry). Previously used
-    // Theme.of(context).primaryColorLight for success, an auto-derived
-    // Material default (primaryColor here is plain black/white) that never
-    // matched the app's actual palette.
-    backgroundColor: isSuccess ? AppColors.success : AppColors.error,
+    // Success uses the app's pink accent (secondaryMain) so positive feedback
+    // reads as on-brand rather than generic "system green". Errors keep the
+    // conventional red, the same feedback color used everywhere else (form
+    // validation, order status, checkout retry).
+    backgroundColor: isSuccess ? AppColors.secondaryMain : AppColors.error,
     duration: Duration(milliseconds: duration),
     behavior: SnackBarBehavior.floating,
     elevation: 0,

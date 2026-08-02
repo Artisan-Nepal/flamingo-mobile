@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flamingo/feature/auth/auth_view_model.dart';
 import 'package:flamingo/feature/auth/screen/login/login_screen.dart';
 import 'package:flamingo/feature/product/screen/product-listing/product_listing_screen.dart';
+import 'package:flamingo/feature/promo-banner/data/model/coupon_redeem_outcome.dart';
 import 'package:flamingo/feature/promo-banner/data/model/promo_banner.dart';
 import 'package:flamingo/feature/promo-banner/promo_banner_view_model.dart';
 import 'package:flamingo/shared/shared.dart';
@@ -199,15 +200,27 @@ class _PromoBannerCard extends StatelessWidget {
     // A coupon-carrying banner redeems (saves to wallet) on tap - primary
     // action even if it also links to Sale.
     if (banner.hasCoupon) {
-      final ok = await viewModel.redeem(banner.couponId!);
+      final outcome = await viewModel.redeem(banner.couponId!);
       if (!context.mounted) return;
-      showToast(
-        context,
-        message: ok
-            ? 'Code ${banner.couponCode} saved — apply it at checkout.'
-            : 'Could not save the code. Please try again.',
-        isSuccess: ok,
-      );
+      final (message, isSuccess) = switch (outcome) {
+        CouponRedeemOutcome.saved => (
+            'Code ${banner.couponCode} saved — apply it at checkout.',
+            true,
+          ),
+        CouponRedeemOutcome.alreadyRedeemed => (
+            'You have already redeemed ${banner.couponCode}. Apply it at checkout.',
+            true,
+          ),
+        CouponRedeemOutcome.alreadyUsed => (
+            'You have already used ${banner.couponCode}.',
+            false,
+          ),
+        CouponRedeemOutcome.failed => (
+            'Could not save the code. Please try again.',
+            false,
+          ),
+      };
+      showToast(context, message: message, isSuccess: isSuccess);
       return;
     }
 

@@ -24,5 +24,6 @@ abstract class OrderRemote {
   Future<DeliveryQuote> getDeliveryQuote({
     required String shippingAddressId,
     required String shippingMethodId,
+    List<String>? productVariantIds,
   });
 }

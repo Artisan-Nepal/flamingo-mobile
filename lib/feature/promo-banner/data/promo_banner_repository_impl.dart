@@ -1,3 +1,4 @@
+import 'package:flamingo/feature/promo-banner/data/model/coupon_redeem_outcome.dart';
 import 'package:flamingo/feature/promo-banner/data/model/promo_banner.dart';
 import 'package:flamingo/feature/promo-banner/data/promo_banner_repository.dart';
 import 'package:flamingo/feature/promo-banner/data/remote/promo_banner_remote.dart';
@@ -14,7 +15,7 @@ class PromoBannerRepositoryImpl implements PromoBannerRepository {
   }
 
   @override
-  Future<void> redeemCoupon(String couponId) async {
+  Future<CouponRedeemOutcome> redeemCoupon(String couponId) async {
     return await _remote.redeemCoupon(couponId);
   }
 }

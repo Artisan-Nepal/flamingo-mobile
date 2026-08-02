@@ -47,11 +47,12 @@ class _SnippetProductDetailImagesState
   @override
   Widget build(BuildContext context) {
     return Container(
-      constraints: BoxConstraints(
-        maxHeight: SizeConfig.screenHeight * 0.5,
-      ),
-      // height: 200,
+      height: SizeConfig.screenHeight * 0.6,
       width: double.infinity,
+      // Neutral tile behind the photo so a portrait product shown in full
+      // (BoxFit.contain, below) sits on an intentional backdrop rather than
+      // leaving bare gaps at its sides.
+      color: isLightMode(context) ? AppColors.grayLighter : AppColors.grayDarker,
       child: Stack(
         alignment: Alignment.center,
         children: [
@@ -68,9 +69,12 @@ class _SnippetProductDetailImagesState
                   ),
                 );
               },
+              // contain (not cover) so the whole garment is visible - product
+              // photos are portrait (~3:4) and cover was cropping their
+              // top/bottom to fill the wider hero box.
               child: CachedNetworkImageWidget(
                 image: widget.images[index],
-                fit: BoxFit.cover,
+                fit: BoxFit.contain,
               ),
             ),
           ),

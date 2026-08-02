@@ -61,13 +61,19 @@ List<ProductDetail> sortProductsHelper({
 }) {
   final startingPriceInPaisa = startingPrice * 100;
   final endingPriceInPaisa = endingPrice * 100;
+  // Support min-only, max-only, and both. A max is only meaningful when it's at
+  // or above the min, otherwise the range is degenerate and we skip filtering.
+  final hasMin = startingPrice > 0;
+  final hasMax = endingPrice > 0 && endingPrice >= startingPrice;
   List<ProductDetail> list = [];
-  if (startingPrice > 0 && endingPrice > startingPrice) {
-    list.addAll(products
-        .where((product) =>
-            (product.variants[0].price) >= startingPriceInPaisa &&
-            (product.variants[0].price) <= endingPriceInPaisa)
-        .toList());
+  if (hasMin || hasMax) {
+    list.addAll(products.where((product) {
+      if (product.variants.isEmpty) return false;
+      final price = product.variants.first.price;
+      if (hasMin && price < startingPriceInPaisa) return false;
+      if (hasMax && price > endingPriceInPaisa) return false;
+      return true;
+    }));
   } else {
     list.addAll(products);
   }
@@ -80,8 +86,53 @@ List<ProductDetail> sortProductsHelper({
     list.sort((a, b) => a.variants[0].price.compareTo(b.variants[0].price));
     Iterable<ProductDetail> iterable = list.reversed;
     list = iterable.toList();
+  } else if (filterType.isNewest || filterType.isOldest) {
+    // Products without a createdAt sort to the very bottom regardless of
+    // direction, so they never jump to the top of a "Newest first" list.
+    final epoch = DateTime.fromMillisecondsSinceEpoch(0);
+    list.sort((a, b) {
+      final byDate = (a.createdAt ?? epoch).compareTo(b.createdAt ?? epoch);
+      return filterType.isNewest ? -byDate : byDate;
+    });
   }
   return list;
+}
+
+/// A sensible upper bound (in rupees) for a price-range slider, derived from the
+/// most expensive product currently loaded and rounded up to a clean step so the
+/// slider track ends on a round number. Falls back to a default when the list is
+/// empty or has no prices yet.
+double priceUpperBoundRupees(List<ProductDetail> products) {
+  final maxPaisa = products
+      .where((p) => p.variants.isNotEmpty)
+      .map((p) => p.variants.first.price)
+      .fold<int>(0, (a, b) => b > a ? b : a);
+  if (maxPaisa <= 0) return 10000;
+  final rupees = (maxPaisa / 100).ceil();
+  final step = rupees <= 10000
+      ? 500
+      : rupees <= 50000
+          ? 1000
+          : 5000;
+  return ((rupees / step).ceil() * step).toDouble();
+}
+
+/// Human-friendly countdown to an expiry instant, e.g. "3d 5h left",
+/// "6h 20m left", "45m left". Used by the Coupons wallet.
+String formatTimeLeft(DateTime until) {
+  final diff = until.difference(DateTime.now());
+  if (diff.isNegative) return 'Expired';
+  final days = diff.inDays;
+  final hours = diff.inHours % 24;
+  final minutes = diff.inMinutes % 60;
+  if (days >= 1) {
+    return hours > 0 ? '${days}d ${hours}h left' : '${days}d left';
+  }
+  if (diff.inHours >= 1) {
+    return minutes > 0 ? '${diff.inHours}h ${minutes}m left' : '${diff.inHours}h left';
+  }
+  if (diff.inMinutes >= 1) return '${diff.inMinutes}m left';
+  return 'Expiring soon';
 }
 
 String formatNepaliCurrency(int amount) {

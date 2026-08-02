@@ -120,54 +120,39 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
 
   Future<void> _openPricePicker(SearchViewModel vm) async {
     final f = vm.filters;
-    final minCtrl = TextEditingController(
-        text: f.minPrice != null ? (f.minPrice! ~/ 100).toString() : '');
-    final maxCtrl = TextEditingController(
-        text: f.maxPrice != null ? (f.maxPrice! ~/ 100).toString() : '');
-    final apply = await showDialog<bool>(
+    // Slider bound from the loaded results, but never below any already-applied
+    // max so the current selection always fits on the track.
+    var bound = priceUpperBoundRupees(vm.searchProductsUseCase.data ?? []);
+    if (f.maxPrice != null && f.maxPrice! / 100 > bound) {
+      bound = (f.maxPrice! / 100).ceilToDouble();
+    }
+
+    final result = await showModalBottomSheet<_PriceResult>(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Price range (Rs)'),
-        content: Row(
-          children: [
-            Expanded(
-              child: TextField(
-                controller: minCtrl,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(labelText: 'Min'),
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: TextField(
-                controller: maxCtrl,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(labelText: 'Max'),
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-              onPressed: () => Navigator.pop(ctx, false),
-              child: const Text('Clear')),
-          ElevatedButton(
-              onPressed: () => Navigator.pop(ctx, true),
-              child: const Text('Apply')),
-        ],
+      isScrollControlled: true,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (ctx) => _PriceRangeSheet(
+        maxBound: bound,
+        initialMin: f.minPrice != null ? f.minPrice! ~/ 100 : null,
+        initialMax: f.maxPrice != null ? f.maxPrice! ~/ 100 : null,
       ),
     );
-    if (apply == null) return; // dismissed
-    final minRs = int.tryParse(minCtrl.text.trim());
-    final maxRs = int.tryParse(maxCtrl.text.trim());
-    // Rupees in the UI, paisa on the wire.
+    if (result == null) return; // dismissed
+
+    // Rupees in the UI, paisa on the wire. A full-span range means "no price
+    // filter" - clear it so the pill doesn't falsely read as active.
+    final isFullRange =
+        result.cleared || (result.min <= 0 && result.max >= bound.round());
     final newFilters = ProductFilterParams(
       categoryIds: f.categoryIds,
       sizeValues: f.sizeValues,
       sellerIds: f.sellerIds,
       onSale: f.onSale,
-      minPrice: apply && minRs != null ? minRs * 100 : null,
-      maxPrice: apply && maxRs != null ? maxRs * 100 : null,
+      minPrice: isFullRange || result.min <= 0 ? null : result.min * 100,
+      maxPrice: isFullRange ? null : result.max * 100,
     );
     await vm.applyFilters(widget.keyword, newFilters);
   }
@@ -294,5 +279,108 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
       ),
     );
   }
+}
 
+/// Outcome of the price bottom sheet: the chosen range (rupees), or a flag that
+/// the user tapped Clear.
+class _PriceResult {
+  final int min;
+  final int max;
+  final bool cleared;
+  const _PriceResult({this.min = 0, this.max = 0, this.cleared = false});
+}
+
+/// Bottom sheet wrapping [PriceRangeSelector] with Clear / Apply actions, used by
+/// the search price filter.
+class _PriceRangeSheet extends StatefulWidget {
+  const _PriceRangeSheet({
+    required this.maxBound,
+    this.initialMin,
+    this.initialMax,
+  });
+
+  final double maxBound;
+  final int? initialMin;
+  final int? initialMax;
+
+  @override
+  State<_PriceRangeSheet> createState() => _PriceRangeSheetState();
+}
+
+class _PriceRangeSheetState extends State<_PriceRangeSheet> {
+  late int _min = widget.initialMin ?? 0;
+  late int _max = widget.initialMax ?? widget.maxBound.round();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(
+        bottom: MediaQuery.of(context).viewInsets.bottom,
+      ),
+      child: SafeArea(
+        top: false,
+        child: Padding(
+          padding: const EdgeInsets.all(Dimens.spacingSizeDefault),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  margin: const EdgeInsets.only(bottom: Dimens.spacingSizeSmall),
+                  decoration: BoxDecoration(
+                    color: AppColors.grayLight,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ),
+              const Text(
+                'Price range',
+                style: TextStyle(
+                  fontSize: Dimens.fontSizeLarge,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const VerticalSpaceWidget(height: Dimens.spacingSizeDefault),
+              PriceRangeSelector(
+                maxBound: widget.maxBound,
+                initialMin: _min,
+                initialMax: _max,
+                onChanged: (min, max) {
+                  _min = min;
+                  _max = max;
+                },
+              ),
+              const VerticalSpaceWidget(height: Dimens.spacingSizeDefault),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => Navigator.pop(
+                        context,
+                        const _PriceResult(cleared: true),
+                      ),
+                      child: const Text('Clear'),
+                    ),
+                  ),
+                  const HorizontalSpaceWidget(width: Dimens.spacingSizeSmall),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () => Navigator.pop(
+                        context,
+                        _PriceResult(min: _min, max: _max),
+                      ),
+                      child: const Text('Apply'),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }

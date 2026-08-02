@@ -1,3 +1,4 @@
+import 'package:flamingo/feature/promo-banner/data/model/coupon_redeem_outcome.dart';
 import 'package:flamingo/feature/promo-banner/data/model/promo_banner.dart';
 import 'package:flamingo/feature/promo-banner/data/promo_banner_repository.dart';
 import 'package:flamingo/shared/shared.dart';
@@ -27,14 +28,14 @@ class PromoBannerViewModel extends ChangeNotifier {
     }
   }
 
-  // Saves the coupon to the customer's wallet. Returns true on success so the
-  // caller can toast accordingly.
-  Future<bool> redeem(String couponId) async {
+  // Saves the coupon to the customer's wallet. Returns the outcome (saved /
+  // already redeemed / already used / failed) so the caller can toast honestly
+  // instead of always claiming success.
+  Future<CouponRedeemOutcome> redeem(String couponId) async {
     try {
-      await _repository.redeemCoupon(couponId);
-      return true;
+      return await _repository.redeemCoupon(couponId);
     } catch (_) {
-      return false;
+      return CouponRedeemOutcome.failed;
     }
   }
 }

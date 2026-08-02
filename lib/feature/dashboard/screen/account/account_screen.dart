@@ -2,6 +2,7 @@ import 'package:flamingo/feature/address/screen/address-listing/address_listing_
 import 'package:flamingo/feature/auth/auth.dart';
 import 'package:flamingo/feature/auth/auth_view_model.dart';
 import 'package:flamingo/feature/cart/screen/cart-listing/cart_listing_screen.dart';
+import 'package:flamingo/feature/coupon/screen/coupon-listing/coupon_listing_screen.dart';
 import 'package:flamingo/feature/customer-activity/customer_activity_view_model.dart';
 import 'package:flamingo/feature/dashboard/screen/dashboard/dashboard_view_model.dart';
 import 'package:flamingo/feature/fit-reference/screen/fit-reference-listing/fit_reference_listing_screen.dart';
@@ -202,6 +203,12 @@ class _AccountScreenState extends State<AccountScreen> {
           onPressed: () {
             Provider.of<DashboardViewModel>(context, listen: false)
                 .setPageIndex(3);
+          },
+        ),
+        ListTileV2Wdiget(
+          title: 'Coupons',
+          onPressed: () {
+            NavigationHelper.push(context, const CouponListingScreen());
           },
         ),
         ListTileV2Wdiget(

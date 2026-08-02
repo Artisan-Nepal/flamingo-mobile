@@ -4,6 +4,8 @@ class KhaltiInitiateRequest {
   final String paymentMethodCode;
   final String shippingMethodId;
   final String? couponCode;
+  // "Buy Now" express checkout: order only these cart lines. Null = whole cart.
+  final List<String>? productVariantIds;
 
   KhaltiInitiateRequest({
     required this.billingAddressId,
@@ -11,6 +13,7 @@ class KhaltiInitiateRequest {
     required this.paymentMethodCode,
     required this.shippingMethodId,
     this.couponCode,
+    this.productVariantIds,
   });
 
   Map<String, dynamic> toJson() {
@@ -22,6 +25,9 @@ class KhaltiInitiateRequest {
     };
     if (couponCode != null) {
       json['couponCode'] = couponCode;
+    }
+    if (productVariantIds != null && productVariantIds!.isNotEmpty) {
+      json['productVariantIds'] = productVariantIds;
     }
     return json;
   }

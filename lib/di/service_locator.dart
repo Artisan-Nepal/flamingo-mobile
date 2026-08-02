@@ -3,6 +3,7 @@ import 'package:flamingo/di/registration/feature/address.dart';
 import 'package:flamingo/di/registration/feature/advertisement.dart';
 import 'package:flamingo/di/registration/feature/cart.dart';
 import 'package:flamingo/di/registration/feature/category.dart';
+import 'package:flamingo/di/registration/feature/coupon.dart';
 import 'package:flamingo/di/registration/feature/customer_activity.dart';
 import 'package:flamingo/di/registration/feature/dashboard.dart';
 import 'package:flamingo/di/registration/feature/fit_reference.dart';
@@ -40,6 +41,8 @@ Future setUpServiceLocator() async {
   registerCartFeature(locator);
   registerWishlistFeature(locator);
   registerOrderFeature(locator);
+  // After order: reuses OrderRepository for GET /coupons/saved.
+  registerCouponFeature(locator);
   registerCustomerActivityFeature(locator);
   registerVendorFeature(locator);
   registerSearchFeature(locator);

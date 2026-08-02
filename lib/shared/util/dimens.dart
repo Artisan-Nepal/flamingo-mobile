@@ -6,6 +6,8 @@ class Dimens {
   static const double fontSizeLarge = 16.0;
   static const double fontSizeExtraLarge = 18.0;
   static const double fontSizeOverLarge = 24.0;
+  // Editorial headline size, e.g. the home advertisement title.
+  static const double fontSizeHuge = 28.0;
 
   // Spacing
   static const double spacingSizeExtraSmall = 5.0;

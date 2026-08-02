@@ -100,12 +100,15 @@ class OrderRemoteImpl implements OrderRemote {
   Future<DeliveryQuote> getDeliveryQuote({
     required String shippingAddressId,
     required String shippingMethodId,
+    List<String>? productVariantIds,
   }) async {
     final apiResponse = await _apiClient.get(
       ApiUrls.deliveryQuote,
       queryParams: {
         'shippingAddressId': shippingAddressId,
         'shippingMethodId': shippingMethodId,
+        if (productVariantIds != null && productVariantIds.isNotEmpty)
+          'productVariantIds': productVariantIds.join(','),
       },
     );
     return DeliveryQuote.fromJson(apiResponse.data);

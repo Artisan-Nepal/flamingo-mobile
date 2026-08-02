@@ -20,9 +20,14 @@ class PlaceOrderScreen extends StatefulWidget {
   const PlaceOrderScreen({
     Key? key,
     required this.items,
+    this.productVariantIds,
   }) : super(key: key);
 
   final List<CartItem> items;
+
+  // "Buy Now" express checkout: restrict the order to these variant lines only
+  // (leaving the rest of the bag untouched). Null = normal whole-cart checkout.
+  final List<String>? productVariantIds;
 
   @override
   State<PlaceOrderScreen> createState() => _PlaceOrderScreenState();
@@ -37,6 +42,7 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
   void initState() {
     super.initState();
     _viewModel.setCartItems(widget.items);
+    _viewModel.setExpressScope(widget.productVariantIds);
     _viewModel.getSavedCoupons();
   }
 

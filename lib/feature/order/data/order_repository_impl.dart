@@ -84,10 +84,12 @@ class OrderRepositoryImpl implements OrderRepository {
   Future<DeliveryQuote> getDeliveryQuote({
     required String shippingAddressId,
     required String shippingMethodId,
+    List<String>? productVariantIds,
   }) async {
     return await _orderRemote.getDeliveryQuote(
       shippingAddressId: shippingAddressId,
       shippingMethodId: shippingMethodId,
+      productVariantIds: productVariantIds,
     );
   }
 }

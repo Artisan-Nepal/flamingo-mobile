@@ -28,6 +28,10 @@ class ProductDetail {
   // null when the category has no fitZone set (e.g. sarees; size chart still
   // shows, comparison doesn't - SIZE_AND_FIT_PLAN.md §9 A1).
   final String? fitZone;
+  // When the product was added to the catalog. Drives the "Newest/Oldest first"
+  // sort in the filter sheet. Nullable because older cached payloads (and a few
+  // endpoints) may omit it - those products sort as oldest.
+  final DateTime? createdAt;
 
   ProductDetail({
     required this.id,
@@ -46,6 +50,7 @@ class ProductDetail {
     this.stretchLevel,
     this.measurementStatus = 'NONE',
     this.fitZone,
+    this.createdAt,
   });
 
   factory ProductDetail.fromJson(Map<String, dynamic> json) => ProductDetail(
@@ -78,6 +83,9 @@ class ProductDetail {
                 List.from(json['productCategory']).isEmpty
             ? null
             : json['productCategory'][0]['category']['fitZone'],
+        createdAt: json['createdAt'] == null
+            ? null
+            : DateTime.tryParse(json['createdAt'].toString()),
       );
 
   static List<ProductDetail> fromJsonList(dynamic json) =>

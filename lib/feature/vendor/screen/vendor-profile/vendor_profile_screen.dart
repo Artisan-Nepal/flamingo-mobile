@@ -231,9 +231,15 @@ class _VendorProfileScreenState extends State<VendorProfileScreen> {
                     );
                   }),
                   _buildStoriesRow(productListingViewModel),
-                  if (productListingViewModel.getProductsUseCase.data?.rows
-                          .isNotEmpty ==
-                      true)
+                  // Keep the filter row visible whenever there are results OR any
+                  // filter is active. Without the second condition, applying a
+                  // filter that returns nothing (e.g. Sale) would hide the row
+                  // entirely, stranding the user with no way to clear the filter
+                  // except the back button.
+                  if (productListingViewModel
+                              .getProductsUseCase.data?.rows.isNotEmpty ==
+                          true ||
+                      !_filters.isEmpty)
                     _buildRefineAndCategoryRow(productListingViewModel),
                   ..._buildProductListing(productListingViewModel)
                 ],

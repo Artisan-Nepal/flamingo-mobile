@@ -83,4 +83,11 @@ class ApiUrls {
   static String notificationsSelf = '/notifications/self';
   static String notificationRead = '/notifications/:id/read';
   static String notificationDelete = '/notifications/:id';
+
+  // REVIEWS
+  static String productReviewSummary = '/products/:id/reviews/summary';
+  static String productReviews = '/products/:id/reviews';
+  static String myProductReview = '/products/:id/reviews/me';
+  static String reviews = '/reviews';
+  static String reviewById = '/reviews/:id';
 }

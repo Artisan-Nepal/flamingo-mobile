@@ -64,7 +64,14 @@ class TitledScreen extends StatelessWidget {
                   notification.disallowIndicator();
                   return false;
                 },
+                // Translucent + onTap so tapping empty space (outside a text
+                // field) dismisses the keyboard, while children still receive
+                // their own taps. Matches the vendor app's DefaultScreen; this
+                // GestureDetector previously had no onTap, so the keyboard
+                // never dismissed on background tap (e.g. the write-review form).
                 child: GestureDetector(
+                  behavior: HitTestBehavior.translucent,
+                  onTap: () => FocusScope.of(context).unfocus(),
                   child: scrollable
                       ? SingleChildScrollView(
                           controller: scrollController,

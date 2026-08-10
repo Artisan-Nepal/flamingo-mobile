@@ -32,6 +32,10 @@ class ProductDetail {
   // sort in the filter sheet. Nullable because older cached payloads (and a few
   // endpoints) may omit it - those products sort as oldest.
   final DateTime? createdAt;
+  // Ratings & reviews summary, nullable so endpoints that don't include it yet
+  // just render no rating badge (see RatingBadgeWidget) instead of "0.0 (0)".
+  final double? averageRating;
+  final int? reviewCount;
 
   ProductDetail({
     required this.id,
@@ -51,6 +55,8 @@ class ProductDetail {
     this.measurementStatus = 'NONE',
     this.fitZone,
     this.createdAt,
+    this.averageRating,
+    this.reviewCount,
   });
 
   factory ProductDetail.fromJson(Map<String, dynamic> json) => ProductDetail(
@@ -86,6 +92,10 @@ class ProductDetail {
         createdAt: json['createdAt'] == null
             ? null
             : DateTime.tryParse(json['createdAt'].toString()),
+        averageRating: json['averageRating'] == null
+            ? null
+            : (json['averageRating'] as num).toDouble(),
+        reviewCount: json['reviewCount'],
       );
 
   static List<ProductDetail> fromJsonList(dynamic json) =>

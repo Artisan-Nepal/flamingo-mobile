@@ -381,7 +381,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       // around it.
                       color: AppColors.grayLighter,
                       border: Border.all(color: AppColors.grayLine),
-                      borderRadius: BorderRadius.circular(Dimens.radiusLarge),
+                      borderRadius: BorderRadius.circular(Dimens.radiusSmall),
                     ),
                     child: Text(
                       term,

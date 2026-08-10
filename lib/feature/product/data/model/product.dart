@@ -15,6 +15,8 @@ class Product {
   final String sellerStoreName;
   final String? sellerId;
   final ProductDetail? product;
+  final double? averageRating;
+  final int? reviewCount;
 
   Product({
     required this.productId,
@@ -26,6 +28,8 @@ class Product {
     this.originalPrice,
     this.sellerId,
     this.product,
+    this.averageRating,
+    this.reviewCount,
   });
 
   bool get isDiscounted => originalPrice != null && originalPrice! > price;
@@ -42,6 +46,10 @@ class Product {
       price: json['price'],
       sellerStoreName: json['sellerStoreName'],
       sellerId: json['sellerId'],
+      averageRating: json['averageRating'] == null
+          ? null
+          : (json['averageRating'] as num).toDouble(),
+      reviewCount: json['reviewCount'],
     );
   }
 
@@ -65,6 +73,8 @@ class Product {
       sellerStoreName: product.seller.storeName,
       sellerId: product.seller.id,
       product: product,
+      averageRating: product.averageRating,
+      reviewCount: product.reviewCount,
     );
   }
 

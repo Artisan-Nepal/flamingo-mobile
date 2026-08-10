@@ -5,6 +5,7 @@ import 'package:flamingo/feature/order/screen/order-detail/snippet_order_detail_
 import 'package:flamingo/feature/order/screen/order-detail/track_order_screen.dart';
 import 'package:flamingo/feature/order/screen/place-order/snippet_order_item.dart';
 import 'package:flamingo/feature/product/screen/product-detail/product_detail_screen.dart';
+import 'package:flamingo/feature/review/screen/write-review/write_review_screen.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/alert-dialog/alert_dialog_widget.dart';
 import 'package:flamingo/widget/widget.dart';
@@ -168,21 +169,26 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     final canCancel =
         _cancellableStatusCodes.contains(widget.order.orderStatus.code) &&
             !_cancelled;
+    final isDelivered = widget.order.orderStatus.code == 'DELIVERED';
+
+    final trackButton = Expanded(
+      child: isDelivered
+          // Once delivered, reviewing is the action we're inviting (see the
+          // delivered notification copy) - so Track Order steps down to
+          // secondary and Rate & Review takes the primary slot below.
+          ? OutlinedButtonWidget(
+              label: 'Track Order',
+              onPressed: () => _openTrackOrder(),
+            )
+          : FilledButtonWidget(
+              label: 'Track Order',
+              onPressed: () => _openTrackOrder(),
+            ),
+    );
+
     return Row(
       children: [
-        Expanded(
-          child: FilledButtonWidget(
-            label: 'Track Order',
-            onPressed: () {
-              NavigationHelper.push(
-                context,
-                TrackOrderScreen(
-                  order: widget.order,
-                ),
-              );
-            },
-          ),
-        ),
+        trackButton,
         if (canCancel) ...[
           const HorizontalSpaceWidget(width: Dimens.spacingSizeDefault),
           Expanded(
@@ -193,7 +199,29 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
             ),
           ),
         ],
+        if (isDelivered) ...[
+          const HorizontalSpaceWidget(width: Dimens.spacingSizeDefault),
+          Expanded(
+            child: FilledButtonWidget(
+              label: 'Rate & Review',
+              onPressed: () => NavigationHelper.push(
+                context,
+                WriteReviewScreen(
+                  productId: widget.order.product.id,
+                  productTitle: widget.order.product.title,
+                ),
+              ),
+            ),
+          ),
+        ],
       ],
+    );
+  }
+
+  void _openTrackOrder() {
+    NavigationHelper.push(
+      context,
+      TrackOrderScreen(order: widget.order),
     );
   }
 

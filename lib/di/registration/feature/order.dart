@@ -1,5 +1,6 @@
 import 'package:flamingo/data/data.dart';
 import 'package:flamingo/di/service_names.dart';
+import 'package:flamingo/feature/address/data/address_repository.dart';
 import 'package:flamingo/feature/auth/auth.dart';
 import 'package:flamingo/feature/order/data/local/order_local.dart';
 import 'package:flamingo/feature/order/data/local/order_local_impl.dart';
@@ -34,7 +35,10 @@ void registerOrderFeature(GetIt locator) {
         authRepository: locator<AuthRepository>()),
   );
   locator.registerFactory<PlaceOrderViewModel>(
-    () => PlaceOrderViewModel(orderRepository: locator<OrderRepository>()),
+    () => PlaceOrderViewModel(
+      orderRepository: locator<OrderRepository>(),
+      addressRepository: locator<AddressRepository>(),
+    ),
   );
 
   locator.registerFactory<CheckoutMethodViewModel>(

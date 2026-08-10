@@ -15,6 +15,8 @@ import 'package:flamingo/feature/product/screen/product-detail/snippet_size_char
 import 'package:flamingo/feature/product/screen/product-detail/snippet_size_selection_bottom_sheet.dart';
 import 'package:flamingo/feature/product/screen/product-listing/min_product_listing_view_model.dart';
 import 'package:flamingo/feature/product/screen/product-listing/snippet_product_listing.dart';
+import 'package:flamingo/feature/review/screen/product-reviews/product_review_view_model.dart';
+import 'package:flamingo/feature/review/screen/product-reviews/snippet_product_reviews.dart';
 import 'package:flamingo/feature/vendor/screen/vendor-profile/vendor_profile_screen.dart';
 import 'package:flamingo/shared/enum/lead_source.dart';
 import 'package:flamingo/shared/shared.dart';
@@ -22,6 +24,7 @@ import 'package:flamingo/widget/error/default_error_widget.dart';
 import 'package:flamingo/widget/list-tile/list_tile.dart';
 import 'package:flamingo/widget/loader/default_screen_loader_widget.dart';
 import 'package:flamingo/widget/loader/full_screen_loader.dart';
+import 'package:flamingo/widget/rating/rating_badge_widget.dart';
 import 'package:flamingo/widget/shimmer/shimmer.dart';
 import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/cupertino.dart';
@@ -63,6 +66,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   final _appBarViewModel = locator<ProductDetailAppBarViewModel>();
   final _relatedProductsViewModel = locator<MinProductListingViewModel>();
   final _inStockAlternativesViewModel = locator<MinProductListingViewModel>();
+  final _reviewsViewModel = locator<ProductReviewViewModel>();
 
   // Reported up from SnippetFitComparison (SIZE_AND_FIT_PLAN.md §9/B1) so the
   // size selector row - "where the decision is actually made" - can show the
@@ -77,6 +81,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     _viewModel.setProduct(widget.productId, widget.product,
         leadSource: widget.leadSource, advertisementId: widget.advertisementId);
     _appBarViewModel.init();
+    _reviewsViewModel.loadSummary(widget.productId);
+    // First page only - the PDP section shows a 2-review preview; the full
+    // paginated list lives behind "See all" (ReviewListScreen), which fetches
+    // its own copy from a fresh view-model instance.
+    _reviewsViewModel.loadReviews(widget.productId);
     _scrollController.addListener(() {
       _appBarViewModel.setScrollOffset(_scrollController.offset);
     });
@@ -104,6 +113,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         ),
         ChangeNotifierProvider(
           create: (context) => _relatedProductsViewModel,
+        ),
+        ChangeNotifierProvider(
+          create: (context) => _reviewsViewModel,
         ),
         // _inStockAlternativesViewModel is intentionally NOT registered here:
         // it's the same type as _relatedProductsViewModel, and a second
@@ -281,6 +293,21 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                                   height: Dimens
                                                       .spacingSizeDefault),
                                               _buildContactUs(),
+                                              VerticalSpaceWidget(
+                                                  height: Dimens
+                                                      .spacingSizeDefault),
+                                              Divider(
+                                                  color: AppColors.grayLight),
+                                              VerticalSpaceWidget(
+                                                  height: Dimens
+                                                      .spacingSizeDefault),
+                                              SnippetProductReviews(
+                                                productId: viewModel
+                                                    .productUseCase.data!.id,
+                                                productTitle: viewModel
+                                                    .productUseCase.data!
+                                                    .title,
+                                              ),
                                             ],
                                           ),
                                         ),
@@ -741,6 +768,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               color: AppColors.grayDark,
             ),
       ),
+      if (viewModel.productUseCase.data!.averageRating != null) ...[
+        const VerticalSpaceWidget(height: Dimens.spacing_2),
+        RatingBadgeWidget(
+          averageRating: viewModel.productUseCase.data!.averageRating,
+          reviewCount: viewModel.productUseCase.data!.reviewCount,
+        ),
+      ],
       const VerticalSpaceWidget(height: Dimens.spacing_2),
       Row(
         crossAxisAlignment: CrossAxisAlignment.end,

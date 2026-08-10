@@ -1,5 +1,6 @@
 import 'package:flamingo/data/local/local.dart';
 import 'package:flamingo/feature/order/data/local/order_local.dart';
+import 'package:flamingo/feature/order/data/model/last_checkout_selection.dart';
 
 class OrderLocalImpl implements OrderLocal {
   final LocalStorageClient _sharedPrefManager;
@@ -30,5 +31,31 @@ class OrderLocalImpl implements OrderLocal {
   Future<void> clearPendingKhaltiPidx() async {
     await _sharedPrefManager.remove(LocalStorageKeys.pendingKhaltiPidx);
     await _sharedPrefManager.remove(LocalStorageKeys.pendingKhaltiPidxExpiresAt);
+  }
+
+  @override
+  Future<void> saveLastCheckoutSelection({
+    required String shippingAddressId,
+    required String billingAddressId,
+    required String shippingMethodId,
+  }) async {
+    await _sharedPrefManager.setString(
+        LocalStorageKeys.lastShippingAddressId, shippingAddressId);
+    await _sharedPrefManager.setString(
+        LocalStorageKeys.lastBillingAddressId, billingAddressId);
+    await _sharedPrefManager.setString(
+        LocalStorageKeys.lastShippingMethodId, shippingMethodId);
+  }
+
+  @override
+  Future<LastCheckoutSelection> getLastCheckoutSelection() async {
+    return LastCheckoutSelection(
+      shippingAddressId:
+          await _sharedPrefManager.getString(LocalStorageKeys.lastShippingAddressId),
+      billingAddressId:
+          await _sharedPrefManager.getString(LocalStorageKeys.lastBillingAddressId),
+      shippingMethodId:
+          await _sharedPrefManager.getString(LocalStorageKeys.lastShippingMethodId),
+    );
   }
 }

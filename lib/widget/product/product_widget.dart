@@ -5,6 +5,7 @@ import 'package:flamingo/shared/enum/lead_source.dart';
 import 'package:flamingo/shared/shared.dart';
 import 'package:flamingo/widget/fav-button/fav_product_button_widget.dart';
 import 'package:flamingo/widget/image/image.dart';
+import 'package:flamingo/widget/rating/rating_badge_widget.dart';
 import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -105,6 +106,13 @@ class ProductWidget extends StatelessWidget {
                     color: AppColors.grayDark,
                   ),
             ),
+            if (payload.averageRating != null) ...[
+              const SizedBox(height: Dimens.spacing_2),
+              RatingBadgeWidget(
+                averageRating: payload.averageRating,
+                reviewCount: payload.reviewCount,
+              ),
+            ],
             const SizedBox(height: Dimens.spacingSizeExtraSmall),
             Row(
               children: [

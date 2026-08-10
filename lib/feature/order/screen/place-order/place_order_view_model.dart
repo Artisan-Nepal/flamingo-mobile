@@ -1,5 +1,8 @@
+import 'package:flamingo/data/data.dart';
 import 'package:flamingo/di/di.dart';
+import 'package:flamingo/feature/address/data/address_repository.dart';
 import 'package:flamingo/feature/address/data/model/address.dart';
+import 'package:flamingo/feature/address/data/model/customer_address.dart';
 import 'package:flamingo/feature/cart/data/model/cart_item.dart';
 import 'package:flamingo/feature/customer-activity/create_activity_view_model.dart';
 import 'package:flamingo/feature/customer-activity/customer_activity_view_model.dart';
@@ -20,9 +23,13 @@ import 'package:flutter/cupertino.dart';
 
 class PlaceOrderViewModel extends ChangeNotifier {
   final OrderRepository _orderRepository;
+  final AddressRepository _addressRepository;
 
-  PlaceOrderViewModel({required OrderRepository orderRepository})
-      : _orderRepository = orderRepository;
+  PlaceOrderViewModel({
+    required OrderRepository orderRepository,
+    required AddressRepository addressRepository,
+  })  : _orderRepository = orderRepository,
+        _addressRepository = addressRepository;
 
   int _orderIndex = 0;
   ShippingMethod? _selectedShippingMethod;
@@ -109,6 +116,55 @@ class PlaceOrderViewModel extends ChangeNotifier {
   setSelectedPaymentMethod(PaymentMethod? paymentMethod) {
     _selectedPaymentMethod = paymentMethod;
     notifyListeners();
+  }
+
+  // Pre-selects shipping address, billing address, and shipping method from the
+  // customer's last checkout (payment is intentionally left for them to pick
+  // each time). Every saved id is re-validated against the live lists, so a
+  // since-deleted address or a now-unavailable method just stays unselected
+  // instead of being sent to the server and failing at Place Order. Best-effort:
+  // any fetch failure leaves the fields untouched (manual selection still works).
+  Future<void> applyLastSelectionDefaults() async {
+    final saved = await locator<OrderLocal>().getLastCheckoutSelection();
+    if (saved.isEmpty) return;
+
+    try {
+      final results = await Future.wait([
+        _addressRepository.getCustomerAddresses(),
+        _orderRepository.getShippingMethods(),
+      ]);
+      final addresses = (results[0] as List<CustomerAddress>)
+          .map((customerAddress) => customerAddress.address)
+          .toList();
+      final methods = (results[1] as FetchResponse<ShippingMethod>).rows;
+
+      Address? findAddress(String? id) {
+        if (id == null) return null;
+        for (final address in addresses) {
+          if (address.id == id) return address;
+        }
+        return null;
+      }
+
+      _selectedShippingAddress ??= findAddress(saved.shippingAddressId);
+      _selectedBillingAddress ??= findAddress(saved.billingAddressId);
+      if (_selectedShippingMethod == null && saved.shippingMethodId != null) {
+        for (final method in methods) {
+          if (method.id == saved.shippingMethodId) {
+            _selectedShippingMethod = method;
+            break;
+          }
+        }
+      }
+
+      notifyListeners();
+      // Only meaningful once both an address and a (standard) method are set -
+      // fetchDeliveryQuote no-ops otherwise, so it's safe to always call.
+      fetchDeliveryQuote();
+    } catch (_) {
+      // Defaults are a convenience; on failure the customer just selects
+      // manually as before.
+    }
   }
 
   // Asks the server for the real per-store distance-based delivery total for
@@ -201,10 +257,28 @@ class PlaceOrderViewModel extends ChangeNotifier {
       );
       locator<CustomerActivityViewModel>().getCustomerCountInfo();
       _logOrderActvity();
+      await _saveSelectionForNextCheckout();
       setPlaceOrderUseCase(Response.complete(null));
     } catch (exception) {
       setPlaceOrderUseCase(Response.error(exception));
     }
+  }
+
+  // Remembers the non-payment selections so the next checkout defaults to
+  // them (see applyLastSelectionDefaults). Called only after the order is
+  // actually placed, so an abandoned checkout doesn't change the defaults.
+  Future<void> _saveSelectionForNextCheckout() async {
+    final shippingAddress = _selectedShippingAddress;
+    final billingAddress = _selectedBillingAddress;
+    final shippingMethod = _selectedShippingMethod;
+    if (shippingAddress == null || billingAddress == null || shippingMethod == null) {
+      return;
+    }
+    await locator<OrderLocal>().saveLastCheckoutSelection(
+      shippingAddressId: shippingAddress.id,
+      billingAddressId: billingAddress.id,
+      shippingMethodId: shippingMethod.id,
+    );
   }
 
   // Step 1 of Khalti checkout: reserves stock and returns a Khalti
@@ -247,6 +321,7 @@ class PlaceOrderViewModel extends ChangeNotifier {
       await locator<OrderLocal>().clearPendingKhaltiPidx();
       locator<CustomerActivityViewModel>().getCustomerCountInfo();
       _logOrderActvity();
+      await _saveSelectionForNextCheckout();
       setPlaceOrderUseCase(Response.complete(null));
     } catch (exception) {
       setPlaceOrderUseCase(Response.error(exception));

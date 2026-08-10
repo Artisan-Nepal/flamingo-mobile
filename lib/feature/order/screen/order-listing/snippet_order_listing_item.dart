@@ -1,6 +1,8 @@
 import 'package:flamingo/feature/order/data/model/order.dart';
 import 'package:flamingo/feature/order/screen/order-detail/order_detail_screen.dart';
+import 'package:flamingo/feature/review/screen/write-review/write_review_screen.dart';
 import 'package:flamingo/shared/shared.dart';
+import 'package:flamingo/widget/button/variants/text_button_widget.dart';
 import 'package:flamingo/widget/image/cached_network_image_widget.dart';
 import 'package:flamingo/widget/widget.dart';
 import 'package:flutter/material.dart';
@@ -140,6 +142,23 @@ class SnippetOrderListingItem extends StatelessWidget {
                               fontStyle: FontStyle.italic,
                               color: AppColors.grayMain,
                             ),
+                      ),
+                    ),
+                  if (order.orderStatus.code == 'DELIVERED')
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: TextButtonWidget(
+                        label: 'Rate & Review',
+                        padding: EdgeInsets.zero,
+                        onPressed: () {
+                          NavigationHelper.push(
+                            context,
+                            WriteReviewScreen(
+                              productId: order.product.id,
+                              productTitle: order.product.title,
+                            ),
+                          );
+                        },
                       ),
                     ),
                 ],

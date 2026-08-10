@@ -44,6 +44,10 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
     _viewModel.setCartItems(widget.items);
     _viewModel.setExpressScope(widget.productVariantIds);
     _viewModel.getSavedCoupons();
+    // Pre-fill shipping/billing address + shipping method from the last
+    // checkout so the customer doesn't re-pick them every time (payment stays
+    // a fresh choice each order).
+    _viewModel.applyLastSelectionDefaults();
   }
 
   @override
